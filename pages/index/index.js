@@ -23,7 +23,7 @@ Page({
       timeFunction: 'ease-in'
     })
     this.animation = animation
-    animation.translateY(265).step()
+    animation.translateY(260).step()
     this.setData({
       animationInfo: animation.export(),
       maskHidden: true
