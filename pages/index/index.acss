@@ -1,0 +1,96 @@
+.app{
+  position:absolute;
+  top:0;
+  left:0;
+  right: 0;
+  bottom:0;
+  background: transparent;
+  overflow:hidden;
+  padding: 20px;
+}
+.feiyong-container, .jiekuan-container{
+  padding: 20px;
+  background:#fff;
+  margin:0px auto;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,.2)
+}
+.title{
+  line-height: 24px;
+  padding-bottom: 5px;
+  font-size: 32rpx
+}
+.status{
+  font-size: 20rpx;
+  position:relative;
+  padding:0 10px;
+  margin: 0 -10px;
+  line-height: 22px;
+}
+.status.error::before{
+  content: '';
+  position:absolute;
+  left:0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  background:#ff5252;
+  border-radius: 50%
+}
+.content{
+  overflow:hidden;
+  font-size: 23rpx;
+  padding: 5px 0
+}
+.content .left{
+  float:left
+}
+.content .right{
+  float:right
+}
+.bill-number{
+  color:#999;
+  font-size: 23rpx
+}
+.see-all{
+  text-align:center;
+  padding: 20px 0 5px 0;
+  font-size: 24rpx;
+  color:#3276c3
+}
+.add-page{
+  position:absolute;
+  z-index: 998;
+  bottom:0;
+  left:0;
+  background:#fff;
+  height: 300px;
+  width: 100%;
+  transform: translateY(265px)
+}
+.add-item{
+  margin-left: 15px;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 35px;
+  border-bottom: 1px solid #f1f1f1;
+}
+.add-item:nth-child(1) {
+  background:url(../../images/jiekuan.png) left center no-repeat;
+  background-size: 24px 24px
+}
+
+.add-item:nth-child(2) {
+  background:url(../../images/baoxiao.png) left center no-repeat;
+  background-size: 24px 24px
+}
+
+.mask{
+  position: absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  background: rgba(0,0,0,.6)
+}

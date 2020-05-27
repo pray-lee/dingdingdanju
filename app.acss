@@ -1,0 +1,91 @@
+page {
+  background: #f2f2f2;
+  padding: 15px;
+  color: #333;
+  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+  box-sizing: border-box;
+  overflow:hidden;
+  height: 100vh
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 40px;
+  background: #ff5252
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  min-height: 88px;
+  align-items: center;
+}
+
+.form-row-label {
+  width: 140px;
+  font-size: 24rpx;
+  margin-right: 10px;
+  text-align: left;
+  color: #000;
+}
+
+.form-row-content {
+  flex: 1;
+  font-size: 24rpx;
+}
+
+.form-line {
+  height: 1px;
+  background-color: #ddd;
+  margin-left: 30px;
+}
+
+.input {
+  width: 99%;
+  font-size: 24rpx
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.row-title {
+  flex: 1;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  font-size: 24rpx;
+  color: #000;
+}
+
+.row-extra {
+  flex-basis: initial;
+  font-size: 24rpx;
+  color: #888;
+}
+
+.row-arow {
+  width: 32px;
+  height: 32px;
+  margin-left: 16px;
+}
+
+.a-list-arow {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-left: 16px;
+  background-image: url('data:image/svg+xml;charset=utf-8,<svg width="16" height="26" viewBox="0 0 16 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="UI-KIT_基础元件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="9.9基础元件" transform="translate(-5809.000000, -8482.000000)" fill="#C7C7CC"><polygon id="Disclosure-Indicator" points="5811 8482 5809 8484 5820.5 8495 5809 8506 5811 8508 5825 8495"></polygon></g></g></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transition: transform 0.3s;
+}

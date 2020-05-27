@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "add": "../components/add/index"
+  }
+}

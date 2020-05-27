@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "defaultTitle": "我的单据",
+    "titleBarColor": "#333",
+    "allowsBounceVertical": "YES"
+  },
+  
+  "debug": false
+}
