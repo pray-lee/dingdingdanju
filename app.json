@@ -1,12 +1,13 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/list/index",
+    "pages/addBill/index"
   ],
   "window": {
     "defaultTitle": "我的单据",
-    "titleBarColor": "#333",
+    "titleBarColor": "#3276c3",
     "allowsBounceVertical": "YES"
   },
-  
   "debug": false
 }

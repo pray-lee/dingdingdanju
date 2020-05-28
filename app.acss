@@ -7,7 +7,16 @@ page {
   overflow:hidden;
   height: 100vh
 }
-
+.app{
+  position:absolute;
+  top:0;
+  left:0;
+  right: 0;
+  bottom:0;
+  background: transparent;
+  overflow:hidden;
+  padding: 20px;
+}
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -17,19 +26,19 @@ page {
   align-items: center;
   width: 100vw;
   height: 40px;
-  background: #ff5252
+  background: #ff5252;
 }
 
 .form-row {
   display: flex;
   align-items: center;
   padding: 0 30px;
-  min-height: 88px;
+  min-height: 88rpx;
   align-items: center;
 }
 
 .form-row-label {
-  width: 140px;
+  min-width: 6em;
   font-size: 24rpx;
   margin-right: 10px;
   text-align: left;
@@ -72,13 +81,13 @@ page {
   color: #888;
 }
 
-.row-arow {
+.row-arrow {
   width: 32px;
   height: 32px;
   margin-left: 16px;
 }
 
-.a-list-arow {
+.a-list-arrow {
   display: block;
   width: 30px;
   height: 30px;
@@ -88,4 +97,80 @@ page {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   transition: transform 0.3s;
+}
+.status{
+  font-size: 24rpx;
+  position:relative;
+  padding:0 20rpx;
+  margin: 0 -20rpx;
+  line-height: 44rpx;
+}
+.status.error::before{
+  content: '';
+  position:absolute;
+  left:0;
+  top: 16rpx;
+  width: 10rpx;
+  height: 10rpx;
+  background:#ff5252;
+  border-radius: 50%
+}
+.content{
+  overflow:hidden;
+  font-size: 28rpx;
+  padding: 5px 0
+}
+.content .left{
+  float:left
+}
+.content .right{
+  float:right
+}
+.bill-number{
+  color:#999;
+  font-size: 24rpx
+}
+.see-all{
+  text-align:center;
+  padding: 40rpx 0 10rpx 0;
+  font-size: 24rpx;
+  color:#3276c3
+}
+.add-page, .add-borrow-page{
+  position:absolute;
+  z-index: 998;
+  bottom:0;
+  left:0;
+  background:#fff;
+  height: 300px;
+  width: 100%;
+  transform: translateY(300px)
+}
+.add-item{
+  margin-left: 30rpx;
+  height:100rpx;
+  line-height: 100rpx;
+  padding-left: 80rpx;
+  border-bottom: 1px solid #f1f1f1;
+}
+.add-item:nth-child(1) {
+  background:url(../../images/jiekuan.png) left center no-repeat;
+  background-size: 48rpx 48rpx
+}
+
+.add-item:nth-child(2) {
+  background:url(../../images/baoxiao.png) left center no-repeat;
+  background-size: 48rpx 48rpx
+}
+
+.mask{
+  position: absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  background: rgba(0,0,0,.6)
+}
+.bill-number-span{
+  margin-right: 20rpx
 }

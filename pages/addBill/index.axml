@@ -1,0 +1,159 @@
+<view class="form-wrapper" onTap="onClick">
+    <form onSubmit="formSubmit" onReset="formReset">
+        <scroll-view scroll-y class="form-scroll-wrapper">
+            <view class="form-row">
+                <view class="form-row-label">单据编号</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="单据编号"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">业务日期</view>
+                <view class="form-row-content">
+                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
+                           value="{{businessTime}}"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请组织</view>
+                <view class="form-row-content">
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}" range-key="name">
+                        <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                    </picker>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请部门</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="申请部门"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">借款单位类型</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="借款单位类型"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">收款银行</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="收款银行"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">收款账号</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="收款账号"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">借款类型</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="借款类型"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">核算维度</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="核算维度"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">资金计划类型</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="资金计划类型"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">借款合计</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="借款合计"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">是否有发票</view>
+                <view class="form-row-content">
+                    <radio-group onChange="radioChange" name="invoiceType">
+                        <label class="radio">
+                            <radio value="1"></radio>是
+                        </label>
+                        <label class="radio">
+                            <radio value="0" checked="checked" class="radio-control"></radio>否
+                        </label>
+                    </radio-group>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">合同编号</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="合同编号" disabled/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">提交人</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="提交人"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">提交日期</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="提交日期" onFocus="onSubmitFocus" value="{{submitTime}}"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">备注</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="备注"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="add-borrow" onTap="onAddShow">
+                添加借款详情
+            </view>
+            <view class="borrow-list">
+                <view class="borrow-item" a:for="{{borrowList}}">{{item.borrowDetail}} + {{item.remark}}</view>
+            </view>
+        </scroll-view>
+        <view class="btn-area">
+            <button formType="submit" class="submit-btn">提交</button>
+            <button formType="reset" class="reset-btn">重置</button>
+        </view>
+        <!--    // 隐藏表单的值-->
+        <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="shenqingzuzhi"/>
+    </form>
+    <!--        增加借款的地方-->
+    <view class="add-borrow-page" animation="{{animationInfo}}">
+        <view class="form-row">
+            <view class="form-row-label">借款详情</view>
+            <view class="form-row-content">
+                <input class="input" placeholder="借款详情" onInput="bindKeyInput" data-type="borrowDetail" value="{{borrowDetail}}"/>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">备注</view>
+            <view class="form-row-content">
+                <input class="input" placeholder="备注" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
+    </view>
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+</view>

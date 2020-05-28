@@ -2,6 +2,7 @@
   <view class="jiekuan-container">
     <view class="jiekuan-content">
       <view class="title">我的借款单</view>
+      <view class="completed-bill">查看已完成单据</view>
       <view class="main">
         <view class="status error">待提交</view>
         <view class="content">
@@ -9,15 +10,16 @@
           <text class="right">￥100.00</text>
         </view>
         <view class="bill-number">
-          <text>我的借款单</text>J2000000000003
+          <text class="bill-number-span">单据编号</text>J2000000000003
         </view>
-        <view class="see-all">查看全部</view>
+        <view class="see-all" onTap="seeAll" data-type="jiekuan">查看全部</view>
       </view>
     </view>
   </view>
-  <view class="feiyong-container">
-    <view class="feiyong-content">
+  <view class="baoxiao-container">
+    <view class="baoxiao-content">
       <view class="title">我的报销单</view>
+      <view class="completed-bill">查看已完成单据</view>
       <view class="main">
         <view class="status error">待提交</view>
         <view class="content">
@@ -25,21 +27,17 @@
           <text class="right">￥100.00</text>
         </view>
         <view class="bill-number">
-          <text>我的报销单</text>J2000000000003
+          <text class="bill-number-span">单据编号</text>J2000000000003
         </view>
-        <view class="see-all">查看全部</view>
+        <view class="see-all" onTap="seeAll" data-type="baoxiao">查看全部</view>
       </view>
     </view>
   </view>
   <add onAddShow="onAddShow"></add>
   <!-- 新增单据弹框 -->
-  <!-- <view class="add-page" animation="{{animationInfo}}">
-    <view>借款单</view>
-    <view>费用报销单</view>
-  </view> -->
   <view class="add-page" animation="{{animationInfo}}">
-    <view class="add-item">借款单</view>
-    <view class="add-item">费用报销单</view>
+    <view class="add-item" onTap="onShowAddBill" data-type="jiekuan">借款单</view>
+    <view class="add-item" onTap="onShowAddBill" data-type="baoxiao">费用报销单</view>
   </view>
   <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

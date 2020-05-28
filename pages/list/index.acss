@@ -1,0 +1,11 @@
+
+.scroll-view{
+    height: calc(100vh - 140rpx)
+}
+.list-item {
+    margin:0px auto;
+    margin-bottom: 10px;
+    background:#fff;
+    padding: 20px;
+    border-radius: 5px
+}

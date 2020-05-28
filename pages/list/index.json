@@ -1,0 +1,6 @@
+{
+  "defaultTitle": "单据列表",
+  "usingComponents": {
+    "add": "../components/add/index"
+  }
+}
