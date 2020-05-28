@@ -57,22 +57,38 @@
     height: 100rpx;
     line-height: 100rpx;
 }
-.add-borrow{
+.add-borrow, .upload-wrapper{
     display:flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 30rpx;
-    color:#fff;
+    color:#3276c3;
+    font-weight:bold;
     font-size: 30rpx;
-    background:#3276c3;
-    height: 80rpx;
-    line-height: 80rpx;
-    flex: 1
+    //background:#3276c3;
+    height: 40rpx;
+    line-height: 40rpx;
+    flex: 1;
+    margin-top: 40rpx
 }
-.add-borrow-btn{
+.add-borrow-btn, .add-file-btn{
     min-width: 120rpx;
     height: 40rpx;
     line-height: 40rpx;
-    padding: 0 40rpx;
-    border-left: 2px solid #fff;
+    padding-left: 40rpx;
+    border-left: 2px solid #3276c3;
+}
+.borrow-item .form-row, .file-item .form-row{
+    padding-left: 0;
+    line-height: 88rpx;
+}
+.delete-borrow, .delete-file{
+    width: 60rpx;
+    height: 88rpx;
+    background:url(../../images/delete.png) center center no-repeat;
+    background-size: 30rpx 30rpx;
+}
+.img{
+    width:40rpx;
+    height: 40rpx
 }

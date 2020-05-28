@@ -123,22 +123,46 @@
                 </view>
             </view>
             <view class="form-line"/>
+<!-- 增加借款详情-->
             <view class="add-borrow" onTap="onAddShow">
                 <view class="borrow-title">借款列表</view>
                 <view class="add-borrow-btn">添加借款</view>
             </view>
             <view class="borrow-list">
-                <view class="borrow-item" a:for="{{borrowList}}">{{item.borrowDetail}} + {{item.remark}}</view>
+                <view class="borrow-item" a:for="{{borrowList}}">
+                    <view class="form-row">
+                        <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowDetail}}"></view>
+                        <view class="form-row-label">借款详情</view>
+                        <view class="form-row-content">
+                            <text>{{item.borrowDetail}}</text>
+                        </view>
+                    </view>
+                <view class="form-line"/></view>
+            </view>
+            <view class="upload-wrapper" onTap="handleUpload">
+                <view class="borrow-title">附件列表</view>
+                <view class="add-file-btn">添加附件</view>
+            </view>
+            <view class="file-list">
+                <view class="file-item" a:for="{{fileList}}">
+                    <view class="form-row">
+                        <view class="delete-file" onTap="deleteFile" data-file="{{item}}"></view>
+                        <view class="form-row-label">附件名称</view>
+                        <view class="form-row-content">
+                            <image src="{{item}}" class="img" mode="aspectFill"></image>
+                        </view>
+                    </view>
+                    <view class="form-line"/></view>
             </view>
         </scroll-view>
         <view class="btn-area">
             <button formType="submit" class="submit-btn">提交</button>
             <button formType="reset" class="reset-btn">重置</button>
         </view>
-        <!--    // 隐藏表单的值-->
+<!--隐藏表单的值-->
         <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="shenqingzuzhi"/>
     </form>
-    <!--        增加借款的地方-->
+<!--增加借款弹框-->
     <view class="add-borrow-page" animation="{{animationInfo}}">
         <view class="form-row">
             <view class="form-row-label">借款详情</view>

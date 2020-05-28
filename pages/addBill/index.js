@@ -25,7 +25,9 @@ Page({
         arrIndex: 0,
         borrowList: [],
         borrowDetail: '',
-        remark: ''
+        remark: '',
+        fileList: []
+
     },
     formSubmit(e) {
         console.log(e.detail)
@@ -122,6 +124,25 @@ Page({
             })
         }
     },
+    deleteBorrowDetail(e) {
+        var borrowDetail = e.currentTarget.dataset.detail
+        console.log(borrowDetail)
+        var borrowList = this.data.borrowList.filter(item => {
+            return item.borrowDetail !== borrowDetail
+        })
+        this.setData({
+            borrowList
+        })
+    },
+    deleteFile(e) {
+        var file = e.currentTarget.dataset.file
+        var fileList = this.data.fileList.filter(item => {
+            return item !== file
+        })
+        this.setData({
+            fileList
+        })
+    },
     handleAddBorrow() {
         if( this.data.borrowDetail!== ''){
             var obj = {
@@ -134,5 +155,16 @@ Page({
             })
             this.onAddHide()
         }
+    },
+    handleUpload() {
+        console.log(1111)
+        dd.chooseImage({
+            count: 2,
+            success: (res) => {
+                this.setData({
+                    fileList: this.data.fileList.concat(res.filePaths)
+                })
+            },
+        })
     }
 })
