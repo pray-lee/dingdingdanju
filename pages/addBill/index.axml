@@ -124,7 +124,8 @@
             </view>
             <view class="form-line"/>
             <view class="add-borrow" onTap="onAddShow">
-                添加借款详情
+                <view class="borrow-title">借款列表</view>
+                <view class="add-borrow-btn">添加借款</view>
             </view>
             <view class="borrow-list">
                 <view class="borrow-item" a:for="{{borrowList}}">{{item.borrowDetail}} + {{item.remark}}</view>

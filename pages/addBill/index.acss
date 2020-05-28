@@ -57,3 +57,22 @@
     height: 100rpx;
     line-height: 100rpx;
 }
+.add-borrow{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30rpx;
+    color:#fff;
+    font-size: 30rpx;
+    background:#3276c3;
+    height: 80rpx;
+    line-height: 80rpx;
+    flex: 1
+}
+.add-borrow-btn{
+    min-width: 120rpx;
+    height: 40rpx;
+    line-height: 40rpx;
+    padding: 0 40rpx;
+    border-left: 2px solid #fff;
+}
