@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/list/index",
-    "pages/addBill/index"
+    "pages/addJiekuan/index",
+    "pages/addBaoxiao/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

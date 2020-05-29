@@ -132,7 +132,7 @@
                 <view class="borrow-item" a:for="{{borrowList}}">
                     <view class="form-row">
                         <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowDetail}}"></view>
-                        <view class="form-row-label">借款详情</view>
+                        <view class="form-row-label">借款金额</view>
                         <view class="form-row-content">
                             <text>{{item.borrowDetail}}</text>
                         </view>
@@ -165,9 +165,9 @@
 <!--增加借款弹框-->
     <view class="add-borrow-page" animation="{{animationInfo}}">
         <view class="form-row">
-            <view class="form-row-label">借款详情</view>
+            <view class="form-row-label">借款金额</view>
             <view class="form-row-content">
-                <input class="input" placeholder="借款详情" onInput="bindKeyInput" data-type="borrowDetail" value="{{borrowDetail}}"/>
+                <input class="input" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowDetail" value="{{borrowDetail}}"/>
             </view>
         </view>
         <view class="form-line"/>

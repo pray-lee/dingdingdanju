@@ -57,10 +57,14 @@ Page({
         //   });
         // }.bind(this), 1500);
     },
-    onShowAddBill(e) {
-        var type = e.currentTarget.dataset.type
+    onShowAddJiekuan(e) {
         dd.navigateTo({
-            url: '../addBill/index?type=' + type
+            url: '../addJiekuan/index'
+        })
+    },
+    onShowAddBaoxiao(e) {
+        dd.navigateTo({
+            url: '../addBaoxiao/index'
         })
     },
     onHide() {

@@ -1,0 +1,254 @@
+<view class="form-wrapper" onTap="onClick">
+    <form onSubmit="formSubmit" onReset="formReset">
+        <scroll-view scroll-y class="form-scroll-wrapper">
+            <view class="form-row">
+                <view class="form-row-label">单据编号</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="单据编号"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">业务日期</view>
+                <view class="form-row-content">
+                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
+                           value="{{businessTime}}"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请组织</view>
+                <view class="form-row-content">
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                            range-key="name">
+                        <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                    </picker>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请部门</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="申请部门"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">往来单位类型</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="往来单位类型"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">往来单位</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="往来单位"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">收款银行</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="收款银行"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">收款账号</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="收款账号"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请报销金额</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="申请报销金额"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">核销借款金额</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="核销借款金额"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">应付款金额</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="应付款金额"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">是否有发票</view>
+                <view class="form-row-content">
+                    <radio-group onChange="radioChange" name="invoiceType">
+                        <label class="radio">
+                            <radio value="1"></radio>
+                            是
+                        </label>
+                        <label class="radio">
+                            <radio value="0" checked="checked" class="radio-control"></radio>
+                            否
+                        </label>
+                    </radio-group>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">提交人</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="提交人"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">提交日期</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="提交日期" onFocus="onSubmitFocus" value="{{submitTime}}"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">备注</view>
+                <view class="form-row-content">
+                    <input class="input" placeholder="备注"/>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <!-- 增加借款详情-->
+            <view class="add-borrow" onTap="onAddShow">
+                <view class="borrow-title">报销详情</view>
+                <view class="add-borrow-btn">添加详情</view>
+            </view>
+            <view class="borrow-list">
+                <view class="borrow-item" a:for="{{borrowList}}">
+                    <view class="form-row">
+                        <view class="delete-borrow" onTap="deleteBorrowDetail"
+                              data-detail="{{item.borrowDetail}}"></view>
+                        <view class="form-row-label">报销详情</view>
+                        <view class="form-row-content">
+                            <text>{{item.borrowDetail}}</text>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </view>
+            <!--核销借款-->
+            <view class="add-borrow" onTap="onAddShow">
+                <view class="borrow-title">核销借款</view>
+                <view class="add-borrow-btn">导入借款</view>
+            </view>
+            <view class="borrow-list">
+                <view class="borrow-item" a:for="{{importList}}">
+                    <view class="form-row">
+                        <view class="delete-borrow" onTap="deleteBorrowDetail"
+                              data-detail="{{item}}"></view>
+                        <view class="form-row-label">核销金额</view>
+                        <view class="form-row-content">
+                            <input value="{{item}}" class="input"/>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </view>
+            <!--上传附件-->
+            <view class="upload-wrapper" onTap="handleUpload">
+                <view class="borrow-title">附件列表</view>
+                <view class="add-file-btn">添加附件</view>
+            </view>
+            <view class="file-list">
+                <view class="file-item" a:for="{{fileList}}">
+                    <view class="form-row">
+                        <view class="delete-file" onTap="deleteFile" data-file="{{item}}"></view>
+                        <view class="form-row-label">附件名称</view>
+                        <view class="form-row-content">
+                            <image src="{{item}}" class="img" mode="aspectFill"></image>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </view>
+        </scroll-view>
+        <view class="btn-area">
+            <button formType="submit" class="submit-btn">提交</button>
+            <button formType="reset" class="reset-btn">重置</button>
+        </view>
+        <!--隐藏表单的值-->
+        <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="shenqingzuzhi"/>
+    </form>
+    <!--增加导入借款单弹框-->
+    <view class="add-borrow-page" animation="{{animationInfo}}">
+        <form onSubmit="onCheckboxSubmit">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+            <checkbox-group onChange="onCheckboxChange" name="import-borrow-list">
+                <label class="checkbox-label">
+                    <checkbox value="111" class="checkbox"></checkbox>
+                    <view class="import-borrow-item">
+                        <view class="form-row">
+                            <view class="import-borrow-item-left">
+                                <view class="import-borrow-remark">没钱花，借点钱</view>
+                                <view class="import-borrow-info">
+                                    <view class="import-borrow-time">2020.01.01</view>
+                                    <view class="import-borrow-money">￥100000</view>
+                                </view>
+                            </view>
+                            <view class="import-borrow-item-right">
+                                ￥
+                                <text>20000</text>
+                            </view>
+                        </view>
+                        <view class="form-line"/>
+                    </view>
+                </label>
+                <label class="checkbox-label">
+                    <checkbox value="222" class="checkbox"></checkbox>
+                    <view class="import-borrow-item">
+                        <view class="form-row">
+                            <view class="import-borrow-item-left">
+                                <view class="import-borrow-remark">没钱花，借点钱</view>
+                                <view class="import-borrow-info">
+                                    <view class="import-borrow-time">2020.01.01</view>
+                                    <view class="import-borrow-money">￥100000</view>
+                                </view>
+                            </view>
+                            <view class="import-borrow-item-right">
+                                ￥
+                                <text>20000</text>
+                            </view>
+                        </view>
+                        <view class="form-line"/>
+                    </view>
+                </label>
+                <label class="checkbox-label">
+                    <checkbox value="333" class="checkbox"></checkbox>
+                    <view class="import-borrow-item">
+                        <view class="form-row">
+                            <view class="import-borrow-item-left">
+                                <view class="import-borrow-remark">没钱花，借点钱</view>
+                                <view class="import-borrow-info">
+                                    <view class="import-borrow-time">2020.01.01</view>
+                                    <view class="import-borrow-money">￥<text>100000</text></view>
+                                </view>
+                            </view>
+                            <view class="import-borrow-item-right">
+                                ￥
+                                <text>20000</text>
+                            </view>
+                        </view>
+                        <view class="form-line"/>
+                    </view>
+                </label>
+            </checkbox-group>
+        </scroll-view>
+<!--        <view class="borrow-submit" onTap="handleAddBorrow">导入</view>-->
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+</view>
+</view>
+<view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+</view>

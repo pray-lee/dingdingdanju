@@ -35,10 +35,7 @@ Page({
         })
     },
     onShowAddBill(e) {
-        var type = e.currentTarget.dataset.type
-        dd.navigateTo({
-            url: '../addBill/index?type=' + type
-        })
+
     },
     onShow() {
         // 页面显示

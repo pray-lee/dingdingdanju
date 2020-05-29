@@ -157,14 +157,17 @@ Page({
         }
     },
     handleUpload() {
-        console.log(1111)
-        dd.chooseImage({
-            count: 2,
-            success: (res) => {
-                this.setData({
-                    fileList: this.data.fileList.concat(res.filePaths)
-                })
-            },
-        })
+        // dd.uploadAttachmentToDingTalk({
+        //     image:{multiple:true,compress:false,max:9,spaceId: "12345"},
+        //     // space:{corpId:"xxx3020",spaceId:"12345",isCopy:1 , max:9},
+        //     file:{spaceId:"12345",max:1},
+        //     types:["photo","camera","file"],//PC端支持["photo","file","space"]
+        //     success: res => {
+        //         console.log(res)
+        //     },
+        //     file: err => {
+        //         console.log(err)
+        //     }
+        // })
     }
 })
