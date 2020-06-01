@@ -157,7 +157,6 @@
         </scroll-view>
         <view class="btn-area">
             <button formType="submit" class="submit-btn">提交</button>
-            <button formType="reset" class="reset-btn">重置</button>
         </view>
 <!--隐藏表单的值-->
         <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="shenqingzuzhi"/>

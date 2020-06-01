@@ -34,8 +34,15 @@ Page({
             maskHidden: true
         })
     },
-    onShowAddBill(e) {
-
+    onShowAddJiekuan(e) {
+        dd.navigateTo({
+            url: '../addJiekuan/index'
+        })
+    },
+    onShowAddBaoxiao(e) {
+        dd.navigateTo({
+            url: '../addBaoxiao/index'
+        })
     },
     onShow() {
         // 页面显示

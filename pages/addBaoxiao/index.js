@@ -1,7 +1,9 @@
 Page({
     data: {
         maskHidden: true,
+        hesuanMaskHidden: true,
         animationInfo: {},
+        hesuanAnimationInfo: {},
         businessTime: '',
         submitTime: '',
         objectArray: [
@@ -24,8 +26,8 @@ Page({
         ],
         arrIndex: 0,
         fileList: [],
-        importBorrowList: []
-
+        importBorrowList: [],
+        baoxiaoList: []
     },
     formSubmit(e) {
         console.log(e.detail)
@@ -40,17 +42,17 @@ Page({
         })
     },
     onBusinessFocus() {
-       dd.datePicker({
-           format: 'yyyy-MM-dd',
-           currentDate: '2012-12-12',
-           success: (res) => {
-               this.setData({
-                   businessTime: res.date,
-               })
-               // 解除focus不触发的解决办法。
-               this.onClick()
-           },
-       })
+        dd.datePicker({
+            format: 'yyyy-MM-dd',
+            currentDate: '2012-12-12',
+            success: (res) => {
+                this.setData({
+                    businessTime: res.date,
+                })
+                // 解除focus不触发的解决办法。
+                this.onClick()
+            },
+        })
     },
     onClick() {
         console.log('onClick')
@@ -80,6 +82,30 @@ Page({
             maskHidden: false
         })
     },
+    onHesuanShow() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.hesuanAnimation = animation
+        animation.translateY(0).step()
+        this.setData({
+            hesuanAnimationInfo: animation.export(),
+            hesuanMaskHidden: false
+        })
+    },
+    onHesuanHide() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.hesuanAnimation = animation
+        animation.translateY(300).step()
+        this.setData({
+            hesuanAnimationInfo: animation.export(),
+            hesuanMaskHidden: true
+        })
+    },
     onAddHide() {
         var animation = dd.createAnimation({
             duration: 250,
@@ -102,16 +128,25 @@ Page({
         this.setData({
             animationInfo: animation.export()
         })
+        // hesuan 弹框
+        var animation1 = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.hesuanaAnimation = animation1
+        this.setData({
+            hesuanAnimationInfo: animation1.export()
+        })
     },
     bindKeyInput(e) {
         // 借款详情
-        if(e.currentTarget.dataset.type === 'borrowDetail'){
+        if (e.currentTarget.dataset.type === 'borrowDetail') {
             this.setData({
                 borrowDetail: e.detail.value
             })
         }
         // 备注
-        if(e.currentTarget.dataset.type === 'remark'){
+        if (e.currentTarget.dataset.type === 'remark') {
             this.setData({
                 remark: e.detail.value
             })
@@ -119,26 +154,27 @@ Page({
     },
     deleteBorrowDetail(e) {
         var importDetail = e.currentTarget.dataset.detail
-        var importList = this.data.importList.filter(item => {
-            return item !== importDetail
-        })
+        var importList = this.data.importList.filter(item => item !== importDetail)
         this.setData({
             importList
         })
     },
+    deleteBaoxiaoDetail(e) {
+        var idx = e.currentTarget.dataset.index
+        var baoxiaoList = this.data.baoxiaoList.filter((item, index) => {
+            console.log(idx, index)
+            return idx !== index
+        })
+        this.setData({
+            baoxiaoList
+        })
+    },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
-        var fileList = this.data.fileList.filter(item => {
-            return item !== file
-        })
+        var fileList = this.data.fileList.filter(item => item !== file)
         this.setData({
             fileList
         })
-    },
-    // 导入
-    handleAddBorrow(e) {
-            console.log(e)
-            this.onAddHide()
     },
     handleUpload() {
         // dd.uploadAttachmentToDingTalk({
@@ -163,5 +199,27 @@ Page({
             importList
         })
         this.onAddHide()
+    },
+    onAddBaoxiao() {
+        var obj = {
+            subjectId: '',
+            trueSubjectId: '',
+            auxpropertyNames: '',
+            trueAuxpropertyNames: '',
+            applicationAmount: '',
+            invoiceType: '0',
+            taxRate: '',
+        }
+        var baoxiaoList = this.data.baoxiaoList.concat(obj)
+        this.setData({
+            baoxiaoList
+        })
+    },
+    checkFocus() {
+        this.onHesuanShow()
+    },
+    onHesuanSubmit(e) {
+        console.log(e)
+        this.onHesuanHide()
     }
 })

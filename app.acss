@@ -138,7 +138,7 @@ page {
   font-size: 24rpx;
   color:#3276c3
 }
-.add-page, .add-borrow-page{
+.add-page, .add-borrow-page, .add-hesuanweidu-page{
   position:absolute;
   z-index: 998;
   bottom:0;
@@ -165,7 +165,7 @@ page {
   background-size: 48rpx 48rpx
 }
 
-.mask{
+.mask, .hesuan-mask{
   position: absolute;
   top:0;
   left:0;

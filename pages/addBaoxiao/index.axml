@@ -119,24 +119,90 @@
                 </view>
             </view>
             <view class="form-line"/>
-            <!-- 增加借款详情-->
-            <view class="add-borrow" onTap="onAddShow">
+            <!-- 增加报销详情-->
+            <view class="add-borrow" onTap="onAddBaoxiao">
                 <view class="borrow-title">报销详情</view>
                 <view class="add-borrow-btn">添加详情</view>
             </view>
-            <view class="borrow-list">
-                <view class="borrow-item" a:for="{{borrowList}}">
-                    <view class="form-row">
-                        <view class="delete-borrow" onTap="deleteBorrowDetail"
-                              data-detail="{{item.borrowDetail}}"></view>
-                        <view class="form-row-label">报销详情</view>
-                        <view class="form-row-content">
-                            <text>{{item.borrowDetail}}</text>
-                        </view>
-                    </view>
-                    <view class="form-line"/>
+            <view class="baoxiao-item" a:if="{{baoxiaoList.length}}" a:for="{{baoxiaoList}}">
+                <view class="baoxiao-item-title">
+                    <text>报销详情</text>
+                    <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
+                          data-index="{{index}}"></view>
                 </view>
+                <view class="form-row">
+                    <view class="form-row-label">费用类型</view>
+                    <view class="form-row-content">
+                        <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                                range-key="name">
+                            <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">核算维度</view>
+                    <view class="hesuanweidu-btn special-btn" onTap="checkFocus"></view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">预算类型</view>
+                    <view class="form-row-content">
+                        <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                                range-key="name">
+                            <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">预算维度</view>
+                    <input class="input" placeholder="预算维度"/>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">附加信息</view>
+                    <input class="input" placeholder="附加信息"/>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">申请报销金额</view>
+                    <input class="input" placeholder="申请报销金额"/>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">发票类型</view>
+                    <view class="form-row-content">
+                        <radio-group onChange="radioChange" name="invoiceType">
+                            <label class="radio">
+                                <radio value="1"></radio>
+                                普票
+                            </label>
+                            <label class="radio">
+                                <radio value="0" checked="checked" class="radio-control"></radio>
+                                专票
+                            </label>
+                        </radio-group>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">税率</view>
+                    <view class="form-row-content">
+                        <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                                range-key="name">
+                            <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label">备注</view>
+                    <input class="input" placeholder="备注"/>
+                </view>
+                <view class="form-line"/>
             </view>
+
             <!--核销借款-->
             <view class="add-borrow" onTap="onAddShow">
                 <view class="borrow-title">核销借款</view>
@@ -186,44 +252,6 @@
             <scroll-view class="jiekuandan" scroll-y style="height: 240px">
             <checkbox-group onChange="onCheckboxChange" name="import-borrow-list">
                 <label class="checkbox-label">
-                    <checkbox value="111" class="checkbox"></checkbox>
-                    <view class="import-borrow-item">
-                        <view class="form-row">
-                            <view class="import-borrow-item-left">
-                                <view class="import-borrow-remark">没钱花，借点钱</view>
-                                <view class="import-borrow-info">
-                                    <view class="import-borrow-time">2020.01.01</view>
-                                    <view class="import-borrow-money">￥100000</view>
-                                </view>
-                            </view>
-                            <view class="import-borrow-item-right">
-                                ￥
-                                <text>20000</text>
-                            </view>
-                        </view>
-                        <view class="form-line"/>
-                    </view>
-                </label>
-                <label class="checkbox-label">
-                    <checkbox value="222" class="checkbox"></checkbox>
-                    <view class="import-borrow-item">
-                        <view class="form-row">
-                            <view class="import-borrow-item-left">
-                                <view class="import-borrow-remark">没钱花，借点钱</view>
-                                <view class="import-borrow-info">
-                                    <view class="import-borrow-time">2020.01.01</view>
-                                    <view class="import-borrow-money">￥100000</view>
-                                </view>
-                            </view>
-                            <view class="import-borrow-item-right">
-                                ￥
-                                <text>20000</text>
-                            </view>
-                        </view>
-                        <view class="form-line"/>
-                    </view>
-                </label>
-                <label class="checkbox-label">
                     <checkbox value="333" class="checkbox"></checkbox>
                     <view class="import-borrow-item">
                         <view class="form-row">
@@ -244,11 +272,43 @@
                 </label>
             </checkbox-group>
         </scroll-view>
-<!--        <view class="borrow-submit" onTap="handleAddBorrow">导入</view>-->
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+    <!--核算维度弹框-->
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}">
+        <form onSubmit="onHesuanSubmit">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+                <view class="import-baoxiao-item">
+                    <view class="form-row">
+                        <view class="form-row-label">部门</view>
+                        <view class="form-row-content">
+                            <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                                    range-key="name">
+                                <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+                <view class="import-baoxiao-item">
+                    <view class="form-row">
+                        <view class="form-row-label">部门</view>
+                        <view class="form-row-content">
+                            <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                                    range-key="name">
+                                <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </scroll-view>
             <button formType="submit" class="import-borrow-list-btn">导入</button>
         </form>
     </view>
 </view>
 </view>
 <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+<view class="hesuan-mask" hidden="{{hesuanMaskHidden}}" onTap="onHesuanHide"></view>
 </view>

@@ -40,7 +40,7 @@
     height:0;
     padding:0
 }
-.add-borrow-page{
+.add-borrow-page, .add-hesuanweidu-page{
     z-index:1000;
     transform:translateY(360px)
 }
@@ -82,7 +82,7 @@
     padding-left: 0;
     line-height: 88rpx;
 }
-.delete-borrow, .delete-file{
+.delete-borrow, .delete-file, .delete-baoxiao-item{
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
@@ -140,4 +140,20 @@
 }
 .import-borrow-input{
     font-size: 24rpx
+}
+.baoxiao-item{
+    margin: 20rpx 0
+}
+.baoxiao-item-title{
+    background:#f1f1f1;
+    padding: 0 60rpx;
+    font-size: 26rpx;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.special-btn{
+    width: 99%;
+    height: 88rpx;
+    line-height: 88rpx
 }
