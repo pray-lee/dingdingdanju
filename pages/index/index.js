@@ -38,7 +38,6 @@ Page({
     onLoad(query) {
         dd.getAuthCode({
             success: (res) => {
-                dd.alert({ content: res.authCode })
                 dd.httpRequest({
                     url: "http://192.168.1.116:8080/jeecg/loginController.do?loginDingTalk&code=" + res.authCode,
                     method: "GET",

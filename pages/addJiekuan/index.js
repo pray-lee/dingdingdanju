@@ -2,43 +2,32 @@ Page({
     data: {
         maskHidden: true,
         animationInfo: {},
-        businessTime: '',
-        submitTime: '',
-        objectArray: [
-            {
-                id: 0,
-                name: '美国',
-            },
-            {
-                id: 1,
-                name: '中国',
-            },
-            {
-                id: 2,
-                name: '巴西',
-            },
-            {
-                id: 3,
-                name: '日本',
-            },
-        ],
-        arrIndex: 0,
-        borrowList: [],
-        borrowDetail: '',
+        borrowAmount: '',
         remark: '',
-        fileList: []
-
+        fileList: [],
+        submitData: {
+            billDetailList: []
+        }
     },
     formSubmit(e) {
         console.log(e.detail)
-    },
-    formReset() {
-        console.log('formreset')
+        console.log(this.data)
     },
     bindObjPickerChange(e) {
-        console.log('picker发送选择改变，携带值为', e.detail.value);
         this.setData({
-            arrIndex: e.detail.value,
+            submitData: {
+                ...this.data.submitData,
+                [e.currentTarget.dataset.name]: e.detail.value
+            }
+        })
+    },
+    onBlur(e) {
+        console.log(e, 'blur')
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                [e.currentTarget.dataset.name]: e.detail.value
+            },
         })
     },
     onBusinessFocus() {
@@ -47,7 +36,10 @@ Page({
            currentDate: '2012-12-12',
            success: (res) => {
                this.setData({
-                   businessTime: res.date,
+                   submitData: {
+                       ...this.data.submitData,
+                       businessTime: res.date
+                   },
                })
                // 解除focus不触发的解决办法。
                this.onClick()
@@ -63,7 +55,10 @@ Page({
             currentDate: '2012-12-12',
             success: (res) => {
                 this.setData({
-                    submitTime: res.date
+                    submitData: {
+                        ...this.data.submitData,
+                        submitDate: res.date
+                    }
                 })
                 // 解除focus不触发的解决办法。
                 this.onClick()
@@ -71,7 +66,6 @@ Page({
         })
     },
     onAddShow() {
-        console.log(1)
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'
@@ -83,7 +77,7 @@ Page({
             maskHidden: false
         })
         this.setData({
-            borrowDetail: '',
+            borrowAmount: '',
             remark: ''
         })
     },
@@ -112,9 +106,9 @@ Page({
     },
     bindKeyInput(e) {
         // 借款详情
-        if(e.currentTarget.dataset.type === 'borrowDetail'){
+        if(e.currentTarget.dataset.type === 'borrowAmount'){
             this.setData({
-                borrowDetail: e.detail.value
+                borrowAmount: e.detail.value
             })
         }
         // 备注
@@ -125,13 +119,16 @@ Page({
         }
     },
     deleteBorrowDetail(e) {
-        var borrowDetail = e.currentTarget.dataset.detail
-        console.log(borrowDetail)
-        var borrowList = this.data.borrowList.filter(item => {
-            return item.borrowDetail !== borrowDetail
+        var borrowAmount = e.currentTarget.dataset.detail
+        console.log(borrowAmount)
+        var billDetailList = this.data.submitData['billDetailList'].filter(item => {
+            return item.borrowAmount !== borrowAmount
         })
         this.setData({
-            borrowList
+            submitData: {
+                ...this.data.submitData,
+                billDetailList
+            }
         })
     },
     deleteFile(e) {
@@ -144,14 +141,17 @@ Page({
         })
     },
     handleAddBorrow() {
-        if( this.data.borrowDetail!== ''){
+        if( this.data.borrowAmount!== ''){
             var obj = {
-                borrowDetail:this.data.borrowDetail,
+                borrowAmount:this.data.borrowAmount,
                 remark:this.data.remark
             }
-            var borrowList = this.data.borrowList.concat(obj)
+            var billDetailList = this.data.submitData['billDetailList'].concat(obj)
             this.setData({
-                borrowList
+                submitData: {
+                    ...this.data.submitData,
+                    billDetailList
+                }
             })
             this.onAddHide()
         }
@@ -169,5 +169,5 @@ Page({
         //         console.log(err)
         //     }
         // })
-    }
+    },
 })

@@ -12,12 +12,22 @@
                 <view class="form-row-label">业务日期</view>
                 <view class="form-row-content">
                     <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
-                           value="{{businessTime}}"/>
+                           value="{{businessTime}}" name="businessDateTime"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">申请组织</view>
+                <view class="form-row-content">
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                            range-key="name" data-name="accountbookId">
+                        <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                    </picker>
+                </view>
+            </view>
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">申请部门</view>
                 <view class="form-row-content">
                     <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
                             range-key="name">
@@ -27,37 +37,39 @@
             </view>
             <view class="form-line"/>
             <view class="form-row">
-                <view class="form-row-label">申请部门</view>
-                <view class="form-row-content">
-                    <input class="input" placeholder="申请部门"/>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
                 <view class="form-row-label">往来单位类型</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="往来单位类型"/>
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                            range-key="name">
+                        <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                    </picker>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">往来单位</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="往来单位"/>
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{wanglai}}"
+                            range-key="name">
+                        <view class="row-extra">当前选择：{{wanglai[arrIndex].name}}</view>
+                    </picker>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">收款银行</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="收款银行"/>
+                    <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
+                            range-key="name">
+                        <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                    </picker>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="收款账号"/>
+                    <input class="input" placeholder="收款账号" name="incomeBankAccount"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -71,21 +83,21 @@
             <view class="form-row">
                 <view class="form-row-label">核销借款金额</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="核销借款金额"/>
+                    <input class="input" placeholder="核销借款金额" name="applicationAmount"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">应付款金额</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="应付款金额"/>
+                    <input class="input" placeholder="应付款金额" name="totalAmount"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">是否有发票</view>
                 <view class="form-row-content">
-                    <radio-group onChange="radioChange" name="invoiceType">
+                    <radio-group name="invoice">
                         <label class="radio">
                             <radio value="1"></radio>
                             是
@@ -101,21 +113,21 @@
             <view class="form-row">
                 <view class="form-row-label">提交人</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="提交人"/>
+                    <input class="input" placeholder="提交人" name="submitterName"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">提交日期</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="提交日期" onFocus="onSubmitFocus" value="{{submitTime}}"/>
+                    <input class="input" name="submitDate" placeholder="提交日期" onFocus="onSubmitFocus" value="{{submitTime}}"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">备注</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="备注"/>
+                    <input class="input" placeholder="备注" name="remark"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -241,10 +253,9 @@
         </scroll-view>
         <view class="btn-area">
             <button formType="submit" class="submit-btn">提交</button>
-            <button formType="reset" class="reset-btn">重置</button>
         </view>
         <!--隐藏表单的值-->
-        <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="shenqingzuzhi"/>
+        <input class="none" type="text" value="{{objectArray[arrIndex].id}}" name="accountbookId"/>
     </form>
     <!--增加导入借款单弹框-->
     <view class="add-borrow-page" animation="{{animationInfo}}">
