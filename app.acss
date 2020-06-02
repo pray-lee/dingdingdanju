@@ -49,6 +49,10 @@ page {
   flex: 1;
   font-size: 24rpx;
   display:flex;
+  position:relative
+}
+.form-row-content .picker-style {
+  width: 100%
 }
 
 .form-line {
@@ -58,9 +62,10 @@ page {
 }
 
 .input {
-  width: 99%;
+  width: 100%;
   font-size: 24rpx;
-  text-align:right
+  text-align:right;
+  padding:0
 }
 
 .row {
@@ -119,7 +124,7 @@ page {
 }
 .content{
   overflow:hidden;
-  font-size: 28rpx;
+  font-size: 26rpx;
   padding: 5px 0
 }
 .content .left{
@@ -130,7 +135,7 @@ page {
 }
 .bill-number{
   color:#999;
-  font-size: 24rpx
+  font-size: 22rpx
 }
 .see-all{
   text-align:center;
@@ -175,4 +180,11 @@ page {
 }
 .bill-number-span{
   margin-right: 20rpx
+}
+
+.row-extra{
+    position:absolute;
+    right: 0;
+    top:50%;
+    transform: translateY(-50%);
 }
