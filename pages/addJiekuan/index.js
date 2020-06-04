@@ -104,6 +104,9 @@ Page({
             this.setIncomeBankAccount(this.data[listName][value].bankAccount)
         }
     },
+    specialBindObjPickerChange(e) {
+        console.log(e.detail.value)
+    },
     onBlur(e) {
         console.log(e, 'blur')
         this.setData({
