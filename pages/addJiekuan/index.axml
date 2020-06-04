@@ -80,8 +80,8 @@
             <view class="form-row">
                 <view class="form-row-label">核算维度</view>
                 <view class="form-row-content">
-                    <view class="hesuanweidu-btn special-btn" onTap="checkFocus"></view>
-                    <input class="input" disabled value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>
+                    <view class="hesuanweidu-btn special-btn" onTap="checkFocus">{{submitData.auxpropertyNames}}</view>
+                    <!-- <input class="input" disabled value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/> -->
                 </view>
             </view>
             <view class="form-line"/>
@@ -208,8 +208,8 @@
                     <view class="form-row">
                         <view class="form-row-label">{{item.auxptyName}}</view>
                         <view class="form-row-content">
-                            <picker onChange="bindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
-                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-special="auxpty" data-value="{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}">
+                            <picker onChange="specialBindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-special="auxpty" data-value="{{allAuxptyList[item.auxptyId]['data'][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}">
                                 <view class="row-extra">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
                             </picker>
                         </view>

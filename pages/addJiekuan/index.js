@@ -43,7 +43,8 @@ Page({
             billDetailList: [],
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
-            invoice: 0
+            invoice: 0,
+            auxpropertyNames: '',
         }
     },
     formSubmit(e) {
@@ -78,22 +79,13 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        if(e.currentTarget.dataset.special) {
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    auxpropertyNames: e.currentTarget.dataset.value
-                } 
-            })
-        }else{
-            this.setData({
-                [index]: e.detail.value,
-                submitData: {
-                    ...this.data.submitData,
-                    [name]: this.data[listName][value].id
-                }
-            })
-        }
+        this.setData({
+            [index]: e.detail.value,
+            submitData: {
+                ...this.data.submitData,
+                [name]: this.data[listName][value].id
+            }
+        })
         // --------------------------------------------------------
         if (name === 'accountbookId') {
             this.getDepartmentList(this.data[listName][value].id)

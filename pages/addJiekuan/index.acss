@@ -97,3 +97,22 @@
     height: 88rpx;
     line-height: 88rpx
 }
+.add-hesuanweidu-page{
+    z-index: 1000
+}
+.import-borrow-list-btn{
+    position:fixed;
+    z-index:1000;
+    bottom:0px;
+    left:0px;
+    text-align:center;
+    background:rgb(50, 118, 195);
+    color:rgb(255, 255, 255);
+    font-size:0.32rem;
+    width:100%;
+    height:1rem;
+    line-height:1rem;
+    text-align:center;
+    border:0px;
+    border-radius:0px;
+}
