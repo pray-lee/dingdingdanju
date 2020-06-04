@@ -80,6 +80,7 @@
             <view class="form-row">
                 <view class="form-row-label">核算维度</view>
                 <view class="form-row-content">
+                    <view class="hesuanweidu-btn special-btn" onTap="checkFocus"></view>
                     <input class="input" disabled value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>
                 </view>
             </view>
@@ -199,4 +200,25 @@
         <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+    <!--核算维度弹框-->
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}">
+        <form onSubmit="onHesuanSubmit">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+                <view class="import-baoxiao-item" a:for="{{subjectAuxptyList}}">
+                    <view class="form-row">
+                        <view class="form-row-label">{{item.auxptyName}}</view>
+                        <view class="form-row-content">
+                            <picker onChange="bindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-special="auxpty" data-value="{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}">
+                                <view class="row-extra">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </scroll-view>
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+    <view class="hesuan-mask" hidden="{{hesuanMaskHidden}}" onTap="onHesuanHide"></view>
 </view>

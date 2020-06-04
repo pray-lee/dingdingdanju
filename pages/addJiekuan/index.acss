@@ -92,3 +92,8 @@
     width:40rpx;
     height: 40rpx
 }
+.special-btn{
+    width: 99%;
+    height: 88rpx;
+    line-height: 88rpx
+}
