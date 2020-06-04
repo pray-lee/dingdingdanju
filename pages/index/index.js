@@ -1,5 +1,4 @@
 var app = getApp()
-console.log(app.globalData)
 Page({
     data: {
         animationInfo: {},
@@ -36,24 +35,8 @@ Page({
         })
     },
     onLoad(query) {
-        dd.getAuthCode({
-            success: (res) => {
-                dd.httpRequest({
-                    url: "http://192.168.1.116:8080/jeecg/loginController.do?loginDingTalk&code=" + res.authCode,
-                    method: "GET",
-                    dataType: "json",
-                    success: res => {
-                        console.log(res);
-                    }
-                })
-            },
-            fail: (err) => {
-                dd.alert({ content: JSON.stringify(err) })
-            }
-        })
     },
     onReady() {
-        // 页面加载完成
     },
     onShow() {
         // 页面显示
