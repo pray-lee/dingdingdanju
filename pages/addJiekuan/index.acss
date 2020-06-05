@@ -95,7 +95,9 @@
 .special-btn{
     width: 99%;
     height: 88rpx;
-    line-height: 88rpx
+    line-height: 88rpx;
+    text-align:right;
+    color:rgb(136,136,136)
 }
 .add-hesuanweidu-page{
     z-index: 1000

@@ -19,6 +19,9 @@ Page({
         incomeBankList: [],
         subjectIndex: 0,
         subjectList: [],
+        // 资金计划列表
+        capitalTypeIndex: 0,
+        capitalTypeList: [],
         applicantIndex: 0,
         applicantType: [
             {
@@ -38,6 +41,7 @@ Page({
         subjectAuxptyList: [],
         // 辅助核算列表(所有)
         allAuxptyList: {},
+        isCapitalTypeStart: false,
         submitData: {
             billApEntityList: [],
             billDetailList: [],
@@ -45,6 +49,7 @@ Page({
             applicantType: 10,
             invoice: 0,
             auxpropertyNames: '',
+            amount: 0
         }
     },
     formSubmit(e) {
@@ -90,9 +95,13 @@ Page({
         if (name === 'accountbookId') {
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10)
+            this.isCapitalTypeStart(this.data[listName][value].id)
         }
         if (name === 'submitterDepartmentId') {
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
+        }
+        if (name === 'subjectId') {
+            this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
         }
         if (name === 'applicantType') {
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
@@ -104,8 +113,18 @@ Page({
             this.setIncomeBankAccount(this.data[listName][value].bankAccount)
         }
     },
+    // 核算维度onChange
     specialBindObjPickerChange(e) {
-        console.log(e.detail.value)
+        var auxptyId = e.currentTarget.dataset.id
+        this.setData({
+            allAuxptyList: {
+                ...this.data.allAuxptyList,
+                [auxptyId]: {
+                    ...this.data.allAuxptyList[auxptyId],
+                    index: e.detail.value
+                }
+            },
+        })
     },
     onBlur(e) {
         console.log(e, 'blur')
@@ -192,7 +211,26 @@ Page({
         })
     },
     onHesuanSubmit(e) {
-        console.log(e)
+        console.log(this.data.allAuxptyList)
+        // 辅助核算字符串拼接
+        var auxptyNameStr = ''
+        // 辅助核算提交需要的数组
+        var billApEntityList = []
+        var tempData = this.data.allAuxptyList
+        for (var i in tempData) {
+            auxptyNameStr += `${tempData[i].auxptyName}_${tempData[i].data[tempData[i].index][this.getAuxptyNameMap(tempData[i].auxptyId)]},`
+            billApEntityList.push({
+                auxptyId: tempData[i].auxptyId,
+                auxptyDetailId: tempData[i]["data"][tempData[i].index].id,
+            })
+        }
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                auxpropertyNames: auxptyNameStr.slice(0, -1),
+                billApEntityList
+            }
+        })
         this.onHesuanHide()
     },
     onAddHide() {
@@ -243,14 +281,14 @@ Page({
     },
     deleteBorrowDetail(e) {
         var borrowAmount = e.currentTarget.dataset.detail
-        console.log(borrowAmount)
         var billDetailList = this.data.submitData['billDetailList'].filter(item => {
             return item.borrowAmount !== borrowAmount
         })
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                billDetailList
+                billDetailList,
+                amount: (Number(this.data.submitData.amount) - Number(borrowAmount)).toFixed(2)
             }
         })
     },
@@ -270,10 +308,16 @@ Page({
                 remark: this.data.remark
             }
             var billDetailList = this.data.submitData['billDetailList'].concat(obj)
+            // 借款合计
+            var amount = 0
+            billDetailList.forEach(item => {
+                amount += Number(item.borrowAmount)
+            })
             this.setData({
                 submitData: {
                     ...this.data.submitData,
-                    billDetailList
+                    billDetailList,
+                    amount: amount.toFixed(2)
                 }
             })
             this.onAddHide()
@@ -407,49 +451,62 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
+                console.log(res, '借款类型')
                 var arr = []
-                res.data.forEach(item => {
-                    if (!item.childrenCount) {
-                        arr.push({
-                            id: item.id,
-                            name: item.text
-                        })
-                    }
-                })
-                this.setData({
-                    subjectList: arr,
-                    subjectIndex: 0,
-                    submitData: {
-                        ...this.data.submitData,
-                        subjectId: arr[0].id
-                    }
-                })
-                this.getSubjectAuxptyList(arr[0].id, this.data.submitData.accountbookId)
-                // this.onHesuanShow()
+                if (res.data.length) {
+                    res.data.forEach(item => {
+                        if (!item.childrenCount) {
+                            arr.push({
+                                id: item.id,
+                                name: item.text
+                            })
+                        }
+                    })
+                    this.setData({
+                        subjectList: arr,
+                        subjectIndex: 0,
+                        submitData: {
+                            ...this.data.submitData,
+                            subjectId: arr[0].id
+                        }
+                    })
+                    this.getSubjectAuxptyList(arr[0].id, this.data.submitData.accountbookId)
+
+                }
             }
         })
     },
     // 获取科目对应的辅助核算
-    getSubjectAuxptyList(subjectId, accountbookId) {
+    getSubjectAuxptyList(subjectId, accountbookId, flag) {
         dd.httpRequest({
             url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
             method: 'GET',
             dataType: 'json',
             success: res => {
                 console.log(res, 'auxpryList')
-                var arr = res.data.obj.subjectAuxptyList.map(item => {
-                    return {
-                        auxptyId: item.auxptyId,
-                        auxptyName: item.auxpropertyConfig.auxptyName
+                if (!!res.data.obj.subjectAuxptyList.length) {
+                    var arr = res.data.obj.subjectAuxptyList.map(item => {
+                        return {
+                            auxptyId: item.auxptyId,
+                            auxptyName: item.auxpropertyConfig.auxptyName
+                        }
+                    })
+                    this.setData({
+                        subjectAuxptyList: arr,
+                        allAuxptyList: {},
+                        submitData: {
+                            ...this.data.submitData,
+                            auxpropertyNames: ''
+                        }
+                    })
+                    // 请求辅助核算列表
+                    arr.forEach(item => {
+                        this.getAuxptyList(this.data.submitData.accountbookId, item.auxptyId)
+                    })
+                    if (flag) {
+                        this.onHesuanShow()
                     }
-                })
-                this.setData({
-                    subjectAuxptyList: arr
-                })
-                // 请求辅助核算列表
-                arr.forEach(item => {
-                    this.getAuxptyList(this.data.submitData.accountbookId, item.auxptyId)
-                })
+                }
             }
         })
     },
@@ -496,19 +553,19 @@ Page({
     },
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid) {
-        console.log(auxptyid)
         dd.httpRequest({
             url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
             method: 'GET',
             dataType: 'json',
             success: res => {
                 console.log(res, '辅助核算列表')
-
                 var obj = {
                     [auxptyid]: {
                         data: res.data.rows,
                         index: 0,
-                        name: this.getAuxptyNameMap(auxptyid)
+                        name: this.getAuxptyNameMap(auxptyid),
+                        auxptyName: this.data.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
+                        auxptyId: auxptyid
                     }
                 }
                 var newObj = Object.assign({}, this.data.allAuxptyList, obj)
@@ -542,5 +599,47 @@ Page({
                 name = "auxptyDetailName"
         }
         return name
+    },
+    // 资金计划列表
+    getCapitalTypeList() {
+        dd.httpRequest({
+            url: app.globalData.url + 'capitalTypeDetailController.do?getList',
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                console.log(res, '资金计划')
+                var arr = res.data.obj.map(item => {
+                    return {
+                        detailId: item.detailId,
+                        detailName: item.detailName
+                    }
+                })
+                this.setData({
+                    capitalTypeList: arr
+                })
+            }
+        })
+    },
+    // 判断资金计划是否启用
+    isCapitalTypeStart(accountbookId) {
+        dd.httpRequest({
+            url: app.globalData.url + "accountbookController.do?getModuleIdsByAccountbookId&accountbookId=" + accountbookId,
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                console.log(res, '是否启用')
+                this.setData({
+                    isCapitalTypeStart: res.data
+                })
+                if (!!res.data) {
+                    this.getCapitalTypeList()
+                }else{
+                    this.setData({
+                        capitalTypeList: [],
+                        capitalTypeIndex: 0
+                    })
+                }
+            }
+        })
     }
 })

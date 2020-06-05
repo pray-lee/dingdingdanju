@@ -80,7 +80,7 @@
             <view class="form-row">
                 <view class="form-row-label">核算维度</view>
                 <view class="form-row-content">
-                    <view class="hesuanweidu-btn special-btn" onTap="checkFocus">{{submitData.auxpropertyNames}}</view>
+                    <view class="hesuanweidu-btn special-btn ellipsis" onTap="checkFocus">{{submitData.auxpropertyNames}}</view>
                     <!-- <input class="input" disabled value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/> -->
                 </view>
             </view>
@@ -89,8 +89,8 @@
                 <view class="form-row-label">资金计划类型</view>
                 <view class="form-row-content">
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}" range-key="name" data-name="capitalTypeDetailId">
-                            <view class="row-extra">{{objectArray[arrIndex].name}}</view>
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{capitalTypeIndex}}" range="{{capitalTypeList}}" range-key="detailName" data-name="capitalTypeDetailId" data-index="capitalTypeIndex" data-list="capitalTypeList">
+                            <view class="row-extra">{{capitalTypeList[capitalTypeIndex].detailName}}</view>
                         </picker>
                     </view>
                 </view>
@@ -99,7 +99,7 @@
             <view class="form-row">
                 <view class="form-row-label">借款合计</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.amount}}" placeholder="借款合计" data-name="amount"/>
+                    <input class="input" disabled value="{{submitData.amount == 0 ? '' : submitData.amount}}" placeholder="借款合计" data-name="amount"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -209,8 +209,8 @@
                         <view class="form-row-label">{{item.auxptyName}}</view>
                         <view class="form-row-content">
                             <picker onChange="specialBindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
-                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-special="auxpty" data-value="{{allAuxptyList[item.auxptyId]['data'][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}">
-                                <view class="row-extra">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
+                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-list="{{allAuxptyList[item.auxptyId]}}" data-id="{{item.auxptyId}}">
+                                <view class="row-extra ellipsis">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
                             </picker>
                         </view>
                     </view>

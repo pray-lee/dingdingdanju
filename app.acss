@@ -188,3 +188,8 @@ page {
     top:50%;
     transform: translateY(-50%);
 }
+.ellipsis{
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap
+}
