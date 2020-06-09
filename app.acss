@@ -187,6 +187,8 @@ page {
     right: 0;
     top:50%;
     transform: translateY(-50%);
+    text-align: right;
+    max-width: 85%
 }
 .ellipsis{
   text-overflow:ellipsis;

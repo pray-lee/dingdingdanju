@@ -1,5 +1,4 @@
 {
     "editor.highlightActiveIndentGuide": false,
-    "editor.renderIndentGuides": false,
-    "editor.cursorSmoothCaretAnimation": true
+    "editor.renderIndentGuides": false
 }

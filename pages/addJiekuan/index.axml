@@ -4,7 +4,7 @@
             <view class="form-row">
                 <view class="form-row-label">单据编号</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivablebillCode" />
+                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivablebillCode" value={{submitData.billCode}} />
                 </view>
             </view>
             <view class="form-line"/>
@@ -12,7 +12,7 @@
                 <view class="form-row-label">业务日期</view>
                 <view class="form-row-content">
                     <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
-                           value="{{submitData.businessTime}}" data-name="businessDateTime" onBlur="onBlur"/>
+                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -73,15 +73,15 @@
             <view class="form-row">
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="收款账号" data-name="incomeBankAccount"/>
+                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="" data-name="incomeBankAccount"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">核算维度</view>
                 <view class="form-row-content">
-                    <view class="hesuanweidu-btn special-btn ellipsis" onTap="checkFocus">{{submitData.auxpropertyNames}}</view>
-                    <!-- <input class="input" disabled value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/> -->
+                    <!-- <view class="row-extra special-btn ellipsis" onTap="checkFocus">{{submitData.auxpropertyNames}}</view> -->
+                    <input class="input" onFocus="checkFocus" disabled="{{!subjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -108,10 +108,10 @@
                 <view class="form-row-content">
                     <radio-group onChange="radioChange" data-name="invoice">
                         <label class="radio">
-                            <radio value="1"></radio>是
+                            <radio value="1" checked={{submitData.invoice == 1}}></radio>是
                         </label>
                         <label class="radio">
-                            <radio value="0" checked="checked" class="radio-control"></radio>否
+                            <radio value="0" checked={{submitData.invoice == 0}} class="radio-control"></radio>否
                         </label>
                     </radio-group>
                 </view>
@@ -127,7 +127,7 @@
             <view class="form-row">
                 <view class="form-row-label">提交人</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.submitterName}}" placeholder="提交人" data-name="submitterName"/>
+                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人" data-name="submitterName"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -151,7 +151,7 @@
                 <view class="add-borrow-btn">添加借款</view>
             </view>
             <view class="borrow-list">
-                <view class="borrow-item" a:for="{{submitData.billDetailList}}">
+                <view class="borrow-item" a:for="{{submitData.billDetailListObj}}">
                     <view class="form-row">
                         <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowAmount}}"></view>
                         <view class="form-row-label">借款金额</view>

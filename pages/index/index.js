@@ -57,12 +57,12 @@ Page({
     },
     onShowAddJiekuan(e) {
         dd.navigateTo({
-            url: '../addJiekuan/index'
+            url: '../addJiekuan/index?type=add'
         })
     },
     onShowAddBaoxiao(e) {
         dd.navigateTo({
-            url: '../addBaoxiao/index'
+            url: '../addBaoxiao/index?type=add'
         })
     },
     onHide() {
