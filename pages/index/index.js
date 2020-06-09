@@ -1,8 +1,23 @@
 var app = getApp()
+app.globalData.loadingCount = 0
 Page({
     data: {
         animationInfo: {},
-        maskHidden: true
+        maskHidden: true,
+        jiekuanList: [],
+        statusObj: {
+            10: "待提交",
+            20: "待审批",
+            25: "审批驳回",
+            30: "已审批",
+            60: "已提交付款",
+            80: "已付款"
+        },
+        applicantType: {
+            10:"职员",
+            20:"供应商",
+            30:"客户"
+        },
     },
     seeAll(e) {
         // 查看全部
@@ -34,7 +49,43 @@ Page({
             maskHidden: true
         })
     },
+    addLoading() {
+        dd.showLoading({
+            content: '加载中...'
+        })
+        app.globalData.loadingCount ++
+    },
+    hideLoading(){
+        app.globalData.loadingCount--
+        if(app.globalData.loadingCount === 0) {
+            dd.hideLoading()
+        }
+    },
     onLoad(query) {
+        this.addLoading()
+        dd.httpRequest({
+            url: app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,',
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                this.setData({
+                    jiekuanList: res.data.rows,
+                })
+                this.hideLoading()
+            }
+        }),
+        this.addLoading()
+        dd.httpRequest({
+            url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                this.setData({
+                    baoxiaoList: res.data.rows,
+                })
+                this.hideLoading()
+            }
+        })
     },
     onReady() {
     },
@@ -59,11 +110,13 @@ Page({
         dd.navigateTo({
             url: '../addJiekuan/index?type=add'
         })
+        this.onAddHide()
     },
     onShowAddBaoxiao(e) {
         dd.navigateTo({
             url: '../addBaoxiao/index?type=add'
         })
+        this.onAddHide()
     },
     onHide() {
         // 页面隐藏
@@ -75,6 +128,7 @@ Page({
         // 标题被点击
     },
     onPullDownRefresh() {
+        console.log(1121)
         // 页面被下拉
     },
     onReachBottom() {

@@ -8,7 +8,8 @@
   "window": {
     "defaultTitle": "我的单据",
     "titleBarColor": "#3276c3",
-    "allowsBounceVertical": "YES"
+    "allowsBounceVertical": "YES",
+    "pullRefresh": true
   },
   "debug": false
 }

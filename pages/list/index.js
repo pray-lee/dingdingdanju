@@ -1,4 +1,5 @@
 var app = getApp()
+app.globalData.loadingCount = 0
 Page({
     data: {
         type: '',
@@ -14,9 +15,9 @@ Page({
             80: "已付款"
         },
         applicantType: {
-            10:"职员",
-            20:"供应商",
-            30:"客户"
+            10: "职员",
+            20: "供应商",
+            30: "客户"
         }
     },
     onLoad(query) {
@@ -26,16 +27,25 @@ Page({
         })
         // 页面加载完成
         var url = ''
-        if(type === 'jiekuan') {
+        if (type === 'jiekuan') {
             url = app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,'
-
-        }else{
-            url = 'abccccccccccc'
         }
+        if (type === 'jiekuanCompleted') {
+            url = app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&status=80&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,'
+        }
+        if (type === 'baoxiao') {
+            url = app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status'
+        }
+        if (type === 'baoxiaoCompleted') {
+            url = app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&status=80&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status'
+        }
+
+        this.addLoading()
         dd.httpRequest({
             url: url,
             method: 'GET',
             success: res => {
+                this.hideLoading()
                 console.log(res)
                 this.setData({
                     list: res.data.rows
@@ -48,6 +58,18 @@ Page({
                 console.log('completed')
             }
         })
+    },
+    addLoading() {
+        dd.showLoading({
+            content: '数据加载中...'
+        })
+        app.globalData.loadingCount++
+    },
+    hideLoading() {
+        app.globalData.loadingCount--
+        if (app.globalData.loadingCount === 0) {
+            dd.hideLoading()
+        }
     },
     onAddShow() {
         var animation = dd.createAnimation({
@@ -77,11 +99,13 @@ Page({
         dd.navigateTo({
             url: '../addJiekuan/index?type=add'
         })
+        this.onAddHide()
     },
     onShowAddBaoxiao(e) {
         dd.navigateTo({
             url: '../addBaoxiao/index?type=add'
         })
+        this.onAddHide()
     },
     onShow() {
         // 页面显示
@@ -96,8 +120,15 @@ Page({
     },
     goToEdit(e) {
         var id = e.currentTarget.dataset.id
-        dd.navigateTo({
-            url: '../addJiekuan/index?type=edit&id=' + id
-        })
+        console.log(this.data.type, 'type')
+        if(this.data.type.indexOf('baoxiao') != -1) {
+            dd.navigateTo({
+                url: '../addBaoxiao/index?type=edit&id=' + id
+            })
+        }else{
+            dd.navigateTo({
+                url: '../addJiekuan/index?type=edit&id=' + id
+            })
+        }
     }
 })

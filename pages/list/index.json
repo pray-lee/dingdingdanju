@@ -1,5 +1,6 @@
 {
   "defaultTitle": "单据列表",
+  "pullRefresh": true,
   "usingComponents": {
     "add": "../components/add/index"
   }

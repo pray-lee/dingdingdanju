@@ -1,5 +1,6 @@
 import moment from 'moment'
 var app = getApp()
+app.globalData.loadingCount = 0
 Page({
     data: {
         maskHidden: true,
@@ -69,8 +70,20 @@ Page({
                         }
                     })
                 })
-                
+
             })
+        }
+    },
+    addLoading() {
+        dd.showLoading({
+            content: '加载中...'
+        })
+        app.globalData.loadingCount ++
+    },
+    hideLoading() {
+        app.globalData.loadingCount--
+        if(app.globalData.loadingCount === 0) {
+            dd.hideLoading()
         }
     },
     formSubmit(e) {
@@ -80,6 +93,7 @@ Page({
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?doAdd',
             method: 'POST',
@@ -87,6 +101,7 @@ Page({
             data: this.data.submitData,
             success: res => {
                 console.log(res)
+                this.hideLoading()
             },
             fail: res => {
                 console.log(res, 'fail')
@@ -366,7 +381,7 @@ Page({
                 userName: app.globalData.realName
             }
         })
-        var type = query.type 
+        var type = query.type
         var id = query.id
         // 获取账簿列表
         if(type === 'add') {
@@ -379,6 +394,7 @@ Page({
     },
     // 获取申请组织
     getAccountbookList(data) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId',
             method: 'GET',
@@ -408,14 +424,17 @@ Page({
                 var incomeBankName = data ? data.incomeBankName : ''
                 var subjectId = data ? data.subjectId : ''
                 var billApEntityListObj = data ? data.billApEntityList : []
+                var capitalTypeDetailId = data ? data.capitalTypeDetailId : null
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
                 this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
-                this.isCapitalTypeStart(accountbookId)
+                this.isCapitalTypeStart(accountbookId, capitalTypeDetailId)
+                this.hideLoading()
             }
         })
     },
     // 获取申请部门
     getDepartmentList(accountbookId, departmentId, subjectId, billApEntityListObj) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
             method: 'GET',
@@ -446,11 +465,13 @@ Page({
                     }
                 })
                 this.getSubjectList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
+                this.hideLoading()
             }
         })
     },
     // 获取借款单位
     getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType,
             method: 'GET',
@@ -482,11 +503,13 @@ Page({
                     }
                 })
                 this.getIncomeBankList(applicantType, applicantId, incomeBankName)
+                this.hideLoading()
             }
         })
     },
     // 获取收款银行
     getIncomeBankList(applicantType, applicantId, incomeBankName) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'incomeBankInfoController.do?listInfo&applicantType=' + applicantType + '&applicantId=' + applicantId,
             method: 'GET',
@@ -495,7 +518,7 @@ Page({
                 console.log(res, 'incomeBankList')
                 var arr = res.data.obj
                 if(arr.length) {
-                
+
                 }
                 // edit的时候，设置incomeBankIndex
                 var incomeBankIndex = 0
@@ -533,11 +556,13 @@ Page({
                     })
                     this.setIncomeBankAccount('')
                 }
+                this.hideLoading()
             }
         })
     },
     // 获取科目类型
     getSubjectList(accountbookId, departId, subject, billApEntityListObj) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=4&findAll=false',
             method: 'GET',
@@ -563,7 +588,7 @@ Page({
                                 subjectIndex = index
                             }
                         })
-                    }                     
+                    }
                     this.setData({
                         subjectList: arr,
                         subjectIndex: subjectIndex,
@@ -573,12 +598,23 @@ Page({
                         }
                     })
                     this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
+                }else{
+                    this.setData({
+                        subjectList: [],
+                        subjectIndex: 0,
+                        submitData: {
+                            ...this.data.submitData,
+                            subjectId: ''
+                        }
+                    })
                 }
+                this.hideLoading()
             }
         })
     },
     // 获取科目对应的辅助核算
     getSubjectAuxptyList(subjectId, accountbookId, flag, billApEntityListObj) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
             method: 'GET',
@@ -619,6 +655,7 @@ Page({
                         subjectAuxptyList: []
                     })
                 }
+                this.hideLoading()
             }
         })
     },
@@ -638,7 +675,7 @@ Page({
     checkFocus() {
         this.onHesuanShow()
     },
-    // 辅助核算请求url分类 
+    // 辅助核算请求url分类
     getAuxptyUrl(accountbookId, auxptyid) {
         var url = ''
         switch (auxptyid) {
@@ -665,24 +702,25 @@ Page({
     },
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid, billApEntityListObj) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, '辅助核算列表')
                 // 处理index
                 var auxptyIndex = 0
-                billApEntityListObj.forEach((item, index) => {
-                    if(item.auxptyId == auxptyid) {
-                        res.data.rows.forEach((row, rowIndex) => {
-                            console.log(row, rowIndex)
-                            if(row.id == item.auxptyDetailId) {
-                                auxptyIndex = rowIndex
-                            }
-                        })
-                    }
-                })
+                if(!!billApEntityListObj) {
+                    billApEntityListObj.forEach((item, index) => {
+                        if(item.auxptyId == auxptyid) {
+                            res.data.rows.forEach((row, rowIndex) => {
+                                if(row.id == item.auxptyDetailId) {
+                                    auxptyIndex = rowIndex
+                                }
+                            })
+                        }
+                    })
+                }
                 var obj = {
                     [auxptyid]: {
                         data: res.data.rows,
@@ -696,6 +734,7 @@ Page({
                 this.setData({
                     allAuxptyList: newObj
                 })
+                this.hideLoading()
             }
         })
     },
@@ -725,27 +764,39 @@ Page({
         return name
     },
     // 资金计划列表
-    getCapitalTypeList() {
+    getCapitalTypeList(capitalTypeDetailId) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'capitalTypeDetailController.do?getList',
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, '资金计划')
                 var arr = res.data.obj.map(item => {
                     return {
-                        detailId: item.detailId,
+                        detailId: item.id,
                         detailName: item.detailName
                     }
                 })
+                console.log(arr, '资金计划类型列表')
+                var capitalTypeIndex = 0
+                if(!!capitalTypeDetailId) {
+                    arr.forEach((item, index) => {
+                        if(item.detailId === capitalTypeDetailId) {
+                            capitalTypeIndex = index
+                        }
+                    })
+                }
                 this.setData({
-                    capitalTypeList: arr
+                    capitalTypeList: arr,
+                    capitalTypeIndex
                 })
+                this.hideLoading()
             }
         })
     },
     // 判断资金计划是否启用
-    isCapitalTypeStart(accountbookId) {
+    isCapitalTypeStart(accountbookId, capitalTypeDetailId) {
+        this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + "accountbookController.do?getModuleIdsByAccountbookId&accountbookId=" + accountbookId,
             method: 'GET',
@@ -756,30 +807,28 @@ Page({
                     isCapitalTypeStart: res.data
                 })
                 if (!!res.data) {
-                    this.getCapitalTypeList()
+                    this.getCapitalTypeList(capitalTypeDetailId)
                 }else{
                     this.setData({
                         capitalTypeList: [],
                         capitalTypeIndex: 0
                     })
                 }
+                this.hideLoading()
             }
         })
     },
     // 请求编辑回显数据
     getEditData(id) {
-        dd.showLoading({
-            content: '数据加载中...'
-        })
+        this.addLoading()
        dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?getDetail&id=' + id,
             method: 'GET',
             dataType: 'json',
             success: res => {
-                dd.hideLoading()
-                console.log(1)
                 console.log(res.data.obj)
-                this.setRenderData(res.data.obj) 
+                this.setRenderData(res.data.obj)
+                this.hideLoading()
             }
        })
     },
@@ -789,14 +838,14 @@ Page({
         var billDetailListObj = data.billDetailList.map(item => {
             return {
                 borrowAmount: item.borrowAmount,
-                remark: item.remark            
-            } 
+                remark: item.remark
+            }
         })
         // billApEntityList
         var billApEntityListObj = data.billApEntityList.map(item => {
             return {
                 auxptyId: item.auxptyId,
-                auxptyDetailId: item.auxptyDetailId    
+                auxptyDetailId: item.auxptyDetailId
             }
         })
         // 请求
