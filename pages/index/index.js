@@ -5,6 +5,7 @@ Page({
         animationInfo: {},
         maskHidden: true,
         jiekuanList: [],
+        baoxiaoList: [],
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -62,6 +63,50 @@ Page({
         }
     },
     onLoad(query) {
+        // 登录
+        this.addLoading()
+        dd.getAuthCode({
+            success: (res) => {
+                dd.httpRequest({
+                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode,
+                    method: "GET",
+                    dataType: "json",
+                    success: res => {
+                        if(res.data.success){
+                            app.globalData.realName=res.data.obj.realName
+                            // var sessionId = res.data.obj
+                            // dd.setStorage({
+                            //   key: 'sessionId',
+                            //   data: sessionId,
+                            //   success: function() {
+                            //     console.log('写入成功')
+                            //   }
+                            // })
+                            // 请求借款列表
+                            this.getJiekuanList()
+                            // 请求报销列表
+                            this.getBaoxiaoList()
+                            this.hideLoading()
+                        }
+                    },
+                    fail: res => {
+                        this.hideLoading()
+                        console.log(res, 'failed')
+                        dd.navigateTo({
+                           url: '../error/index'
+                        })
+                    },
+                    // complete: res => {
+                    //     this.hideLoading()
+                    //     console.log(res, 'completed')
+                    // }
+                })
+            }
+        })
+    },
+    onReady() {
+    },
+    getJiekuanList() {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,',
@@ -73,7 +118,9 @@ Page({
                 })
                 this.hideLoading()
             }
-        }),
+        })
+    },
+    getBaoxiaoList() {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
@@ -87,8 +134,6 @@ Page({
             }
         })
     },
-    onReady() {
-    },
     onShow() {
         // 页面显示
         var animation = dd.createAnimation({
@@ -99,12 +144,6 @@ Page({
         this.setData({
             animationInfo: animation.export()
         })
-        // setTimeout(function() {
-        //   animation.translate(35).step();
-        //   this.setData({
-        //     animationInfo:animation.export(),
-        //   });
-        // }.bind(this), 1500);
     },
     onShowAddJiekuan(e) {
         dd.navigateTo({

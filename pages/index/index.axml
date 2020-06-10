@@ -19,15 +19,15 @@
   <view class="baoxiao-container">
     <view class="baoxiao-content">
       <view class="title">我的报销单</view>
-      <view class="completed-bill" data-type="baoxiaoCompleted" onTap="seeAll">查看已完成单据</view>
+      <view class="completed-bill" data-type="baoxiaoCompleted" onTap="seeAll" data-type="baoxiaoCompleted">查看已完成单据</view>
       <view class="main">
-        <view class="status error">待提交</view>
+        <view class="status error">{{statusObj[baoxiaoList[0].status]}}</view>
         <view class="content">
-          <text class="left">测试</text>
-          <text class="right">￥100.00</text>
+          <text class="left">{{applicantType[baoxiaoList[0].applicantType]}} {{baoxiaoList[0].applicantName}}</text>
+          <text class="right">￥{{baoxiaoList[0].unpaidAmount}}</text>
         </view>
         <view class="bill-number">
-          <text class="bill-number-span">单据编号</text>J2000000000003
+          <text class="bill-number-span">单据编号</text>{{baoxiaoList[0].billCode}}
         </view>
         <view class="see-all" onTap="seeAll" data-type="baoxiao">查看全部</view>
       </view>
