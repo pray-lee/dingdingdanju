@@ -75,9 +75,11 @@ Page({
         }
     },
     addLoading() {
-        dd.showLoading({
-            content: '加载中...'
-        })
+        if(app.globalData.loadingCount < 1) {
+            dd.showLoading({
+                content: '加载中...'
+            })
+        }
         app.globalData.loadingCount ++
     },
     hideLoading() {
@@ -827,7 +829,9 @@ Page({
             dataType: 'json',
             success: res => {
                 console.log(res.data.obj)
-                this.setRenderData(res.data.obj)
+                if(res.data.obj) {
+                    this.setRenderData(res.data.obj)
+                }
                 this.hideLoading()
             }
        })
@@ -835,19 +839,23 @@ Page({
     // 回显数据设置
     setRenderData(data) {
         // billDetailList
-        var billDetailListObj = data.billDetailList.map(item => {
-            return {
-                borrowAmount: item.borrowAmount,
-                remark: item.remark
-            }
-        })
+        if(data.billDetailList.length) {
+            var billDetailListObj = data.billDetailList.map(item => {
+                return {
+                    borrowAmount: item.borrowAmount,
+                    remark: item.remark
+                }
+            })
+        }
         // billApEntityList
-        var billApEntityListObj = data.billApEntityList.map(item => {
-            return {
-                auxptyId: item.auxptyId,
-                auxptyDetailId: item.auxptyDetailId
-            }
-        })
+        if(data.billApEntityList.length) {
+            var billApEntityListObj = data.billApEntityList.map(item => {
+                return {
+                    auxptyId: item.auxptyId,
+                    auxptyDetailId: item.auxptyDetailId
+                }
+            })
+        }
         // 请求
         this.getAccountbookList(data)
         // 设置数据

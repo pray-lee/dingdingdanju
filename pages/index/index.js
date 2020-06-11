@@ -51,9 +51,11 @@ Page({
         })
     },
     addLoading() {
-        dd.showLoading({
-            content: '加载中...'
-        })
+        if(app.globalData.loadingCount < 1) {
+            dd.showLoading({
+                content: '加载中...'
+            })
+        }
         app.globalData.loadingCount ++
     },
     hideLoading(){
@@ -63,7 +65,6 @@ Page({
         }
     },
     onLoad(query) {
-        // 登录
         this.addLoading()
         dd.getAuthCode({
             success: (res) => {
@@ -93,7 +94,7 @@ Page({
                         this.hideLoading()
                         console.log(res, 'failed')
                         dd.navigateTo({
-                           url: '../error/index'
+                            url: '../error/index'
                         })
                     },
                     // complete: res => {
