@@ -14,6 +14,5 @@ App({
     // "url": "https://www.caika.net/Test/",
     // "url": "http://39.96.59.19:8081/Test/"
     "url": "http://192.168.1.93:8080/jeecg/",
-    loadingCount: 0
   }
 });

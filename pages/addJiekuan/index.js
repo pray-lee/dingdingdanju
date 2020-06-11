@@ -107,6 +107,7 @@ Page({
             },
             fail: res => {
                 console.log(res, 'fail')
+                this.hideLoading()
             }
         })
     },
@@ -193,22 +194,6 @@ Page({
     },
     onClick() {
         console.log('onClick')
-    },
-    onSubmitFocus() {
-        dd.datePicker({
-            format: 'yyyy-MM-dd',
-            currentDate: '2012-12-12',
-            success: (res) => {
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        submitDate: res.date
-                    }
-                })
-                // 解除focus不触发的解决办法。
-                this.onClick()
-            },
-        })
     },
     onAddShow() {
         var animation = dd.createAnimation({
@@ -867,7 +852,7 @@ Page({
                 billDetailListObj,
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
-                invoice: 1,
+                invoice: data.invoice,
                 auxpropertyNames: data.auxpropertyNames,
                 businessDateTime:data.businessDateTime,
                 amount: data.amount,

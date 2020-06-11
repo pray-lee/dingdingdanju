@@ -120,7 +120,7 @@
             <view class="form-row">
                 <view class="form-row-label">合同编号</view>
                 <view class="form-row-content">
-                    <input class="input" value="{{submitData.contractNumber}}" placeholder="合同编号" data-name="contractNumber"/>
+                    <input class="input" value="{{submitData.contractNumber}}" placeholder="合同编号" data-name="contractNumber" onBlur="onBlur"/>
                 </view>
             </view>
             <view class="form-line"/>
