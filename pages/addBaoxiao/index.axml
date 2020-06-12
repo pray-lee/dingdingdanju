@@ -65,12 +65,12 @@
             <view class="form-row">
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="收款账号" data-name="incomeBankAccount"/>
+                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" data-name="incomeBankAccount"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
-                <view class="form-row-label">申请报销金额</view>
+                                                                                                                        <view class="form-row-label">申请报销金额</view>
                 <view class="form-row-content">
                     <input class="input" disabled value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}" data-name="applicationAmount" placeholder="申请报销金额"/>
                 </view>

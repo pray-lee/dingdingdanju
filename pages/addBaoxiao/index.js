@@ -1,4 +1,5 @@
 import moment from "moment";
+
 var app = getApp()
 app.globalData.loadingCount = 0
 
@@ -47,7 +48,7 @@ Page({
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
             invoice: 0,
-            businessDateTime:moment().format('YYYY-MM-DD'),
+            businessDateTime: moment().format('YYYY-MM-DD'),
             applicationAmount: 0,
             totalAmount: 0,
             verificationAmount: 0,
@@ -56,11 +57,15 @@ Page({
             billCode: '',
             auxpropertyNames: ''
         },
-        baoxiaoList: []
+        baoxiaoList: [],
+        // 所有报销详情列表的辅助核算数据
+        AllbaoxiaoAuxptyList: [],
+        // 每一个报销详情列表的辅助核算index, 一个列表一个index
+        AllbaoxiaoSubjectIndexList: []
     },
     formatSubmitData(array, name) {
-        if(array.length) {
-            array.forEach((item,index) => {
+        if (array.length) {
+            array.forEach((item, index) => {
                 Object.keys(item) //borrowAmount remark
                 Object.keys(item).forEach(keys => {
                     console.log(keys)
@@ -71,21 +76,20 @@ Page({
                         }
                     })
                 })
-
             })
         }
     },
     addLoading() {
-        if(app.globalData.loadingCount < 1) {
+        if (app.globalData.loadingCount < 1) {
             dd.showLoading({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount ++
+        app.globalData.loadingCount++
     },
     hideLoading() {
         app.globalData.loadingCount--
-        if(app.globalData.loadingCount === 0) {
+        if (app.globalData.loadingCount === 0) {
             dd.hideLoading()
         }
     },
@@ -324,19 +328,19 @@ Page({
         // })
     },
     onLoad(query) {
-       this.setData({
-           submitData: {
-               ...this.data.submitData,
-               userName: app.globalData.realName
-           }
-       })
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                userName: app.globalData.realName
+            }
+        })
         var type = query.type
         var id = query.id
         // 获取账簿列表
-        if(type === 'add'){
+        if (type === 'add') {
             this.getAccountbookList()
         }
-        if(type === 'edit') {
+        if (type === 'edit') {
             //渲染
             this.getEditData(id)
         }
@@ -353,9 +357,9 @@ Page({
                 var accountbookIndex = 0
                 var accountbookId = !!data ? data.accountbookId : res.data[0].id
                 // edit的时候设置值
-                if(accountbookId) {
+                if (accountbookId) {
                     res.data.forEach((item, index) => {
-                        if(item.id === accountbookId) {
+                        if (item.id === accountbookId) {
                             accountbookIndex = index
                         }
                     })
@@ -397,9 +401,9 @@ Page({
                 // edit 的时候设置departmentIndex
                 var departmentIndex = 0
                 var submitterDepartmentId = !!departmentId ? departmentId : arr[0].id
-                if(submitterDepartmentId) {
-                    arr.forEach((item,index) => {
-                        if(item.id === submitterDepartmentId) {
+                if (submitterDepartmentId) {
+                    arr.forEach((item, index) => {
+                        if (item.id === submitterDepartmentId) {
                             departmentIndex = index
                         }
                     })
@@ -434,9 +438,9 @@ Page({
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
                 var applicantId = !!applicant ? applicant : arr[0].id
-                if(applicantId) {
-                    arr.forEach((item,index) => {
-                        if(item.id === applicantId) {
+                if (applicantId) {
+                    arr.forEach((item, index) => {
+                        if (item.id === applicantId) {
                             borrowIndex = index
                         }
                     })
@@ -465,20 +469,20 @@ Page({
             success: res => {
                 console.log(res, 'incomeBankList')
                 var arr = res.data.obj
-                if(arr.length) {
+                if (arr.length) {
 
                 }
                 // edit的时候，设置incomeBankIndex
                 var incomeBankIndex = 0
                 var bankName = ''
-                if(arr.length) {
+                if (arr.length) {
                     bankName = !!incomeBankName ? incomeBankName : arr[0].bankName
-                }else {
+                } else {
                     bankName = !!incomeBankName ? incomeBankName : ''
                 }
-                if(bankName) {
+                if (bankName) {
                     arr.forEach((item, index) => {
-                        if(item.bankName === bankName) {
+                        if (item.bankName === bankName) {
                             incomeBankIndex = index
                         }
                     })
@@ -536,8 +540,10 @@ Page({
             applicationAmount: '',
             invoiceType: '0',
             taxRate: '',
+            remark: ''
         }
         var baoxiaoList = this.data.baoxiaoList.concat(obj)
+        // 提交的数据
         this.setData({
             baoxiaoList
         })
@@ -577,7 +583,7 @@ Page({
             dataType: 'json',
             success: res => {
                 console.log(res.data.obj)
-                if(res.data.obj) {
+                if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                 }
                 this.hideLoading()
@@ -587,7 +593,7 @@ Page({
     // 回显数据设置
     setRenderData(data) {
         // billDetailList
-        if(data.billDetailList.length) {
+        if (data.billDetailList.length) {
             var billDetailListObj = data.billDetailList.map(item => {
                 return {
                     borrowAmount: item.borrowAmount,
@@ -596,7 +602,7 @@ Page({
             })
         }
         // billApEntityList
-        if(data.billApEntityList.length) {
+        if (data.billApEntityList.length) {
             var billApEntityListObj = data.billApEntityList.map(item => {
                 return {
                     auxptyId: item.auxptyId,
@@ -616,7 +622,7 @@ Page({
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
                 invoice: data.invoice,
-                businessDateTime:data.businessDateTime,
+                businessDateTime: data.businessDateTime,
                 applicationAmount: data.applicationAmount,
                 verificationAmount: data.verificationAmount,
                 totalAmount: data.totalAmount,
@@ -685,51 +691,31 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, '借款类型')
+                console.log(res, '费用类型')
                 var arr = []
-                if (res.data.length) {
-                    res.data.forEach(item => {
-                        if (!item.childrenCount) {
-                            arr.push({
-                                id: item.id,
-                                name: item.text
-                            })
-                        }
-                    })
-                    // edit的时候，设置subjectIndex
-                    var subjectIndex = 0
-                    var subjectId = subject ? subject : arr[0].id
-                    if(subjectId) {
-                        arr.forEach((item, index) => {
-                            if(item.id === subjectId) {
-                                subjectIndex = index
-                            }
+                res.data.forEach(item => {
+                    if (!item.childrenCount) {
+                        arr.push({
+                            id: item.id,
+                            name: item.text
                         })
                     }
-                    this.setData({
-                        subjectList: arr,
-                        subjectIndex: subjectIndex,
-                        submitData: {
-                            ...this.data.submitData,
-                            subjectId
-                        }
-                    })
-                    this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
-                }else{
-                    this.setData({
-                        subjectList: [],
-                        subjectIndex: 0,
-                        submitData: {
-                            ...this.data.submitData,
-                            subjectId: ''
-                        }
-                    })
-                }
+                })
+                var subjectId = subject ? subject : arr[0].id
+                this.setData({
+                    subjectList: arr,
+                    subjectIndex: 0,
+                    submitData: {
+                        ...this.data.submitData,
+                        subjectId
+                    }
+                })
+                this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
                 this.hideLoading()
             }
         })
     },
-    // 获取科目对应的辅助核算
+    // 获取科目对应的辅助核算 (每一个都是单独调用)
     getSubjectAuxptyList(subjectId, accountbookId, flag, billApEntityListObj) {
         this.addLoading()
         dd.httpRequest({
@@ -752,7 +738,7 @@ Page({
                             ...this.data.submitData,
                         }
                     })
-                    if(!billApEntityListObj) {
+                    if (!billApEntityListObj) {
                         this.setData({
                             submitData: {
                                 ...this.data.submitData,
@@ -767,7 +753,7 @@ Page({
                     if (flag) {
                         this.onHesuanShow()
                     }
-                }else{
+                } else {
                     this.setData({
                         subjectAuxptyList: []
                     })
@@ -786,17 +772,17 @@ Page({
             success: res => {
                 // 处理index
                 var auxptyIndex = 0
-                if(!!billApEntityListObj) {
-                    billApEntityListObj.forEach((item, index) => {
-                        if(item.auxptyId == auxptyid) {
-                            res.data.rows.forEach((row, rowIndex) => {
-                                if(row.id == item.auxptyDetailId) {
-                                    auxptyIndex = rowIndex
-                                }
-                            })
-                        }
-                    })
-                }
+                // if (!!billApEntityListObj) {
+                //     billApEntityListObj.forEach((item, index) => {
+                //         if (item.auxptyId == auxptyid) {
+                //             res.data.rows.forEach((row, rowIndex) => {
+                //                 if (row.id == item.auxptyDetailId) {
+                //                     auxptyIndex = rowIndex
+                //                 }
+                //             })
+                //         }
+                //     })
+                // }
                 var obj = {
                     [auxptyid]: {
                         data: res.data.rows,
@@ -807,6 +793,7 @@ Page({
                     }
                 }
                 var newObj = Object.assign({}, this.data.allAuxptyList, obj)
+                console.log(newObj, 'allAuxptyList......................')
                 this.setData({
                     allAuxptyList: newObj
                 })
