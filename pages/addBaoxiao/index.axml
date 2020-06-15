@@ -179,20 +179,20 @@
                 <view class="form-row">
                     <view class="form-row-label">预算类型</view>
                     <view class="form-row-content">
-<!--                        <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.trueSubjectIndex}}"-->
-<!--                                range="{{item.trueSubjectList}}"-->
-<!--                                range-key="name" data-name="subjectId" data-index="{{index}}"-->
-<!--                                data-list="{{item.trueSubjectList}}">-->
-<!--                            <view class="row-extra">{{item.trueSubjectList[item.trueSubjectIndex].name}}</view>-->
-<!--                        </picker>-->
+                       <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.trueSubjectIndex}}"
+                               range="{{item.trueSubjectList}}"
+                               range-key="name" data-name="trueSubjectId" data-index="{{index}}"
+                               data-list="{{item.trueSubjectList}}">
+                           <view class="row-extra">{{item.trueSubjectList[item.trueSubjectIndex].name}}</view>
+                       </picker>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">预算维度</view>
-<!--                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"-->
-<!--                           disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}"-->
-<!--                           placeholder="预算维度" data-name="auxpropertyNames" data-index="{{index}}"/>-->
+                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"
+                           disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{item.trueAuxpropertyNames}}"
+                           placeholder="预算维度" data-name="trueAuxpropertyNames" data-index="{{index}}"/>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
@@ -312,8 +312,8 @@
         </form>
     </view>
     <!--核算维度弹框-->
-    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}">
-        <form onSubmit="onHesuanSubmit">
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:if="{{hesuanType === 'hesuan'}}">
+        <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList.length}}">
             <scroll-view class="jiekuandan" scroll-y style="height: 240px">
                 <view class="import-baoxiao-item" a:for="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList}}">
                     <view class="form-row">
@@ -327,6 +327,31 @@
                                     data-id="{{item.auxptyId}}">
                                 <view class="row-extra ellipsis">
                                     {{baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId]["data"][baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].index][baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].name]}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </scroll-view>
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:else>
+        <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoList[trueHesuanShowIndex].trueSubjectAuxptyList.length}}">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+                <view class="import-baoxiao-item" a:for="{{baoxiaoList[trueHesuanShowIndex].trueSubjectAuxptyList}}">
+                    <view class="form-row">
+                        <view class="form-row-label">{{item.auxptyName}}</view>
+                        <view class="form-row-content">
+                            <picker onChange="specialBindObjPickerChange"
+                                    value="{{baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId].index}}"
+                                    range="{{baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId].name}}"
+                                    data-list="{{baoxiaoList[trueHesuanShowIndex].trueAllAUxptyList[item.auxptyId]}}"
+                                    data-id="{{item.auxptyId}}">
+                                <view class="row-extra ellipsis">
+                                    {{baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId]["data"][baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId].index][baoxiaoList[trueHesuanShowIndex].trueAllAuxptyList[item.auxptyId].name]}}
                                 </view>
                             </picker>
                         </view>

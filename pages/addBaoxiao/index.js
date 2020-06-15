@@ -43,6 +43,7 @@ Page({
             subjectAuxptyList: []
         },
         hesuanShowIndex: 0,
+        trueHesuanShowIndex: 0,
         submitData: {
             billApEntityListObj: [],
             billDetailListObj: [],
@@ -125,16 +126,29 @@ Page({
     },
     // 报销列表的onTap
     bindBaoxiaoObjPickerChange(e) {
+        var name = e.currentTarget.dataset.name
         var index = e.currentTarget.dataset.index
         var value = e.detail.value
         var baoxiaoItem = this.data.baoxiaoList[index]
-        baoxiaoItem.subjectIndex = value
-        this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
-        this.setData({
-            baoxiaoList: [...this.data.baoxiaoList],
-            hesuanShowIndex: index
-        })
-        this.getSubjectAuxptyList(baoxiaoItem.subjectList[value].id, this.data.submitData.accountbookId, true)
+        if(name === 'subjectId') {
+            baoxiaoItem.subjectIndex = value
+            this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
+            this.setData({
+                baoxiaoList: [...this.data.baoxiaoList],
+                hesuanShowIndex: index
+            })
+            this.getSubjectAuxptyList('hesuan', baoxiaoItem.subjectList[value].id, this.data.submitData.accountbookId, true)
+
+        }else{
+            // yusuan预算
+            baoxiaoItem.trueSubjectIndex = value
+            this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
+            this.setData({
+                baoxiaoList: [...this.data.baoxiaoList],
+                trueHesuanShowIndex: index
+            })
+            this.getSubjectAuxptyList('yusuan', baoxiaoItem.trueSubjectList[value].id, this.data.submitData.accountbookId, true)
+        }
     },
     bindObjPickerChange(e) {
         var name = e.currentTarget.dataset.name
@@ -171,26 +185,26 @@ Page({
     specialBindObjPickerChange(e) {
         var auxptyId = e.currentTarget.dataset.id
         var tempData = clone(this.data.baoxiaoList)
-        console.log(tempData, 'tempdaata...........')
-        tempData[this.data.hesuanShowIndex].allAuxptyList = {
-            ...tempData[this.data.hesuanShowIndex].allAuxptyList,
-            [auxptyId]: {
-                ...tempData[this.data.hesuanShowIndex].allAuxptyList[auxptyId],
-                index: e.detail.value
+        if(this.data.hesuanType === 'hesuan') {
+            tempData[this.data.hesuanShowIndex].allAuxptyList = {
+                ...tempData[this.data.hesuanShowIndex].allAuxptyList,
+                [auxptyId]: {
+                    ...tempData[this.data.hesuanShowIndex].allAuxptyList[auxptyId],
+                    index: e.detail.value
+                }
+            }
+        }else{
+            tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = {
+                ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList,
+                [auxptyId]: {
+                    ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList[auxptyId],
+                    index: e.detail.value
+                }
             }
         }
         this.setData({
             baoxiaoList: tempData
         })
-        // this.setData({
-        //     allAuxptyList: {
-        //         ...this.data.allAuxptyList,
-        //         [auxptyId]: {
-        //             ...this.data.allAuxptyList[auxptyId],
-        //             index: e.detail.value
-        //         }
-        //     },
-        // })
     },
     onBlur(e) {
         console.log(e, 'blur')
@@ -233,8 +247,7 @@ Page({
         })
         // 弹框数据清空
     },
-    onHesuanShow() {
-        console.log(this.data.baoxiaoList, 'onHesuanShow')
+    onHesuanShow(type) {
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'
@@ -243,7 +256,8 @@ Page({
         animation.translateY(0).step()
         this.setData({
             hesuanAnimationInfo: animation.export(),
-            hesuanMaskHidden: false
+            hesuanMaskHidden: false,
+            hesuanType: type
         })
         // 弹框数据清空
     },
@@ -326,7 +340,6 @@ Page({
     deleteBaoxiaoDetail(e) {
         var idx = e.currentTarget.dataset.index
         var baoxiaoList = this.data.baoxiaoList.filter((item, index) => {
-            console.log(idx, index)
             return idx !== index
         })
         this.setData({
@@ -581,33 +594,52 @@ Page({
             invoiceType: '0',
             taxRate: '',
             remark: '',
-            allAuxptyList: newSubjectObj.allAuxptyList,
-            subjectList: newSubjectObj.subjectList,
+            allAuxptyList: clone(newSubjectObj).allAuxptyList,
+            trueAllAuxptyList: clone(newSubjectObj).allAuxptyList,
+            subjectList: clone(newSubjectObj).subjectList,
+            trueSubjectList: clone(newSubjectObj).subjectList,
             // 科目index
-            subjectIndex: newSubjectObj.subjectIndex,
-            subjectAuxptyList: newSubjectObj.subjectAuxptyList
+            subjectIndex: clone(newSubjectObj).subjectIndex,
+            trueSubjectIndex: clone(newSubjectObj).subjectIndex,
+            trueSubjectAuxptyList: clone(newSubjectObj).subjectAuxptyList,
+            subjectAuxptyList: clone(newSubjectObj).subjectAuxptyList
         }
         this.setData({
             baoxiaoList: this.data.baoxiaoList.concat(obj),
         })
     },
     checkFocus(e) {
-        console.log(e)
-        console.log(this.data.baoxiaoList, 'baoxiaoList-checkFocus')
-        this.setData({
-            hesuanShowIndex: e.currentTarget.dataset.index
-        })
-        this.onHesuanShow(e.currentTarget.dataset.index)
+        var name = e.currentTarget.dataset.name
+        if(name === 'auxpropertyNames') {
+            this.setData({
+                hesuanShowIndex: e.currentTarget.dataset.index
+            })
+        }else{
+            this.setData({
+                trueHesuanShowIndex: e.currentTarget.dataset.index
+            })
+        }
+        var type = name === 'auxpropertyNames' ? 'hesuan' : 'yusuan'
+        this.onHesuanShow(type)
     },
     onHesuanSubmit(e) {
         // 辅助核算字符串拼接
-        var auxptyNameStr = ''
         var tempData = this.data.baoxiaoList
-        var tempAllAuxptyList = tempData[this.data.hesuanShowIndex].allAuxptyList
-        for (var i in tempAllAuxptyList) {
-            auxptyNameStr += `${tempAllAuxptyList[i].auxptyName}_${tempAllAuxptyList[i].data[tempAllAuxptyList[i].index][this.getAuxptyNameMap(tempAllAuxptyList[i].auxptyId)]},`
+        if(this.data.hesuanType === 'hesuan') {
+            var auxptyNameStr = ''
+            var tempAllAuxptyList = tempData[this.data.hesuanShowIndex].allAuxptyList
+            for (var i in tempAllAuxptyList) {
+                auxptyNameStr += `${tempAllAuxptyList[i].auxptyName}_${tempAllAuxptyList[i].data[tempAllAuxptyList[i].index][this.getAuxptyNameMap(tempAllAuxptyList[i].auxptyId)]},`
+            }
+            tempData[this.data.hesuanShowIndex].auxpropertyNames = auxptyNameStr.slice(0, -1)
+        }else{
+            var trueAuxptyNameStr = ''
+            var trueTempAllAuxptyList = tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList
+            for (var i in trueTempAllAuxptyList) {
+                trueAuxptyNameStr += `${trueTempAllAuxptyList[i].auxptyName}_${trueTempAllAuxptyList[i].data[trueTempAllAuxptyList[i].index][this.getAuxptyNameMap(trueTempAllAuxptyList[i].auxptyId)]},`
+            }
+            tempData[this.data.trueHesuanShowIndex].trueAuxpropertyNames = trueAuxptyNameStr.slice(0, -1)
         }
-        tempData[this.data.hesuanShowIndex].auxpropertyNames = auxptyNameStr.slice(0, -1)
         this.setData({
             baoxiaoList: tempData
         })
@@ -730,11 +762,10 @@ Page({
         })
         this.addLoading()
         dd.httpRequest({
-            url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=4&findAll=false',
+            url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=9&findAll=false',
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, '费用类型')
                 var arr = []
                 res.data.forEach(item => {
                     if (!item.childrenCount) {
@@ -747,17 +778,19 @@ Page({
                 var subjectId = subject ? subject : arr[0].id
                 this.setData({
                     subjectObject: {
-                        ...this.data.subjectObject,
                         subjectList: arr,
+                        subjectIndex: 0,
+                        allAuxptyList: {},
+                        subjectAuxptyList: []
                     }
                 })
-                this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
+                this.getSubjectAuxptyList('hesuan', subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
                 this.hideLoading()
             }
         })
     },
     // 获取科目对应的辅助核算 (每一个都是单独调用)
-    getSubjectAuxptyList(subjectId, accountbookId, flag, billApEntityListObj) {
+    getSubjectAuxptyList(type, subjectId, accountbookId, flag, billApEntityListObj) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
@@ -773,8 +806,15 @@ Page({
                     })
                     if(this.data.baoxiaoList.length) {
                         var tempData = clone(this.data.baoxiaoList)
-                        tempData[this.data.hesuanShowIndex].subjectAuxptyList = arr
-                        tempData[this.data.hesuanShowIndex].allAuxptyList = []
+                        if(type === 'hesuan') {
+                            tempData[this.data.hesuanShowIndex].subjectAuxptyList = arr
+                            tempData[this.data.hesuanShowIndex].allAuxptyList = []
+                            tempData[this.data.hesuanShowIndex].auxpropertyNames = ''
+                        }else{
+                            tempData[this.data.trueHesuanShowIndex].trueSubjectAuxptyList = arr
+                            tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = []
+                            tempData[this.data.trueHesuanShowIndex].trueAuxpropertyNames = ''
+                        }
                         this.setData({
                             baoxiaoList: tempData,
                         })
@@ -788,21 +828,34 @@ Page({
                     }
                     // 请求辅助核算列表
                     arr.forEach(item => {
-                        this.getAuxptyList(this.data.submitData.accountbookId, item.auxptyId)
+                        this.getAuxptyList(type, this.data.submitData.accountbookId, item.auxptyId)
                     })
                     if (flag) {
-                        this.onHesuanShow()
+                        this.onHesuanShow(type)
                     }
                 } else {
-
+                    if(this.data.baoxiaoList.length) {
+                        var tempData = clone(this.data.baoxiaoList)
+                        if(type === 'hesuan'){
+                            tempData[this.data.hesuanShowIndex].subjectAuxptyList = []
+                            tempData[this.data.hesuanShowIndex].allAuxptyList = {}
+                            tempData[this.data.hesuanShowIndex].auxpropertyNames = ''
+                        }else{
+                            tempData[this.data.trueHesuanShowIndex].trueSubjectAuxptyList = []
+                            tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = {}
+                            tempData[this.data.trueHesuanShowIndex].trueAuxpropertyNames = ''
+                        }
+                        this.setData({
+                            baoxiaoList: tempData
+                        })
+                    }
                 }
                 this.hideLoading()
             }
         })
     },
     // 请求辅助核算列表
-    getAuxptyList(accountbookId, auxptyid) {
-        console.log(this.data.hesuanShowIndex, 'hesuanShowIndex')
+    getAuxptyList(type, accountbookId, auxptyid) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
@@ -812,20 +865,33 @@ Page({
                 // 处理index
                 var auxptyIndex = 0
                 if(this.data.baoxiaoList.length > 0) {
-                    var obj = {
-                        [auxptyid]: {
-                            data: res.data.rows,
-                            index: auxptyIndex,
-                            name: this.getAuxptyNameMap(auxptyid),
-                            auxptyName: this.data.baoxiaoList[this.data.hesuanShowIndex].subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
-                            auxptyId: auxptyid
+                    if(type === 'hesuan') {
+                        var obj = {
+                            [auxptyid]: {
+                                data: res.data.rows,
+                                index: auxptyIndex,
+                                name: this.getAuxptyNameMap(auxptyid),
+                                auxptyName: this.data.baoxiaoList[this.data.hesuanShowIndex].subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
+                                auxptyId: auxptyid
+                            }
                         }
+                        var tempData = clone(this.data.baoxiaoList)
+                        var newObj = Object.assign({}, this.data.baoxiaoList[this.data.hesuanShowIndex].allAuxptyList, obj)
+                        tempData[this.data.hesuanShowIndex].allAuxptyList = newObj
+                    }else{
+                        var trueObj = {
+                            [auxptyid]: {
+                                data: res.data.rows,
+                                index: auxptyIndex,
+                                name: this.getAuxptyNameMap(auxptyid),
+                                auxptyName: this.data.baoxiaoList[this.data.trueHesuanShowIndex].trueSubjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
+                                auxptyId: auxptyid
+                            }
+                        }
+                        var trueNewObj = Object.assign({}, this.data.baoxiaoList[this.data.trueHesuanShowIndex].trueAllAuxptyList, trueObj)
+                        var tempData = clone(this.data.baoxiaoList)
+                        tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = trueNewObj
                     }
-                    console.log(obj, 'getAuxtyList-allauxptyList')
-                    var newObj = Object.assign({}, this.data.baoxiaoList[this.data.hesuanShowIndex].allAuxptyList, obj)
-
-                    var tempData = clone(this.data.baoxiaoList)
-                    tempData[this.data.hesuanShowIndex].allAuxptyList = newObj
                     this.setData({
                         baoxiaoList: tempData
                     })
