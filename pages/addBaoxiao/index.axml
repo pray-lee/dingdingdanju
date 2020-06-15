@@ -4,7 +4,8 @@
             <view class="form-row">
                 <view class="form-row-label">单据编号</view>
                 <view class="form-row-content">
-                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivableBillCode" value="{{submitData.billCode}}"/>
+                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivableBillCode"
+                           value="{{submitData.billCode}}"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -20,7 +21,8 @@
                 <view class="form-row-label">申请组织</view>
                 <view class="form-row-content">
                     <picker onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}"
-                            range-key="accountbookName" data-name="accountbookId" data-index="accountbookIndex" data-list="accountbookList">
+                            range-key="accountbookName" data-name="accountbookId" data-index="accountbookIndex"
+                            data-list="accountbookList">
                         <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
                     </picker>
                 </view>
@@ -29,7 +31,9 @@
             <view class="form-row">
                 <view class="form-row-label">申请部门</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}" range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId" data-list="departmentList" data-index="departmentIndex">
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}"
+                            range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId"
+                            data-list="departmentList" data-index="departmentIndex">
                         <view class="row-extra">{{departmentList[departmentIndex].name}}</view>
                     </picker>
                 </view>
@@ -38,16 +42,20 @@
             <view class="form-row">
                 <view class="form-row-label">往来单位类型</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}" range="{{applicantTypeList}}" range-key="name" data-name="applicantType" data-list="applicantTypeList" data-index="applicantIndex">
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}"
+                            range="{{applicantTypeList}}" range-key="name" data-name="applicantType"
+                            data-list="applicantTypeList" data-index="applicantIndex">
                         <view class="row-extra">{{applicantTypeList[applicantIndex].name}}</view>
                     </picker>
                 </view>
             </view>
             <view class="form-line"/>
-                        <view class="form-row">
+            <view class="form-row">
                 <view class="form-row-label">往来单位</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}" range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex" data-list="borrowList">
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}"
+                            range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex"
+                            data-list="borrowList">
                         <view class="row-extra">{{borrowList[borrowIndex].name}}</view>
                     </picker>
                 </view>
@@ -56,7 +64,9 @@
             <view class="form-row">
                 <view class="form-row-label">收款银行</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}" range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName" data-list="incomeBankList" data-index="incomeBankIndex">
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"
+                            range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"
+                            data-list="incomeBankList" data-index="incomeBankIndex">
                         <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
                     </picker>
                 </view>
@@ -65,28 +75,34 @@
             <view class="form-row">
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" data-name="incomeBankAccount"/>
+                    <input class="input" disabled value="{{submitData.incomeBankAccount}}"
+                           data-name="incomeBankAccount"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
-                                                                                                                        <view class="form-row-label">申请报销金额</view>
+                <view class="form-row-label">申请报销金额</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}" data-name="applicationAmount" placeholder="申请报销金额"/>
+                    <input class="input" disabled
+                           value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}"
+                           data-name="applicationAmount" placeholder="申请报销金额"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">核销借款金额</view>
                 <view class="form-row-content">
-                    <input class="input" data-name="applicationAmount" disabled value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}" placeholder="核销借款金额"/>
+                    <input class="input" data-name="applicationAmount" disabled
+                           value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}"
+                           placeholder="核销借款金额"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">应付款金额</view>
                 <view class="form-row-content">
-                    <input class="input" data-name="totalAmount" disabled value="{{submitData.totalAmount == 0 ? '' : submitData.totalAmount}}" placeholder="应付款金额"/>
+                    <input class="input" data-name="totalAmount" disabled
+                           value="{{submitData.totalAmount == 0 ? '' : submitData.totalAmount}}" placeholder="应付款金额"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -95,10 +111,12 @@
                 <view class="form-row-content">
                     <radio-group data-name="invoice" onChange="radioChange">
                         <label class="radio">
-                            <radio value="1" checked="{{submitData.invoice == 1}}"></radio>是
+                            <radio value="1" checked="{{submitData.invoice == 1}}"></radio>
+                            是
                         </label>
                         <label class="radio">
-                            <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio>否
+                            <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio>
+                            否
                         </label>
                     </radio-group>
                 </view>
@@ -107,21 +125,24 @@
             <view class="form-row">
                 <view class="form-row-label">提交人</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人" data-name="submitterName"/>
+                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人"
+                           data-name="submitterName"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">提交日期</view>
                 <view class="form-row-content">
-                    <input class="input" disabled data-name="submitDate" value="{{submitData.submitDate}}" placeholder="提交日期"/>
+                    <input class="input" disabled data-name="submitDate" value="{{submitData.submitDate}}"
+                           placeholder="提交日期"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">备注</view>
                 <view class="form-row-content">
-                    <input class="input" value="{{submitData.remark}}" placeholder="备注" data-name="remark" onBlur="onBlur"/>
+                    <input class="input" value="{{submitData.remark}}" placeholder="备注" data-name="remark"
+                           onBlur="onBlur"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -139,31 +160,39 @@
                 <view class="form-row">
                     <view class="form-row-label">费用类型</view>
                     <view class="form-row-content">
-                        <picker onChange="bindObjPickerChange" value="{{subjectIndex}}" range="{{subjectList}}"
-                                range-key="name" data-name="subjectId" data-index="subjectIndex" data-list="subjectList">
-                            <view class="row-extra">{{subjectList[subjectIndex].name}}</view>
+                        <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.subjectIndex}}"
+                                range="{{item.subjectList}}"
+                                range-key="name" data-name="subjectId" data-index="{{index}}"
+                                data-list="{{item.subjectList}}">
+                            <view class="row-extra">{{item.subjectList[item.subjectIndex].name}}</view>
                         </picker>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">核算维度</view>
-                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus" disabled="{{!subjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames" />
+                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"
+                           disabled="{{!item.subjectAuxptyList.length}}" value="{{item.auxpropertyNames}}"
+                           placeholder="核算维度" data-name="auxpropertyNames" data-index="{{index}}"/>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">预算类型</view>
                     <view class="form-row-content">
-                        <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
-                                range-key="name">
-                            <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
-                        </picker>
+<!--                        <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.trueSubjectIndex}}"-->
+<!--                                range="{{item.trueSubjectList}}"-->
+<!--                                range-key="name" data-name="subjectId" data-index="{{index}}"-->
+<!--                                data-list="{{item.trueSubjectList}}">-->
+<!--                            <view class="row-extra">{{item.trueSubjectList[item.trueSubjectIndex].name}}</view>-->
+<!--                        </picker>-->
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">预算维度</view>
-                    <input class="input" placeholder="预算维度"/>
+<!--                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"-->
+<!--                           disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}"-->
+<!--                           placeholder="预算维度" data-name="auxpropertyNames" data-index="{{index}}"/>-->
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
@@ -197,7 +226,7 @@
                     <view class="form-row-content">
                         <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
                                 range-key="name">
-                            <view class="row-extra">当前选择：{{objectArray[arrIndex].name}}</view>
+                            <view class="row-extra">{{objectArray[arrIndex].name}}</view>
                         </picker>
                     </view>
                 </view>
@@ -212,16 +241,16 @@
             <!--核销借款-->
             <view class="add-borrow" onTap="onAddShow">
                 <view class="borrow-title">核销借款</view>
-                <view class="add-borrow-btn">导入借款</view>
+                <view class="add-borrow-btn" onTap="getImportBorrowList">导入借款</view>
             </view>
             <view class="borrow-list">
                 <view class="borrow-item" a:for="{{importList}}">
                     <view class="form-row">
                         <view class="delete-borrow" onTap="deleteBorrowDetail"
-                              data-detail="{{item}}"></view>
+                              data-id="{{item.id}}"></view>
                         <view class="form-row-label">核销金额</view>
                         <view class="form-row-content">
-                            <input value="{{item}}" class="input"/>
+                            <input value="{{item.unverifyAmount}}" class="input"/>
                         </view>
                     </view>
                     <view class="form-line"/>
@@ -253,42 +282,52 @@
     <view class="add-borrow-page" animation="{{animationInfo}}">
         <form onSubmit="onCheckboxSubmit">
             <scroll-view class="jiekuandan" scroll-y style="height: 240px">
-            <checkbox-group onChange="onCheckboxChange" name="import-borrow-list">
-                <label class="checkbox-label">
-                    <checkbox value="333" class="checkbox"></checkbox>
-                    <view class="import-borrow-item">
-                        <view class="form-row">
-                            <view class="import-borrow-item-left">
-                                <view class="import-borrow-remark">没钱花，借点钱</view>
-                                <view class="import-borrow-info">
-                                    <view class="import-borrow-time">2020.01.01</view>
-                                    <view class="import-borrow-money">￥<text>100000</text></view>
+                <block a:if="{{importBorrowList.length}}">
+                    <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{importBorrowList}}">
+                        <label class="checkbox-label">
+                            <checkbox value="{{item.unverifyAmount}}" class="checkbox"></checkbox>
+                            <view class="import-borrow-item">
+                                <view class="form-row">
+                                    <view class="import-borrow-item-left">
+                                        <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
+                                        <view class="import-borrow-info">
+                                            <view class="import-borrow-time">{{item.businessDateTime}}</view>
+                                            <view class="import-borrow-money">￥
+                                                <text>{{item.amount}}</text>
+                                            </view>
+                                        </view>
+                                    </view>
+                                    <view class="import-borrow-item-right">
+                                        ￥
+                                        <text>{{item.unverifyAmount}}</text>
+                                    </view>
                                 </view>
+                                <view class="form-line"/>
                             </view>
-                            <view class="import-borrow-item-right">
-                                ￥
-                                <text>20000</text>
-                            </view>
-                        </view>
-                        <view class="form-line"/>
-                    </view>
-                </label>
-            </checkbox-group>
-        </scroll-view>
+                        </label>
+                    </checkbox-group>
+                </block>
+            </scroll-view>
             <button formType="submit" class="import-borrow-list-btn">导入</button>
         </form>
     </view>
-<!--    核算维度弹框-->
+    <!--核算维度弹框-->
     <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}">
         <form onSubmit="onHesuanSubmit">
             <scroll-view class="jiekuandan" scroll-y style="height: 240px">
-                <view class="import-baoxiao-item" a:for="{{subjectAuxptyList}}">
+                <view class="import-baoxiao-item" a:for="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList}}">
                     <view class="form-row">
                         <view class="form-row-label">{{item.auxptyName}}</view>
                         <view class="form-row-content">
-                            <picker onChange="specialBindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
-                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-list="{{allAUxptyList[item.auxptyId]}}" data-id="{{item.auxptyId}}">
-                                <view class="row-extra ellipsis">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
+                            <picker onChange="specialBindObjPickerChange"
+                                    value="{{baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].index}}"
+                                    range="{{baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].name}}"
+                                    data-list="{{baoxiaoList[hesuanShowIndex].allAUxptyList[item.auxptyId]}}"
+                                    data-id="{{item.auxptyId}}">
+                                <view class="row-extra ellipsis">
+                                    {{baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId]["data"][baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].index][baoxiaoList[hesuanShowIndex].allAuxptyList[item.auxptyId].name]}}
+                                </view>
                             </picker>
                         </view>
                     </view>

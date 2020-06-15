@@ -68,6 +68,7 @@ Page({
         this.addLoading()
         dd.getAuthCode({
             success: (res) => {
+                console.log(res)
                 dd.httpRequest({
                     url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode,
                     method: "GET",
