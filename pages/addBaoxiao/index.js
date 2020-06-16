@@ -132,10 +132,12 @@ Page({
         var baoxiaoItem = this.data.baoxiaoList[index]
         if(name === 'subjectId') {
             baoxiaoItem.subjectIndex = value
+            baoxiaoItem.trueSubjectIndex = value
             this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
             this.setData({
                 baoxiaoList: [...this.data.baoxiaoList],
-                hesuanShowIndex: index
+                hesuanShowIndex: index,
+                trueHesuanShowIndex: index
             })
             this.getSubjectAuxptyList('hesuan', baoxiaoItem.subjectList[value].id, this.data.submitData.accountbookId, true)
 
@@ -190,6 +192,13 @@ Page({
                 ...tempData[this.data.hesuanShowIndex].allAuxptyList,
                 [auxptyId]: {
                     ...tempData[this.data.hesuanShowIndex].allAuxptyList[auxptyId],
+                    index: e.detail.value
+                }
+            }
+            tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = {
+                ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList,
+                [auxptyId]: {
+                    ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList[auxptyId],
                     index: e.detail.value
                 }
             }
