@@ -70,7 +70,6 @@ Page({
     },
     // 把baoxiaoList的数据，重组一下，拼在submitData里提交
     formatSubmitData(array, name) {
-        console.log(array)
         array.forEach((item, index) => {
             Object.keys(item).forEach(keys => {
                 if(item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
