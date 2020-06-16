@@ -151,7 +151,7 @@
                 <view class="borrow-title">报销详情</view>
                 <view class="add-borrow-btn">添加详情</view>
             </view>
-            <view class="baoxiao-item" a:if="{{baoxiaoList.length}}" a:for="{{baoxiaoList}}">
+            <view class="baoxiao-item" a:if="{{baoxiaoList}}" a:for="{{baoxiaoList}}">
                 <view class="baoxiao-item-title">
                     <text>报销详情</text>
                     <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
@@ -202,20 +202,16 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">申请报销金额</view>
-                    <input class="input" placeholder="申请报销金额"/>
+                    <input class="input" placeholder="申请报销金额" value="{{item.applicationAmount}}" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="applicationAmount"/>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">发票类型</view>
                     <view class="form-row-content">
-                        <radio-group onChange="radioChange" name="invoiceType">
-                            <label class="radio">
-                                <radio value="1"></radio>
-                                普票
-                            </label>
-                            <label class="radio">
-                                <radio value="0" checked="checked" class="radio-control"></radio>
-                                专票
+                        <radio-group onChange="baoxiaoRadioChange" name="invoiceType" data-index="{{index}}" data-name="invoiceType">
+                            <label class="radio" a:for="{{invoiceTypeArr}}" a:for-item="invoice">
+                                <radio value="{{invoice.id}}" checked="{{item.invoiceType == invoice.id}}"></radio>
+                                {{invoice.text}}
                             </label>
                         </radio-group>
                     </view>
@@ -224,16 +220,16 @@
                 <view class="form-row">
                     <view class="form-row-label">税率</view>
                     <view class="form-row-content">
-                        <picker onChange="bindObjPickerChange" value="{{arrIndex}}" range="{{objectArray}}"
-                                range-key="name">
-                            <view class="row-extra">{{objectArray[arrIndex].name}}</view>
+                        <picker onChange="bindTaxRagePickerChange" value="{{item.taxRageIndex}}" range="{{item.taxRageArr}}"
+                                range-key="text" data-index="{{index}}">
+                            <view class="row-extra">{{item.taxRageArr[item.taxRageIndex].text}}</view>
                         </picker>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">备注</view>
-                    <input class="input" placeholder="备注"/>
+                    <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="remark"/>
                 </view>
                 <view class="form-line"/>
             </view>

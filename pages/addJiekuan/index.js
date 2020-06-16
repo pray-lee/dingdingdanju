@@ -60,7 +60,6 @@ Page({
     formatSubmitData(array, name) {
         if(array.length) {
             array.forEach((item,index) => {
-                Object.keys(item) //borrowAmount remark
                 Object.keys(item).forEach(keys => {
                     console.log(keys)
                     this.setData({
