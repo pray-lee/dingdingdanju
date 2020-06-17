@@ -725,7 +725,7 @@ Page({
     },
     onHesuanSubmit(e) {
         // 辅助核算字符串拼接
-        var tempData = this.data.baoxiaoList
+        var tempData = clone(this.data.baoxiaoList)
         if (this.data.hesuanType === 'hesuan') {
             var billDetailApEntityListObj = []
             var auxptyNameStr = ''
@@ -1007,7 +1007,7 @@ Page({
                         this.onHesuanShow(type)
                     }
                 } else {
-                    var tempData = this.data.baoxiaoList
+                    var tempData = clone(this.data.baoxiaoList)
                     if (tempData.length) {
                         if (type === 'hesuan') {
                             tempData[idx].subjectAuxptyList = []
@@ -1092,12 +1092,17 @@ Page({
                     })
                 }
                 if (this.data.subjectObject.subjectAuxptyList.length) {
+                    var auxptyName = ''
+                    var filterArr = this.data.subjectObject.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)
+                    if(filterArr.length) {
+                        auxptyName = filterArr[0].auxptyName
+                    }
                     var obj = {
                         [auxptyid]: {
                             data: res.data.rows,
                             index: auxptyIndex,
                             name: this.getAuxptyNameMap(auxptyid),
-                            auxptyName: this.data.subjectObject.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
+                            auxptyName,
                             auxptyId: auxptyid
                         }
                     }
