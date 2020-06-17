@@ -3,6 +3,8 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        type: '',
+        billId: '',
         maskHidden: true,
         hesuanMaskHidden: true,
         animationInfo: {},
@@ -95,8 +97,14 @@ Page({
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         this.addLoading()
+        var url = ''
+        if(this.data.type === 'add') {
+            url = app.globalData.url + 'borrowBillController.do?doAdd'
+        }else{
+            url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
+        }
         dd.httpRequest({
-            url: app.globalData.url + 'borrowBillController.do?doAdd',
+            url,
             method: 'POST',
             dataType: 'json',
             data: this.data.submitData,
@@ -368,7 +376,13 @@ Page({
             }
         })
         var type = query.type
+        this.setData({
+            type
+        })
         var id = query.id
+        this.setData({
+            billId: id
+        })
         // 获取账簿列表
         if(type === 'add') {
             this.getAccountbookList()

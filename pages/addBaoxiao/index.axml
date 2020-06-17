@@ -151,7 +151,7 @@
                 <view class="borrow-title">报销详情</view>
                 <view class="add-borrow-btn">添加详情</view>
             </view>
-            <view class="baoxiao-item" a:if="{{baoxiaoList}}" a:for="{{baoxiaoList}}">
+            <view class="baoxiao-item" a:if="{{baoxiaoList.length}}" a:for="{{baoxiaoList}}">
                 <view class="baoxiao-item-title">
                     <text>报销详情</text>
                     <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
