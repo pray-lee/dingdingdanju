@@ -711,6 +711,9 @@ Page({
                 // 处理index
                 var auxptyIndex = 0
                 if(!!billApEntityListObj) {
+                    console.log(billApEntityListObj)
+                    console.log(auxptyid)
+                    console.log('=============')
                     billApEntityListObj.forEach((item, index) => {
                         if(item.auxptyId == auxptyid) {
                             res.data.rows.forEach((row, rowIndex) => {

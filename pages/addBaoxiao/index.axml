@@ -197,7 +197,7 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">附加信息</view>
-                    <input class="input" placeholder="附加信息"/>
+                    <input class="input" placeholder="附加信息" value="点击打开" onFocus="openExtraInfo"/>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
@@ -229,7 +229,7 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">备注</view>
-                    <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="remark"/>
+                    <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="remark" value="{{item.remark}}"/>
                 </view>
                 <view class="form-line"/>
             </view>
@@ -243,10 +243,10 @@
                 <view class="borrow-item" a:for="{{importList}}">
                     <view class="form-row">
                         <view class="delete-borrow" onTap="deleteBorrowDetail"
-                              data-id="{{item.id}}"></view>
+                              data-id="{{item.billDetailId}}"></view>
                         <view class="form-row-label">核销金额</view>
                         <view class="form-row-content">
-                            <input value="{{item.unverifyAmount}}" class="input"/>
+                            <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" data-index="{{index}}"/>
                         </view>
                     </view>
                     <view class="form-line"/>
@@ -278,10 +278,10 @@
     <view class="add-borrow-page" animation="{{animationInfo}}">
         <form onSubmit="onCheckboxSubmit">
             <scroll-view class="jiekuandan" scroll-y style="height: 240px">
-                <block a:if="{{importBorrowList.length}}">
-                    <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{importBorrowList}}">
+                <block a:if="{{tempImportList.length}}">
+                    <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{tempImportList}}">
                         <label class="checkbox-label">
-                            <checkbox value="{{item.unverifyAmount}}" class="checkbox"></checkbox>
+                            <checkbox value="{{item}}" class="checkbox"></checkbox>
                             <view class="import-borrow-item">
                                 <view class="form-row">
                                     <view class="import-borrow-item-left">
