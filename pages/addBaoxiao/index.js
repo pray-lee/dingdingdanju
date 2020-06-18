@@ -227,16 +227,30 @@ Page({
         if (name === 'accountbookId') {
             // 重新获取科目以后，就要置空报销列表
             this.setData({
-                baoxiaoList: []
+                baoxiaoList: [],
+                submitData: {
+                    ...this.data.submitData,
+                    applicationAmount: '',
+                    totalAmount: '',
+                    verificationAmount: ''
+                },
             })
+            this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10)
         }
         if (name === 'submitterDepartmentId') {
             // 重新获取科目以后，就要置空报销列表
             this.setData({
-                baoxiaoList: []
+                baoxiaoList: [],
+                submitData: {
+                    ...this.data.submitData,
+                    applicationAmount: '',
+                    totalAmount: '',
+                    verificationAmount: ''
+                },
             })
+            this.setTotalAmount()
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantType') {

@@ -164,14 +164,15 @@
             <view class="upload-wrapper" onTap="handleUpload">
                 <view class="borrow-title">附件列表</view>
                 <view class="add-file-btn">添加附件</view>
+                <web-view a:if="{{uploadSrc !== ''}}" id="web-view-1" src="{{uploadSrc}}" onMessage="uploadCallback"></web-view>
             </view>
             <view class="file-list">
-                <view class="file-item" a:for="{{fileList}}">
+                <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
                     <view class="form-row">
-                        <view class="delete-file" onTap="deleteFile" data-file="{{item}}"></view>
-                        <view class="form-row-label">附件名称</view>
+                        <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
+                        <view class="form-row-label" onTap="downloadFile" data-url="{{item.uri}}">{{item.name}}</view>
                         <view class="form-row-content">
-                            <image src="{{item}}" class="img" mode="aspectFill"></image>
+                            <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
                         </view>
                     </view>
                     <view class="form-line"/></view>

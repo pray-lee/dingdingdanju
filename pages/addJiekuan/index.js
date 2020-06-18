@@ -3,6 +3,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        uploadSrc: '',
         type: '',
         billId: '',
         maskHidden: true,
@@ -11,7 +12,6 @@ Page({
         hesuanAnimationInfo: {},
         borrowAmount: '',
         remark: '',
-        fileList: [],
         accountbookIndex: 0,
         accountbookList: [],
         departmentIndex: 0,
@@ -48,6 +48,7 @@ Page({
         submitData: {
             billApEntityListObj: [],
             billDetailListObj: [],
+            billFilesObj: [],
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
             invoice: 0,
@@ -93,6 +94,7 @@ Page({
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
+        this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -277,6 +279,21 @@ Page({
         })
     },
     onShow() {
+        // 从缓存里获取上传数据
+        dd.getStorage({
+            key: 'fileList',
+            success: res => {
+                console.log('获取文件成功', res)
+                if(!!res.data) {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data)
+                        }
+                    })
+                }
+            }
+        })
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -325,11 +342,14 @@ Page({
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
-        var fileList = this.data.fileList.filter(item => {
-            return item !== file
+        var fileList = this.data.submitData.billFilesObj.filter(item => {
+            return item.name !== file
         })
         this.setData({
-            fileList
+            submitData:{
+                ...this.data.submitData,
+                billFilesObj: fileList
+            }
         })
     },
     handleAddBorrow() {
@@ -355,20 +375,36 @@ Page({
         }
     },
     handleUpload() {
-        // dd.uploadAttachmentToDingTalk({
-        //     image:{multiple:true,compress:false,max:9,spaceId: "12345"},
-        //     // space:{corpId:"xxx3020",spaceId:"12345",isCopy:1 , max:9},
-        //     file:{spaceId:"12345",max:1},
-        //     types:["photo","camera","file"],//PC端支持["photo","file","space"]
-        //     success: res => {
-        //         console.log(res)
-        //     },
-        //     file: err => {
-        //         console.log(err)
-        //     }
-        // })
+        dd.navigateTo({
+            url: '/pages/uploadPage/index'
+        })
+    },
+    downloadFile(e) {
+       var url = e.currentTarget.dataset.url
+        console.log(url)
+        dd.downloadFile({
+            url,
+            success({filePath}) {
+                console.log(filePath)
+                dd.previewImage({
+                    urls: [filePath]
+                })
+            }
+        })
     },
     onLoad(query) {
+        // 清除缓存
+        dd.removeStorageSync({
+            key: 'fileList',
+            success: () => {
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billFilesObj: []
+                    }
+                })
+            }
+        })
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -857,6 +893,12 @@ Page({
                 }
             })
         }
+        // fileList
+        if(data.billFiles.length) {
+            var billFilesObj = data.billFiles.map(item => {
+                return item
+            })
+        }
         // 请求
         this.getAccountbookList(data)
         // 设置数据
@@ -866,6 +908,7 @@ Page({
                 ...this.data.submitData,
                 billApEntityListObj,
                 billDetailListObj,
+                billFilesObj,
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
                 invoice: data.invoice,
