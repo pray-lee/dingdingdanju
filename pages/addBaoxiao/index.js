@@ -460,6 +460,7 @@ Page({
         // })
     },
     onLoad(query) {
+        app.globalData.loadingCount = 0
         this.getTaxRageArr()
         this.getInvoiceTypeArr()
         this.setData({

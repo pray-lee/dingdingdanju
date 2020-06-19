@@ -28,19 +28,23 @@ Page({
     },
     uploadCallback(data) {
         console.log(data, 'messsage info...')
-        if(!!data && data.detail) {
-            // 获取缓存数据
-            // console.log(data.detail)
-            dd.setStorage({
-                key: 'fileList',
-                data: data.detail,
+        if(!!data) {
+            dd.alert({
+                content: JSON.stringify(data.detail),
+                buttonText: '上传回调',
                 success: () => {
-                    if(!!data) {
-                        console.log('缓存设置成功')
-                        dd.navigateBack({
-                            delta: 1
-                        })
-                    }
+                    // 获取缓存数据
+                    dd.setStorage({
+                        key: 'fileList',
+                        data: data.detail,
+                        success: () => {
+                            if(!!data.detail) {
+                                dd.navigateBack({
+                                    delta: 1
+                                })
+                            }
+                        }
+                    })
                 }
             })
         }

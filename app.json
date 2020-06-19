@@ -13,5 +13,5 @@
     "allowsBounceVertical": "YES",
     "pullRefresh": true
   },
-  "debug": false
+  "debug": true
 }

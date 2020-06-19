@@ -1,7 +1,6 @@
 App({
   onLaunch(options) {
     console.log('running....')
-    console.log(1)
   },
   onShow(options) {
     // 从后台被 scheme 重新打开

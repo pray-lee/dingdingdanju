@@ -1,3 +1,5 @@
+import {loginFiled} from "../../util/getErrorMessage";
+
 var app = getApp()
 app.globalData.loadingCount = 0
 Page({
@@ -76,33 +78,25 @@ Page({
                     success: res => {
                         if(res.data.success){
                             app.globalData.realName=res.data.obj.realName
-                            // var sessionId = res.data.obj
-                            // dd.setStorage({
-                            //   key: 'sessionId',
-                            //   data: sessionId,
-                            //   success: function() {
-                            //     console.log('写入成功')
-                            //   }
-                            // })
                             // 请求借款列表
                             this.getJiekuanList()
                             // 请求报销列表
                             this.getBaoxiaoList()
                             this.hideLoading()
+                        }else{
+                            loginFiled()
+                            this.hideLoading()
                         }
                     },
                     fail: res => {
+                        loginFiled('网络错误！')
                         this.hideLoading()
                         console.log(res, 'failed')
-                        dd.navigateTo({
-                            url: '../error/index'
-                        })
                     },
-                    // complete: res => {
-                    //     this.hideLoading()
-                    //     console.log(res, 'completed')
-                    // }
                 })
+            },
+            fail: res => {
+                loginFiled('当前组织没有该小程序')
             }
         })
     },

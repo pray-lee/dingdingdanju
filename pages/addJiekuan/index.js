@@ -1,4 +1,5 @@
 import moment from 'moment'
+import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
 var app = getApp()
 app.globalData.loadingCount = 0
 Page({
@@ -61,6 +62,7 @@ Page({
         }
     },
     formatSubmitData(array, name) {
+        console.log(array)
         if(array.length) {
             array.forEach((item,index) => {
                 Object.keys(item).forEach(keys => {
@@ -105,16 +107,31 @@ Page({
         }else{
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
         }
+        //  test
+        dd.alert({
+            content: JSON.stringify(this.data.submitData.fileList),
+            buttonText: '上传失败',
+            success: () => {}
+        })
         dd.httpRequest({
             url,
             method: 'POST',
             dataType: 'json',
             data: this.data.submitData,
             success: res => {
-                console.log(res)
+                if(res.data && typeof res.data == 'string'){
+                    getErrorMessage(res.data)
+                }
+                // 提交成功
+                if(res.data.success) {
+                    submitSuccess()
+                }
                 this.hideLoading()
             },
             fail: res => {
+                if(res.data && typeof res.data == 'string'){
+                    getErrorMessage(res.data)
+                }
                 console.log(res, 'fail')
                 this.hideLoading()
             }
@@ -283,12 +300,16 @@ Page({
         dd.getStorage({
             key: 'fileList',
             success: res => {
-                console.log('获取文件成功', res)
+                dd.alert({
+                    content: JSON.stringify(res.data),
+                    buttonText: '上传失败了',
+                    success: () => {}
+                })
                 if(!!res.data) {
                     this.setData({
                         submitData: {
                             ...this.data.submitData,
-                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data)
+                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data.fileLists)
                         }
                     })
                 }
@@ -327,11 +348,20 @@ Page({
             })
         }
     },
+    // 删除得时候把submitData里面之前存的报销列表数据清空
+    clearListSubmitData(submitData, name) {
+        Object.keys(submitData).forEach(key => {
+            if (key.indexOf(name) != -1) {
+                delete submitData[key]
+            }
+        })
+    },
     deleteBorrowDetail(e) {
         var borrowAmount = e.currentTarget.dataset.detail
         var billDetailListObj = this.data.submitData['billDetailListObj'].filter(item => {
             return item.borrowAmount !== borrowAmount
         })
+        this.clearListSubmitData(this.data.submitData, 'billDetailList')
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -345,6 +375,7 @@ Page({
         var fileList = this.data.submitData.billFilesObj.filter(item => {
             return item.name !== file
         })
+        this.clearListSubmitData(this.data.submitData, 'billFiles')
         this.setData({
             submitData:{
                 ...this.data.submitData,
@@ -393,6 +424,7 @@ Page({
         })
     },
     onLoad(query) {
+        app.globalData.loadingCount = 0
         // 清除缓存
         dd.removeStorageSync({
             key: 'fileList',
@@ -908,7 +940,7 @@ Page({
                 ...this.data.submitData,
                 billApEntityListObj,
                 billDetailListObj,
-                billFilesObj,
+                billFilesObj: billFilesObj || [],
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
                 invoice: data.invoice,
