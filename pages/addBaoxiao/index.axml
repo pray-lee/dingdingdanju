@@ -197,7 +197,8 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">附加信息</view>
-                    <input class="input" placeholder="附加信息" value="点击打开" onFocus="openExtraInfo"/>
+<!--                     <input class="input" placeholder="附加信息" disabled="{{!item.subjectExtraId}}" value="点击打开" onFocus="openExtraInfo"/> -->
+                    <view class="input extraBtn" onTap="openExtraInfo" data-index="{{index}}" data-extraId="{{item.subjectExtraId}}">查看详情</view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
@@ -357,6 +358,42 @@
             </scroll-view>
             <button formType="submit" class="import-borrow-list-btn">导入</button>
         </form>
+    </view>
+<!--   附加信息   -->
+    <view class="add-extra-page" animation="{{extraAnimationInfo}}">
+        <scroll-view scroll-y class="form-scroll-wrapper">
+            <form onSubmit="onExtraSubmit">
+                <view class="add-borrow" onTap="onAddExtra">
+                    <view class="borrow-title">附加信息</view>
+                    <view class="add-borrow-btn">添加信息</view>
+                </view>
+                <view class="baoxiao-item" a:if="{{baoxiaoList[extraIndex].extraList.length}}" a:for="{{baoxiaoList[extraIndex].extraList}}">
+                    <view class="baoxiao-item-title">
+                        <text>附加信息详情</text>
+                        <view class="delete-baoxiao-item" onTap="deleteExtra"
+                              data-index="{{index}}"></view>
+                    </view>
+                    <block a:for="{{item.conf}}" a:for-item="extraDetail" a:for-index="idx">
+                        <view class="form-row">
+                            <view class="form-row-label">{{extraDetail.field}}</view>
+                            <view class="form-row-content">
+                                <block a:if="{{extraDetail.type == 2}}">
+                                    <input class="input businessTime" placeholder="{{extraDetail.field}}" onFocus="onExtraDateFocus"
+                                           value="{{baoxiaoList[extraIndex].extraMessage[index][idx]}}"  data-name="{{item.field}}" onBlur="onExtraDateBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>
+                                </block>
+                                <input a:else class="input" value="{{baoxiaoList[extraIndex].extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
+                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>
+                            </view>
+                        </view>
+                        <view class="form-line"/>
+                    </block>
+                </view>
+                <view class="btn-area">
+                    <button formType="submit" class="submit-btn">确定</button>
+                    <button class="submit-btn cancel-extra" onTap="cancelExtra">取消</button>
+                </view>
+            </form>
+        </scroll-view>
     </view>
 </view>
 </view>

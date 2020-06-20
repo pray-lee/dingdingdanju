@@ -1,5 +1,6 @@
 import moment from "moment";
 import clone from 'lodash/cloneDeep'
+import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -10,6 +11,7 @@ Page({
         maskHidden: true,
         hesuanMaskHidden: true,
         animationInfo: {},
+        extraAnimationInfo: {},
         hesuanAnimationInfo: {},
         borrowAmount: '',
         remark: '',
@@ -48,10 +50,15 @@ Page({
             subjectIndex: 0,
             subjectList: [],
             allAuxptyList: {},
-            subjectAuxptyList: []
+            subjectAuxptyList: [],
         },
+        subjectExtraConf: null,
+        extraIndex: 0,
+        extraList: [],
+        extraMessage: [],
         hesuanShowIndex: 0,
         trueHesuanShowIndex: 0,
+        nowDate: moment().format('YYYY-MM-DD'),
         submitData: {
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
@@ -74,8 +81,9 @@ Page({
     formatSubmitData(array, name) {
         console.log(array, 'baoxiaoList..........')
         array.forEach((item, index) => {
+            item.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
             Object.keys(item).forEach(keys => {
-                if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
+                if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
                     item[keys].forEach((arrItem, arrIndex) => {
                         Object.keys(arrItem).forEach(arrKeys => {
                             this.setData({
@@ -87,15 +95,28 @@ Page({
                         })
                     })
                 } else {
-                    this.setData({
-                        submitData: {
-                            ...this.data.submitData,
-                            [`${name}[${index}].${keys}`]: item[keys]
-                        }
-                    })
+                    // 如果是附加信息，转换成字符串
+                    if(keys == 'extraMessage') {
+                        this.setData({
+                            submitData: {
+                                ...this.data.submitData,
+                                [`${name}[${index}].${keys}`]: JSON.stringify(item[keys]),
+                            }
+                        })
+                    }else{
+                        this.setData({
+                            submitData: {
+                                ...this.data.submitData,
+                                [`${name}[${index}].${keys}`]: item[keys]
+                            }
+                        })
+                    }
                 }
             })
         })
+    },
+    formatExtra(array) {
+
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -131,10 +152,19 @@ Page({
             dataType: 'json',
             data: this.data.submitData,
             success: res => {
-                console.log(res, 'submitData...')
+                if(res.data && typeof res.data == 'string'){
+                    getErrorMessage(res.data)
+                }
+                // 提交成功
+                if(res.data.success) {
+                    submitSuccess()
+                }
                 this.hideLoading()
             },
             fail: res => {
+                if(res.data && typeof res.data == 'string'){
+                    getErrorMessage(res.data)
+                }
                 console.log(res, 'fail')
                 this.hideLoading()
             }
@@ -191,6 +221,7 @@ Page({
         if (name === 'subjectId') {
             baoxiaoItem.subjectIndex = value
             baoxiaoItem.subjectId = baoxiaoItem.subjectList[value].id
+            baoxiaoItem.subjectExtraId = baoxiaoItem.subjectList[value].subjectExtraId
             this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
             this.setData({
                 baoxiaoList: [...this.data.baoxiaoList],
@@ -347,6 +378,28 @@ Page({
         })
         // 弹框数据清空
     },
+    onExtraShow() {
+        var animation = dd.createAnimation({
+            duration: 500,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            extraAnimationInfo: animation.export(),
+        })
+    },
+    onExtraHide() {
+        var animation = dd.createAnimation({
+            duration: 500,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(1000).step()
+        this.setData({
+            extraAnimationInfo: animation.export(),
+        })
+    },
     onHesuanShow(type) {
         var animation = dd.createAnimation({
             duration: 250,
@@ -404,6 +457,16 @@ Page({
         this.setData({
             hesuanAnimationInfo: animation1.export()
         })
+        // 附加信息
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        this.setData({
+            extraAnimationInfo: animation.export()
+        })
+
     },
     bindKeyInput(e) {
         // 借款详情
@@ -432,7 +495,6 @@ Page({
         var baoxiaoList = this.data.baoxiaoList.filter((item, index) => {
             return idx !== index
         })
-        console.log(baoxiaoList)
         this.clearListSubmitData(this.data.submitData)
         this.setData({
             baoxiaoList
@@ -702,6 +764,7 @@ Page({
             var obj = {
                 subjectId: this.data.subjectObject.subjectList[0].id,
                 trueSubjectId: this.data.subjectObject.subjectList[0].id,
+                subjectExtraId: this.data.subjectObject.subjectList[0].subjectExtraId,
                 applicationAmount: '',
                 invoiceType: this.data.invoiceTypeArr[1].id,
                 taxRageArr: clone(newTaxRageObj).taxRageArr,
@@ -895,9 +958,12 @@ Page({
                             var trueSubjectIndex = 0
                             var subjectId = item.subjectId
                             var trueSubjectId = item.trueSubjectId
+                            var subjectExtraId = ''
                             arr.forEach((arrItem, arrIndex) => {
                                 if (arrItem.id === subjectId) {
+                                    // 附加信息科目ID
                                     subjectIndex = arrIndex
+                                    subjectExtraId = arrItem.subjectExtraId
                                 }
                                 if (arrItem.id === trueSubjectId) {
                                     trueSubjectIndex = arrIndex
@@ -906,6 +972,7 @@ Page({
                             // 重组数据， 钉钉我草你妈！！！
                             var obj = {}
                             obj.subjectId = item.subjectId
+                            obj.subjectExtraId = subjectExtraId
                             obj.subjectIndex = subjectIndex
                             obj.subjectList = arr
                             obj.subjectAuxptyList = []
@@ -918,6 +985,14 @@ Page({
                             obj.trueAllAuxptyList = {}
                             obj.trueAuxpropertyNames = item.trueAuxpropertyNames
                             obj.applicationAmount = item.applicationAmount
+                            // 附加信息
+                            obj.extraMessage = JSON.parse(item.extraMessage)
+                            obj.subjectExtraConf = JSON.parse(item.subjectExtraConf)
+                            var extraList = []
+                            obj.extraMessage.forEach(item => {
+                                extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
+                            })
+                            obj.extraList = extraList
                             var auxptyObj = []
                             item.billDetailApEntityList.forEach(auxptyItem => {
                                 auxptyObj.push({
@@ -1109,7 +1184,7 @@ Page({
                 if (this.data.subjectObject.subjectAuxptyList.length) {
                     var auxptyName = ''
                     var filterArr = this.data.subjectObject.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)
-                    if(filterArr.length) {
+                    if (filterArr.length) {
                         auxptyName = filterArr[0].auxptyName
                     }
                     var obj = {
@@ -1227,7 +1302,120 @@ Page({
         this.setBorrowAmount(newArr)
         this.onAddHide()
     },
-    openExtraInfo() {
-        console.log('openExtraInfo')
+    openExtraInfo(e) {
+        var index = e.currentTarget.dataset.index
+        var extraId = e.currentTarget.dataset.extraId
+        if (this.data.baoxiaoList[index].subjectExtraId) {
+            this.onExtraShow()
+            this.getExtraInfo(extraId, index)
+            this.setData({
+                extraIndex: index
+            })
+        }
     },
+    getExtraInfo(extraId, index) {
+        // 接口有问题
+        dd.httpRequest({
+            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraDetailId=' + '2c91e3ec6b4a7d67016b4a94528d0074',
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                console.log(res)
+                if(res.data.success) {
+                    this.setData({
+                        subjectExtraConf: JSON.parse(res.data.obj),
+                    })
+                    // 回显
+                    var tempData = clone(this.data.baoxiaoList)
+                    if(!tempData[index].extraMessage) {
+                        tempData[index].extraMessage = []
+                        tempData[index].extraList = []
+                        this.setData({
+                            baoxiaoList: tempData
+                        })
+                    }
+                }
+            }
+        })
+    },
+    onAddExtra() {
+        console.log('add', this.data.baoxiaoList)
+        if(this.data.subjectExtraConf) {
+            var obj = this.generateExtraList(this.data.subjectExtraConf)
+            var tempData = clone(this.data.baoxiaoList)
+            tempData[this.data.extraIndex].extraList.push({conf: obj.array})
+            tempData[this.data.extraIndex].extraMessage.push(obj.extraMessage)
+            this.setData({
+                baoxiaoList: tempData
+            })
+        }
+    },
+    generateExtraList(conf) {
+        var tempData = clone(conf)
+        var array = []
+        var extraMessage = []
+        tempData.name.forEach((item, index) => {
+            var obj = {}
+            obj.field = item
+            obj.type = tempData.type[index]
+            array.push(obj)
+            extraMessage.push('')
+        })
+        return {
+            array,
+            extraMessage
+        }
+    },
+    onExtraDateFocus(e) {
+        console.log(this.data.baoxiaoList, 'datetimefocus')
+
+        var idx = e.currentTarget.dataset.index
+        var extraIdx = e.currentTarget.dataset.extraIndex
+        dd.datePicker({
+            format: 'yyyy-MM-dd',
+            currentDate: moment().format('YYYY-MM-DD'),
+            success: (res) => {
+                // var tempData = this.data.extraMessage.concat()
+                // tempData[extraIndex][idx] = res.date
+                // this.setData({
+                //     extraMessage: tempData
+                // })
+                var tempData = clone(this.data.baoxiaoList)
+                tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
+                this.setData({
+                    baoxiaoList: tempData
+                })
+                // 解除focus不触发的解决办法。
+                this.onClick()
+            },
+        })
+    },
+    onExtraBlur(e) {
+        var idx = e.currentTarget.dataset.index
+        var extraIdx = e.currentTarget.dataset.extraIndex
+        var tempData = clone(this.data.baoxiaoList)
+        tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = e.detail.value
+        this.setData({
+            baoxiaoList: tempData
+        })
+    },
+    cancelExtra() {
+        this.onExtraHide()
+        // this.setData({
+        //     extraList: [],
+        // })
+    },
+    deleteExtra(e) {
+        var idx = e.currentTarget.dataset.index
+        var tempData = clone(this.data.baoxiaoList)
+        tempData[this.data.extraIndex].extraMessage = tempData[this.data.extraIndex].extraMessage.filter((item, index) => index != idx)
+        tempData[this.data.extraIndex].extraList = tempData[this.data.extraIndex].extraList.filter((item, index) => index != idx)
+        this.setData({
+            baoxiaoList: tempData
+        })
+    },
+    onExtraSubmit() {
+        this.onExtraHide()
+        console.log(this.data.baoxiaoList)
+    }
 })

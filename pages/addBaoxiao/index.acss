@@ -15,7 +15,7 @@
     position:fixed;
     bottom:0;
     left:0;
-    z-index:999;
+    z-index:990;
     width: 100%;
 }
 .btn-area button{
@@ -39,6 +39,20 @@
 .add-borrow-page, .add-hesuanweidu-page{
     z-index:1000;
     transform:translateY(360px)
+}
+.add-extra-page{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    background:#fff;
+    transform: translateY(1000px);
+    z-index: 999
+}
+.extraBtn{
+    color:#ccc
 }
 .borrow-submit{
     position:fixed;
@@ -155,4 +169,11 @@
     text-align:right;
     color:rgb(136,136,136);
     font-size: 24rpx
+}
+input{
+    padding-right:0
+}
+.btn-area .cancel-extra{
+    background:#fff;
+    color:#3276c3;
 }
