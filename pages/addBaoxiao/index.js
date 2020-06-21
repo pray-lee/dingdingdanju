@@ -446,11 +446,6 @@ Page({
         dd.getStorage({
             key: 'fileList',
             success: res => {
-                dd.alert({
-                    content: JSON.stringify(res.data),
-                    buttonText: '上传失败了',
-                    success: () => {}
-                })
                 if(!!res.data) {
                     this.setData({
                         submitData: {

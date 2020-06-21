@@ -29,22 +29,16 @@ Page({
     uploadCallback(data) {
         console.log(data, 'messsage info...')
         if(!!data) {
-            dd.alert({
-                content: JSON.stringify(data.detail),
-                buttonText: '上传回调',
+            // 获取缓存数据
+            dd.setStorage({
+                key: 'fileList',
+                data: data.detail,
                 success: () => {
-                    // 获取缓存数据
-                    dd.setStorage({
-                        key: 'fileList',
-                        data: data.detail,
-                        success: () => {
-                            if(!!data.detail) {
-                                dd.navigateBack({
-                                    delta: 1
-                                })
-                            }
-                        }
-                    })
+                    if(!!data.detail) {
+                        dd.navigateBack({
+                            delta: 1
+                        })
+                    }
                 }
             })
         }

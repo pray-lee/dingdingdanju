@@ -107,12 +107,6 @@ Page({
         }else{
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
         }
-        //  test
-        dd.alert({
-            content: JSON.stringify(this.data.submitData.fileList),
-            buttonText: '上传失败',
-            success: () => {}
-        })
         dd.httpRequest({
             url,
             method: 'POST',
@@ -300,11 +294,6 @@ Page({
         dd.getStorage({
             key: 'fileList',
             success: res => {
-                dd.alert({
-                    content: JSON.stringify(res.data),
-                    buttonText: '上传失败了',
-                    success: () => {}
-                })
                 if(!!res.data) {
                     this.setData({
                         submitData: {

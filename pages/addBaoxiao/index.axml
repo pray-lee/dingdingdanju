@@ -263,7 +263,7 @@
                 <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
                     <view class="form-row">
                         <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
-                        <view class="form-row-label" onTap="downloadFile" data-url="{{item.uri}}">{{item.uri}}</view>
+                        <view class="form-row-label" onTap="downloadFile" data-url="{{item.uri}}">{{item.name}}</view>
                         <view class="form-row-content">
                             <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
                         </view>
