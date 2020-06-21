@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        uploadSrc: '',
         type: '',
         billId: '',
         maskHidden: true,
@@ -60,6 +61,7 @@ Page({
         trueHesuanShowIndex: 0,
         nowDate: moment().format('YYYY-MM-DD'),
         submitData: {
+            billFilesObj: [],
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
             applicantId: '',
@@ -136,6 +138,7 @@ Page({
         // 处理一下提交格式
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
         this.formatSubmitData(this.data.importList, 'borrowBillList')
+        this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -439,6 +442,25 @@ Page({
         })
     },
     onShow() {
+        // 从缓存里获取上传数据
+        dd.getStorage({
+            key: 'fileList',
+            success: res => {
+                dd.alert({
+                    content: JSON.stringify(res.data),
+                    buttonText: '上传失败了',
+                    success: () => {}
+                })
+                if(!!res.data) {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data.fileLists)
+                        }
+                    })
+                }
+            }
+        })
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -502,27 +524,49 @@ Page({
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
-        var fileList = this.data.fileList.filter(item => item !== file)
+        var fileList = this.data.submitData.billFilesObj.filter(item => {
+            return item.name !== file
+        })
+        this.clearListSubmitData(this.data.submitData, 'billFiles')
         this.setData({
-            fileList
+            submitData:{
+                ...this.data.submitData,
+                billFilesObj: fileList
+            }
         })
     },
     handleUpload() {
-        // dd.uploadAttachmentToDingTalk({
-        //     image:{multiple:true,compress:false,max:9,spaceId: "12345"},
-        //     // space:{corpId:"xxx3020",spaceId:"12345",isCopy:1 , max:9},
-        //     file:{spaceId:"12345",max:1},
-        //     types:["photo","camera","file"],//PC端支持["photo","file","space"]
-        //     success: res => {
-        //         console.log(res)
-        //     },
-        //     file: err => {
-        //         console.log(err)
-        //     }
-        // })
+        dd.navigateTo({
+            url: '/pages/uploadPage/index'
+        })
+    },
+    downloadFile(e) {
+        var url = e.currentTarget.dataset.url
+        console.log(url)
+        dd.downloadFile({
+            url,
+            success({filePath}) {
+                console.log(filePath)
+                dd.previewImage({
+                    urls: [filePath]
+                })
+            }
+        })
     },
     onLoad(query) {
         app.globalData.loadingCount = 0
+        // 清除缓存
+        dd.removeStorageSync({
+            key: 'fileList',
+            success: () => {
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billFilesObj: []
+                    }
+                })
+            }
+        })
         this.getTaxRageArr()
         this.getInvoiceTypeArr()
         this.setData({
@@ -861,12 +905,19 @@ Page({
                 applicationAmount: item.applicationAmount
             }
         })
+        //fileList
+        if(data.billFiles.length) {
+            var billFilesObj = data.billFiles.map(item => {
+                return item
+            })
+        }
         // 设置数据
         this.setData({
             ...this.data,
             importList,
             submitData: {
                 ...this.data.submitData,
+                billFilesObj: billFilesObj || [],
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
                 invoice: data.invoice,
@@ -989,10 +1040,12 @@ Page({
                             obj.extraMessage = JSON.parse(item.extraMessage)
                             obj.subjectExtraConf = JSON.parse(item.subjectExtraConf)
                             var extraList = []
-                            obj.extraMessage.forEach(item => {
-                                extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
-                            })
-                            obj.extraList = extraList
+                            if(obj.extraMessage&&obj.extraMessage.length > 0) {
+                                obj.extraMessage.forEach(item => {
+                                    extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
+                                })
+                                obj.extraList = extraList
+                            }
                             var auxptyObj = []
                             item.billDetailApEntityList.forEach(auxptyItem => {
                                 auxptyObj.push({
@@ -1316,7 +1369,7 @@ Page({
     getExtraInfo(extraId, index) {
         // 接口有问题
         dd.httpRequest({
-            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraDetailId=' + '2c91e3ec6b4a7d67016b4a94528d0074',
+            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
             method: 'GET',
             dataType: 'json',
             success: res => {
