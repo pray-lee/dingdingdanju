@@ -12,7 +12,7 @@ App({
     "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
     // "url": "https://www.caika.net/Test/",
     "url": "http://39.96.59.19:8081/Test/",
-    "uploadUrl": "aliyunController.do?goUploadFile&uuid="
+    // "uploadUrl": "aliyunController.do?goUploadFile&uuid="
     // "url": "http://192.168.1.93:8080/jeecg/",
   }
 });

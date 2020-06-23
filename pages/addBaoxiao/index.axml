@@ -177,9 +177,13 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">核算维度</view>
-                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"
-                           disabled="{{!item.subjectAuxptyList.length}}" value="{{item.auxpropertyNames}}"
-                           placeholder="核算维度" data-name="auxpropertyNames" data-index="{{index}}"/>
+                    <view class="form-row-content">
+                        <view a:if="{{item.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames" data-index="{{index}}" data-subjectAuxptyName="subjectAuxptyList">{{item.auxpropertyNames}}</view>
+                        <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames" data-subjectAuxptyName="subjectAuxptyList" data-index="{{index}}">请选择核算维度</view>
+                    </view>
+<!--                     <input class="hesuanweidu-btn special-btn" onFocus="checkFocus" -->
+<!--                            disabled="{{!item.subjectAuxptyList.length}}" value="{{item.auxpropertyNames}}" -->
+<!--                            placeholder="核算维度" data-name="auxpropertyNames" data-index="{{index}}"/> -->
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
@@ -196,9 +200,13 @@
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label">预算维度</view>
-                    <input class="hesuanweidu-btn special-btn" onFocus="checkFocus"
-                           disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{item.trueAuxpropertyNames}}"
-                           placeholder="预算维度" data-name="trueAuxpropertyNames" data-index="{{index}}"/>
+                    <view class="form-row-content">
+                        <view a:if="{{item.trueAuxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="trueAuxpropertyNames" data-index="{{index}}" data-subjectAuxptyName="trueSubjectAuxptyList">{{item.trueAuxpropertyNames}}</view>
+                        <view a:else class="mock-input nodata" onTap="checkFocus" data-name="trueAuxpropertyNames" data-subjectAuxptyName="trueSubjectAuxptyList" data-index="{{index}}">请选择核算维度</view>
+                    </view>
+<!--                     <input class="hesuanweidu-btn special-btn" onFocus="checkFocus" -->
+<!--                            disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{item.trueAuxpropertyNames}}" -->
+<!--                            placeholder="预算维度" data-name="trueAuxpropertyNames" data-index="{{index}}"/> -->
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">

@@ -98,14 +98,14 @@ Page({
                     })
                 } else {
                     // 如果是附加信息，转换成字符串
-                    if(keys == 'extraMessage') {
+                    if (keys == 'extraMessage') {
                         this.setData({
                             submitData: {
                                 ...this.data.submitData,
                                 [`${name}[${index}].${keys}`]: JSON.stringify(item[keys]),
                             }
                         })
-                    }else{
+                    } else {
                         this.setData({
                             submitData: {
                                 ...this.data.submitData,
@@ -155,17 +155,17 @@ Page({
             dataType: 'json',
             data: this.data.submitData,
             success: res => {
-                if(res.data && typeof res.data == 'string'){
+                if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 // 提交成功
-                if(res.data.success) {
+                if (res.data.success) {
                     submitSuccess()
                 }
                 this.hideLoading()
             },
             fail: res => {
-                if(res.data && typeof res.data == 'string'){
+                if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 console.log(res, 'fail')
@@ -250,7 +250,7 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        if(name !== 'incomeBankName') {
+        if (name !== 'incomeBankName') {
             this.setData({
                 [index]: e.detail.value,
                 submitData: {
@@ -258,7 +258,7 @@ Page({
                     [name]: this.data[listName][value].id
                 }
             })
-        }else{
+        } else {
             this.setData({
                 [index]: e.detail.value,
                 submitData: {
@@ -456,7 +456,7 @@ Page({
         dd.getStorage({
             key: 'fileList',
             success: res => {
-                if(!!res.data) {
+                if (!!res.data) {
                     this.setData({
                         submitData: {
                             ...this.data.submitData,
@@ -534,7 +534,7 @@ Page({
         })
         this.clearListSubmitData(this.data.submitData, 'billFiles')
         this.setData({
-            submitData:{
+            submitData: {
                 ...this.data.submitData,
                 billFilesObj: fileList
             }
@@ -838,6 +838,12 @@ Page({
     },
     checkFocus(e) {
         var name = e.currentTarget.dataset.name
+        var subjectAuxptyName = e.currentTarget.dataset.subjectAuxptyName
+        var index = e.currentTarget.dataset.index
+        console.log(this.data.baoxiaoList)
+        console.log(index)
+        console.log(subjectAuxptyName)
+        console.log(this.data.baoxiaoList[index])
         if (name === 'auxpropertyNames') {
             this.setData({
                 hesuanShowIndex: e.currentTarget.dataset.index
@@ -848,7 +854,9 @@ Page({
             })
         }
         var type = name === 'auxpropertyNames' ? 'hesuan' : 'yusuan'
-        this.onHesuanShow(type)
+        if(this.data.baoxiaoList[index][subjectAuxptyName].length) {
+            this.onHesuanShow(type)
+        }
     },
     onHesuanSubmit(e) {
         // 辅助核算字符串拼接
@@ -911,7 +919,7 @@ Page({
             }
         })
         //fileList
-        if(data.billFiles.length) {
+        if (data.billFiles.length) {
             var billFilesObj = data.billFiles.map(item => {
                 return item
             })
@@ -1042,11 +1050,11 @@ Page({
                             obj.trueAuxpropertyNames = item.trueAuxpropertyNames
                             obj.applicationAmount = item.applicationAmount
                             // 附加信息
-                            if(!!item.extraMessage) {
+                            if (!!item.extraMessage) {
                                 obj.extraMessage = JSON.parse(item.extraMessage)
                                 obj.subjectExtraConf = JSON.parse(item.subjectExtraConf)
                                 var extraList = []
-                                if(obj.extraMessage&&obj.extraMessage.length > 0) {
+                                if (obj.extraMessage && obj.extraMessage.length > 0) {
                                     obj.extraMessage.forEach(item => {
                                         extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
                                     })
@@ -1382,13 +1390,13 @@ Page({
             dataType: 'json',
             success: res => {
                 console.log(res)
-                if(res.data.success) {
+                if (res.data.success) {
                     this.setData({
                         subjectExtraConf: JSON.parse(res.data.obj),
                     })
                     // 回显
                     var tempData = clone(this.data.baoxiaoList)
-                    if(!tempData[index].extraMessage) {
+                    if (!tempData[index].extraMessage) {
                         tempData[index].extraMessage = []
                         tempData[index].extraList = []
                         this.setData({
@@ -1401,7 +1409,7 @@ Page({
     },
     onAddExtra() {
         console.log('add', this.data.baoxiaoList)
-        if(this.data.subjectExtraConf) {
+        if (this.data.subjectExtraConf) {
             var obj = this.generateExtraList(this.data.subjectExtraConf)
             var tempData = clone(this.data.baoxiaoList)
             tempData[this.data.extraIndex].extraList.push({conf: obj.array})
@@ -1420,9 +1428,9 @@ Page({
             obj.field = item
             obj.type = tempData.type[index]
             array.push(obj)
-            if(obj.type == 2) {
+            if (obj.type == 2) {
                 extraMessage.push(moment().format('YYYY-MM-DD'))
-            }else{
+            } else {
                 extraMessage.push('')
             }
         })
@@ -1446,7 +1454,7 @@ Page({
                 //     extraMessage: tempData
                 // })
                 var tempData = clone(this.data.baoxiaoList)
-                if(!!res.date) {
+                if (!!res.date) {
                     tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
                     this.setData({
                         baoxiaoList: tempData

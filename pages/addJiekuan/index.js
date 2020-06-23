@@ -1,5 +1,6 @@
 import moment from 'moment'
 import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
+
 var app = getApp()
 app.globalData.loadingCount = 0
 Page({
@@ -54,7 +55,7 @@ Page({
             applicantType: 10,
             invoice: 0,
             auxpropertyNames: '',
-            businessDateTime:moment().format('YYYY-MM-DD'),
+            businessDateTime: moment().format('YYYY-MM-DD'),
             amount: 0,
             status: 20,
             userName: '',
@@ -63,8 +64,8 @@ Page({
     },
     formatSubmitData(array, name) {
         console.log(array)
-        if(array.length) {
-            array.forEach((item,index) => {
+        if (array.length) {
+            array.forEach((item, index) => {
                 Object.keys(item).forEach(keys => {
                     console.log(keys)
                     this.setData({
@@ -79,16 +80,16 @@ Page({
         }
     },
     addLoading() {
-        if(app.globalData.loadingCount < 1) {
+        if (app.globalData.loadingCount < 1) {
             dd.showLoading({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount ++
+        app.globalData.loadingCount++
     },
     hideLoading() {
         app.globalData.loadingCount--
-        if(app.globalData.loadingCount === 0) {
+        if (app.globalData.loadingCount === 0) {
             dd.hideLoading()
         }
     },
@@ -102,9 +103,9 @@ Page({
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         this.addLoading()
         var url = ''
-        if(this.data.type === 'add') {
+        if (this.data.type === 'add') {
             url = app.globalData.url + 'borrowBillController.do?doAdd'
-        }else{
+        } else {
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
         }
         dd.httpRequest({
@@ -113,17 +114,17 @@ Page({
             dataType: 'json',
             data: this.data.submitData,
             success: res => {
-                if(res.data && typeof res.data == 'string'){
+                if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 // 提交成功
-                if(res.data.success) {
+                if (res.data.success) {
                     submitSuccess()
                 }
                 this.hideLoading()
             },
             fail: res => {
-                if(res.data && typeof res.data == 'string'){
+                if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 console.log(res, 'fail')
@@ -145,7 +146,7 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        if(name !== 'incomeBankName') {
+        if (name !== 'incomeBankName') {
             this.setData({
                 [index]: e.detail.value,
                 submitData: {
@@ -153,7 +154,7 @@ Page({
                     [name]: this.data[listName][value].id
                 }
             })
-        }else{
+        } else {
             this.setData({
                 [index]: e.detail.value,
                 submitData: {
@@ -211,7 +212,7 @@ Page({
             format: 'yyyy-MM-dd',
             currentDate: moment().format('YYYY-MM-DD'),
             success: (res) => {
-                if(!!res.date) {
+                if (!!res.date) {
                     this.setData({
                         submitData: {
                             ...this.data.submitData,
@@ -309,7 +310,7 @@ Page({
         dd.getStorage({
             key: 'fileList',
             success: res => {
-                if(!!res.data) {
+                if (!!res.data) {
                     this.setData({
                         submitData: {
                             ...this.data.submitData,
@@ -381,7 +382,7 @@ Page({
         })
         this.clearListSubmitData(this.data.submitData, 'billFiles')
         this.setData({
-            submitData:{
+            submitData: {
                 ...this.data.submitData,
                 billFilesObj: fileList
             }
@@ -411,29 +412,54 @@ Page({
     },
     handleUpload() {
         dd.chooseImage({
-            count: 9,
+            count: 1,
             success: res => {
-                console.log(res.filePaths)
-                var billFilesObj = []
-                if(res.filePaths.length) {
-                   res.filePaths.forEach(filePath => {
-                      billFilesObj.push({
-                        name: filePath,
-                          uri: filePath
-                      })
-                   })
-                }
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        billFilesObj
-                    }
-                })
+                console.log(res)
+                this.uploadFile(res.filePaths)
+            },
+            fail: res => {
+                console.log('用户取消操作')
             }
         })
     },
+    /**
+     *
+     * @param 上传图片字符串列表
+     */
+    uploadFile(array) {
+        if(array.length) {
+            this.addLoading()
+            let promiseList = []
+            array.forEach(item => {
+                promiseList.push(new Promise((resolve, reject) => {
+                    dd.uploadFile({
+                        url: app.globalData.url + 'aliyunController/uploadImages.do',
+                        fileType: 'image',
+                        fileName: item,
+                        filePath: item,
+                        success: res => {
+                            console.log(res)
+                            resolve()
+                        },
+                        fail: res => {
+                            reject(res)
+                        }
+                    })
+                }))
+            })
+            Promise.all(promiseList).then(res => {
+                // 提交成功的处理逻辑
+                this.hideLoading()
+                console.log(res)
+            }).catch( error => {
+                this.hideLoading()
+                console.log('catch')
+                console.log(error)
+            })
+        }
+    },
     downloadFile(e) {
-       var url = e.currentTarget.dataset.url
+        var url = e.currentTarget.dataset.url
         console.log(url)
         dd.downloadFile({
             url,
@@ -474,10 +500,10 @@ Page({
             billId: id
         })
         // 获取账簿列表
-        if(type === 'add') {
+        if (type === 'add') {
             this.getAccountbookList()
         }
-        if(type === 'edit') {
+        if (type === 'edit') {
             // 渲染
             this.getEditData(id)
         }
@@ -493,9 +519,9 @@ Page({
                 var accountbookIndex = 0
                 var accountbookId = !!data ? data.accountbookId : res.data[0].id
                 // edit的时候设置值
-                if(accountbookId) {
+                if (accountbookId) {
                     res.data.forEach((item, index) => {
-                        if(item.id === accountbookId) {
+                        if (item.id === accountbookId) {
                             accountbookIndex = index
                         }
                     })
@@ -539,9 +565,9 @@ Page({
                 // edit 的时候设置departmentIndex
                 var departmentIndex = 0
                 var submitterDepartmentId = !!departmentId ? departmentId : arr[0].id
-                if(submitterDepartmentId) {
-                    arr.forEach((item,index) => {
-                        if(item.id === submitterDepartmentId) {
+                if (submitterDepartmentId) {
+                    arr.forEach((item, index) => {
+                        if (item.id === submitterDepartmentId) {
                             departmentIndex = index
                         }
                     })
@@ -576,9 +602,9 @@ Page({
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
                 var applicantId = !!applicant ? applicant : arr[0].id
-                if(applicantId) {
-                    arr.forEach((item,index) => {
-                        if(item.id === applicantId) {
+                if (applicantId) {
+                    arr.forEach((item, index) => {
+                        if (item.id === applicantId) {
                             borrowIndex = index
                         }
                     })
@@ -610,14 +636,14 @@ Page({
                 // edit的时候，设置incomeBankIndex
                 var incomeBankIndex = 0
                 var bankName = ''
-                if(arr.length) {
+                if (arr.length) {
                     bankName = !!incomeBankName ? incomeBankName : arr[0].bankName
-                }else {
+                } else {
                     bankName = !!incomeBankName ? incomeBankName : ''
                 }
-                if(bankName) {
+                if (bankName) {
                     arr.forEach((item, index) => {
-                        if(item.bankName === bankName) {
+                        if (item.bankName === bankName) {
                             incomeBankIndex = index
                         }
                     })
@@ -669,9 +695,9 @@ Page({
                     // edit的时候，设置subjectIndex
                     var subjectIndex = 0
                     var subjectId = subject ? subject : arr[0].id
-                    if(subjectId) {
+                    if (subjectId) {
                         arr.forEach((item, index) => {
-                            if(item.id === subjectId) {
+                            if (item.id === subjectId) {
                                 subjectIndex = index
                             }
                         })
@@ -685,7 +711,7 @@ Page({
                         }
                     })
                     this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
-                }else{
+                } else {
                     this.setData({
                         subjectList: [],
                         subjectIndex: 0,
@@ -722,7 +748,7 @@ Page({
                             ...this.data.submitData,
                         }
                     })
-                    if(!billApEntityListObj) {
+                    if (!billApEntityListObj) {
                         this.setData({
                             submitData: {
                                 ...this.data.submitData,
@@ -737,7 +763,7 @@ Page({
                     if (flag) {
                         this.onHesuanShow()
                     }
-                }else{
+                } else {
                     this.setData({
                         subjectAuxptyList: []
                     })
@@ -797,14 +823,14 @@ Page({
             success: res => {
                 // 处理index
                 var auxptyIndex = 0
-                if(!!billApEntityListObj) {
+                if (!!billApEntityListObj) {
                     console.log(billApEntityListObj)
                     console.log(auxptyid)
                     console.log('=============')
                     billApEntityListObj.forEach((item, index) => {
-                        if(item.auxptyId == auxptyid) {
+                        if (item.auxptyId == auxptyid) {
                             res.data.rows.forEach((row, rowIndex) => {
-                                if(row.id == item.auxptyDetailId) {
+                                if (row.id == item.auxptyDetailId) {
                                     auxptyIndex = rowIndex
                                 }
                             })
@@ -869,9 +895,9 @@ Page({
                 })
                 console.log(arr, '资金计划类型列表')
                 var capitalTypeIndex = 0
-                if(!!capitalTypeDetailId) {
+                if (!!capitalTypeDetailId) {
                     arr.forEach((item, index) => {
-                        if(item.detailId === capitalTypeDetailId) {
+                        if (item.detailId === capitalTypeDetailId) {
                             capitalTypeIndex = index
                         }
                     })
@@ -898,7 +924,7 @@ Page({
                 })
                 if (!!res.data) {
                     this.getCapitalTypeList(capitalTypeDetailId)
-                }else{
+                } else {
                     this.setData({
                         capitalTypeList: [],
                         capitalTypeIndex: 0
@@ -911,23 +937,23 @@ Page({
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
-       dd.httpRequest({
+        dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?getDetail&id=' + id,
             method: 'GET',
             dataType: 'json',
             success: res => {
                 console.log(res.data.obj)
-                if(res.data.obj) {
+                if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                 }
                 this.hideLoading()
             }
-       })
+        })
     },
     // 回显数据设置
     setRenderData(data) {
         // billDetailList
-        if(data.billDetailList.length) {
+        if (data.billDetailList.length) {
             var billDetailListObj = data.billDetailList.map(item => {
                 return {
                     borrowAmount: item.borrowAmount,
@@ -936,7 +962,7 @@ Page({
             })
         }
         // billApEntityList
-        if(data.billApEntityList.length) {
+        if (data.billApEntityList.length) {
             var billApEntityListObj = data.billApEntityList.map(item => {
                 return {
                     auxptyId: item.auxptyId,
@@ -945,7 +971,7 @@ Page({
             })
         }
         // fileList
-        if(data.billFiles.length) {
+        if (data.billFiles.length) {
             var billFilesObj = data.billFiles.map(item => {
                 return item
             })
@@ -964,7 +990,7 @@ Page({
                 applicantType: data.applicantType,
                 invoice: data.invoice,
                 auxpropertyNames: data.auxpropertyNames,
-                businessDateTime:data.businessDateTime,
+                businessDateTime: data.businessDateTime,
                 amount: data.amount,
                 status: data.status,
                 userName: app.globalData.realName,
