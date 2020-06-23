@@ -1,6 +1,3 @@
 {
-  "pullRefresh": true,
-  "usingComponents": {
-    "add": "../components/add/index"
-  }
+  "pullRefresh": true
 }

@@ -11,8 +11,9 @@
             <view class="form-row">
                 <view class="form-row-label">业务日期</view>
                 <view class="form-row-content">
-                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
-                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>
+<!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
+<!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
+                    <view data-name="businessDateTime" onTap="onBusinessFocus">{{submitData.businessDateTime}}</view>
                 </view>
             </view>
             <view class="form-line"/>
@@ -64,16 +65,19 @@
             <view class="form-row">
                 <view class="form-row-label">收款银行</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}" range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName" data-list="incomeBankList" data-index="incomeBankIndex">
-                        <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
-                    </picker>
+                    <block a:if="{{incomeBankList.length}}">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}" range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName" data-list="incomeBankList" data-index="incomeBankIndex">
+                            <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
+                        </picker>
+                    </block>
+                    <view a:else class="mock-input nodata">请选择收款银行</view>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="" data-name="incomeBankAccount"/>
+                    <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="收款账号" data-name="incomeBankAccount"/>
                 </view>
             </view>
             <view class="form-line"/>
@@ -81,7 +85,10 @@
                 <view class="form-row-label">核算维度</view>
                 <view class="form-row-content">
                     <!-- <view class="row-extra special-btn ellipsis" onTap="checkFocus">{{submitData.auxpropertyNames}}</view> -->
-                    <input class="input" onFocus="checkFocus" disabled="{{!subjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>
+<!--                    <input class="input" onFocus="checkFocus" disabled="{{!subjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>-->
+                    <view a:if="{{submitData.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames">{{submitData.auxpropertyNames}}</view>
+                    <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames">请选择核算维度</view>
+
                 </view>
             </view>
             <view class="form-line"/>
@@ -89,9 +96,12 @@
                 <view class="form-row-label">资金计划类型</view>
                 <view class="form-row-content">
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{capitalTypeIndex}}" range="{{capitalTypeList}}" range-key="detailName" data-name="capitalTypeDetailId" data-index="capitalTypeIndex" data-list="capitalTypeList">
-                            <view class="row-extra">{{capitalTypeList[capitalTypeIndex].detailName}}</view>
-                        </picker>
+                        <block a:if="{{capitalTypeList[capitalTypeIndex].detailName}}">
+                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{capitalTypeIndex}}" range="{{capitalTypeList}}" range-key="detailName" data-name="capitalTypeDetailId" data-index="capitalTypeIndex" data-list="capitalTypeList">
+                                <view class="row-extra">{{capitalTypeList[capitalTypeIndex].detailName}}</view>
+                            </picker>
+                        </block>
+                        <view a:else class="mock-input nodata">请选择资金计划</view>
                     </view>
                 </view>
             </view>
@@ -134,7 +144,8 @@
             <view class="form-row">
                 <view class="form-row-label">提交日期</view>
                 <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.submitDate}}" data-name="submitDate" placeholder="提交日期"/>
+<!--                    <input class="input" disabled value="{{submitData.submitDate}}" data-name="submitDate" placeholder="提交日期"/>-->
+                    <view data-name="submitDate">{{submitData.submitDate}}</view>
                 </view>
             </view>
             <view class="form-line"/>

@@ -12,6 +12,5 @@
     "titleBarColor": "#3276c3",
     "allowsBounceVertical": "YES",
     "pullRefresh": true
-  },
-  "debug": true
+  }
 }

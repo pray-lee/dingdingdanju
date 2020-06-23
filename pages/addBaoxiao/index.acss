@@ -177,3 +177,27 @@ input{
     background:#fff;
     color:#3276c3;
 }
+.mock-input{
+    height: 88rpx;
+    line-height: 88rpx;
+    width: 100%;
+    text-align:right;
+    color:rgb(136,136,136)
+}
+.mock-input.nodata{
+    color:#c7c7cd
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18*/
+    color: rgb(136,136,136);
+}
+input::-moz-placeholder {/* Mozilla Firefox 19+*/
+    color: rgb(136,136,136);
+}
+
+input:-ms-input-placeholder{
+    color: rgb(136,136,136);
+}
+
+input::-webkit-input-placeholder{
+    color: rgb(136,136,136);
+}

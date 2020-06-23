@@ -13,13 +13,15 @@
                     {{item.billCode}}
                 </view>
             </view>
-            <add onAddShow="onAddShow"></add>
-            <!-- 新增单据弹框 -->
-            <view class="add-page" animation="{{animationInfo}}">
-                <view class="add-item" onTap="onShowAddJiekuan">借款单</view>
-                <view class="add-item" onTap="onShowAddBaoxiao">费用报销单</view>
-            </view>
-            <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
         </view>
     </scroll-view>
+    <view class="add-btn" onTap="onAddShow">
+        新增单据
+    </view>
+    <!-- 新增单据弹框 -->
+    <view class="add-page" animation="{{animationInfo}}">
+        <view class="add-item" onTap="onShowAddJiekuan">借款单</view>
+        <view class="add-item" onTap="onShowAddBaoxiao">费用报销单</view>
+    </view>
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

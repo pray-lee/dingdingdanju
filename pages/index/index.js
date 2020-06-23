@@ -29,6 +29,7 @@ Page({
         })
     },
     onAddShow() {
+        console.log(11111)
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'
@@ -161,6 +162,7 @@ Page({
     },
     onTitleClick() {
         // 标题被点击
+        console.log('title clicked')
     },
     onPullDownRefresh() {
         console.log(1121)

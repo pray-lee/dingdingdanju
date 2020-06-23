@@ -1,3 +1,0 @@
-<view class="add-btn" onTap="onAddClick">
-  新增单据
-</view>

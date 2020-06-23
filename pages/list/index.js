@@ -89,7 +89,7 @@ Page({
             timeFunction: 'ease-in'
         })
         this.animation = animation
-        animation.translateY(360).step()
+        animation.translateY(260).step()
         this.setData({
             animationInfo: animation.export(),
             maskHidden: true
@@ -130,5 +130,15 @@ Page({
                 url: '../addJiekuan/index?type=edit&id=' + id
             })
         }
+    },
+    onPullDownRefresh() {
+        dd.alert({
+            content: '下拉刷新',
+            buttonText: '确定',
+            success: res => {
+
+            }
+        })
+        console.log('onPullDownRefresh', new Date())
     }
 })

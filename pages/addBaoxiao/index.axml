@@ -12,8 +12,9 @@
             <view class="form-row">
                 <view class="form-row-label">业务日期</view>
                 <view class="form-row-content">
-                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"
-                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>
+<!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
+<!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
+                    <view onTap="onBusinessFocus" data-name="businessDateTime">{{submitData.businessDateTime}}</view>
                 </view>
             </view>
             <view class="form-line"/>
@@ -64,11 +65,14 @@
             <view class="form-row">
                 <view class="form-row-label">收款银行</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"
-                            range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"
-                            data-list="incomeBankList" data-index="incomeBankIndex">
-                        <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
-                    </picker>
+                    <block a:if="{{incomeBankList[incomeBankIndex].bankName}}">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"
+                                range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"
+                                data-list="incomeBankList" data-index="incomeBankIndex">
+                            <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
+                        </picker>
+                    </block>
+                    <view a:else class="mock-input nodata">请选择收款银行</view>
                 </view>
             </view>
             <view class="form-line"/>
@@ -76,25 +80,27 @@
                 <view class="form-row-label">收款账号</view>
                 <view class="form-row-content">
                     <input class="input" disabled value="{{submitData.incomeBankAccount}}"
-                           data-name="incomeBankAccount"/>
+                           data-name="incomeBankAccount" placeholder="收款账号"/>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">申请报销金额</view>
                 <view class="form-row-content">
-                    <input class="input" disabled
+                    <input a:if="{{submitData.applicationAmount}}" class="input" disabled
                            value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}"
                            data-name="applicationAmount" placeholder="申请报销金额"/>
+                    <view a:else class="mock-input nodata">请填写报销详情</view>
                 </view>
             </view>
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label">核销借款金额</view>
                 <view class="form-row-content">
-                    <input class="input" data-name="applicationAmount" disabled
+                    <input a:if="{{submitData.verificationAmount}}" class="input" data-name="applicationAmount" disabled
                            value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}"
                            placeholder="核销借款金额"/>
+                    <view a:else class="mock-input nodata">请导入借款单</view>
                 </view>
             </view>
             <view class="form-line"/>
@@ -378,8 +384,10 @@
                             <view class="form-row-label">{{extraDetail.field}}</view>
                             <view class="form-row-content">
                                 <block a:if="{{extraDetail.type == 2}}">
-                                    <input class="input businessTime" placeholder="{{extraDetail.field}}" onFocus="onExtraDateFocus"
-                                           value="{{baoxiaoList[extraIndex].extraMessage[index][idx]}}"  data-name="{{item.field}}" onBlur="onExtraDateBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>
+<!--                                    <input class="input businessTime" placeholder="{{extraDetail.field}}" onFocus="onExtraDateFocus"-->
+<!--                                           value="{{baoxiaoList[extraIndex].extraMessage[index][idx]}}"  data-name="{{item.field}}" onBlur="onExtraDateBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>-->
+
+                                    <view onTap="onExtraDateFocus" data-name="{{item.field}}" data-index="{{idx}}" data-extraIndex="{{index}}">{{baoxiaoList[extraIndex].extraMessage[index][idx]}}</view>
                                 </block>
                                 <input a:else class="input" value="{{baoxiaoList[extraIndex].extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
                                        onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>

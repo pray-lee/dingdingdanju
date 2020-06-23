@@ -1,7 +1,7 @@
 <view class="app">
   <view class="jiekuan-container">
     <view class="jiekuan-content">
-      <view class="title">我的借款单10</view>
+      <view class="title">我的借款单</view>
       <view class="completed-bill" onTap="seeAll" data-type="jiekuanCompleted">查看已完成单据</view>
       <view class="main">
         <view class="status error">{{statusObj[jiekuanList[0].status]}}</view>
@@ -33,7 +33,9 @@
       </view>
     </view>
   </view>
-  <add onAddShow="onAddShow"></add>
+  <view class="add-btn" onTap="onAddShow">
+    新增单据
+  </view>
   <!-- 新增单据弹框 -->
   <view class="add-page" animation="{{animationInfo}}">
     <view class="add-item" onTap="onShowAddJiekuan">借款单</view>

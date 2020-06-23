@@ -96,7 +96,7 @@ Page({
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
-        this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
+        this.formatSubmitData(this.data.submitData.billFilesObj, 'billInternetFiles')
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -145,13 +145,23 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        this.setData({
-            [index]: e.detail.value,
-            submitData: {
-                ...this.data.submitData,
-                [name]: this.data[listName][value].id
-            }
-        })
+        if(name !== 'incomeBankName') {
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].id
+                }
+            })
+        }else{
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].bankName
+                }
+            })
+        }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
             this.getDepartmentList(this.data[listName][value].id)
@@ -201,15 +211,20 @@ Page({
             format: 'yyyy-MM-dd',
             currentDate: moment().format('YYYY-MM-DD'),
             success: (res) => {
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        businessDateTime: res.date
-                    },
-                })
+                if(!!res.date) {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            businessDateTime: res.date
+                        },
+                    })
+                }
                 // 解除focus不触发的解决办法。
                 this.onClick()
             },
+            fail: res => {
+                console.log(res, 'failed dateTime')
+            }
         })
     },
     onClick() {
@@ -395,8 +410,26 @@ Page({
         }
     },
     handleUpload() {
-        dd.navigateTo({
-            url: '/pages/uploadPage/index'
+        dd.chooseImage({
+            count: 9,
+            success: res => {
+                console.log(res.filePaths)
+                var billFilesObj = []
+                if(res.filePaths.length) {
+                   res.filePaths.forEach(filePath => {
+                      billFilesObj.push({
+                        name: filePath,
+                          uri: filePath
+                      })
+                   })
+                }
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billFilesObj
+                    }
+                })
+            }
         })
     },
     downloadFile(e) {
@@ -574,9 +607,6 @@ Page({
             success: res => {
                 console.log(res, 'incomeBankList')
                 var arr = res.data.obj
-                if(arr.length) {
-
-                }
                 // edit的时候，设置incomeBankIndex
                 var incomeBankIndex = 0
                 var bankName = ''

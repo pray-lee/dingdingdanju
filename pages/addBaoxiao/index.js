@@ -250,13 +250,23 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        this.setData({
-            [index]: e.detail.value,
-            submitData: {
-                ...this.data.submitData,
-                [name]: this.data[listName][value].id
-            }
-        })
+        if(name !== 'incomeBankName') {
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].id
+                }
+            })
+        }else{
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].bankName
+                }
+            })
+        }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
             // 重新获取科目以后，就要置空报销列表
@@ -1032,14 +1042,16 @@ Page({
                             obj.trueAuxpropertyNames = item.trueAuxpropertyNames
                             obj.applicationAmount = item.applicationAmount
                             // 附加信息
-                            obj.extraMessage = JSON.parse(item.extraMessage)
-                            obj.subjectExtraConf = JSON.parse(item.subjectExtraConf)
-                            var extraList = []
-                            if(obj.extraMessage&&obj.extraMessage.length > 0) {
-                                obj.extraMessage.forEach(item => {
-                                    extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
-                                })
-                                obj.extraList = extraList
+                            if(!!item.extraMessage) {
+                                obj.extraMessage = JSON.parse(item.extraMessage)
+                                obj.subjectExtraConf = JSON.parse(item.subjectExtraConf)
+                                var extraList = []
+                                if(obj.extraMessage&&obj.extraMessage.length > 0) {
+                                    obj.extraMessage.forEach(item => {
+                                        extraList.push({conf: this.generateExtraList(obj.subjectExtraConf).array})
+                                    })
+                                    obj.extraList = extraList
+                                }
                             }
                             var auxptyObj = []
                             item.billDetailApEntityList.forEach(auxptyItem => {
@@ -1260,8 +1272,9 @@ Page({
         this.setData({
             tempImportList: []
         })
+        console.log(this.data.submitData.invoice)
         dd.httpRequest({
-            url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=0&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
+            url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + this.data.submitData.invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
             method: 'GET',
             dataType: 'json',
             success: res => {
@@ -1407,7 +1420,11 @@ Page({
             obj.field = item
             obj.type = tempData.type[index]
             array.push(obj)
-            extraMessage.push('')
+            if(obj.type == 2) {
+                extraMessage.push(moment().format('YYYY-MM-DD'))
+            }else{
+                extraMessage.push('')
+            }
         })
         return {
             array,
@@ -1429,10 +1446,12 @@ Page({
                 //     extraMessage: tempData
                 // })
                 var tempData = clone(this.data.baoxiaoList)
-                tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
-                this.setData({
-                    baoxiaoList: tempData
-                })
+                if(!!res.date) {
+                    tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
+                    this.setData({
+                        baoxiaoList: tempData
+                    })
+                }
                 // 解除focus不触发的解决办法。
                 this.onClick()
             },
