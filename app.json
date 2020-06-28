@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/addJiekuan/index",
     "pages/index/index",
     "pages/list/index",
-    "pages/addJiekuan/index",
     "pages/addBaoxiao/index",
     "pages/error/index",
     "pages/uploadPage/index"
@@ -10,7 +10,6 @@
   "window": {
     "defaultTitle": "我的单据",
     "titleBarColor": "#3276c3",
-    "allowsBounceVertical": "YES",
     "pullRefresh": true
   }
 }

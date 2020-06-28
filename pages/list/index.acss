@@ -4,8 +4,23 @@
 }
 .list-item {
     margin:0px auto;
-    margin-bottom: 10px;
+    margin-bottom: 20rpx;
     background:#fff;
-    padding: 20px;
-    border-radius: 5px
+    padding: 25px;
+}
+.tabs{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80rpx;
+    color:#333;
+    font-size: 28rpx;
+    background:#fff;
+    margin-bottom: 20rpx
+}
+.tab{
+    width: 170rpx;
+    text-align:center;
+    line-height: 80rpx;
+    border-bottom: 5rpx solid transparent
 }

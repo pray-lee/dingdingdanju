@@ -25,7 +25,7 @@ Page({
     seeAll(e) {
         // 查看全部
         dd.navigateTo({
-            url: '../list/index?type=' + e.currentTarget.dataset.type
+            url: '../list/index?type=' + e.currentTarget.dataset.type + '&flag=' + e.currentTarget.dataset.flag
         })
     },
     onAddShow() {
@@ -44,10 +44,10 @@ Page({
     onAddHide() {
         var animation = dd.createAnimation({
             duration: 250,
-            timeFunction: 'ease-in'
+            timeFunction: 'linear'
         })
         this.animation = animation
-        animation.translateY(260).step()
+        animation.translateY('100%').step()
         this.setData({
             animationInfo: animation.export(),
             maskHidden: true
@@ -79,6 +79,7 @@ Page({
                     success: res => {
                         if(res.data.success){
                             app.globalData.realName=res.data.obj.realName
+                            app.globalData.applicantId = res.data.obj.id
                             // 请求借款列表
                             this.getJiekuanList()
                             // 请求报销列表

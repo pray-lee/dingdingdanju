@@ -1,45 +1,111 @@
 <view class="app">
-  <view class="jiekuan-container">
-    <view class="jiekuan-content">
-      <view class="title">我的借款单</view>
-      <view class="completed-bill" onTap="seeAll" data-type="jiekuanCompleted">查看已完成单据</view>
-      <view class="main">
-        <view class="status error">{{statusObj[jiekuanList[0].status]}}</view>
-        <view class="content">
-          <text class="left">{{applicantType[jiekuanList[0].applicantType]}} {{jiekuanList[0].applicantName}}</text>
-          <text class="right">￥{{jiekuanList[0].amount}}</text>
+    <view class="jiekuan-container">
+        <view class="jiekuan-content">
+            <view class="title">我的借款单</view>
+            <!--      <view class="completed-bill" onTap="seeAll" data-type="jiekuanCompleted">查看已完成单据</view>-->
+            <view class="main">
+                <view a:if="{{jiekuanList.length}}">
+                    <view class="status error">
+                        <text>{{statusObj[jiekuanList[0].status]}}</text>
+                        <text class="billCode">{{jiekuanList[0].billCode}}</text>
+                    </view>
+                    <view class="content">
+                        <text a:if="{{jiekuanList[0].remark}}" class="left">{{jiekuanList[0].remark}}</text>
+                        <text a:else class="left">
+                            [无备注]
+                        </text>
+                        <text class="right">￥{{jiekuanList[0].amount}}</text>
+                    </view>
+                </view>
+                <view a:else>
+                    <view class="status error">
+                        <text>审批状态</text>
+                        <text class="billCode">单据编号</text>
+                    </view>
+                    <view class="content">
+                        <text class="left">备注</text>
+                        <text class="right">￥0.00</text>
+                    </view>
+                </view>
+                <!--        <view class="see-all" onTap="seeAll" data-type="jiekuan">查看全部</view>-->
+                <view class="list-btn-area">
+                    <view class="btn-content" data-type="10" onTap="seeAll" data-flag="J">
+                        <image class="img" mode="scaleToFill" src="../../images/draft-btn.png"></image>
+                        <view>草稿箱</view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="btn-content" data-type="20" onTap="seeAll" data-flag="J">
+                        <image class="img" mode="scaleToFill" src="../../images/undo-btn.png"></image>
+                        <view>未完成单据</view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="btn-content" data-type="80" onTap="seeAll" data-flag="J">
+                        <image class="img" mode="scaleToFill" src="../../images/completed-btn.png"></image>
+                        <view>已完成单据</view>
+                    </view>
+                </view>
+            </view>
         </view>
-        <view class="bill-number">
-          <text class="bill-number-span">单据编号</text>{{jiekuanList[0].billCode}}
-        </view>
-        <view class="see-all" onTap="seeAll" data-type="jiekuan">查看全部</view>
-      </view>
     </view>
-  </view>
-  <view class="baoxiao-container">
-    <view class="baoxiao-content">
-      <view class="title">我的报销单</view>
-      <view class="completed-bill" data-type="baoxiaoCompleted" onTap="seeAll" data-type="baoxiaoCompleted">查看已完成单据</view>
-      <view class="main">
-        <view class="status error">{{statusObj[baoxiaoList[0].status]}}</view>
-        <view class="content">
-          <text class="left">{{applicantType[baoxiaoList[0].applicantType]}} {{baoxiaoList[0].applicantName}}</text>
-          <text class="right">￥{{baoxiaoList[0].unpaidAmount}}</text>
+    <view class="baoxiao-container">
+        <view class="baoxiao-content">
+            <view class="title">我的报销单</view>
+            <view class="main">
+                <view a:if="{{baoxiaoList.length}}">
+                    <view class="status error">
+                        <text>{{statusObj[baoxiaoList[0].status]}}</text>
+                        <text class="billCode">{{baoxiaoList[0].billCode}}</text>
+                    </view>
+                    <view class="content">
+                        <text a:if="{{baoxiaoList[0].remark}}" class="left">{{baoxiaoList[0].remark}}</text>
+                        <text a:else class="left">
+                            [无备注]
+                        </text>
+                        <text class="right">￥{{baoxiaoList[0].unpaidAmount}}</text>
+                    </view>
+                </view>
+                <view a:else>
+                    <view class="status error">
+                        <text>审批状态</text>
+                        <text class="billCode">单据编号</text>
+                    </view>
+                    <view class="content">
+                        <text class="left">备注</text>
+                        <text class="right">￥0.00</text>
+                    </view>
+                </view>
+                <view class="list-btn-area">
+                    <view class="btn-content" data-type="10" onTap="seeAll" data-flag="B">
+                        <image class="img" mode="scaleToFill" src="../../images/draft-btn.png"></image>
+                        <view>草稿箱</view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="btn-content" data-type="20" onTap="seeAll" data-flag="B">
+                        <image class="img" mode="scaleToFill" src="../../images/undo-btn.png"></image>
+                        <view>未完成单据</view>
+                    </view>
+                    <view class="line"></view>
+                    <view class="btn-content" data-type="80" onTap="seeAll" data-flag="B">
+                        <image class="img" mode="scaleToFill" src="../../images/completed-btn.png"></image>
+                        <view>已完成单据</view>
+                    </view>
+                </view>
+            </view>
         </view>
-        <view class="bill-number">
-          <text class="bill-number-span">单据编号</text>{{baoxiaoList[0].billCode}}
-        </view>
-        <view class="see-all" onTap="seeAll" data-type="baoxiao">查看全部</view>
-      </view>
     </view>
-  </view>
-  <view class="add-btn" onTap="onAddShow">
-    新增单据
-  </view>
-  <!-- 新增单据弹框 -->
-  <view class="add-page" animation="{{animationInfo}}">
-    <view class="add-item" onTap="onShowAddJiekuan">借款单</view>
-    <view class="add-item" onTap="onShowAddBaoxiao">费用报销单</view>
-  </view>
-  <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+    <view class="add-btn" onTap="onAddShow">
+        新增单据
+    </view>
+    <!-- 新增单据弹框 -->
+    <view class="add-page" animation="{{animationInfo}}">
+        <view class="add-item" onTap="onShowAddJiekuan">
+            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>
+            <view>借款单</view>
+        </view>
+        <view class="add-item" onTap="onShowAddBaoxiao">
+            <image class="add-img" mode="scaleToFill" src="../../images/baoxiao-icon.png"></image>
+            <view>报销单</view>
+        </view>
+    </view>
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

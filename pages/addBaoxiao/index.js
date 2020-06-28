@@ -6,7 +6,6 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
-        uploadSrc: '',
         type: '',
         billId: '',
         maskHidden: true,
@@ -452,20 +451,6 @@ Page({
         })
     },
     onShow() {
-        // 从缓存里获取上传数据
-        dd.getStorage({
-            key: 'fileList',
-            success: res => {
-                if (!!res.data) {
-                    this.setData({
-                        submitData: {
-                            ...this.data.submitData,
-                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data.fileLists)
-                        }
-                    })
-                }
-            }
-        })
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -541,9 +526,77 @@ Page({
         })
     },
     handleUpload() {
-        dd.navigateTo({
-            url: '/pages/uploadPage/index'
+        dd.chooseImage({
+            count: 6,
+            success: res => {
+                console.log(res)
+                this.uploadFile(res.filePaths)
+            },
+            fail: res => {
+                console.log('用户取消操作')
+            }
         })
+    },
+    /**
+     *
+     * @param 上传图片字符串列表
+     */
+    uploadFile(array) {
+        if(array.length) {
+            this.addLoading()
+            let promiseList = []
+            array.forEach(item => {
+                promiseList.push(new Promise((resolve, reject) => {
+                    dd.uploadFile({
+                        url: app.globalData.url + 'aliyunController/uploadImages.do',
+                        fileType: 'image',
+                        fileName: item,
+                        filePath: item,
+                        formData: {
+                            accountbookId: this.data.submitData.accountbookId,
+                            submitterDepartmentId: this.data.submitData.submitterDepartmentId
+                        },
+                        success: res => {
+                            const result = JSON.parse(res.data)
+                            if(result.obj&&result.obj.length) {
+                                const file = result.obj[0]
+                                resolve(file)
+                            }else{
+                                reject('上传失败')
+                            }
+                        },
+                        fail: res => {
+                            reject(res)
+                        }
+                    })
+                }))
+            })
+            Promise.all(promiseList).then(res => {
+                // 提交成功的处理逻辑
+                this.hideLoading()
+                console.log(res)
+                var billFilesList = []
+                res.forEach(item => {
+                    billFilesList.push(item)
+                })
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
+                    }
+                })
+            }).catch( error => {
+                this.hideLoading()
+                console.log(error, 'catch')
+                dd.alert({
+                    content: '上传失败',
+                    buttonText: '好的',
+                    success: res => {
+
+                    }
+                })
+            })
+        }
     },
     downloadFile(e) {
         var url = e.currentTarget.dataset.url
@@ -721,7 +774,7 @@ Page({
                 })
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
-                var applicantId = !!applicant ? applicant : arr[0].id
+                var applicantId = !!applicant ? applicant : app.globalData.applicantId
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {

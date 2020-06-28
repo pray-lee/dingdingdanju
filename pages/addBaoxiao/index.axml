@@ -271,7 +271,6 @@
             <view class="upload-wrapper" onTap="handleUpload">
                 <view class="borrow-title">附件列表</view>
                 <view class="add-file-btn">添加附件</view>
-                <web-view a:if="{{uploadSrc !== ''}}" id="web-view-1" src="{{uploadSrc}}" onMessage="uploadCallback"></web-view>
             </view>
             <view class="file-list">
                 <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">

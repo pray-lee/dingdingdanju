@@ -1,10 +1,16 @@
 <view class="app">
+    <view class="tabs">
+        <view class="tab" data-active="10" style="color: {{active == 10 ? '#1f65d8' : '#333'}}; border-bottom-color: {{active == 10 ? '#1f65d8' : 'transparent'}}" onTap="getData">草稿箱</view>
+        <view class="tab" data-active="20" style="color: {{active == 20 ? '#1f65d8' : '#333'}}; border-bottom-color: {{active == 20 ? '#1f65d8' : 'transparent'}}" onTap="getData">未完成</view>
+        <view class="tab" data-active="80" style="color: {{active == 80 ? '#1f65d8' : '#333'}}; border-bottom-color: {{active == 80 ? '#1f65d8' : 'transparent'}}" onTap="getData">已完成</view>
+    </view>
     <scroll-view scroll-y="{{true}}" class="scroll-view">
         <view class="list-wrapper">
             <view class="list-item" a:for="{{list}}" onTap="goToEdit" data-id={{item.id}}>
                 <view class="status error">{{statusObj[item.status]}}</view>
                 <view class="content">
-                    <text class="left">{{applicantType[item.applicantType]}} {{item.applicantName}}</text>
+                    <text a:if="{{!!item.remark}}">{{item.remark}}</text>
+                    <text a:else>[无备注]</text>
                     <text class="right" a:if="{{type.indexOf('jiekuan') != -1}}">￥{{item.amount}}</text>
                     <text a:else class="right">￥{{item.unpaidAmount}}</text>
                 </view>
@@ -20,8 +26,14 @@
     </view>
     <!-- 新增单据弹框 -->
     <view class="add-page" animation="{{animationInfo}}">
-        <view class="add-item" onTap="onShowAddJiekuan">借款单</view>
-        <view class="add-item" onTap="onShowAddBaoxiao">费用报销单</view>
+        <view class="add-item" onTap="onShowAddJiekuan">
+            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>
+            <view>借款单</view>
+        </view>
+        <view class="add-item" onTap="onShowAddBaoxiao">
+            <image class="add-img" mode="scaleToFill" src="../../images/baoxiao-icon.png"></image>
+            <view>报销单</view>
+        </view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

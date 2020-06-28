@@ -1,5 +1,4 @@
 .form-wrapper{
-    background:#fff;
     position:absolute;
     top:0;
     left:0;
@@ -9,6 +8,18 @@
 }
 .form-scroll-wrapper{
     height: calc(100vh - 120rpx)
+}
+.block-wrapper{
+    margin-bottom: 20rpx;
+    background:#fff;
+    padding-top: 34rpx;
+}
+.title{
+    margin:0 40rpx;
+    border-left: 4rpx solid #1f65d8;
+    padding-left: 14rpx;
+    font-size: 30rpx;
+    font-weight:600
 }
 .btn-area{
     display:flex;
@@ -58,39 +69,43 @@
     line-height: 100rpx;
 }
 .add-borrow, .upload-wrapper{
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30rpx;
-    color:#3276c3;
-    font-weight:bold;
-    font-size: 30rpx;
-    //background:#3276c3;
-    height: 40rpx;
-    line-height: 40rpx;
-    flex: 1;
-    margin-top: 40rpx
 }
 .add-borrow-btn, .add-file-btn{
-    min-width: 120rpx;
-    height: 40rpx;
-    line-height: 40rpx;
-    padding-left: 40rpx;
-    border-left: 2px solid #3276c3;
+    text-align:center;
+    height: 87rpx;
+    line-height: 87rpx;
+    color:#1f65d8;
+    font-weight:200
 }
 .borrow-item .form-row, .file-item .form-row{
-    padding-left: 0;
-    line-height: 88rpx;
+    padding: 0 40rpx;
+    display:flex;
+    align-items: center;
+}
+.borrow-item .form-row-content, .file-list .form-row-content{
+    text-align:center
 }
 .delete-borrow, .delete-file{
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
     background-size: 30rpx 30rpx;
+    position:absolute;
+    left: 20rpx;
+    z-index: 999
+}
+.borrow-line{
+    width: 1rpx;
+    height: 36rpx;
+    background:#ddd
 }
 .img{
     width:40rpx;
     height: 40rpx
+}
+.img-wrapper{
+    display:flex;
+    justify-content: flex-end;
 }
 .special-btn{
     width: 99%;
@@ -119,10 +134,9 @@
     border-radius:0px;
 }
 .mock-input{
-    height: 88rpx;
-    line-height: 88rpx;
+    height: 44rpx;
+    line-height: 44rpx;
     width: 100%;
-    text-align:right;
     color:rgb(136,136,136)
 }
 .mock-input.nodata{
@@ -141,4 +155,8 @@ input:-ms-input-placeholder{
 
 input::-webkit-input-placeholder{
     color: rgb(136,136,136);
+}
+.invoice-wrapper{
+    display:flex;
+    justify-content: space-between;
 }

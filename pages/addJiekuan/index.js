@@ -5,7 +5,6 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
-        uploadSrc: '',
         type: '',
         billId: '',
         maskHidden: true,
@@ -97,7 +96,7 @@ Page({
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
-        this.formatSubmitData(this.data.submitData.billFilesObj, 'billInternetFiles')
+        this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         console.log(this.data)
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -136,7 +135,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                invoice: e.detail.value
+                invoice: e.detail.value ? 1 : 0
             }
         })
     },
@@ -183,6 +182,9 @@ Page({
         }
         if (name === 'incomeBankName') {
             this.setIncomeBankAccount(this.data[listName][value].bankAccount)
+        }
+        if (name === 'capitalTypeDetailId') {
+            this.setCapitalType(this.data[listName][value].detailId)
         }
     },
     // 核算维度onChange
@@ -363,6 +365,8 @@ Page({
     },
     deleteBorrowDetail(e) {
         var borrowAmount = e.currentTarget.dataset.detail
+        console.log(borrowAmount, ',,,,,,,,,,,,,,,,,,')
+        console.log(this.data.submitData)
         var billDetailListObj = this.data.submitData['billDetailListObj'].filter(item => {
             return item.borrowAmount !== borrowAmount
         })
@@ -412,7 +416,7 @@ Page({
     },
     handleUpload() {
         dd.chooseImage({
-            count: 1,
+            count: 6,
             success: res => {
                 console.log(res)
                 this.uploadFile(res.filePaths)
@@ -437,9 +441,18 @@ Page({
                         fileType: 'image',
                         fileName: item,
                         filePath: item,
+                        formData: {
+                            accountbookId: this.data.submitData.accountbookId,
+                            submitterDepartmentId: this.data.submitData.submitterDepartmentId
+                        },
                         success: res => {
-                            console.log(res)
-                            resolve()
+                            const result = JSON.parse(res.data)
+                            if(result.obj&&result.obj.length) {
+                                const file = result.obj[0]
+                                resolve(file)
+                            }else{
+                                reject('上传失败')
+                            }
                         },
                         fail: res => {
                             reject(res)
@@ -451,40 +464,37 @@ Page({
                 // 提交成功的处理逻辑
                 this.hideLoading()
                 console.log(res)
+                var billFilesList = []
+                res.forEach(item => {
+                   billFilesList.push(item)
+                })
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
+                    }
+                })
             }).catch( error => {
                 this.hideLoading()
-                console.log('catch')
-                console.log(error)
+                console.log(error, 'catch')
+                dd.alert({
+                    content: '上传失败',
+                    buttonText: '好的',
+                    success: res => {
+
+                    }
+                })
             })
         }
     },
-    downloadFile(e) {
+    previewFile(e) {
         var url = e.currentTarget.dataset.url
-        console.log(url)
-        dd.downloadFile({
-            url,
-            success({filePath}) {
-                console.log(filePath)
-                dd.previewImage({
-                    urls: [filePath]
-                })
-            }
+        dd.previewImage({
+            urls: [url],
         })
     },
     onLoad(query) {
         app.globalData.loadingCount = 0
-        // 清除缓存
-        dd.removeStorageSync({
-            key: 'fileList',
-            success: () => {
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        billFilesObj: []
-                    }
-                })
-            }
-        })
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -601,7 +611,7 @@ Page({
                 })
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
-                var applicantId = !!applicant ? applicant : arr[0].id
+                var applicantId = !!applicant ? applicant : app.globalData.applicantId
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {
@@ -904,9 +914,21 @@ Page({
                 }
                 this.setData({
                     capitalTypeList: arr,
-                    capitalTypeIndex
+                    capitalTypeIndex,
+                    submitData: {
+                        ...this.data.submitData,
+                        capitalTypeDetailId: arr[0].detailId
+                    }
                 })
                 this.hideLoading()
+            }
+        })
+    },
+    setCapitalType(id) {
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                capitalTypeDetailId: id
             }
         })
     },
