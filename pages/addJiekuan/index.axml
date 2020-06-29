@@ -83,6 +83,13 @@
             <view class="block-wrapper">
                 <view class="title">单据信息</view>
                 <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>事由</view>
+                    <view class="form-row-content">
+                        <input class="input" value="{{submitData.remark}}" placeholder="请输入事由" data-name="remark" onBlur="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>借款类型</view>
                     <view class="form-row-content">
                         <picker class="picker-style" onChange="bindObjPickerChange" value="{{subjectIndex}}" range="{{subjectList}}" range-key="name" data-name="subjectId" data-index="subjectIndex" data-list="subjectList">
@@ -140,8 +147,9 @@
 <!--                            </label>-->
 <!--                        </radio-group>-->
 <!--                    </view>-->
-                    <switch checked onChange="radioChange" checked="{{submitData.invoice == 0 ? false : true}}" color="#1f76d8"/>
+                    <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
+                <view class="form-line"/>
             </view>
 <!--            <view class="form-row">-->
 <!--                <view class="form-row-label">借款合计</view>-->
@@ -169,13 +177,6 @@
 <!--                <view class="form-row-content">-->
 <!--                    <input class="input" disabled value="{{submitData.submitDate}}" data-name="submitDate" placeholder="提交日期"/>-->
 <!--                    <view data-name="submitDate">{{submitData.submitDate}}</view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">备注</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" value="{{submitData.remark}}" placeholder="备注" data-name="remark" onBlur="onBlur"/>-->
 <!--                </view>-->
 <!--            </view>-->
 <!--            <view class="form-line"/>-->
@@ -228,7 +229,8 @@
             </view>
         </scroll-view>
         <view class="btn-area">
-            <button formType="submit" class="submit-btn">提交</button>
+            <button onTap="formSubmit" class="submit-btn">提交</button>
+<!--             <button formType="submit" class="submit-btn">提交</button> -->
         </view>
     </form>
 <!--增加借款弹框-->
@@ -241,9 +243,9 @@
         </view>
         <view class="form-line"/>
         <view class="form-row">
-            <view class="form-row-label">备注</view>
+            <view class="form-row-label">事由</view>
             <view class="form-row-content">
-                <input class="input" placeholder="备注" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
+                <input class="input" placeholder="请输入事由" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
             </view>
         </view>
         <view class="form-line"/>

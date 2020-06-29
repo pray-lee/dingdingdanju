@@ -112,20 +112,21 @@
                 </view>
             </view>
             <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">是否有发票</view>
-                <view class="form-row-content">
-                    <radio-group data-name="invoice" onChange="radioChange">
-                        <label class="radio">
-                            <radio value="1" checked="{{submitData.invoice == 1}}"></radio>
-                            是
-                        </label>
-                        <label class="radio">
-                            <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio>
-                            否
-                        </label>
-                    </radio-group>
-                </view>
+            <view class="form-row invoice-wrapper">
+                <view class="form-row-label"><text class="require">*</text>是否有发票</view>
+<!--                 <view class="form-row-content"> -->
+<!--                     <radio-group data-name="invoice" onChange="radioChange"> -->
+<!--                         <label class="radio"> -->
+<!--                             <radio value="1" checked="{{submitData.invoice == 1}}"></radio> -->
+<!--                             是 -->
+<!--                         </label> -->
+<!--                         <label class="radio"> -->
+<!--                             <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio> -->
+<!--                             否 -->
+<!--                         </label> -->
+<!--                     </radio-group> -->
+<!--                 </view> -->
+                    <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
             </view>
             <view class="form-line"/>
             <view class="form-row">

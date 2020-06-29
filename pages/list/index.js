@@ -3,6 +3,7 @@ app.globalData.loadingCount = 0
 Page({
     data: {
         type: '',
+        scrollTop: 0,
         maskHidden: true,
         animationInfo: {},
         list: [],
@@ -43,9 +44,19 @@ Page({
         }
         return url
     },
+    // scroll
+    onScroll(e) {
+        const {scrollTop} = e.detail
+        this.setData({
+            scrollTop
+        })
+    },
     // 点击tab页请求
     getData(e) {
         this.addLoading()
+        this.setData({
+            scrollTop: 0
+        })
         var active = e.currentTarget.dataset.active
         var url = this.setUrl(active + this.data.flag)
         this.setData({

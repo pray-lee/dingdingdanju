@@ -178,10 +178,9 @@ input{
     color:#3276c3;
 }
 .mock-input{
-    height: 88rpx;
-    line-height: 88rpx;
+    height: 44rpx;
+    line-height: 44rpx;
     width: 100%;
-    text-align:right;
     color:rgb(136,136,136)
 }
 .mock-input.nodata{
@@ -200,4 +199,8 @@ input:-ms-input-placeholder{
 
 input::-webkit-input-placeholder{
     color: rgb(136,136,136);
+}
+.invoice-wrapper{
+    display:flex;
+    justify-content: space-between;
 }
