@@ -308,20 +308,25 @@ Page({
         })
     },
     onShow() {
-        // 从缓存里获取上传数据
-        dd.getStorage({
-            key: 'fileList',
-            success: res => {
-                if (!!res.data) {
-                    this.setData({
-                        submitData: {
-                            ...this.data.submitData,
-                            billFilesObj: this.data.submitData.billFilesObj.concat(res.data.fileLists)
-                        }
-                    })
+        // 从缓存里获取借款人id
+        const borrowId = dd.getStorageSync({key: 'borrowId'}).data
+        if(!!borrowId) {
+            console.log('借款人id已经获取', borrowId)
+            var borrowIndex = 0
+            this.data.borrowList.forEach((item, index) => {
+                if(item.id === borrowId) {
+                    borrowIndex = index
                 }
-            }
-        })
+            })
+            this.setData({
+                borrowIndex,
+                submitData: {
+                    ...this.data.submitData,
+                    applicantId: borrowId
+                }
+            })
+            this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+        }
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -393,26 +398,40 @@ Page({
         })
     },
     handleAddBorrow() {
-        if (this.data.borrowAmount !== '') {
-            var obj = {
-                borrowAmount: this.data.borrowAmount,
-                remark: this.data.remark
-            }
-            var billDetailListObj = this.data.submitData['billDetailListObj'].concat(obj)
-            // 借款合计
-            var amount = 0
-            billDetailListObj.forEach(item => {
-                amount += Number(item.borrowAmount)
+        if (this.data.borrowAmount === '') {
+            dd.alert({
+                content: '请输入借款金额',
+                buttonText: '确定',
+                success: res => {}
             })
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    billDetailListObj,
-                    amount: amount.toFixed(2)
-                }
-            })
-            this.onAddHide()
+            return
         }
+        if (this.data.remark === '') {
+            dd.alert({
+                content: '请输入备注信息',
+                buttonText: '确定',
+                success: res => {}
+            })
+            return
+        }
+        var obj = {
+            borrowAmount: this.data.borrowAmount,
+            remark: this.data.remark
+        }
+        var billDetailListObj = this.data.submitData['billDetailListObj'].concat(obj)
+        // 借款合计
+        var amount = 0
+        billDetailListObj.forEach(item => {
+            amount += Number(item.borrowAmount)
+        })
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                billDetailListObj,
+                amount: amount.toFixed(2)
+            }
+        })
+        this.onAddHide()
     },
     handleUpload() {
         dd.chooseImage({
@@ -431,7 +450,7 @@ Page({
      * @param 上传图片字符串列表
      */
     uploadFile(array) {
-        if(array.length) {
+        if (array.length) {
             this.addLoading()
             let promiseList = []
             array.forEach(item => {
@@ -447,10 +466,10 @@ Page({
                         },
                         success: res => {
                             const result = JSON.parse(res.data)
-                            if(result.obj&&result.obj.length) {
+                            if (result.obj && result.obj.length) {
                                 const file = result.obj[0]
                                 resolve(file)
-                            }else{
+                            } else {
                                 reject('上传失败')
                             }
                         },
@@ -466,7 +485,7 @@ Page({
                 console.log(res)
                 var billFilesList = []
                 res.forEach(item => {
-                   billFilesList.push(item)
+                    billFilesList.push(item)
                 })
                 this.setData({
                     submitData: {
@@ -474,7 +493,7 @@ Page({
                         billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
                     }
                 })
-            }).catch( error => {
+            }).catch(error => {
                 this.hideLoading()
                 console.log(error, 'catch')
                 dd.alert({
@@ -607,6 +626,14 @@ Page({
                     return {
                         id: item.applicantId,
                         name: item.borrowObject
+                    }
+                })
+                // 写入缓存
+                dd.setStorage({
+                    key: 'borrowList',
+                    data: arr,
+                    success: res => {
+                       console.log('borrowList write success!!!!')
                     }
                 })
                 // edit的时候，设置borrowIndex
@@ -1019,6 +1046,11 @@ Page({
                 accountbookId: data.accountbookId,
                 billCode: data.billCode
             }
+        })
+    },
+    goInfoList() {
+        dd.navigateTo({
+            url: '/pages/infoList/index?'
         })
     }
 })

@@ -1,11 +1,12 @@
 {
   "pages": [
-    "pages/addJiekuan/index",
     "pages/index/index",
     "pages/list/index",
+    "pages/addJiekuan/index",
     "pages/addBaoxiao/index",
     "pages/error/index",
-    "pages/uploadPage/index"
+    "pages/uploadPage/index",
+    "pages/infoList/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

@@ -1,0 +1,7 @@
+<view class="info-wrapper">
+    <scroll-view scroll-y class="scroll-info-list">
+        <view class="info-item" a:for="{{borrowList}}" data-id="{{item.id}}" onTap="goBack">
+            {{item.name}}
+        </view>
+    </scroll-view>
+</view>

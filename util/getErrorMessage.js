@@ -9,6 +9,7 @@ const getErrorMessage = string => {
         },
     });
 }
+
 const submitSuccess = () => {
     console.log('submit success...')
     dd.alert({

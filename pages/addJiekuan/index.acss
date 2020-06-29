@@ -103,6 +103,16 @@
     width:40rpx;
     height: 40rpx
 }
+.jiekuan-icon{
+    width: 30rpx;
+    height: 30rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+}
+.add-icon{
+    width: 42rpx;
+    height: 42rpx;
+}
 .img-wrapper{
     display:flex;
     justify-content: flex-end;
@@ -137,7 +147,7 @@
     height: 44rpx;
     line-height: 44rpx;
     width: 100%;
-    color:rgb(136,136,136)
+    color:rgb(136,136,136);
 }
 .mock-input.nodata{
     color:#c7c7cd
@@ -159,4 +169,34 @@ input::-webkit-input-placeholder{
 .invoice-wrapper{
     display:flex;
     justify-content: space-between;
+}
+.submit-info-wrapper{
+    padding-bottom: 34rpx
+}
+.submit-info, .total{
+    font-weight: 600
+}
+.submit-info{
+    display:flex;
+    justify-content: space-around;
+    font-size: 28rpx;
+    color:#333
+}
+.total{
+    display:flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-top: 20rpx;
+}
+.total-word{
+    font-size: 40rpx;
+}
+.incomeBankAccount, .incomeBankName{
+    color:#BBBBBB
+}
+.incomeBankAccount{
+    font-size: 36rpx;
+}
+.incomeBankName{
+    font-size: 24rpx
 }
