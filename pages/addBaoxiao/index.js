@@ -136,6 +136,12 @@ Page({
     },
     formSubmit(e) {
         const status = e.currentTarget.dataset.status
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                status
+            }
+        })
         // 处理一下提交格式
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
         this.formatSubmitData(this.data.importList, 'borrowBillList')
@@ -149,11 +155,6 @@ Page({
             url = app.globalData.url + 'reimbursementBillController.do?doAdd'
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
-            this.setData({
-                submitData: {
-                   status
-                }
-            })
         }
         dd.httpRequest({
             url,
@@ -652,18 +653,6 @@ Page({
     },
     onLoad(query) {
         app.globalData.loadingCount = 0
-        // 清除缓存
-        dd.removeStorageSync({
-            key: 'fileList',
-            success: () => {
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        billFilesObj: []
-                    }
-                })
-            }
-        })
         this.getTaxRageArr()
         this.getInvoiceTypeArr()
         this.setData({

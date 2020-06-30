@@ -95,6 +95,12 @@ Page({
     },
     formSubmit(e) {
         const status = e.currentTarget.dataset.status
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                status
+            }
+        })
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
@@ -108,12 +114,6 @@ Page({
             url = app.globalData.url + 'borrowBillController.do?doAdd'
         } else {
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    status
-                }
-            })
         }
         dd.httpRequest({
             url,
