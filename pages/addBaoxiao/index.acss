@@ -1,5 +1,4 @@
 .form-wrapper{
-    background:#fff;
     position:absolute;
     top:0;
     left:0;
@@ -9,6 +8,18 @@
 }
 .form-scroll-wrapper{
     height: calc(100vh - 120rpx)
+}
+.block-wrapper{
+    margin-bottom: 20rpx;
+    background:#fff;
+    padding-top: 34rpx;
+}
+.title{
+    margin:0 40rpx;
+    border-left: 4rpx solid #1f65d8;
+    padding-left: 14rpx;
+    font-size: 30rpx;
+    font-weight:600
 }
 .btn-area{
     display:flex;
@@ -25,8 +36,8 @@
     border-radius: 0;
     color:#fff;
     font-size: 32rpx;
-    height: 80rpx;
-    line-height: 80rpx
+    height: 100rpx;
+    line-height: 100rpx
 }
 .radio{
     margin-right: 30rpx
@@ -203,4 +214,44 @@ input::-webkit-input-placeholder{
 .invoice-wrapper{
     display:flex;
     justify-content: space-between;
+}
+.submit-info-wrapper{
+    padding-bottom: 34rpx
+}
+.submit-info, .total{
+    font-weight: 600
+}
+.submit-info{
+    display:flex;
+    justify-content: space-around;
+    font-size: 28rpx;
+    color:#333
+}
+.total{
+    display:flex;
+    justify-content: center;
+    align-items: baseline;
+    padding-top: 20rpx;
+}
+.total-word{
+    font-size: 40rpx;
+}
+.jiekuan-icon{
+    width: 30rpx;
+    height: 30rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
+}
+.incomeBankAccount, .incomeBankName{
+    color:#BBBBBB
+}
+.incomeBankAccount{
+    font-size: 36rpx;
+}
+.incomeBankName{
+    font-size: 24rpx
+}
+.btn-area .save-draft{
+    background:#fff;
+    color:#1f65d8;
 }

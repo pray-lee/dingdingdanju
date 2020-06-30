@@ -21,6 +21,7 @@ Page({
         departmentIndex: 0,
         departmentList: [],
         borrowIndex: 0,
+        borrowList: [],
         // 税率
         taxRageObject: {
             taxRageArr: [],
@@ -134,6 +135,7 @@ Page({
         }
     },
     formSubmit(e) {
+        const status = e.currentTarget.dataset.status
         // 处理一下提交格式
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
         this.formatSubmitData(this.data.importList, 'borrowBillList')
@@ -147,6 +149,11 @@ Page({
             url = app.globalData.url + 'reimbursementBillController.do?doAdd'
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
+            this.setData({
+                submitData: {
+                   status
+                }
+            })
         }
         dd.httpRequest({
             url,
@@ -451,6 +458,28 @@ Page({
         })
     },
     onShow() {
+        // 从缓存里获取借款人id
+        const borrowId = dd.getStorageSync({key: 'borrowId'}).data
+        if (!!borrowId) {
+            console.log('借款人id已经获取', borrowId)
+            console.log(this.data.borrowList, 'borrowList')
+            var borrowIndex = 0
+            this.data.borrowList.forEach((item, index) => {
+                if (item.id === borrowId) {
+                    borrowIndex = index
+                }
+            })
+            this.setData({
+                borrowIndex,
+                submitData: {
+                    ...this.data.submitData,
+                    applicantId: borrowId
+                }
+            })
+            setTimeout(() => {
+                this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+            })
+        }
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -611,6 +640,16 @@ Page({
             }
         })
     },
+    onHide() {
+        console.log('onHide...............')
+        // 清理借款人缓存
+        dd.removeStorage({
+            key: 'borrowId',
+            success: function(){
+                console.log('借款人缓存删除成功')
+            }
+        });
+    },
     onLoad(query) {
         app.globalData.loadingCount = 0
         // 清除缓存
@@ -770,6 +809,13 @@ Page({
                     return {
                         id: item.applicantId,
                         name: item.borrowObject
+                    }
+                })
+                // 写入缓存
+                dd.setStorage({
+                    key: 'borrowList',
+                    data: arr,
+                    success: res => {
                     }
                 })
                 // edit的时候，设置borrowIndex
@@ -1545,5 +1591,10 @@ Page({
     onExtraSubmit() {
         this.onExtraHide()
         console.log(this.data.baoxiaoList)
+    },
+    goInfoList() {
+        dd.navigateTo({
+            url: '/pages/infoList/index'
+        })
     }
 })

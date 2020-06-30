@@ -45,18 +45,18 @@ Page({
         return url
     },
     // scroll
-    onScroll(e) {
-        const {scrollTop} = e.detail
-        this.setData({
-            scrollTop
-        })
-    },
+    // onScroll(e) {
+    //     const {scrollTop} = e.detail
+    //     this.setData({
+    //         scrollTop
+    //     })
+    // },
     // 点击tab页请求
     getData(e) {
         this.addLoading()
-        this.setData({
-            scrollTop: 0
-        })
+        // this.setData({
+        //     scrollTop: 0
+        // })
         var active = e.currentTarget.dataset.active
         var url = this.setUrl(active + this.data.flag)
         this.setData({
@@ -66,7 +66,6 @@ Page({
             url: url,
             method: 'GET',
             success: res => {
-                this.hideLoading()
                 console.log(res)
                 this.setData({
                     list: res.data.rows,
@@ -77,6 +76,7 @@ Page({
             },
             complete: res => {
                 console.log('completed')
+                this.hideLoading()
             }
         })
     },
@@ -97,7 +97,6 @@ Page({
             url: url,
             method: 'GET',
             success: res => {
-                this.hideLoading()
                 console.log(res)
                 this.setData({
                     list: res.data.rows
@@ -108,19 +107,24 @@ Page({
             },
             complete: res => {
                 console.log('completed')
+                this.hideLoading()
             }
         })
     },
     addLoading() {
-        dd.showLoading({
-            content: '数据加载中...'
-        })
-        app.globalData.loadingCount++
+        if(app.globalData.loadingCount < 1) {
+            dd.showLoading({
+                content: '加载中...'
+            })
+        }
+        app.globalData.loadingCount +=1
     },
     hideLoading() {
-        app.globalData.loadingCount--
-        if (app.globalData.loadingCount === 0) {
+        if(app.globalData.loadingCount <= 1) {
             dd.hideLoading()
+            app.globalData.loadingCount = 0
+        }else{
+            app.globalData.loadingCount-=1
         }
     },
     onAddShow() {

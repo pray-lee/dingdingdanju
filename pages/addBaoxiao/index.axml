@@ -1,158 +1,174 @@
 <view class="form-wrapper" onTap="onClick">
     <form onSubmit="formSubmit">
         <scroll-view scroll-y class="form-scroll-wrapper">
-            <view class="form-row">
-                <view class="form-row-label">单据编号</view>
-                <view class="form-row-content">
-                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivableBillCode"
-                           value="{{submitData.billCode}}"/>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">业务日期</view>
-                <view class="form-row-content">
-<!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
-<!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
-                    <view onTap="onBusinessFocus" data-name="businessDateTime">{{submitData.businessDateTime}}</view>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">申请组织</view>
-                <view class="form-row-content">
-                    <picker onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}"
-                            range-key="accountbookName" data-name="accountbookId" data-index="accountbookIndex"
-                            data-list="accountbookList">
-                        <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
-                    </picker>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">申请部门</view>
-                <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}"
-                            range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId"
-                            data-list="departmentList" data-index="departmentIndex">
-                        <view class="row-extra">{{departmentList[departmentIndex].name}}</view>
-                    </picker>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">往来单位类型</view>
-                <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}"
-                            range="{{applicantTypeList}}" range-key="name" data-name="applicantType"
-                            data-list="applicantTypeList" data-index="applicantIndex">
-                        <view class="row-extra">{{applicantTypeList[applicantIndex].name}}</view>
-                    </picker>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">往来单位</view>
-                <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}"
-                            range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex"
-                            data-list="borrowList">
-                        <view class="row-extra">{{borrowList[borrowIndex].name}}</view>
-                    </picker>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">收款银行</view>
-                <view class="form-row-content">
-                    <block a:if="{{incomeBankList[incomeBankIndex].bankName}}">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"
-                                range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"
-                                data-list="incomeBankList" data-index="incomeBankIndex">
-                            <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>
+            <view class="block-wrapper">
+                <view class="title">申请方信息</view>
+                <!--            <view class="form-row">-->
+                <!--                <view class="form-row-label">单据编号</view>-->
+                <!--                <view class="form-row-content">-->
+                <!--                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivableBillCode"-->
+                <!--                           value="{{submitData.billCode}}"/>-->
+                <!--                </view>-->
+                <!--            </view>-->
+                <!--            <view class="form-line"/>-->
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>申请组织</view>
+                    <view class="form-row-content">
+                        <picker onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}"
+                                range-key="accountbookName" data-name="accountbookId" data-index="accountbookIndex"
+                                data-list="accountbookList">
+                            <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
                         </picker>
-                    </block>
-                    <view a:else class="mock-input nodata">请选择收款银行</view>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>申请部门</view>
+                    <view class="form-row-content">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}"
+                                range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId"
+                                data-list="departmentList" data-index="departmentIndex">
+                            <view class="row-extra">{{departmentList[departmentIndex].name}}</view>
+                        </picker>
+                    </view>
                 </view>
             </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">收款账号</view>
-                <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.incomeBankAccount}}"
-                           data-name="incomeBankAccount" placeholder="收款账号"/>
+            <view class="block-wrapper">
+                <view class="title">收款方信息</view>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>往来单位类型</view>
+                    <view class="form-row-content">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}"
+                                range="{{applicantTypeList}}" range-key="name" data-name="applicantType"
+                                data-list="applicantTypeList" data-index="applicantIndex">
+                            <view class="row-extra">{{applicantTypeList[applicantIndex].name}}</view>
+                        </picker>
+                    </view>
                 </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">申请报销金额</view>
-                <view class="form-row-content">
-                    <input a:if="{{submitData.applicationAmount}}" class="input" disabled
-                           value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}"
-                           data-name="applicationAmount" placeholder="申请报销金额"/>
-                    <view a:else class="mock-input nodata">请填写报销详情</view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="goInfoList">
+                    <view class="form-row-label">借款信息</view>
+                    <view class="form-row-content borrowList-wrapper">
+<!--                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}"-->
+<!--                                range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex"-->
+<!--                                data-list="borrowList">-->
+<!--                            <view class="row-extra">{{borrowList[borrowIndex].name}}</view>-->
+<!--                        </picker>-->
+                        {{borrowList[borrowIndex].name}}
+                    </view>
+                    <view class="form-row-content incomeBankAccount">
+                        <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">{{submitData.incomeBankAccount}}</view>
+                        <view a:else class="mock-input nodata">暂无银行账号</view>
+                    </view>
+                    <view class="form-row-content incomeBankName">
+                        <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">{{incomeBankList[0].bankName}}</view>
+                        <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
+                    </view>
                 </view>
+<!--                <view class="form-line"/>-->
+<!--                <view class="form-row">-->
+<!--                    <view class="form-row-label">收款银行</view>-->
+<!--                    <view class="form-row-content">-->
+<!--                        <block a:if="{{incomeBankList[incomeBankIndex].bankName}}">-->
+<!--                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"-->
+<!--                                    range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"-->
+<!--                                    data-list="incomeBankList" data-index="incomeBankIndex">-->
+<!--                                <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>-->
+<!--                            </picker>-->
+<!--                        </block>-->
+<!--                        <view a:else class="mock-input nodata">请选择收款银行</view>-->
+<!--                    </view>-->
+<!--                </view>-->
+<!--                <view class="form-line"/>-->
+<!--                <view class="form-row">-->
+<!--                    <view class="form-row-label">收款账号</view>-->
+<!--                    <view class="form-row-content">-->
+<!--                        <input class="input" disabled value="{{submitData.incomeBankAccount}}"-->
+<!--                               data-name="incomeBankAccount" placeholder="收款账号"/>-->
+<!--                    </view>-->
+<!--                </view>-->
             </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">核销借款金额</view>
-                <view class="form-row-content">
-                    <input a:if="{{submitData.verificationAmount}}" class="input" data-name="applicationAmount" disabled
-                           value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}"
-                           placeholder="核销借款金额"/>
-                    <view a:else class="mock-input nodata">请导入借款单</view>
+            <view class="block-wrapper">
+                <view class="title">单据信息</view>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>事由</view>
+                    <view class="form-row-content">
+                        <input class="input" value="{{submitData.remark}}" placeholder="请输入事由" data-name="remark"
+                               onBlur="onBlur"/>
+                    </view>
                 </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">应付款金额</view>
-                <view class="form-row-content">
-                    <input class="input" data-name="totalAmount" disabled
-                           value="{{submitData.totalAmount == 0 ? '' : submitData.totalAmount}}" placeholder="应付款金额"/>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>业务日期</view>
+                    <view class="form-row-content">
+                        <!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
+                        <!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
+                        <view onTap="onBusinessFocus" data-name="businessDateTime">{{submitData.businessDateTime}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
                 </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row invoice-wrapper">
-                <view class="form-row-label"><text class="require">*</text>是否有发票</view>
-<!--                 <view class="form-row-content"> -->
-<!--                     <radio-group data-name="invoice" onChange="radioChange"> -->
-<!--                         <label class="radio"> -->
-<!--                             <radio value="1" checked="{{submitData.invoice == 1}}"></radio> -->
-<!--                             是 -->
-<!--                         </label> -->
-<!--                         <label class="radio"> -->
-<!--                             <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio> -->
-<!--                             否 -->
-<!--                         </label> -->
-<!--                     </radio-group> -->
-<!--                 </view> -->
+                <view class="form-line"/>
+                <view class="form-row invoice-wrapper">
+                    <view class="form-row-label">是否有发票</view>
+                    <!--                 <view class="form-row-content"> -->
+                    <!--                     <radio-group data-name="invoice" onChange="radioChange"> -->
+                    <!--                         <label class="radio"> -->
+                    <!--                             <radio value="1" checked="{{submitData.invoice == 1}}"></radio> -->
+                    <!--                             是 -->
+                    <!--                         </label> -->
+                    <!--                         <label class="radio"> -->
+                    <!--                             <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio> -->
+                    <!--                             否 -->
+                    <!--                         </label> -->
+                    <!--                     </radio-group> -->
+                    <!--                 </view> -->
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">提交人</view>
-                <view class="form-row-content">
-                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人"
-                           data-name="submitterName"/>
                 </view>
             </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">提交日期</view>
-                <view class="form-row-content">
-                    <input class="input" disabled data-name="submitDate" value="{{submitData.submitDate}}"
-                           placeholder="提交日期"/>
-                </view>
-            </view>
-            <view class="form-line"/>
-            <view class="form-row">
-                <view class="form-row-label">备注</view>
-                <view class="form-row-content">
-                    <input class="input" value="{{submitData.remark}}" placeholder="备注" data-name="remark"
-                           onBlur="onBlur"/>
-                </view>
-            </view>
-            <view class="form-line"/>
+<!--            <view class="form-row">-->
+<!--                <view class="form-row-label">申请报销金额</view>-->
+<!--                <view class="form-row-content">-->
+<!--                    <input a:if="{{submitData.applicationAmount}}" class="input" disabled-->
+<!--                           value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}"-->
+<!--                           data-name="applicationAmount" placeholder="申请报销金额"/>-->
+<!--                    <view a:else class="mock-input nodata">请填写报销详情</view>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="form-line"/>-->
+<!--            <view class="form-row">-->
+<!--                <view class="form-row-label">核销借款金额</view>-->
+<!--                <view class="form-row-content">-->
+<!--                    <input a:if="{{submitData.verificationAmount}}" class="input" data-name="applicationAmount" disabled-->
+<!--                           value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}"-->
+<!--                           placeholder="核销借款金额"/>-->
+<!--                    <view a:else class="mock-input nodata">请导入借款单</view>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="form-line"/>-->
+<!--            <view class="form-row">-->
+<!--                <view class="form-row-label">应付款金额</view>-->
+<!--                <view class="form-row-content">-->
+<!--                    <input class="input" data-name="totalAmount" disabled-->
+<!--                           value="{{submitData.totalAmount == 0 ? '' : submitData.totalAmount}}" placeholder="应付款金额"/>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="form-line"/>-->
+<!--            <view class="form-row">-->
+<!--                <view class="form-row-label">提交人</view>-->
+<!--                <view class="form-row-content">-->
+<!--                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人"-->
+<!--                           data-name="submitterName"/>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="form-line"/>-->
+<!--            <view class="form-row">-->
+<!--                <view class="form-row-label">提交日期</view>-->
+<!--                <view class="form-row-content">-->
+<!--                    <input class="input" disabled data-name="submitDate" value="{{submitData.submitDate}}"-->
+<!--                           placeholder="提交日期"/>-->
+<!--                </view>-->
+<!--            </view>-->
+<!--            <view class="form-line"/>-->
             <!-- 增加报销详情-->
             <view class="add-borrow" onTap="onAddBaoxiao">
                 <view class="borrow-title">报销详情</view>
@@ -284,9 +300,28 @@
                     </view>
                     <view class="form-line"/></view>
             </view>
+            <view class="block-wrapper submit-info-wrapper">
+                <view class="submit-info">
+                    <view class="block">提交人：{{submitData.userName}}</view>
+                    <view class="block">提交日期：{{submitData.submitDate}}</view>
+                </view>
+                <view class="total">
+                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        申请报销金额：</text><text class="total-word">{{submitData.applicationAmount == 0 ? '0.00' : submitData.applicationAmount}}</text>
+                </view>
+                <view class="total">
+                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        核销报销金额：</text><text class="total-word">{{submitData.verificationAmount == 0 ? '0.00' : submitData.verificationAmount}}</text>
+                </view>
+                <view class="total">
+                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        应付款金额</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
+                </view>
+            </view>
         </scroll-view>
         <view class="btn-area">
-            <button formType="submit" class="submit-btn">提交</button>
+            <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
+            <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
         </view>
     </form>
     <!--增加导入借款单弹框-->

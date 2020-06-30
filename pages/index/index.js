@@ -59,12 +59,14 @@ Page({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount ++
+        app.globalData.loadingCount += 1
     },
     hideLoading(){
-        app.globalData.loadingCount--
-        if(app.globalData.loadingCount === 0) {
+        if(app.globalData.loadingCount <= 1) {
             dd.hideLoading()
+            app.globalData.loadingCount = 0
+        }else{
+            app.globalData.loadingCount -= 1
         }
     },
     onLoad(query) {

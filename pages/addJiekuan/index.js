@@ -62,8 +62,7 @@ Page({
         }
     },
     formatSubmitData(array, name) {
-        console.log(array)
-        if (array.length) {
+        if (!!array && array.length) {
             array.forEach((item, index) => {
                 Object.keys(item).forEach(keys => {
                     console.log(keys)
@@ -79,20 +78,23 @@ Page({
         }
     },
     addLoading() {
-        if (app.globalData.loadingCount < 1) {
+        if(app.globalData.loadingCount < 1) {
             dd.showLoading({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount++
+        app.globalData.loadingCount += 1
     },
-    hideLoading() {
-        app.globalData.loadingCount--
-        if (app.globalData.loadingCount === 0) {
+    hideLoading(){
+        if(app.globalData.loadingCount <= 1) {
             dd.hideLoading()
+            app.globalData.loadingCount = 0
+        }else{
+            app.globalData.loadingCount -= 1
         }
     },
     formSubmit(e) {
+        const status = e.currentTarget.dataset.status
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
@@ -106,6 +108,12 @@ Page({
             url = app.globalData.url + 'borrowBillController.do?doAdd'
         } else {
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    status
+                }
+            })
         }
         dd.httpRequest({
             url,
@@ -120,13 +128,15 @@ Page({
                 if (res.data.success) {
                     submitSuccess()
                 }
-                this.hideLoading()
             },
             fail: res => {
                 if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 console.log(res, 'fail')
+            },
+            complete: (res) => {
+                console.log('compelete', res)
                 this.hideLoading()
             }
         })
@@ -308,14 +318,13 @@ Page({
         })
     },
     onShow() {
-        app.globalData.loadingCount = 0
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
-        if(!!borrowId) {
+        if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
             var borrowIndex = 0
             this.data.borrowList.forEach((item, index) => {
-                if(item.id === borrowId) {
+                if (item.id === borrowId) {
                     borrowIndex = index
                 }
             })
@@ -326,7 +335,9 @@ Page({
                     applicantId: borrowId
                 }
             })
-            this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+            setTimeout(() => {
+                this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+            })
         }
         // 页面显示
         var animation = dd.createAnimation({
@@ -403,7 +414,8 @@ Page({
             dd.alert({
                 content: '请输入借款金额',
                 buttonText: '确定',
-                success: res => {}
+                success: res => {
+                }
             })
             return
         }
@@ -411,7 +423,8 @@ Page({
             dd.alert({
                 content: '请输入备注信息',
                 buttonText: '确定',
-                success: res => {}
+                success: res => {
+                }
             })
             return
         }
@@ -513,8 +526,17 @@ Page({
             urls: [url],
         })
     },
+    onHide() {
+        console.log('onHide...............')
+        // 清理借款人缓存
+        dd.removeStorage({
+            key: 'borrowId',
+            success: function(){
+                console.log('借款人缓存删除成功')
+            }
+        });
+    },
     onLoad(query) {
-        app.globalData.loadingCount = 0
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -574,6 +596,8 @@ Page({
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
                 this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
                 this.isCapitalTypeStart(accountbookId, capitalTypeDetailId)
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -611,6 +635,8 @@ Page({
                     }
                 })
                 this.getSubjectList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -634,7 +660,6 @@ Page({
                     key: 'borrowList',
                     data: arr,
                     success: res => {
-                       console.log('borrowList write success!!!!')
                     }
                 })
                 // edit的时候，设置borrowIndex
@@ -657,6 +682,8 @@ Page({
                     }
                 })
                 this.getIncomeBankList(applicantType, applicantId, incomeBankName)
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -669,7 +696,6 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, 'incomeBankList')
                 var arr = res.data.obj
                 // edit的时候，设置incomeBankIndex
                 var incomeBankIndex = 0
@@ -707,6 +733,8 @@ Page({
                     })
                     this.setIncomeBankAccount('')
                 }
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -759,6 +787,8 @@ Page({
                         }
                     })
                 }
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -771,7 +801,6 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res, 'auxpryList')
                 if (!!res.data.obj.subjectAuxptyList.length) {
                     var arr = res.data.obj.subjectAuxptyList.map(item => {
                         return {
@@ -806,6 +835,8 @@ Page({
                         subjectAuxptyList: []
                     })
                 }
+            },
+            complete: res => {
                 this.hideLoading()
             }
         })
@@ -888,6 +919,9 @@ Page({
                 this.setData({
                     allAuxptyList: newObj
                 })
+            },
+            complete: res => {
+                console.log('complete', res)
                 this.hideLoading()
             }
         })
@@ -948,6 +982,9 @@ Page({
                         capitalTypeDetailId: arr[0].detailId
                     }
                 })
+            },
+            complete: res => {
+                console.log('complete', res)
                 this.hideLoading()
             }
         })
@@ -987,6 +1024,7 @@ Page({
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
+        console.log('===============================================')
         dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?getDetail&id=' + id,
             method: 'GET',
@@ -995,13 +1033,19 @@ Page({
                 console.log(res.data.obj)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
+                    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
+                    this.hideLoading()
                 }
-                this.hideLoading()
+            },
+            complete: res => {
+                console.log('complete', res)
             }
         })
     },
     // 回显数据设置
     setRenderData(data) {
+        // 请求
+        this.getAccountbookList(data)
         // billDetailList
         if (data.billDetailList.length) {
             var billDetailListObj = data.billDetailList.map(item => {
@@ -1026,8 +1070,6 @@ Page({
                 return item
             })
         }
-        // 请求
-        this.getAccountbookList(data)
         // 设置数据
         this.setData({
             ...this.data,
@@ -1052,7 +1094,7 @@ Page({
     },
     goInfoList() {
         dd.navigateTo({
-            url: '/pages/infoList/index?'
+            url: '/pages/infoList/index'
         })
     }
 })
