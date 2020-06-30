@@ -308,6 +308,7 @@ Page({
         })
     },
     onShow() {
+        app.globalData.loadingCount = 0
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if(!!borrowId) {

@@ -229,8 +229,8 @@
             </view>
         </scroll-view>
         <view class="btn-area">
-            <button onTap="formSubmit" class="submit-btn">提交</button>
-<!--             <button formType="submit" class="submit-btn">提交</button> -->
+            <button onTap="formSubmit" class="submit-btn save-draft">保存草稿</button>
+            <button onTap="formSubmit" class="submit-btn">提交单据</button>
         </view>
     </form>
 <!--增加借款弹框-->

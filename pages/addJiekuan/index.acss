@@ -200,3 +200,7 @@ input::-webkit-input-placeholder{
 .incomeBankName{
     font-size: 24rpx
 }
+.btn-area .save-draft{
+    background:#fff;
+    color:#1f65d8;
+}
