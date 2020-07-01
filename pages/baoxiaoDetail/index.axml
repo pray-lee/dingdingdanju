@@ -53,7 +53,7 @@
             </view>
         </view>
         <view class="form-line"/>
-        <view class="form-row">
+        <view class="form-row" a:if="{{!!baoxiaoDetail.subjectExtraId}}">
             <view class="form-row-label">附加信息</view>
             <view class="input extraBtn" onTap="openExtraInfo" data-extraId="{{baoxiaoDetail.subjectExtraId}}">查看详情
             </view>
@@ -70,7 +70,7 @@
             <view class="form-row-content">
                 <radio-group onChange="baoxiaoRadioChange" name="invoiceType" data-name="invoiceType">
                     <label class="radio" a:for="{{baoxiaoDetail.invoiceTypeArr}}" a:for-item="invoice">
-                        <radio value="{{baoxiaoDetail.invoice.id}}"
+                        <radio value="{{invoice.id}}"
                                checked="{{baoxiaoDetail.invoiceType == invoice.id}}"></radio>
                         {{invoice.text}}
                     </label>
@@ -78,7 +78,7 @@
             </view>
         </view>
         <view class="form-line"/>
-        <view class="form-row">
+        <view class="form-row" a:if="{{baoxiaoDetail.invoiceType == 2}}">
             <view class="form-row-label">税率</view>
             <view class="form-row-content">
                 <picker onChange="bindTaxRagePickerChange" value="{{baoxiaoDetail.taxRageIndex}}"

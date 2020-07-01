@@ -82,7 +82,7 @@ Page({
     formatSubmitData(array, name) {
         console.log(array, 'baoxiaoList..........')
         array.forEach((item, index) => {
-            item.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
+            console.log(item, '.....................................')
             Object.keys(item).forEach(keys => {
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
                     item[keys].forEach((arrItem, arrIndex) => {
@@ -347,24 +347,6 @@ Page({
             }
         })
     },
-    onBaoxiaoBlur(e) {
-        var tempData = clone(this.data.baoxiaoList)
-        var name = e.currentTarget.dataset.name
-        var index = e.currentTarget.dataset.index
-        tempData[index][name] = e.detail.value
-        var applicationAmount = 0
-        tempData.forEach(item => {
-            applicationAmount += Number(item.applicationAmount)
-        })
-        this.setData({
-            baoxiaoList: tempData,
-            submitData: {
-                ...this.data.submitData,
-                applicationAmount
-            }
-        })
-        this.setTotalAmount()
-    },
     onBusinessFocus() {
         dd.datePicker({
             format: 'yyyy-MM-dd',
@@ -443,14 +425,16 @@ Page({
                 importList
             })
             this.setBorrowAmount(importList)
+            this.setTotalAmount()
         }
     },
     getBaoxiaoDetailFromStorage() {
-        const baoxiaoDetail = dd.getStorageSync({key: 'newBaoxiaoDetail'}).data
+        const baoxiaoDetail = dd.getStorageSync({key: 'newBaoxiaoDetailArr'}).data
+        const index = dd.getStorageSync({key: 'index'}).data
         dd.removeStorage({
-            key: 'newBaoxiaoDetail',
+            key: 'newBaoxiaoDetailArr',
             success: res => {
-                console.log('清除newbaoxiaoDetail成功...')
+                console.log('清除newbaoxiaoDetailArr成功...')
             }
         })
         dd.removeStorage({
@@ -460,9 +444,29 @@ Page({
             }
         })
         if(!!baoxiaoDetail) {
-            this.setData({
-                baoxiaoList: this.data.baoxiaoList.concat(baoxiaoDetail)
-            })
+            let baoxiaoList = clone(this.data.baoxiaoList)
+            console.log(index)
+            if(!!index || index == 0) {
+                baoxiaoList.splice(index, 1)
+                dd.removeStorage({
+                    key: 'index',
+                    success: res => {
+                        console.log('清除index成功')
+                    }
+                })
+                baoxiaoList.splice(index, 0, baoxiaoDetail[0])
+                baoxiaoList = baoxiaoList.concat(baoxiaoDetail.slice(1))
+                this.setData({
+                    baoxiaoList: baoxiaoList
+                })
+            }else{
+                this.setData({
+                    baoxiaoList: baoxiaoList.concat(baoxiaoDetail)
+                })
+            }
+            console.log(baoxiaoList, 'final....')
+            this.setApplicationAmount(baoxiaoList)
+            this.setTotalAmount()
         }
     },
     onShow() {
@@ -523,6 +527,8 @@ Page({
         this.setData({
             baoxiaoList
         })
+        this.setApplicationAmount(baoxiaoList)
+        this.setTotalAmount()
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
@@ -876,7 +882,8 @@ Page({
             }
         })
     },
-    onAddBaoxiao() {
+    // 组成初始详情数据
+    generateBaseDetail() {
         console.log(this.data.subjectObject, '.........')
         if (this.data.subjectObject.subjectList.length) {
             var newSubjectObj = clone(this.data.subjectObject)
@@ -888,7 +895,9 @@ Page({
                 trueSubjectId: this.data.subjectObject.subjectList[0].id,
                 subjectExtraId: this.data.subjectObject.subjectList[0].subjectExtraId,
                 applicationAmount: '',
-                invoiceType: this.data.invoiceTypeArr[1].id,
+                invoiceTypeArr: this.data.invoiceTypeArr,
+                invoiceType: this.data.invoiceTypeArr[0].id,
+                taxRageObject: clone(newTaxRageObj),
                 taxRageArr: clone(newTaxRageObj).taxRageArr,
                 taxRageIndex: clone(newTaxRageObj).taxRageIndex,
                 taxRate: this.data.taxRageObject.taxRageArr[0].id,
@@ -903,21 +912,22 @@ Page({
                 trueSubjectAuxptyList: clone(newSubjectObj).subjectAuxptyList,
                 subjectAuxptyList: clone(newSubjectObj).subjectAuxptyList
             }
-            // console.log(this.data.baoxiaoList)
-            // this.setData({
-            //     baoxiaoList: this.data.baoxiaoList.concat(obj),
-            // })
-            dd.setStorage({
-                key: 'baoxiaoDetail',
-                data: obj,
-                success: res => {
-                    console.log('写入报销详情成功...')
-                    dd.navigateTo({
-                        url: '/pages/baoxiaoDetail/index'
-                    })
-                }
-            })
+
+            return obj
         }
+    },
+    onAddBaoxiao() {
+        var obj = this.generateBaseDetail()
+        dd.setStorage({
+            key: 'initBaoxiaoDetail',
+            data: obj,
+            success: res => {
+                console.log('写入报销详情成功...')
+                dd.navigateTo({
+                    url: '/pages/baoxiaoDetail/index'
+                })
+            }
+        })
     },
     checkFocus(e) {
         var name = e.currentTarget.dataset.name
@@ -1161,6 +1171,7 @@ Page({
                             })
                             obj.billDetailTrueApEntityListObj = trueAuxptyObj
                             obj.remark = item.remark
+                            obj.taxRageObject = this.data.taxRageObject
                             if (item.invoiceType == 2) {
                                 obj.taxRageArr = this.data.taxRageObject.taxRageArr
                                 obj.taxRate = item.taxRate
@@ -1169,9 +1180,14 @@ Page({
                                         obj.taxRageIndex = index
                                     }
                                 })
+                            }else{
+                                obj.taxRageArr = []
+                                obj.taxRate = ''
+                                obj.taxRageIndex = 0
                             }
                             obj.id = item.id
                             obj.invoiceType = item.invoiceType
+                            obj.invoiceTypeArr = this.data.invoiceTypeArr
                             this.setData({
                                 baoxiaoList: [...this.data.baoxiaoList, obj],
                             })
@@ -1391,31 +1407,40 @@ Page({
         this.setTotalAmount()
     },
     setBorrowAmount(array) {
+        var borrowTotalAmount = 0
         if (array.length) {
-            var borrowTotalAmount = 0
             array.forEach(item => {
                 borrowTotalAmount += Number(item.applicationAmount)
             })
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    verificationAmount: borrowTotalAmount
-                }
-            })
-        } else {
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    verificationAmount: 0
-                }
+        }
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                verificationAmount: borrowTotalAmount
+            }
+        })
+        return borrowTotalAmount
+    },
+    setApplicationAmount(array) {
+        var applicationAmount = 0
+        if (array.length) {
+            array.forEach(item => {
+                applicationAmount += Number(item.applicationAmount)
             })
         }
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                applicationAmount
+            }
+        })
+        return applicationAmount
     },
     setTotalAmount() {
         // 申请报销金额
-        var applicationAmount = this.data.submitData.applicationAmount || 0
+        var applicationAmount = this.setApplicationAmount(this.data.baoxiaoList) || 0
         // 核销金额
-        var verificationAmount = this.data.submitData.verificationAmount || 0
+        var verificationAmount = this.setBorrowAmount(this.data.importList) || 0
         // 应付款金额
         var totalAmount = Number(applicationAmount) - Number(verificationAmount)
         this.setData({
@@ -1429,10 +1454,11 @@ Page({
     deleteBorrowDetail(e) {
         var id = e.currentTarget.dataset.id
         var tempArr = this.data.importList.filter(item => item.billDetailId !== id)
-        this.setBorrowAmount(tempArr)
         this.setData({
             importList: tempArr
         })
+        this.setBorrowAmount(tempArr)
+        this.setTotalAmount()
     },
     openExtraInfo(e) {
         var index = e.currentTarget.dataset.index
@@ -1484,6 +1510,7 @@ Page({
     },
     generateExtraList(conf) {
         var tempData = clone(conf)
+        console.log(tempData, '////////////////////////////')
         var array = []
         var extraMessage = []
         tempData.name.forEach((item, index) => {
@@ -1555,6 +1582,35 @@ Page({
     onExtraSubmit() {
         this.onExtraHide()
         console.log(this.data.baoxiaoList)
+    },
+    showBaoxiaoDetail(e) {
+        this.addLoading()
+        const index = e.currentTarget.dataset.index
+        var obj = this.generateBaseDetail()
+        dd.setStorage({
+            key: 'index',
+            data: index,
+            success: res => {
+                console.log('index设置成功...')
+            }
+        })
+        dd.setStorage({
+            key: 'baoxiaoDetail',
+            data: this.data.baoxiaoList[index],
+            success: res => {
+                console.log('写入报销详情成功！！')
+                dd.setStorage({
+                    key: 'initBaoxiaoDetail',
+                    data: obj,
+                    success: res => {
+                        this.hideLoading()
+                        dd.navigateTo({
+                            url: '/pages/baoxiaoDetail/index'
+                        })
+                    }
+                })
+            }
+        })
     },
     goInfoList() {
         dd.navigateTo({

@@ -8,7 +8,8 @@
     "pages/uploadPage/index",
     "pages/infoList/index",
     "pages/importBorrowList/index",
-    "pages/baoxiaoDetail/index"
+    "pages/baoxiaoDetail/index",
+    "pages/extra/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

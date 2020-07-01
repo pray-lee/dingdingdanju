@@ -1,4 +1,5 @@
 import clone from "lodash/cloneDeep";
+import moment from "moment";
 
 const app = getApp()
 Page({
@@ -6,16 +7,43 @@ Page({
         hesuanMaskHidden: true,
         hesuanAnimationInfo: {},
         baoxiaoDetail: {},
-        // baoxiaoArr: []
+        baoxiaoArr: []
     },
     onLoad() {
+        const initBaoxiaoDetail = dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
         const baoxiaoDetail = dd.getStorageSync({key: 'baoxiaoDetail'}).data
-        console.log(baoxiaoDetail)
-        this.setData({
-            baoxiaoDetail
-        })
+        console.log(baoxiaoDetail, 'baoxiaoDetail')
+        if(!baoxiaoDetail) {
+            this.setData({
+                baoxiaoDetail: initBaoxiaoDetail
+            })
+        }else{
+           this.setData({
+               baoxiaoDetail: baoxiaoDetail
+           })
+            dd.removeStorage({
+                key: 'baoxiaoDetail',
+                success: res => {
+                   console.log('清除编辑详情数据成功...')
+                }
+            })
+        }
     },
     onShow() {
+        console.log(this.data.baoxiaoArr, 'arrrrrr')
+        // 获取附加信息
+        dd.getStorage({
+            key: 'baoxiaoDetail',
+            success: res => {
+                console.log(res.data)
+                const baoxiaoDetail = res.data
+                if(!!baoxiaoDetail) {
+                    this.setData({
+                        baoxiaoDetail
+                    })
+                }
+            }
+        })
         // hesuan 弹框
         var animation1 = dd.createAnimation({
             duration: 250,
@@ -40,11 +68,10 @@ Page({
         var baoxiaoItem = clone(this.data.baoxiaoDetail)
         baoxiaoItem.invoiceType = value
         if (value == 2) {
-            baoxiaoItem.taxRageArr = this.data.taxRageObject.taxRageArr
+            baoxiaoItem.taxRageArr = baoxiaoItem.taxRageObject.taxRageArr
             baoxiaoItem.taxRageIndex = 0
-            baoxiaoItem.taxRate = this.data.taxRageObject.taxRageArr[0].id
-            this.setData({
-                baoxiaoDetail: baoxiaoItem
+            baoxiaoItem.taxRate = baoxiaoItem.taxRageObject.taxRageArr[0].id
+            this.setData({ baoxiaoDetail: baoxiaoItem
             })
         } else {
             baoxiaoItem.taxRageArr = []
@@ -404,11 +431,15 @@ Page({
         })
     },
     submitBaoxiaoDetail() {
-        // console.log(this.data.baoxiaoDetail)
+        this.setData({
+            baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+        })
+        this.addLoading()
         dd.setStorage({
             key: 'newBaoxiaoDetailArr',
             data: this.data.baoxiaoArr,
             success: res => {
+                this.hideLoading()
                 dd.navigateBack({
                     delta: 1
                 })
@@ -416,16 +447,59 @@ Page({
         })
     },
     addDetail() {
-        dd.setStorage({
-            key: 'newBaoxiaoDetailArr',
-            data: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail),
+        console.log(this.data.baoxiaoArr.concat(this.data.baoxiaoDetail))
+        this.setData({
+            baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+        })
+        this.setData({
+            baoxiaoDetail: dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
+        })
+    },
+    openExtraInfo(e) {
+        var extraId = e.currentTarget.dataset.extraId
+        if (this.data.baoxiaoDetail.subjectExtraId) {
+            this.getExtraInfo(extraId)
+        }
+    },
+    getExtraInfo(extraId) {
+        this.addLoading()
+        // 接口有问题
+        dd.httpRequest({
+            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
+            method: 'GET',
+            dataType: 'json',
             success: res => {
-               console.log('再加一笔成功')
-                this.setData({
-                    baoxiaoDetail: dd.getStorageSync({key: 'baoxiaoDetail'}).data
-                })
+                console.log(res, '附加信息............')
+                if (res.data.success) {
+                    this.setData({
+                        subjectExtraConf: JSON.parse(res.data.obj),
+                    })
+                    // 回显
+                    var tempData = clone(this.data.baoxiaoDetail)
+                    if (!tempData.extraMessage) {
+                        tempData.extraMessage = []
+                        tempData.extraList = []
+                        this.setData({
+                            baoxiaoDetail: tempData
+                        })
+                    }
+                    dd.setStorage({
+                        key: 'subjectExtraConf',
+                        data: JSON.parse(res.data.obj),
+                        success: res => {
+                            dd.setStorageSync({
+                                key: 'extraBaoxiaoDetail',
+                                data: this.data.baoxiaoDetail
+                            })
+                            this.hideLoading()
+                            dd.navigateTo({
+                                url: '/pages/extra/index'
+                            })
+                        }
+                    })
+                }
             }
         })
-    }
+    },
 
 })

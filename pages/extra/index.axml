@@ -1,0 +1,37 @@
+<!--   附加信息   -->
+<view class="form-wrapper">
+    <view class="add-extra-page">
+        <scroll-view scroll-y class="form-scroll-wrapper">
+            <form onSubmit="onExtraSubmit">
+                <view class="add-borrow" onTap="onAddExtra">
+                    <view class="borrow-title">附加信息</view>
+                    <view class="add-borrow-btn">添加信息</view>
+                </view>
+                <view class="baoxiao-item" a:if="{{baoxiaoDetail.extraList.length}}" a:for="{{baoxiaoDetail.extraList}}">
+                    <view class="baoxiao-item-title">
+                        <text>附加信息详情</text>
+                        <view class="delete-baoxiao-item" onTap="deleteExtra"
+                              data-index="{{index}}"></view>
+                    </view>
+                    <block a:for="{{item.conf}}" a:for-item="extraDetail" a:for-index="idx">
+                        <view class="form-row">
+                            <view class="form-row-label">{{extraDetail.field}}</view>
+                            <view class="form-row-content">
+                                <block a:if="{{extraDetail.type == 2}}">
+                                    <view onTap="onExtraDateFocus" data-name="{{item.field}}" data-index="{{idx}}" data-extraIndex="{{index}}">{{baoxiaoDetail.extraMessage[index][idx]}}</view>
+                                </block>
+                                <input a:else class="input" value="{{baoxiaoDetail.extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
+                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>
+                            </view>
+                        </view>
+                        <view class="form-line"/>
+                    </block>
+                </view>
+                <view class="btn-area">
+                    <button formType="submit" class="submit-btn">确定</button>
+                    <button class="submit-btn cancel-extra" onTap="cancelExtra">取消</button>
+                </view>
+            </form>
+        </scroll-view>
+    </view>
+</view>
