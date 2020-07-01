@@ -285,20 +285,22 @@
                 </view>
             </view>
             <!--上传附件-->
-            <view class="upload-wrapper" onTap="handleUpload">
-                <view class="borrow-title">附件列表</view>
-                <view class="add-file-btn">添加附件</view>
-            </view>
-            <view class="file-list">
-                <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
-                    <view class="form-row">
-                        <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
-                        <view class="form-row-label" onTap="downloadFile" data-url="{{item.uri}}">{{item.name}}</view>
-                        <view class="form-row-content">
-                            <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
+            <view class="block-wrapper">
+                <view class="title">附件上传</view>
+                <view class="file-list">
+                    <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
+                        <view class="form-row">
+                            <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
+                            <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                            <view class="form-row-content img-wrapper">
+                                <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
+                            </view>
                         </view>
-                    </view>
-                    <view class="form-line"/></view>
+                        <view class="form-line"/></view>
+                </view>
+                <view class="upload-wrapper" onTap="handleUpload">
+                    <view class="add-file-btn">添加附件</view>
+                </view>
             </view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="submit-info">
@@ -315,7 +317,7 @@
                 </view>
                 <view class="total">
                     <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        应付款金额</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
+                        应付款金额：</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
                 </view>
             </view>
         </scroll-view>
