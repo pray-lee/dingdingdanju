@@ -8,9 +8,8 @@ Page({
     data: {
         type: '',
         billId: '',
-        maskHidden: true,
-        hesuanMaskHidden: true,
-        animationInfo: {},
+        // hesuanMaskHidden: true,
+        // animationInfo: {},
         extraAnimationInfo: {},
         hesuanAnimationInfo: {},
         borrowAmount: '',
@@ -184,7 +183,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                invoice: e.detail.value
+                invoice: e.detail.value ? 1: 0
             }
         })
     },
@@ -385,19 +384,6 @@ Page({
     onClick() {
         console.log('onClick')
     },
-    onAddShow() {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.animation = animation
-        animation.translateY(0).step()
-        this.setData({
-            animationInfo: animation.export(),
-            maskHidden: false
-        })
-        // 弹框数据清空
-    },
     onExtraShow() {
         var animation = dd.createAnimation({
             duration: 500,
@@ -420,46 +406,7 @@ Page({
             extraAnimationInfo: animation.export(),
         })
     },
-    onHesuanShow(type) {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.hesuanAnimation = animation
-        animation.translateY(0).step()
-        this.setData({
-            hesuanAnimationInfo: animation.export(),
-            hesuanMaskHidden: false,
-            hesuanType: type
-        })
-        // 弹框数据清空
-    },
-    onHesuanHide() {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.hesuanAnimation = animation
-        animation.translateY(300).step()
-        this.setData({
-            hesuanAnimationInfo: animation.export(),
-            hesuanMaskHidden: true
-        })
-    },
-    onAddHide() {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.animation = animation
-        animation.translateY(300).step()
-        this.setData({
-            animationInfo: animation.export(),
-            maskHidden: true
-        })
-    },
-    onShow() {
-        // 从缓存里获取借款人id
+    getBorrowIdFromStorage() {
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
@@ -481,15 +428,50 @@ Page({
                 this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
             })
         }
-        // 页面显示
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
+    },
+    getSelectedBorrowListFromStorage() {
+        const importList = dd.getStorageSync({key: 'importList'}).data
+        dd.removeStorage({
+            key: 'importList',
+            success: res => {
+                console.log('清除imoprtList成功...')
+            }
         })
-        this.animation = animation
-        this.setData({
-            animationInfo: animation.export()
+        if(!!importList && importList.length) {
+           console.log('获取选择的借款列表成功', importList)
+            this.setData({
+                importList
+            })
+            this.setBorrowAmount(importList)
+        }
+    },
+    getBaoxiaoDetailFromStorage() {
+        const baoxiaoDetail = dd.getStorageSync({key: 'newBaoxiaoDetail'}).data
+        dd.removeStorage({
+            key: 'newBaoxiaoDetail',
+            success: res => {
+                console.log('清除newbaoxiaoDetail成功...')
+            }
         })
+        dd.removeStorage({
+            key: 'baoxiaoDetail',
+            success: res => {
+                console.log('清除baoxiaoDetail成功...')
+            }
+        })
+        if(!!baoxiaoDetail) {
+            this.setData({
+                baoxiaoList: this.data.baoxiaoList.concat(baoxiaoDetail)
+            })
+        }
+    },
+    onShow() {
+        // 从缓存里获取借款列表
+        this.getSelectedBorrowListFromStorage()
+        // 从缓存里获取借款人id
+        this.getBorrowIdFromStorage()
+        // 从缓存里获取baoxiaoDetail
+        this.getBaoxiaoDetailFromStorage()
         // hesuan 弹框
         var animation1 = dd.createAnimation({
             duration: 250,
@@ -662,6 +644,7 @@ Page({
             }
         })
         var type = query.type
+        console.log(type, 'type')
         this.setData({
             type
         })
@@ -899,6 +882,8 @@ Page({
             var newSubjectObj = clone(this.data.subjectObject)
             var newTaxRageObj = clone(this.data.taxRageObject)
             var obj = {
+                subjectObject: clone(newSubjectObj),
+                accountbookId: this.data.submitData.accountbookId,
                 subjectId: this.data.subjectObject.subjectList[0].id,
                 trueSubjectId: this.data.subjectObject.subjectList[0].id,
                 subjectExtraId: this.data.subjectObject.subjectList[0].subjectExtraId,
@@ -918,9 +903,19 @@ Page({
                 trueSubjectAuxptyList: clone(newSubjectObj).subjectAuxptyList,
                 subjectAuxptyList: clone(newSubjectObj).subjectAuxptyList
             }
-            console.log(this.data.baoxiaoList)
-            this.setData({
-                baoxiaoList: this.data.baoxiaoList.concat(obj),
+            // console.log(this.data.baoxiaoList)
+            // this.setData({
+            //     baoxiaoList: this.data.baoxiaoList.concat(obj),
+            // })
+            dd.setStorage({
+                key: 'baoxiaoDetail',
+                data: obj,
+                success: res => {
+                    console.log('写入报销详情成功...')
+                    dd.navigateTo({
+                        url: '/pages/baoxiaoDetail/index'
+                    })
+                }
             })
         }
     },
@@ -1365,19 +1360,22 @@ Page({
         })
     },
     getImportBorrowList() {
-        this.setData({
-            tempImportList: []
-        })
-        console.log(this.data.submitData.invoice)
         dd.httpRequest({
             url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + this.data.submitData.invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
             method: 'GET',
             dataType: 'json',
             success: res => {
                 console.log(res, '借款单列表...')
-                this.setData({
-                    tempImportList: res.data.rows
-                })
+                dd.setStorage({
+                    key: 'tempImportList',
+                    data: res.data.rows,
+                    success: res => {
+                        console.log('写入成功，借款列表')
+                        dd.navigateTo({
+                            url: '/pages/importBorrowList/index'
+                        })
+                    }
+                });
             }
         })
     },
@@ -1435,29 +1433,6 @@ Page({
         this.setData({
             importList: tempArr
         })
-    },
-    onCheckboxChange(e) {
-        console.log(this.data.importList)
-        console.log(e)
-    },
-    onCheckboxSubmit(e) {
-        var arr = e.detail.value
-        console.log(arr)
-        var newArr = []
-        for (var i in arr) {
-            if (arr[i].length) {
-                var temp = {
-                    billDetailId: arr[i][0].id,
-                    applicationAmount: arr[i][0].unverifyAmount,
-                }
-                newArr.push(temp)
-            }
-        }
-        this.setData({
-            importList: newArr,
-        })
-        this.setBorrowAmount(newArr)
-        this.onAddHide()
     },
     openExtraInfo(e) {
         var index = e.currentTarget.dataset.index

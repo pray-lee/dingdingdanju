@@ -125,163 +125,48 @@
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">申请报销金额</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input a:if="{{submitData.applicationAmount}}" class="input" disabled-->
-<!--                           value="{{submitData.applicationAmount == 0 ? '' : submitData.applicationAmount}}"-->
-<!--                           data-name="applicationAmount" placeholder="申请报销金额"/>-->
-<!--                    <view a:else class="mock-input nodata">请填写报销详情</view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">核销借款金额</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input a:if="{{submitData.verificationAmount}}" class="input" data-name="applicationAmount" disabled-->
-<!--                           value="{{submitData.verificationAmount == 0 ? '' : submitData.verificationAmount}}"-->
-<!--                           placeholder="核销借款金额"/>-->
-<!--                    <view a:else class="mock-input nodata">请导入借款单</view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">应付款金额</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" data-name="totalAmount" disabled-->
-<!--                           value="{{submitData.totalAmount == 0 ? '' : submitData.totalAmount}}" placeholder="应付款金额"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">提交人</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人"-->
-<!--                           data-name="submitterName"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">提交日期</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" disabled data-name="submitDate" value="{{submitData.submitDate}}"-->
-<!--                           placeholder="提交日期"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
             <!-- 增加报销详情-->
-            <view class="add-borrow" onTap="onAddBaoxiao">
-                <view class="borrow-title">报销详情</view>
-                <view class="add-borrow-btn">添加详情</view>
-            </view>
-            <view class="baoxiao-item" a:if="{{baoxiaoList.length}}" a:for="{{baoxiaoList}}">
-                <view class="baoxiao-item-title">
-                    <text>报销详情</text>
-                    <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
-                          data-index="{{index}}"></view>
-                </view>
-                <view class="form-row">
-                    <view class="form-row-label">费用类型</view>
-                    <view class="form-row-content">
-                        <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.subjectIndex}}"
-                                range="{{item.subjectList}}"
-                                range-key="name" data-name="subjectId" data-index="{{index}}"
-                                data-list="{{item.subjectList}}">
-                            <view class="row-extra">{{item.subjectList[item.subjectIndex].name}}</view>
-                        </picker>
+            <view class="block-wrapper">
+                <view class="title">报销详情</view>
+                <view class="baoxiao-list">
+                    <view class="baoxiao-item" a:for="{{baoxiaoList}}" a:if="{{baoxiaoList.length}}">
+                        <view class="form-row">
+                            <view class="delete-baoxiao-item" onTap="deleteBorrowDetail"
+                                  data-id="{{item.billDetailId}}"></view>
+                            <view class="form-row-content">
+                                {{item.applicationAmount}}
+                            </view>
+                            <view class="borrow-line"></view>
+                            <view class="form-row-content ellipsis borrow-remark">{{item.remark}}</view>
+                        </view>
+                        <view class="form-line"/>
                     </view>
                 </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">核算维度</view>
-                    <view class="form-row-content">
-                        <view a:if="{{item.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames" data-index="{{index}}" data-subjectAuxptyName="subjectAuxptyList">{{item.auxpropertyNames}}</view>
-                        <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames" data-subjectAuxptyName="subjectAuxptyList" data-index="{{index}}">请选择核算维度</view>
-                    </view>
-<!--                     <input class="hesuanweidu-btn special-btn" onFocus="checkFocus" -->
-<!--                            disabled="{{!item.subjectAuxptyList.length}}" value="{{item.auxpropertyNames}}" -->
-<!--                            placeholder="核算维度" data-name="auxpropertyNames" data-index="{{index}}"/> -->
+                <view class="add-borrow" onTap="onAddBaoxiao">
+                    <view class="add-borrow-btn">添加详情</view>
                 </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">预算类型</view>
-                    <view class="form-row-content">
-                       <picker onChange="bindBaoxiaoObjPickerChange" value="{{item.trueSubjectIndex}}"
-                               range="{{item.trueSubjectList}}"
-                               range-key="name" data-name="trueSubjectId" data-index="{{index}}"
-                               data-list="{{item.trueSubjectList}}">
-                           <view class="row-extra">{{item.trueSubjectList[item.trueSubjectIndex].name}}</view>
-                       </picker>
-                    </view>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">预算维度</view>
-                    <view class="form-row-content">
-                        <view a:if="{{item.trueAuxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="trueAuxpropertyNames" data-index="{{index}}" data-subjectAuxptyName="trueSubjectAuxptyList">{{item.trueAuxpropertyNames}}</view>
-                        <view a:else class="mock-input nodata" onTap="checkFocus" data-name="trueAuxpropertyNames" data-subjectAuxptyName="trueSubjectAuxptyList" data-index="{{index}}">请选择核算维度</view>
-                    </view>
-<!--                     <input class="hesuanweidu-btn special-btn" onFocus="checkFocus" -->
-<!--                            disabled="{{!item.trueSubjectAuxptyList.length}}" value="{{item.trueAuxpropertyNames}}" -->
-<!--                            placeholder="预算维度" data-name="trueAuxpropertyNames" data-index="{{index}}"/> -->
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">附加信息</view>
-<!--                     <input class="input" placeholder="附加信息" disabled="{{!item.subjectExtraId}}" value="点击打开" onFocus="openExtraInfo"/> -->
-                    <view class="input extraBtn" onTap="openExtraInfo" data-index="{{index}}" data-extraId="{{item.subjectExtraId}}">查看详情</view>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">申请报销金额</view>
-                    <input class="input" placeholder="申请报销金额" value="{{item.applicationAmount}}" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="applicationAmount"/>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">发票类型</view>
-                    <view class="form-row-content">
-                        <radio-group onChange="baoxiaoRadioChange" name="invoiceType" data-index="{{index}}" data-name="invoiceType">
-                            <label class="radio" a:for="{{invoiceTypeArr}}" a:for-item="invoice">
-                                <radio value="{{invoice.id}}" checked="{{item.invoiceType == invoice.id}}"></radio>
-                                {{invoice.text}}
-                            </label>
-                        </radio-group>
-                    </view>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">税率</view>
-                    <view class="form-row-content">
-                        <picker onChange="bindTaxRagePickerChange" value="{{item.taxRageIndex}}" range="{{item.taxRageArr}}"
-                                range-key="text" data-index="{{index}}">
-                            <view class="row-extra">{{item.taxRageArr[item.taxRageIndex].text}}</view>
-                        </picker>
-                    </view>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label">备注</view>
-                    <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-index="{{index}}" data-name="remark" value="{{item.remark}}"/>
-                </view>
-                <view class="form-line"/>
             </view>
 
             <!--核销借款-->
-            <view class="add-borrow" onTap="onAddShow">
-                <view class="borrow-title">核销借款</view>
-                <view class="add-borrow-btn" onTap="getImportBorrowList">导入借款</view>
-            </view>
-            <view class="borrow-list">
-                <view class="borrow-item" a:for="{{importList}}">
-                    <view class="form-row">
-                        <view class="delete-borrow" onTap="deleteBorrowDetail"
-                              data-id="{{item.billDetailId}}"></view>
-                        <view class="form-row-label">核销金额</view>
-                        <view class="form-row-content">
-                            <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" data-index="{{index}}"/>
+            <view class="block-wrapper">
+                <view class="title">核销借款</view>
+                <view class="borrow-list">
+                    <view class="borrow-item" a:for="{{importList}}">
+                        <view class="form-row">
+                            <view class="delete-borrow" onTap="deleteBorrowDetail"
+                                  data-id="{{item.billDetailId}}"></view>
+                            <view class="form-row-content special-content">
+                                <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" data-index="{{index}}"/>
+                                <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
+                            </view>
+                            <view class="borrow-line"></view>
+                            <view class="form-row-content ellipsis borrow-remark">{{item.remark}}</view>
                         </view>
+                        <view class="form-line"/>
                     </view>
-                    <view class="form-line"/>
+                </view>
+                <view class="add-borrow">
+                    <view class="add-borrow-btn" onTap="getImportBorrowList">导入借款</view>
                 </view>
             </view>
             <!--上传附件-->
@@ -303,22 +188,22 @@
                 </view>
             </view>
             <view class="block-wrapper submit-info-wrapper">
-                <view class="submit-info">
-                    <view class="block">提交人：{{submitData.userName}}</view>
-                    <view class="block">提交日期：{{submitData.submitDate}}</view>
+                <view class="total">
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        报销金额：</text><text class="total-word">{{submitData.applicationAmount == 0 ? '0.00' : submitData.applicationAmount}}</text>
                 </view>
                 <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        申请报销金额：</text><text class="total-word">{{submitData.applicationAmount == 0 ? '0.00' : submitData.applicationAmount}}</text>
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        核销借款：</text><text class="total-word">-{{submitData.verificationAmount == 0 ? '0.00' : submitData.verificationAmount}}</text>
                 </view>
                 <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        核销报销金额：</text><text class="total-word">{{submitData.verificationAmount == 0 ? '0.00' : submitData.verificationAmount}}</text>
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        支付总额：</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
                 </view>
-                <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        应付款金额：</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
-                </view>
+<!--                <view class="submit-info">-->
+<!--                    <view class="block">提交人：{{submitData.userName}}</view>-->
+<!--                    <view class="block">提交日期：{{submitData.submitDate}}</view>-->
+<!--                </view>-->
             </view>
         </scroll-view>
         <view class="btn-area">
@@ -326,39 +211,6 @@
             <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
         </view>
     </form>
-    <!--增加导入借款单弹框-->
-    <view class="add-borrow-page" animation="{{animationInfo}}">
-        <form onSubmit="onCheckboxSubmit">
-            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
-                <block a:if="{{tempImportList.length}}">
-                    <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{tempImportList}}">
-                        <label class="checkbox-label">
-                            <checkbox value="{{item}}" class="checkbox"></checkbox>
-                            <view class="import-borrow-item">
-                                <view class="form-row">
-                                    <view class="import-borrow-item-left">
-                                        <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
-                                        <view class="import-borrow-info">
-                                            <view class="import-borrow-time">{{item.businessDateTime}}</view>
-                                            <view class="import-borrow-money">￥
-                                                <text>{{item.amount}}</text>
-                                            </view>
-                                        </view>
-                                    </view>
-                                    <view class="import-borrow-item-right">
-                                        ￥
-                                        <text>{{item.unverifyAmount}}</text>
-                                    </view>
-                                </view>
-                                <view class="form-line"/>
-                            </view>
-                        </label>
-                    </checkbox-group>
-                </block>
-            </scroll-view>
-            <button formType="submit" class="import-borrow-list-btn">导入</button>
-        </form>
-    </view>
     <!--核算维度弹框-->
     <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:if="{{hesuanType === 'hesuan'}}">
         <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList.length}}">
@@ -450,6 +302,4 @@
     </view>
 </view>
 </view>
-<view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
-<view class="hesuan-mask" hidden="{{hesuanMaskHidden}}" onTap="onHesuanHide"></view>
 </view>

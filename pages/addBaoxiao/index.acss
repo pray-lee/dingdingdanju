@@ -30,7 +30,7 @@
     width: 100%;
 }
 .btn-area button{
-    width: 100%;
+    flex: 1;
     border:0;
     background:#3276c3;
     border-radius: 0;
@@ -47,9 +47,12 @@
     height:0;
     padding:0
 }
+.add-borrow-page{
+    height:100%
+}
 .add-borrow-page, .add-hesuanweidu-page{
     z-index:1000;
-    transform:translateY(360px)
+    transform:translateY(100%)
 }
 .add-extra-page{
     position: absolute;
@@ -85,19 +88,19 @@
     color:#1f65d8;
     font-weight:200
 }
-.borrow-item .form-row, .file-item .form-row{
+.borrow-item .form-row, .file-item .form-row, .baoxiao-item .form-row{
     padding: 0 40rpx;
     display:flex;
     align-items: center;
 }
-.borrow-item .form-row-content, .file-list .form-row-content{
+.borrow-item .form-row-content, .file-list .form-row-content, .baoxiao-item .form-row-content{
     text-align:center
 }
 .delete-borrow, .delete-file, .delete-baoxiao-item{
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
-    background-size: 30rpx 30rpx;
+    background-size: 35rpx 40rpx;
     position:absolute;
     left: 20rpx;
     z-index: 999
@@ -107,54 +110,6 @@
     height: 40rpx
 }
 
-.import-borrow-item{
-    flex: 1
-}
-.import-borrow-item .form-row{
-    justify-content: space-between;
-    font-size: 24rpx;
-    padding: 0;
-}
-.import-borrow-item .form-line{
-    margin-left: 0
-}
-.import-borrow-remark {
-    line-height: 30rpx;
-    margin-top: 10rpx;
-}
-.import-borrow-info{
-    display:flex;
-    align-items: center;
-    color:#b8b9bb;
-    font-weight: 300;
-    font-size: 22rpx
-}
-.checkbox-label{
-    display:flex;
-    align-items: center;
-    padding: 0 15rpx;
-}
-.checkbox{
-    margin-right: 15rpx;
-    border-radius: 50%;
-}
-.import-borrow-list-btn{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width: 100%;
-    background:#3276c3;
-    color:#fff;
-    font-size: 32rpx;
-    height: 100rpx;
-    line-height: 100rpx;
-    text-align: center;
-    border:0;
-    border-radius: 0
-}
-.import-borrow-input{
-    font-size: 24rpx
-}
 .baoxiao-item{
     margin: 20rpx 0
 }
@@ -222,9 +177,9 @@ input::-webkit-input-placeholder{
 }
 .total{
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: baseline;
-    padding-top: 20rpx;
+    padding:0 40rpx;
 }
 .total-word{
     font-size: 40rpx;
@@ -251,4 +206,31 @@ input::-webkit-input-placeholder{
 .img-wrapper{
     display:flex;
     justify-content: flex-end;
+}
+.borrow-line{
+    width: 1rpx;
+    height: 36rpx;
+    background:#ddd
+}
+.borrow-remark {
+    padding: 0 10rpx
+}
+.special-content{
+    display:flex;
+    align-items: center;
+}
+.special-input{
+    width: auto !important;
+    padding: 0 .6rem;
+}
+.edit{
+    width: 20rpx;
+    height: 20rpx;
+    position:absolute;
+    right: 10rpx
+}
+.title-word{
+    width: 7em;
+    margin-right: 20rpx;
+    text-align:left
 }

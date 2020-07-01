@@ -6,7 +6,9 @@
     "pages/addBaoxiao/index",
     "pages/error/index",
     "pages/uploadPage/index",
-    "pages/infoList/index"
+    "pages/infoList/index",
+    "pages/importBorrowList/index",
+    "pages/baoxiaoDetail/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

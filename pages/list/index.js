@@ -177,7 +177,7 @@ Page({
     goToEdit(e) {
         var id = e.currentTarget.dataset.id
         console.log(this.data.type, 'type')
-        if(this.data.type.indexOf('baoxiao') != -1) {
+        if(this.data.type.indexOf('B') != -1) {
             dd.navigateTo({
                 url: '../addBaoxiao/index?type=edit&id=' + id
             })

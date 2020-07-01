@@ -1,0 +1,156 @@
+<view class="form-wrapper" onTap="onClick">
+    <scroll-view scroll-y class="form-scroll-wrapper">
+        <view class="baoxiao-item-title">
+            <text>报销详情</text>
+        </view>
+        <view class="form-row">
+            <view class="form-row-label">费用类型</view>
+            <view class="form-row-content">
+                <picker onChange="bindBaoxiaoObjPickerChange" value="{{baoxiaoDetail.subjectIndex}}"
+                        range="{{baoxiaoDetail.subjectList}}"
+                        range-key="name" data-name="subjectId" data-list="{{subjectList}}">
+                    <view class="row-extra">{{baoxiaoDetail.subjectList[baoxiaoDetail.subjectIndex].name}}</view>
+                </picker>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">核算维度</view>
+            <view class="form-row-content">
+                <view a:if="{{baoxiaoDetail.auxpropertyNames}}" class="mock-input" onTap="checkFocus"
+                      data-name="auxpropertyNames" data-subjectAuxptyName="subjectAuxptyList">
+                    {{baoxiaoDetail.auxpropertyNames}}
+                </view>
+                <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames"
+                      data-subjectAuxptyName="subjectAuxptyList">请选择核算维度
+                </view>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">预算类型</view>
+            <view class="form-row-content">
+                <picker onChange="bindBaoxiaoObjPickerChange" value="{{baoxiaoDetail.trueSubjectIndex}}"
+                        range="{{baoxiaoDetail.trueSubjectList}}"
+                        range-key="name" data-name="trueSubjectId"
+                        data-list="{{baoxiaoDetail.trueSubjectList}}">
+                    <view class="row-extra">{{baoxiaoDetail.trueSubjectList[baoxiaoDetail.trueSubjectIndex].name}}
+                    </view>
+                </picker>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">预算维度</view>
+            <view class="form-row-content">
+                <view a:if="{{baoxiaoDetail.trueAuxpropertyNames}}" class="mock-input" onTap="checkFocus"
+                      data-name="trueAuxpropertyNames" data-subjectAuxptyName="trueSubjectAuxptyList">
+                    {{baoxiaoDetail.trueAuxpropertyNames}}
+                </view>
+                <view a:else class="mock-input nodata" onTap="checkFocus" data-name="trueAuxpropertyNames"
+                      data-subjectAuxptyName="trueSubjectAuxptyList">请选择核算维度
+                </view>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">附加信息</view>
+            <view class="input extraBtn" onTap="openExtraInfo" data-extraId="{{baoxiaoDetail.subjectExtraId}}">查看详情
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">申请报销金额</view>
+            <input class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
+                   data-name="applicationAmount"/>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">发票类型</view>
+            <view class="form-row-content">
+                <radio-group onChange="baoxiaoRadioChange" name="invoiceType" data-name="invoiceType">
+                    <label class="radio" a:for="{{baoxiaoDetail.invoiceTypeArr}}" a:for-item="invoice">
+                        <radio value="{{baoxiaoDetail.invoice.id}}"
+                               checked="{{baoxiaoDetail.invoiceType == invoice.id}}"></radio>
+                        {{invoice.text}}
+                    </label>
+                </radio-group>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">税率</view>
+            <view class="form-row-content">
+                <picker onChange="bindTaxRagePickerChange" value="{{baoxiaoDetail.taxRageIndex}}"
+                        range="{{baoxiaoDetail.taxRageArr}}"
+                        range-key="text">
+                    <view class="row-extra">{{baoxiaoDetail.taxRageArr[baoxiaoDetail.taxRageIndex].text}}</view>
+                </picker>
+            </view>
+        </view>
+        <view class="form-line"/>
+        <view class="form-row">
+            <view class="form-row-label">备注</view>
+            <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-name="remark"
+                   value="{{baoxiaoDetail.remark}}"/>
+        </view>
+        <view class="form-line"/>
+
+    </scroll-view>
+    <!--核算维度弹框-->
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:if="{{hesuanType === 'hesuan'}}">
+        <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoDetail.subjectAuxptyList.length}}">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+                <view class="import-baoxiao-item" a:for="{{baoxiaoDetail.subjectAuxptyList}}">
+                    <view class="form-row">
+                        <view class="form-row-label">{{item.auxptyName}}</view>
+                        <view class="form-row-content">
+                            <picker onChange="specialBindObjPickerChange"
+                                    value="{{baoxiaoDetail.allAuxptyList[item.auxptyId].index}}"
+                                    range="{{baoxiaoDetail.allAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{baoxiaoDetail.allAuxptyList[item.auxptyId].name}}"
+                                    data-list="{{baoxiaoDetail.allAUxptyList[item.auxptyId]}}"
+                                    data-id="{{item.auxptyId}}">
+                                <view class="row-extra ellipsis">
+                                    {{baoxiaoDetail.allAuxptyList[item.auxptyId]["data"][baoxiaoDetail.allAuxptyList[item.auxptyId].index][baoxiaoDetail.allAuxptyList[item.auxptyId].name]}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </scroll-view>
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:else>
+        <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoDetail.trueSubjectAuxptyList.length}}">
+            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+                <view class="import-baoxiao-item" a:for="{{baoxiaoDetail.trueSubjectAuxptyList}}">
+                    <view class="form-row">
+                        <view class="form-row-label">{{item.auxptyName}}</view>
+                        <view class="form-row-content">
+                            <picker onChange="specialBindObjPickerChange"
+                                    value="{{baoxiaoDetail.trueAllAuxptyList[item.auxptyId].index}}"
+                                    range="{{baoxiaoDetail.trueAllAuxptyList[item.auxptyId].data}}"
+                                    range-key="{{baoxiaoDetail.trueAllAuxptyList[item.auxptyId].name}}"
+                                    data-list="{{baoxiaoDetail.trueAllAUxptyList[item.auxptyId]}}"
+                                    data-id="{{item.auxptyId}}">
+                                <view class="row-extra ellipsis">
+                                    {{baoxiaoDetail.trueAllAuxptyList[item.auxptyId]["data"][baoxiaoDetail.trueAllAuxptyList[item.auxptyId].index][baoxiaoDetail.trueAllAuxptyList[item.auxptyId].name]}}
+                                </view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </scroll-view>
+            <button formType="submit" class="import-borrow-list-btn">导入</button>
+        </form>
+    </view>
+    <view class="btn-area">
+        <button onTap="addDetail" class="submit-btn save-draft">再加一笔</button>
+        <button onTap="submitBaoxiaoDetail" class="submit-btn">保存报销</button>
+    </view>
+    <view class="hesuan-mask" hidden="{{hesuanMaskHidden}}" onTap="onHesuanHide"></view>
+</view>

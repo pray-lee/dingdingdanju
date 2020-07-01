@@ -89,7 +89,7 @@
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
-    background-size: 30rpx 30rpx;
+    background-size: 35rpx 40rpx;
     position:absolute;
     left: 20rpx;
     z-index: 999
@@ -184,9 +184,10 @@ input::-webkit-input-placeholder{
 }
 .total{
     display:flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: baseline;
-    padding-top: 20rpx;
+    padding: 0 40rpx;
+    /*padding-top: 20rpx;*/
 }
 .total-word{
     font-size: 40rpx;
