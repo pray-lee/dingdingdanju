@@ -9,7 +9,9 @@
     "pages/infoList/index",
     "pages/importBorrowList/index",
     "pages/baoxiaoDetail/index",
-    "pages/extra/index"
+    "pages/extra/index",
+    "pages/subjectPage/index",
+    "pages/auxptyPage/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

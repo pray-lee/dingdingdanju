@@ -205,3 +205,16 @@ input::-webkit-input-placeholder{
     background:#fff;
     color:#1f65d8;
 }
+.auxpty-wrapper{
+    padding: .1rem 0;
+    display:flex;
+    justify-content: space-between;
+    align-items:center
+}
+.auxpty-wrapper .left{
+  width: 5em;
+}
+.auxpty-wrapper .right{
+    margin-left: 20rpx;
+    text-align:right
+}

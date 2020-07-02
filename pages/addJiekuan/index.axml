@@ -3,12 +3,6 @@
         <scroll-view scroll-y class="form-scroll-wrapper">
             <view class="block-wrapper">
                 <view class="title">申请方信息</view>
-                <!--            <view class="form-row">-->
-                <!--                <view class="form-row-label">单据编号</view>-->
-                <!--                <view class="form-row-content">-->
-                <!--                    <input class="input" placeholder="保存时自动生成" disabled data-name="receivablebillCode" value={{submitData.billCode}} />-->
-                <!--                </view>-->
-                <!--            </view>-->
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>申请组织</view>
                     <view class="form-row-content">
@@ -41,9 +35,6 @@
                 <view class="form-row" onTap="goInfoList">
                     <view class="form-row-label"><text class="require">*</text>借款信息</view>
                     <view class="form-row-content borrowList-wrapper">
-<!--                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}" range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex" data-list="borrowList">-->
-<!--                            <view class="row-extra">{{borrowList[borrowIndex].name}}</view>-->
-<!--                        </picker>-->
                         {{borrowList[borrowIndex].name}}
                     </view>
                     <view class="form-row-content incomeBankAccount">
@@ -51,34 +42,10 @@
                         <view a:else class="mock-input nodata">暂无银行账号</view>
                     </view>
                     <view class="form-row-content incomeBankName">
-<!--                        <block a:if="{{incomeBankList.length}}">-->
-<!--                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}" range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName" data-list="incomeBankList" data-index="incomeBankIndex">-->
-<!--                                <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>-->
-<!--                            </picker>-->
-<!--                        </block>-->
                         <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">{{incomeBankList[0].bankName}}</view>
                         <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
                     </view>
                 </view>
-<!--                <view class="form-line"/>-->
-<!--                <view class="form-row">-->
-<!--                    <view class="form-row-label"><text class="require">*</text>收款银行</view>-->
-<!--                    <view class="form-row-content">-->
-<!--                        <block a:if="{{incomeBankList.length}}">-->
-<!--                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}" range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName" data-list="incomeBankList" data-index="incomeBankIndex">-->
-<!--                                <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>-->
-<!--                            </picker>-->
-<!--                        </block>-->
-<!--                        <view a:else class="mock-input nodata">请选择收款银行</view>-->
-<!--                    </view>-->
-<!--                </view>-->
-<!--                <view class="form-line"/>-->
-<!--                <view class="form-row">-->
-<!--                    <view class="form-row-label"><text class="require">*</text>收款账号</view>-->
-<!--                    <view class="form-row-content">-->
-<!--                        <input class="input" disabled value="{{submitData.incomeBankAccount}}" placeholder="收款账号" data-name="incomeBankAccount"/>-->
-<!--                    </view>-->
-<!--                </view>-->
             </view>
             <view class="block-wrapper">
                 <view class="title">单据信息</view>
@@ -89,22 +56,25 @@
                     </view>
                 </view>
                 <view class="form-line"/>
-                <view class="form-row">
+                <view class="form-row" onTap="goSubjectPage">
                     <view class="form-row-label"><text class="require">*</text>借款类型</view>
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{subjectIndex}}" range="{{subjectList}}" range-key="name" data-name="subjectId" data-index="subjectIndex" data-list="subjectList">
-                            <view class="row-extra">{{subjectList[subjectIndex].name}}</view>
-                        </picker>
+<!--                         <picker class="picker-style" onChange="bindObjPickerChange" value="{{subjectIndex}}" range="{{subjectList}}" range-key="name" data-name="subjectId" data-index="subjectIndex" data-list="subjectList"> -->
+<!--                             <view class="row-extra">{{subjectList[subjectIndex].name}}</view> -->
+<!--                         </picker> -->
+                        <view a:if="{{submitData.subjectId}}" class="mock-input">{{submitData.subjectName}}</view>
+                        <view a:else class="mock-input nodata">请选择借款类型</view>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>核算维度</view>
-                    <view class="form-row-content">
-                        <!-- <view class="row-extra special-btn ellipsis" onTap="checkFocus">{{submitData.auxpropertyNames}}</view> -->
-                        <!--                    <input class="input" onFocus="checkFocus" disabled="{{!subjectAuxptyList.length}}" value="{{submitData.auxpropertyNames}}" placeholder="核算维度" data-name="auxpropertyNames"/>-->
-                        <view a:if="{{submitData.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames">{{submitData.auxpropertyNames}}</view>
-                        <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames">请选择核算维度</view>
+                    <view class="form-row-content auxpty-wrapper" a:for="{{subjectAuxptyList}}" data-id="{{item.auxptyId}}" onTap="goAuxptyPage">
+<!--                         <view a:if="{{submitData.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames">{{submitData.auxpropertyNames}}</view> -->
+<!--                         <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames">请选择核算维度</view> -->
+                            <view class="mock-input left ellipsis">{{item.auxptyName}}</view>
+                            <view class="mock-input right ellipsis" a:if="{{!!selectedAuxpty && selectedAuxpty[item.auxptyId]}}">{{selectedAuxpty[item.auxptyId].name}}</view>
+                            <view class="mock-input right epplipsis" a:else>{{allAuxptyList[item.auxptyId][0].name}}</view>
 
                     </view>
                 </view>
@@ -112,8 +82,6 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>业务日期</view>
                     <view class="form-row-content">
-                        <!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
-                        <!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
                         <view data-name="businessDateTime" onTap="onBusinessFocus">{{submitData.businessDateTime}}</view>
                     </view>
                     <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
@@ -137,49 +105,9 @@
                 </block>
                 <view class="form-row invoice-wrapper">
                     <view class="form-row-label"><text class="require">*</text>是否有发票</view>
-<!--                    <view class="form-row-content">-->
-<!--                        <radio-group onChange="radioChange" data-name="invoice">-->
-<!--                            <label class="radio">-->
-<!--                                <radio value="1" checked={{submitData.invoice == 1}}></radio>是-->
-<!--                            </label>-->
-<!--                            <label class="radio">-->
-<!--                                <radio value="0" checked={{submitData.invoice == 0}} class="radio-control"></radio>否-->
-<!--                            </label>-->
-<!--                        </radio-group>-->
-<!--                    </view>-->
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
-<!--                <view class="form-line"/>-->
             </view>
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">借款合计</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" disabled value="{{submitData.amount == 0 ? '' : submitData.amount}}" placeholder="借款合计" data-name="amount"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">合同编号</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" value="{{submitData.contractNumber}}" placeholder="合同编号" data-name="contractNumber" onBlur="onBlur"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">提交人</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" disabled value="{{submitData.userName}}" placeholder="提交人" data-name="submitterName"/>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
-<!--            <view class="form-row">-->
-<!--                <view class="form-row-label">提交日期</view>-->
-<!--                <view class="form-row-content">-->
-<!--                    <input class="input" disabled value="{{submitData.submitDate}}" data-name="submitDate" placeholder="提交日期"/>-->
-<!--                    <view data-name="submitDate">{{submitData.submitDate}}</view>-->
-<!--                </view>-->
-<!--            </view>-->
-<!--            <view class="form-line"/>-->
 <!-- 增加借款详情-->
             <view class="block-wrapper">
                 <view class="title">借款列表</view>
@@ -219,10 +147,6 @@
                 </view>
             </view>
             <view class="block-wrapper submit-info-wrapper">
-<!--                <view class="submit-info">-->
-<!--                    <view class="block">提交人：{{submitData.userName}}</view>-->
-<!--                    <view class="block">提交日期：{{submitData.submitDate}}</view>-->
-<!--                </view>-->
                 <view class="total">
                     <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
                         借款合计：</text><text class="total-word">{{submitData.amount == 0 ? '0.00' : submitData.amount}}</text></view>

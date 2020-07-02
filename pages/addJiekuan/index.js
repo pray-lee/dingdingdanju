@@ -1,4 +1,5 @@
 import moment from 'moment'
+import clone from "lodash/cloneDeep";
 import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
 
 var app = getApp()
@@ -21,8 +22,6 @@ Page({
         borrowList: [],
         incomeBankIndex: 0,
         incomeBankList: [],
-        subjectIndex: 0,
-        subjectList: [],
         // 资金计划列表
         capitalTypeIndex: 0,
         capitalTypeList: [],
@@ -45,6 +44,8 @@ Page({
         subjectAuxptyList: [],
         // 辅助核算列表(所有)
         allAuxptyList: {},
+        // 选择的辅助核算
+        selectedAuxpty: null,
         isCapitalTypeStart: false,
         submitData: {
             billApEntityListObj: [],
@@ -179,11 +180,20 @@ Page({
             this.isCapitalTypeStart(this.data[listName][value].id)
         }
         if (name === 'submitterDepartmentId') {
+            // 清空科目数据，当这个发生变化的时候
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    subjectId: '',
+                    subjectName: ''
+                },
+                selectedAuxpty: null,
+            })
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
-        if (name === 'subjectId') {
-            this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
-        }
+        // if (name === 'subjectId') {
+        //     this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
+        // }
         if (name === 'applicantType') {
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
@@ -259,52 +269,6 @@ Page({
             remark: ''
         })
     },
-    onHesuanShow() {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.hesuanAnimation = animation
-        animation.translateY(0).step()
-        this.setData({
-            hesuanAnimationInfo: animation.export(),
-            hesuanMaskHidden: false,
-        })
-    },
-    onHesuanHide() {
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.hesuanAnimation = animation
-        animation.translateY(300).step()
-        this.setData({
-            hesuanAnimationInfo: animation.export(),
-            hesuanMaskHidden: true
-        })
-    },
-    onHesuanSubmit(e) {
-        // 辅助核算字符串拼接
-        var auxptyNameStr = ''
-        // 辅助核算提交需要的数组
-        var billApEntityListObj = []
-        var tempData = this.data.allAuxptyList
-        for (var i in tempData) {
-            auxptyNameStr += `${tempData[i].auxptyName}_${tempData[i].data[tempData[i].index][this.getAuxptyNameMap(tempData[i].auxptyId)]},`
-            billApEntityListObj.push({
-                auxptyId: tempData[i].auxptyId,
-                auxptyDetailId: tempData[i]["data"][tempData[i].index].id,
-            })
-        }
-        this.setData({
-            submitData: {
-                ...this.data.submitData,
-                auxpropertyNames: auxptyNameStr.slice(0, -1),
-                billApEntityListObj
-            }
-        })
-        this.onHesuanHide()
-    },
     onAddHide() {
         var animation = dd.createAnimation({
             duration: 250,
@@ -317,7 +281,7 @@ Page({
             maskHidden: true
         })
     },
-    onShow() {
+    getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if (!!borrowId) {
@@ -339,6 +303,61 @@ Page({
                 this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
             })
         }
+    },
+    getAuxptyIdFromStorage() {
+        // 从缓存里获取借款人id
+        const auxpty = dd.getStorageSync({key: 'auxpty'}).data
+        if(!!auxpty) {
+            this.setData({
+                selectedAuxpty: {
+                    ...this.data.selectedAuxpty,
+                    [auxpty.auxptyId]: {
+                        id: auxpty.id,
+                        name: auxpty.name,
+                        auxptyId: auxpty.auxptyId
+                    }
+                }
+            })
+            const obj = Object.values(this.data.selectedAuxpty).map(item => {
+                return {
+                    auxptyId: item.auxptyId,
+                    auxptyDetailId: item.id
+                }
+            })
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    billApEntityListObj: obj
+                }
+            })
+            dd.removeStorage({
+                key: 'auxpty'
+            })
+        }
+    },
+    getSubjectIdFromStorage() {
+        // 从缓存里获取科目id
+        const subject = dd.getStorageSync({key: 'subject'}).data
+        if(!!subject && subject !== null) {
+            console.log('科目已获取', subject)
+            this.setData({
+                selectedAuxpty: null,
+                submitData: {
+                    ...this.data.submitData,
+                    subjectId: subject.id,
+                    subjectName: subject.name
+                }
+            })
+            dd.removeStorage({
+                key: 'subject'
+            })
+            this.getSubjectAuxptyList(subject.id, this.data.submitData.accountbookId)
+        }
+    },
+    onShow() {
+        this.getBorrowIdFromStorage()
+        this.getSubjectIdFromStorage()
+        this.getAuxptyIdFromStorage()
         // 页面显示
         var animation = dd.createAnimation({
             duration: 250,
@@ -594,7 +613,7 @@ Page({
                 var billApEntityListObj = data ? data.billApEntityList : []
                 var capitalTypeDetailId = data ? data.capitalTypeDetailId : null
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
-                this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
+                this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId)
                 this.isCapitalTypeStart(accountbookId, capitalTypeDetailId)
             },
             complete: res => {
@@ -603,7 +622,7 @@ Page({
         })
     },
     // 获取申请部门
-    getDepartmentList(accountbookId, departmentId, subjectId, billApEntityListObj) {
+    getDepartmentList(accountbookId, departmentId, subjectId) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
@@ -634,7 +653,7 @@ Page({
                         submitterDepartmentId
                     }
                 })
-                this.getSubjectList(accountbookId, submitterDepartmentId, subjectId, billApEntityListObj)
+                this.getSubjectList(accountbookId, submitterDepartmentId, subjectId)
             },
             complete: res => {
                 this.hideLoading()
@@ -740,7 +759,7 @@ Page({
         })
     },
     // 获取科目类型
-    getSubjectList(accountbookId, departId, subject, billApEntityListObj) {
+    getSubjectList(accountbookId, departId, subjectId) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=4&findAll=false',
@@ -758,32 +777,12 @@ Page({
                             })
                         }
                     })
-                    // edit的时候，设置subjectIndex
-                    var subjectIndex = 0
-                    var subjectId = subject ? subject : arr[0].id
-                    if (subjectId) {
-                        arr.forEach((item, index) => {
-                            if (item.id === subjectId) {
-                                subjectIndex = index
-                            }
-                        })
-                    }
-                    this.setData({
-                        subjectList: arr,
-                        subjectIndex: subjectIndex,
-                        submitData: {
-                            ...this.data.submitData,
-                            subjectId
-                        }
-                    })
-                    this.getSubjectAuxptyList(subjectId, this.data.submitData.accountbookId, false, billApEntityListObj)
-                } else {
-                    this.setData({
-                        subjectList: [],
-                        subjectIndex: 0,
-                        submitData: {
-                            ...this.data.submitData,
-                            subjectId: ''
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: arr,
+                        success: res => {
+                            console.log('写入科目成功....')
                         }
                     })
                 }
@@ -794,7 +793,7 @@ Page({
         })
     },
     // 获取科目对应的辅助核算
-    getSubjectAuxptyList(subjectId, accountbookId, flag, billApEntityListObj) {
+    getSubjectAuxptyList(subjectId, accountbookId) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
@@ -808,28 +807,13 @@ Page({
                             auxptyName: item.auxpropertyConfig.auxptyName
                         }
                     })
+                    console.log(arr)
                     this.setData({
                         subjectAuxptyList: arr,
-                        allAuxptyList: {},
-                        submitData: {
-                            ...this.data.submitData,
-                        }
                     })
-                    if (!billApEntityListObj) {
-                        this.setData({
-                            submitData: {
-                                ...this.data.submitData,
-                                auxpropertyNames: ''
-                            }
-                        })
-                    }
-                    // 请求辅助核算列表
                     arr.forEach(item => {
-                        this.getAuxptyList(this.data.submitData.accountbookId, item.auxptyId, billApEntityListObj)
+                        this.getAuxptyList(accountbookId, item.auxptyId)
                     })
-                    if (flag) {
-                        this.onHesuanShow()
-                    }
                 } else {
                     this.setData({
                         subjectAuxptyList: []
@@ -883,41 +867,25 @@ Page({
         return url
     },
     // 请求辅助核算列表
-    getAuxptyList(accountbookId, auxptyid, billApEntityListObj) {
+    getAuxptyList(accountbookId, auxptyid) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
             method: 'GET',
             dataType: 'json',
             success: res => {
-                // 处理index
-                var auxptyIndex = 0
-                if (!!billApEntityListObj) {
-                    console.log(billApEntityListObj)
-                    console.log(auxptyid)
-                    console.log('=============')
-                    billApEntityListObj.forEach((item, index) => {
-                        if (item.auxptyId == auxptyid) {
-                            res.data.rows.forEach((row, rowIndex) => {
-                                if (row.id == item.auxptyDetailId) {
-                                    auxptyIndex = rowIndex
-                                }
-                            })
-                        }
-                    })
-                }
-                var obj = {
-                    [auxptyid]: {
-                        data: res.data.rows,
-                        index: auxptyIndex,
-                        name: this.getAuxptyNameMap(auxptyid),
-                        auxptyName: this.data.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
+                const name = this.getAuxptyNameMap(auxptyid)
+                const newObj = res.data.rows.map(item => {
+                    return {
+                        id: item.id,
+                        name: item[name],
                         auxptyId: auxptyid
                     }
-                }
-                var newObj = Object.assign({}, this.data.allAuxptyList, obj)
+                })
+                const tempData = clone(this.data.allAuxptyList)
+                tempData[auxptyid] = newObj
                 this.setData({
-                    allAuxptyList: newObj
+                    allAuxptyList: tempData
                 })
             },
             complete: res => {
@@ -1033,7 +1001,6 @@ Page({
                 console.log(res.data.obj)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
-                    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
                     this.hideLoading()
                 }
             },
@@ -1060,8 +1027,31 @@ Page({
             var billApEntityListObj = data.billApEntityList.map(item => {
                 return {
                     auxptyId: item.auxptyId,
-                    auxptyDetailId: item.auxptyDetailId
+                    auxptyDetailId: item.auxptyDetailId,
+                    auxptyDetailName: item.auxptyDetailName
                 }
+            })
+            const obj = {}
+            billApEntityListObj.forEach(item => {
+                obj[item.auxptyId] = {
+                    auxptyId: item.auxptyId,
+                    id: item.auxptyDetailId,
+                    name: item.auxptyDetailName
+                }
+            })
+            this.setData({
+                selectedAuxpty: obj
+            })
+        }
+        if(data.subject.subjectAuxptyList.length) {
+            const subjectAuxptyList = data.subject.subjectAuxptyList.map(item => {
+                return {
+                    auxptyId: item.auxptyId,
+                    auxptyName: item.auxpropertyConfig.auxptyName
+                }
+            })
+            this.setData({
+                subjectAuxptyList
             })
         }
         // fileList
@@ -1070,6 +1060,8 @@ Page({
                 return item
             })
         }
+        // 请求科目下的辅助核算
+        this.getSubjectAuxptyList(data.subjectId, data.accountbookId)
         // 设置数据
         this.setData({
             ...this.data,
@@ -1081,7 +1073,8 @@ Page({
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
                 invoice: data.invoice,
-                auxpropertyNames: data.auxpropertyNames,
+                subjectId: data.subjectId,
+                subjectName: data.subject.fullSubjectName,
                 businessDateTime: data.businessDateTime,
                 amount: data.amount.toFixed(2),
                 remark: data.remark,
@@ -1095,6 +1088,23 @@ Page({
     goInfoList() {
         dd.navigateTo({
             url: '/pages/infoList/index'
+        })
+    },
+    goSubjectPage() {
+        dd.navigateTo({
+            url: '/pages/subjectPage/index'
+        })
+    },
+    goAuxptyPage(e) {
+        const auxptyId = e.currentTarget.dataset.id
+        dd.setStorage({
+            key: 'auxptyList',
+            data: this.data.allAuxptyList[auxptyId],
+            success: res => {
+                dd.navigateTo({
+                    url: '/pages/auxptyPage/index'
+                })
+            }
         })
     }
 })
