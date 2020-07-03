@@ -10,7 +10,7 @@
     height: calc(100vh - 120rpx)
 }
 .add-hesuanweidu-page{
-    transform:translateY(300)
+    transform:translateY('605rpx')
 }
 .import-borrow-list-btn{
     position:fixed;
@@ -52,4 +52,27 @@
  }
 .add-hesuanweidu-page{
     z-index: 1000
+}
+.block-wrapper{
+    margin-bottom: 20rpx;
+    background:#fff;
+    padding-top: 34rpx;
+}
+.title{
+    margin:0 40rpx;
+    border-left: 4rpx solid #1f65d8;
+    padding-left: 14rpx;
+    font-size: 30rpx;
+    font-weight:600
+}
+.invoice-wrapper{
+    display:flex;
+    justify-content: space-between;
+}
+.extra-icon{
+    width: 44rpx;
+    height: 47rpx;
+    position:absolute;
+    right: 40rpx;
+    top:40rpx
 }

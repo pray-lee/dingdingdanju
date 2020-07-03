@@ -13,3 +13,4 @@ require('../../pages/baoxiaoDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2
 require('../../pages/extra/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/subjectPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/auxptyPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/capitalPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');

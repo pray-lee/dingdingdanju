@@ -10,7 +10,7 @@ Page({
         billId: '',
         // hesuanMaskHidden: true,
         // animationInfo: {},
-        extraAnimationInfo: {},
+        // extraAnimationInfo: {},
         hesuanAnimationInfo: {},
         borrowAmount: '',
         remark: '',
@@ -64,7 +64,7 @@ Page({
             submitDate: moment().format('YYYY-MM-DD'),
             applicantType: 10,
             applicantId: '',
-            invoice: 0,
+            invoice: 1,
             businessDateTime: moment().format('YYYY-MM-DD'),
             applicationAmount: 0,
             totalAmount: 0,
@@ -80,9 +80,7 @@ Page({
     },
     // 把baoxiaoList的数据，重组一下，拼在submitData里提交
     formatSubmitData(array, name) {
-        console.log(array, 'baoxiaoList..........')
         array.forEach((item, index) => {
-            console.log(item, '.....................................')
             Object.keys(item).forEach(keys => {
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
                     item[keys].forEach((arrItem, arrIndex) => {
@@ -389,48 +387,88 @@ Page({
         })
     },
     getBorrowIdFromStorage() {
-        const borrowId = dd.getStorageSync({key: 'borrowId'}).data
-        if (!!borrowId) {
-            console.log('借款人id已经获取', borrowId)
-            console.log(this.data.borrowList, 'borrowList')
-            var borrowIndex = 0
-            this.data.borrowList.forEach((item, index) => {
-                if (item.id === borrowId) {
-                    borrowIndex = index
+        const borrowId = dd.getStorageSync({
+            key: 'borrowId',
+            success: res => {
+                const borrowId = res.data
+                if (!!borrowId) {
+                    console.log('借款人id已经获取', borrowId)
+                    console.log(this.data.borrowList, 'borrowList')
+                    var borrowIndex = 0
+                    this.data.borrowList.forEach((item, index) => {
+                        if (item.id === borrowId) {
+                            borrowIndex = index
+                        }
+                    })
+                    this.setData({
+                        borrowIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            applicantId: borrowId
+                        }
+                    })
+                    setTimeout(() => {
+                        this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+                    })
                 }
-            })
-            this.setData({
-                borrowIndex,
-                submitData: {
-                    ...this.data.submitData,
-                    applicantId: borrowId
-                }
-            })
-            setTimeout(() => {
-                this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
-            })
-        }
+            }
+        })
     },
     getSelectedBorrowListFromStorage() {
-        const importList = dd.getStorageSync({key: 'importList'}).data
+        dd.getStorage({
+            key: 'importList',
+            success: res => {
+                const importList = res.data
+                if(!!importList && importList.length) {
+                    console.log('获取选择的借款列表成功', importList)
+                    this.setData({
+                        importList
+                    })
+                    this.setBorrowAmount(importList)
+                    this.setTotalAmount()
+                }
+            }
+        })
         dd.removeStorage({
             key: 'importList',
             success: res => {
                 console.log('清除imoprtList成功...')
             }
         })
-        if(!!importList && importList.length) {
-           console.log('获取选择的借款列表成功', importList)
-            this.setData({
-                importList
-            })
-            this.setBorrowAmount(importList)
-            this.setTotalAmount()
-        }
     },
     getBaoxiaoDetailFromStorage() {
-        const baoxiaoDetail = dd.getStorageSync({key: 'newBaoxiaoDetailArr'}).data
         const index = dd.getStorageSync({key: 'index'}).data
+        dd.getStorage({
+            key: 'newBaoxiaoDetailArr',
+            success: res => {
+                const baoxiaoDetail = res.data
+                if(!!baoxiaoDetail) {
+                    let baoxiaoList = clone(this.data.baoxiaoList)
+                    console.log(index)
+                    if(!!index || index == 0) {
+                        baoxiaoList.splice(index, 1)
+                        dd.removeStorage({
+                            key: 'index',
+                            success: res => {
+                                console.log('清除index成功')
+                            }
+                        })
+                        baoxiaoList.splice(index, 0, baoxiaoDetail[0])
+                        baoxiaoList = baoxiaoList.concat(baoxiaoDetail.slice(1))
+                        this.setData({
+                            baoxiaoList: baoxiaoList
+                        })
+                    }else{
+                        this.setData({
+                            baoxiaoList: baoxiaoList.concat(baoxiaoDetail)
+                        })
+                    }
+                    console.log(baoxiaoList, 'final....')
+                    this.setApplicationAmount(baoxiaoList)
+                    this.setTotalAmount()
+                }
+            }
+        })
         dd.removeStorage({
             key: 'newBaoxiaoDetailArr',
             success: res => {
@@ -443,31 +481,6 @@ Page({
                 console.log('清除baoxiaoDetail成功...')
             }
         })
-        if(!!baoxiaoDetail) {
-            let baoxiaoList = clone(this.data.baoxiaoList)
-            console.log(index)
-            if(!!index || index == 0) {
-                baoxiaoList.splice(index, 1)
-                dd.removeStorage({
-                    key: 'index',
-                    success: res => {
-                        console.log('清除index成功')
-                    }
-                })
-                baoxiaoList.splice(index, 0, baoxiaoDetail[0])
-                baoxiaoList = baoxiaoList.concat(baoxiaoDetail.slice(1))
-                this.setData({
-                    baoxiaoList: baoxiaoList
-                })
-            }else{
-                this.setData({
-                    baoxiaoList: baoxiaoList.concat(baoxiaoDetail)
-                })
-            }
-            console.log(baoxiaoList, 'final....')
-            this.setApplicationAmount(baoxiaoList)
-            this.setTotalAmount()
-        }
     },
     onShow() {
         // 从缓存里获取借款列表
@@ -728,6 +741,18 @@ Page({
                 })
                 var submitterDepartmentId = data ? data.submitterDepartmentId : ''
                 var applicantType = data ? data.applicantType : 10
+                // edit设置借款类型
+                var applicantIndex = 0
+                if(applicantType) {
+                    this.data.applicantTypeList.forEach((item, index) => {
+                        if (item.id == applicantType) {
+                            applicantIndex = index
+                        }
+                    })
+                }
+                this.setData({
+                    applicantIndex
+                })
                 var applicantId = data ? data.applicantId : ''
                 var incomeBankName = data ? data.incomeBankName : ''
                 var billDetailList = data ? data.billDetailList : []
@@ -1460,54 +1485,54 @@ Page({
         this.setBorrowAmount(tempArr)
         this.setTotalAmount()
     },
-    openExtraInfo(e) {
-        var index = e.currentTarget.dataset.index
-        var extraId = e.currentTarget.dataset.extraId
-        if (this.data.baoxiaoList[index].subjectExtraId) {
-            this.onExtraShow()
-            this.getExtraInfo(extraId, index)
-            this.setData({
-                extraIndex: index
-            })
-        }
-    },
-    getExtraInfo(extraId, index) {
-        // 接口有问题
-        dd.httpRequest({
-            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
-            method: 'GET',
-            dataType: 'json',
-            success: res => {
-                console.log(res)
-                if (res.data.success) {
-                    this.setData({
-                        subjectExtraConf: JSON.parse(res.data.obj),
-                    })
-                    // 回显
-                    var tempData = clone(this.data.baoxiaoList)
-                    if (!tempData[index].extraMessage) {
-                        tempData[index].extraMessage = []
-                        tempData[index].extraList = []
-                        this.setData({
-                            baoxiaoList: tempData
-                        })
-                    }
-                }
-            }
-        })
-    },
-    onAddExtra() {
-        console.log('add', this.data.baoxiaoList)
-        if (this.data.subjectExtraConf) {
-            var obj = this.generateExtraList(this.data.subjectExtraConf)
-            var tempData = clone(this.data.baoxiaoList)
-            tempData[this.data.extraIndex].extraList.push({conf: obj.array})
-            tempData[this.data.extraIndex].extraMessage.push(obj.extraMessage)
-            this.setData({
-                baoxiaoList: tempData
-            })
-        }
-    },
+    // openExtraInfo(e) {
+    //     var index = e.currentTarget.dataset.index
+    //     var extraId = e.currentTarget.dataset.extraId
+    //     if (this.data.baoxiaoList[index].subjectExtraId) {
+    //         this.onExtraShow()
+    //         this.getExtraInfo(extraId, index)
+    //         this.setData({
+    //             extraIndex: index
+    //         })
+    //     }
+    // },
+    // getExtraInfo(extraId, index) {
+    //     // 接口有问题
+    //     dd.httpRequest({
+    //         url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
+    //         method: 'GET',
+    //         dataType: 'json',
+    //         success: res => {
+    //             console.log(res)
+    //             if (res.data.success) {
+    //                 this.setData({
+    //                     subjectExtraConf: JSON.parse(res.data.obj),
+    //                 })
+    //                 // 回显
+    //                 var tempData = clone(this.data.baoxiaoList)
+    //                 if (!tempData[index].extraMessage) {
+    //                     tempData[index].extraMessage = []
+    //                     tempData[index].extraList = []
+    //                     this.setData({
+    //                         baoxiaoList: tempData
+    //                     })
+    //                 }
+    //             }
+    //         }
+    //     })
+    // },
+    // onAddExtra() {
+    //     console.log('add', this.data.baoxiaoList)
+    //     if (this.data.subjectExtraConf) {
+    //         var obj = this.generateExtraList(this.data.subjectExtraConf)
+    //         var tempData = clone(this.data.baoxiaoList)
+    //         tempData[this.data.extraIndex].extraList.push({conf: obj.array})
+    //         tempData[this.data.extraIndex].extraMessage.push(obj.extraMessage)
+    //         this.setData({
+    //             baoxiaoList: tempData
+    //         })
+    //     }
+    // },
     generateExtraList(conf) {
         var tempData = clone(conf)
         console.log(tempData, '////////////////////////////')
@@ -1529,60 +1554,60 @@ Page({
             extraMessage
         }
     },
-    onExtraDateFocus(e) {
-        console.log(this.data.baoxiaoList, 'datetimefocus')
-
-        var idx = e.currentTarget.dataset.index
-        var extraIdx = e.currentTarget.dataset.extraIndex
-        dd.datePicker({
-            format: 'yyyy-MM-dd',
-            currentDate: moment().format('YYYY-MM-DD'),
-            success: (res) => {
-                // var tempData = this.data.extraMessage.concat()
-                // tempData[extraIndex][idx] = res.date
-                // this.setData({
-                //     extraMessage: tempData
-                // })
-                var tempData = clone(this.data.baoxiaoList)
-                if (!!res.date) {
-                    tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
-                    this.setData({
-                        baoxiaoList: tempData
-                    })
-                }
-                // 解除focus不触发的解决办法。
-                this.onClick()
-            },
-        })
-    },
-    onExtraBlur(e) {
-        var idx = e.currentTarget.dataset.index
-        var extraIdx = e.currentTarget.dataset.extraIndex
-        var tempData = clone(this.data.baoxiaoList)
-        tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = e.detail.value
-        this.setData({
-            baoxiaoList: tempData
-        })
-    },
-    cancelExtra() {
-        this.onExtraHide()
-        // this.setData({
-        //     extraList: [],
-        // })
-    },
-    deleteExtra(e) {
-        var idx = e.currentTarget.dataset.index
-        var tempData = clone(this.data.baoxiaoList)
-        tempData[this.data.extraIndex].extraMessage = tempData[this.data.extraIndex].extraMessage.filter((item, index) => index != idx)
-        tempData[this.data.extraIndex].extraList = tempData[this.data.extraIndex].extraList.filter((item, index) => index != idx)
-        this.setData({
-            baoxiaoList: tempData
-        })
-    },
-    onExtraSubmit() {
-        this.onExtraHide()
-        console.log(this.data.baoxiaoList)
-    },
+    // onExtraDateFocus(e) {
+    //     console.log(this.data.baoxiaoList, 'datetimefocus')
+    //
+    //     var idx = e.currentTarget.dataset.index
+    //     var extraIdx = e.currentTarget.dataset.extraIndex
+    //     dd.datePicker({
+    //         format: 'yyyy-MM-dd',
+    //         currentDate: moment().format('YYYY-MM-DD'),
+    //         success: (res) => {
+    //             // var tempData = this.data.extraMessage.concat()
+    //             // tempData[extraIndex][idx] = res.date
+    //             // this.setData({
+    //             //     extraMessage: tempData
+    //             // })
+    //             var tempData = clone(this.data.baoxiaoList)
+    //             if (!!res.date) {
+    //                 tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
+    //                 this.setData({
+    //                     baoxiaoList: tempData
+    //                 })
+    //             }
+    //             // 解除focus不触发的解决办法。
+    //             this.onClick()
+    //         },
+    //     })
+    // },
+    // onExtraBlur(e) {
+    //     var idx = e.currentTarget.dataset.index
+    //     var extraIdx = e.currentTarget.dataset.extraIndex
+    //     var tempData = clone(this.data.baoxiaoList)
+    //     tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = e.detail.value
+    //     this.setData({
+    //         baoxiaoList: tempData
+    //     })
+    // },
+    // cancelExtra() {
+    //     this.onExtraHide()
+    //     // this.setData({
+    //     //     extraList: [],
+    //     // })
+    // },
+    // deleteExtra(e) {
+    //     var idx = e.currentTarget.dataset.index
+    //     var tempData = clone(this.data.baoxiaoList)
+    //     tempData[this.data.extraIndex].extraMessage = tempData[this.data.extraIndex].extraMessage.filter((item, index) => index != idx)
+    //     tempData[this.data.extraIndex].extraList = tempData[this.data.extraIndex].extraList.filter((item, index) => index != idx)
+    //     this.setData({
+    //         baoxiaoList: tempData
+    //     })
+    // },
+    // onExtraSubmit() {
+    //     this.onExtraHide()
+    //     console.log(this.data.baoxiaoList)
+    // },
     showBaoxiaoDetail(e) {
         this.addLoading()
         const index = e.currentTarget.dataset.index

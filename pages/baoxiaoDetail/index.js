@@ -64,7 +64,7 @@ Page({
         })
     },
     baoxiaoRadioChange(e) {
-        var value = e.detail.value
+        var value = e.detail.value ? 2 : 1
         var baoxiaoItem = clone(this.data.baoxiaoDetail)
         baoxiaoItem.invoiceType = value
         if (value == 2) {
@@ -355,7 +355,7 @@ Page({
             timeFunction: 'ease-in'
         })
         this.hesuanAnimation = animation
-        animation.translateY(300).step()
+        animation.translateY('100%').step()
         this.setData({
             hesuanAnimationInfo: animation.export(),
             hesuanMaskHidden: true

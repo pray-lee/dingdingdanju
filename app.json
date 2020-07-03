@@ -11,11 +11,12 @@
     "pages/baoxiaoDetail/index",
     "pages/extra/index",
     "pages/subjectPage/index",
-    "pages/auxptyPage/index"
+    "pages/auxptyPage/index",
+    "pages/capitalPage/index"
   ],
   "window": {
     "defaultTitle": "我的单据",
     "titleBarColor": "#3276c3",
-    "pullRefresh": true
+    "allowsBounceVertical": "NO"
   }
 }

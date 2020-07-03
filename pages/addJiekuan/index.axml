@@ -67,18 +67,16 @@
                     </view>
                 </view>
                 <view class="form-line"/>
-                <view class="form-row">
+                <view class="form-row" a:if="{{subjectAuxptyList.length}}">
                     <view class="form-row-label"><text class="require">*</text>核算维度</view>
                     <view class="form-row-content auxpty-wrapper" a:for="{{subjectAuxptyList}}" data-id="{{item.auxptyId}}" onTap="goAuxptyPage">
-<!--                         <view a:if="{{submitData.auxpropertyNames}}" class="mock-input" onTap="checkFocus" data-name="auxpropertyNames">{{submitData.auxpropertyNames}}</view> -->
-<!--                         <view a:else class="mock-input nodata" onTap="checkFocus" data-name="auxpropertyNames">请选择核算维度</view> -->
                             <view class="mock-input left ellipsis">{{item.auxptyName}}</view>
                             <view class="mock-input right ellipsis" a:if="{{!!selectedAuxpty && selectedAuxpty[item.auxptyId]}}">{{selectedAuxpty[item.auxptyId].name}}</view>
-                            <view class="mock-input right epplipsis" a:else>{{allAuxptyList[item.auxptyId][0].name}}</view>
+<!--默认-->
 
                     </view>
                 </view>
-                <view class="form-line"/>
+                <view class="form-line" a:if="{{subjectAuxptyList.length}}"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>业务日期</view>
                     <view class="form-row-content">
@@ -88,17 +86,11 @@
                 </view>
                 <view class="form-line"/>
                 <block a:if="{{isCapitalTypeStart}}">
-                    <view class="form-row">
+                    <view class="form-row" onTap="goCapitalPage">
                         <view class="form-row-label"><text class="require">*</text>资金计划类型</view>
                         <view class="form-row-content">
-                            <view class="form-row-content">
-                                <block a:if="{{capitalTypeList[capitalTypeIndex].detailName}}">
-                                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{capitalTypeIndex}}" range="{{capitalTypeList}}" range-key="detailName" data-name="capitalTypeDetailId" data-index="capitalTypeIndex" data-list="capitalTypeList">
-                                        <view class="row-extra">{{capitalTypeList[capitalTypeIndex].detailName}}</view>
-                                    </picker>
-                                </block>
-                                <view a:else class="mock-input nodata">请选择资金计划</view>
-                            </view>
+                            <view a:if="{{submitData.capitalTypeDetailId}}" class="mock-input">{{submitData.capitalTypeDetailName}}</view>
+                            <view a:else class="mock-input nodata">请选择资金计划类型</view>
                         </view>
                     </view>
                     <view class="form-line"/>
@@ -176,25 +168,4 @@
         <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
-    <!--核算维度弹框-->
-    <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}">
-        <form onSubmit="onHesuanSubmit">
-            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
-                <view class="import-baoxiao-item" a:for="{{subjectAuxptyList}}">
-                    <view class="form-row">
-                        <view class="form-row-label">{{item.auxptyName}}</view>
-                        <view class="form-row-content">
-                            <picker onChange="specialBindObjPickerChange" value="{{allAuxptyList[item.auxptyId].index}}" range="{{allAuxptyList[item.auxptyId].data}}"
-                                    range-key="{{allAuxptyList[item.auxptyId].name}}" data-list="{{allAuxptyList[item.auxptyId]}}" data-id="{{item.auxptyId}}">
-                                <view class="row-extra ellipsis">{{allAuxptyList[item.auxptyId]["data"][allAuxptyList[item.auxptyId].index][allAuxptyList[item.auxptyId].name]}}</view>
-                            </picker>
-                        </view>
-                    </view>
-                    <view class="form-line"/>
-                </view>
-            </scroll-view>
-            <button formType="submit" class="import-borrow-list-btn">导入</button>
-        </form>
-    </view>
-    <view class="hesuan-mask" hidden="{{hesuanMaskHidden}}" onTap="onHesuanHide"></view>
 </view>

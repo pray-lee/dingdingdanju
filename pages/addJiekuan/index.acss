@@ -53,7 +53,7 @@
 }
 .add-borrow-page{
     z-index:1000;
-    transform:translateY(360px)
+    transform:translateY(100%)
 }
 .borrow-submit{
     position:fixed;

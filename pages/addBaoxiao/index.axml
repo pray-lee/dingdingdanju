@@ -214,7 +214,7 @@
     <!--核算维度弹框-->
     <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:if="{{hesuanType === 'hesuan'}}">
         <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList.length}}">
-            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+            <scroll-view class="jiekuandan" scroll-y style="height: 500rpx">
                 <view class="import-baoxiao-item" a:for="{{baoxiaoList[hesuanShowIndex].subjectAuxptyList}}">
                     <view class="form-row">
                         <view class="form-row-label">{{item.auxptyName}}</view>
@@ -239,7 +239,7 @@
     </view>
     <view class="add-hesuanweidu-page" animation="{{hesuanAnimationInfo}}" a:else>
         <form onSubmit="onHesuanSubmit" a:if="{{baoxiaoList[trueHesuanShowIndex].trueSubjectAuxptyList.length}}">
-            <scroll-view class="jiekuandan" scroll-y style="height: 240px">
+            <scroll-view class="jiekuandan" scroll-y style="height: 500rpx">
                 <view class="import-baoxiao-item" a:for="{{baoxiaoList[trueHesuanShowIndex].trueSubjectAuxptyList}}">
                     <view class="form-row">
                         <view class="form-row-label">{{item.auxptyName}}</view>

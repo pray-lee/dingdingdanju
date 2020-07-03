@@ -7,7 +7,7 @@ Page({
         baoxiaoDetail: {},
         extraList: [],
         extraMessage: [],
-        subjectExtraConf: null
+        subjectExtraConf: null,
     },
     onLoad() {
         dd.getStorage({
@@ -16,14 +16,17 @@ Page({
                 this.setData({
                     subjectExtraConf: res.data,
                 })
-            }
-        })
-        dd.getStorage({
-            key: 'extraBaoxiaoDetail',
-            success: res => {
-               this.setData({
-                   baoxiaoDetail: res.data
-               })
+                dd.getStorage({
+                    key: 'extraBaoxiaoDetail',
+                    success: res1 => {
+                        this.setData({
+                            baoxiaoDetail: res1.data
+                        })
+                        if(!res1.data.extraList.length){
+                            this.onAddExtra()
+                        }
+                    }
+                })
             }
         })
     },
@@ -37,6 +40,12 @@ Page({
             tempData.extraMessage.push(obj.extraMessage)
             this.setData({
                 baoxiaoDetail: tempData
+            })
+            // 看哪一个是附加信息金额
+            this.data.baoxiaoDetail.extraList[0].conf.forEach((item,index) => {
+                if(item.field == '金额') {
+                    app.globalData.caculateIndex = index
+                }
             })
         }
     },
@@ -93,25 +102,61 @@ Page({
         this.setData({
             baoxiaoDetail: tempData
         })
+        this.setApplicationAmount()
     },
     cancelExtra() {
         dd.navigateBack({
             delta: 1
         })
     },
+    onExtraInput(e) {
+        var idx = e.currentTarget.dataset.index
+        var extraIdx = e.currentTarget.dataset.extraIndex
+        var tempData = clone(this.data.baoxiaoDetail)
+        tempData.extraMessage[extraIdx][idx] = e.detail.value
+        // 算附加信息金额
+        const field = tempData.extraList[extraIdx].conf[idx].field
+        if(field == '金额') {
+            app.globalData.caculateIndex = idx
+        }
+        this.setData({
+            baoxiaoDetail: tempData
+        })
+        this.setApplicationAmount()
+    },
     deleteExtra(e) {
         var idx = e.currentTarget.dataset.index
         var tempData = clone(this.data.baoxiaoDetail)
+        if(tempData.extraList.length <= 1) {
+            return
+        }
         tempData.extraMessage = tempData.extraMessage.filter((item, index) => index != idx)
         tempData.extraList = tempData.extraList.filter((item, index) => index != idx)
         this.setData({
             baoxiaoDetail: tempData
         })
+        this.setApplicationAmount()
     },
+    setApplicationAmount() {
+        let applicationAmount = 0
+        this.data.baoxiaoDetail.extraMessage.forEach(item => {
+            applicationAmount += Number(item[app.globalData.caculateIndex])
+        })
+        this.setData({
+            baoxiaoDetail:{
+                ...this.data.baoxiaoDetail,
+                applicationAmount
+            }
+        })
+    },
+
     onExtraSubmit() {
         // this.onExtraHide()
         this.addLoading()
+        this.setApplicationAmount()
         var tempData = clone(this.data.baoxiaoDetail)
+        console.log(tempData, 'tempDasta')
+        let applicationAmount = 0
         tempData.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
         dd.setStorage({
             key: 'baoxiaoDetail',

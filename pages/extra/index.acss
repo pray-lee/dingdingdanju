@@ -7,7 +7,7 @@
   overflow:hidden
 }
 .form-scroll-wrapper{
-  height: calc(100vh - 120rpx)
+  height: calc(100vh - 240rpx)
 }
 .import-borrow-list-btn{
   position:fixed;
@@ -50,7 +50,7 @@
 .add-hesuanweidu-page{
   z-index: 1000
 }
-.delete-borrow, .delete-file, .delete-baoxiao-item{
+.delete-borrow, .delete-file{
   width: 60rpx;
   height: 88rpx;
   background:url(../../images/delete.png) center center no-repeat;
@@ -58,4 +58,59 @@
   position:absolute;
   left: 20rpx;
   z-index: 999
+}
+.total{
+  display:flex;
+  z-index:9999;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 40rpx;
+  background:#fff;
+  position:fixed;
+  bottom: calc(100rpx - 2rpx);
+  left:0;
+  width: 100%;
+  box-sizing:border-box;
+  border: 1rpx solid #ddd;
+  /*padding-top: 20rpx;*/
+}
+.btn-area .save-draft{
+  background:#fff;
+  color:#1f65d8;
+}
+.jiekuan-icon{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 10rpx;
+  vertical-align: top;
+}
+.block-wrapper{
+  margin-bottom: 20rpx;
+  background:#fff;
+  padding-top: 34rpx;
+}
+.title{
+  margin:0 40rpx;
+  border-left: 4rpx solid #1f65d8;
+  padding-left: 14rpx;
+  font-size: 30rpx;
+  font-weight:600
+}
+.add-icon{
+  width: 42rpx;
+  height: 42rpx;
+  margin-right: 20rpx;
+}
+.operate-area{
+  display:flex;
+  justify-content: space-between;
+  padding-right: 40rpx;
+}
+.baoxiao-item-title{
+  display:flex;
+  justify-content: space-between;
+}
+.delete-icon{
+  width: 35rpx;
+  height: 40rpx;
 }
