@@ -18,14 +18,18 @@ Page({
     goBack(e) {
         const id = e.currentTarget.dataset.id
         const name = e.currentTarget.dataset.name
-        const obj = {id, name}
-        dd.setStorageSync({
+        const subjectExtraId = e.currentTarget.dataset.extraId
+        const obj = {id, name, subjectExtraId}
+        console.log(obj, 'goBack')
+        dd.setStorage({
             key: 'subject',
             data: obj,
-        })
-        console.log('设置科目id成功')
-        dd.navigateBack({
-            delta: 1
+            success: res => {
+                console.log('设置科目id成功')
+                dd.navigateBack({
+                    delta: 1
+                })
+            }
         })
     },
     onInput(e) {

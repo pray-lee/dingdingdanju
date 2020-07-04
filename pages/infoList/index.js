@@ -17,13 +17,15 @@ Page({
    },
    goBack(e) {
       const id = e.currentTarget.dataset.id
-      dd.setStorageSync({
+      dd.setStorage({
          key: 'borrowId',
          data: id,
-      })
-      console.log('借款人缓存成功！！！')
-      dd.navigateBack({
-         delta: 1
+          success: res => {
+             console.log('借款人缓存成功！！！')
+             dd.navigateBack({
+                delta: 1
+             })
+          }
       })
    },
    onInput(e) {

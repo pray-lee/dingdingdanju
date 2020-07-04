@@ -8,10 +8,6 @@ Page({
     data: {
         type: '',
         billId: '',
-        // hesuanMaskHidden: true,
-        // animationInfo: {},
-        // extraAnimationInfo: {},
-        hesuanAnimationInfo: {},
         borrowAmount: '',
         remark: '',
         fileList: [],
@@ -46,18 +42,11 @@ Page({
             }
         ],
         // 每新增一个报销列表，就从这个数据结构拷贝一份
-        subjectObject: {
-            subjectIndex: 0,
-            subjectList: [],
-            allAuxptyList: {},
-            subjectAuxptyList: [],
-        },
+        subjectList: [],
         subjectExtraConf: null,
         extraIndex: 0,
         extraList: [],
         extraMessage: [],
-        hesuanShowIndex: 0,
-        trueHesuanShowIndex: 0,
         nowDate: moment().format('YYYY-MM-DD'),
         submitData: {
             billFilesObj: [],
@@ -80,11 +69,15 @@ Page({
     },
     // 把baoxiaoList的数据，重组一下，拼在submitData里提交
     formatSubmitData(array, name) {
+        console.log(array, 'array')
         array.forEach((item, index) => {
             Object.keys(item).forEach(keys => {
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
+                    console.log(item[keys])
                     item[keys].forEach((arrItem, arrIndex) => {
+                        console.log(arrItem)
                         Object.keys(arrItem).forEach(arrKeys => {
+                            console.log(arrKeys)
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -113,9 +106,6 @@ Page({
                 }
             })
         })
-    },
-    formatExtra(array) {
-
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -181,72 +171,9 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                invoice: e.detail.value ? 1: 0
+                invoice: e.detail.value ? 1 : 0
             }
         })
-    },
-    baoxiaoRadioChange(e) {
-        var index = e.currentTarget.dataset.index
-        var baoxiaoItem = this.data.baoxiaoList[index]
-        var value = e.detail.value
-        baoxiaoItem.invoiceType = value
-        this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
-        if (value == 2) {
-            baoxiaoItem.taxRageArr = this.data.taxRageObject.taxRageArr
-            baoxiaoItem.taxRageIndex = 0
-            baoxiaoItem.taxRate = this.data.taxRageObject.taxRageArr[0].id
-            this.setData({
-                baoxiaoList: [...this.data.baoxiaoList]
-            })
-        } else {
-            baoxiaoItem.taxRageArr = []
-            baoxiaoItem.taxRageIndex = 0
-            baoxiaoItem.taxRate = ''
-            this.setData({
-                baoxiaoList: [...this.data.baoxiaoList]
-            })
-        }
-    },
-    // 税率点击
-    bindTaxRagePickerChange(e) {
-        var index = e.currentTarget.dataset.index
-        var baoxiaoItem = this.data.baoxiaoList[index]
-        var value = e.detail.value
-        baoxiaoItem.taxRageIndex = value
-        baoxiaoItem.taxRate = baoxiaoItem.taxRageArr[value].id
-        this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
-        this.setData({
-            baoxiaoList: [...this.data.baoxiaoList]
-        })
-    },
-    // 报销列表的onTap
-    bindBaoxiaoObjPickerChange(e) {
-        var name = e.currentTarget.dataset.name
-        var index = e.currentTarget.dataset.index
-        var value = e.detail.value
-        var baoxiaoItem = this.data.baoxiaoList[index]
-        if (name === 'subjectId') {
-            baoxiaoItem.subjectIndex = value
-            baoxiaoItem.subjectId = baoxiaoItem.subjectList[value].id
-            baoxiaoItem.subjectExtraId = baoxiaoItem.subjectList[value].subjectExtraId
-            this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
-            this.setData({
-                baoxiaoList: [...this.data.baoxiaoList],
-                hesuanShowIndex: index,
-                trueHesuanShowIndex: index
-            })
-            this.getSubjectAuxptyList('hesuan', baoxiaoItem.subjectList[value].id, this.data.submitData.accountbookId, true, null, index)
-        } else {
-            // yusuan预算
-            baoxiaoItem.trueSubjectIndex = value
-            baoxiaoItem.trueSubjectId = baoxiaoItem.trueSubjectList[value].id
-            this.data.baoxiaoList.splice(index, 1, baoxiaoItem)
-            this.setData({
-                baoxiaoList: [...this.data.baoxiaoList],
-                trueHesuanShowIndex: index
-            })
-            this.getSubjectAuxptyList('yusuan', baoxiaoItem.trueSubjectList[value].id, this.data.submitData.accountbookId, true, null, index)
-        }
     },
     bindObjPickerChange(e) {
         var name = e.currentTarget.dataset.name
@@ -276,8 +203,10 @@ Page({
             // 重新获取科目以后，就要置空报销列表
             this.setData({
                 baoxiaoList: [],
+                applicantIndex: 0,
                 submitData: {
                     ...this.data.submitData,
+                    applicantType: 10,
                     applicationAmount: '',
                     totalAmount: '',
                     verificationAmount: ''
@@ -291,14 +220,17 @@ Page({
             // 重新获取科目以后，就要置空报销列表
             this.setData({
                 baoxiaoList: [],
+                applicantIndex: 0,
                 submitData: {
                     ...this.data.submitData,
                     applicationAmount: '',
                     totalAmount: '',
-                    verificationAmount: ''
+                    verificationAmount: '',
+                    applicantType: 10
                 },
             })
             this.setTotalAmount()
+            this.getBorrowBillList(this.data.submitData.accountbookId, 10)
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantType') {
@@ -310,31 +242,6 @@ Page({
         if (name === 'incomeBankName') {
             this.setIncomeBankAccount(this.data[listName][value].bankAccount)
         }
-    },
-    // 核算维度onChange
-    specialBindObjPickerChange(e) {
-        var auxptyId = e.currentTarget.dataset.id
-        var tempData = clone(this.data.baoxiaoList)
-        if (this.data.hesuanType === 'hesuan') {
-            tempData[this.data.hesuanShowIndex].allAuxptyList = {
-                ...tempData[this.data.hesuanShowIndex].allAuxptyList,
-                [auxptyId]: {
-                    ...tempData[this.data.hesuanShowIndex].allAuxptyList[auxptyId],
-                    index: e.detail.value
-                }
-            }
-        } else {
-            tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList = {
-                ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList,
-                [auxptyId]: {
-                    ...tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList[auxptyId],
-                    index: e.detail.value
-                }
-            }
-        }
-        this.setData({
-            baoxiaoList: tempData
-        })
     },
     onBlur(e) {
         console.log(e, 'blur')
@@ -361,65 +268,33 @@ Page({
             },
         })
     },
-    onClick() {
-        console.log('onClick')
-    },
-    onExtraShow() {
-        var animation = dd.createAnimation({
-            duration: 500,
-            timeFunction: 'ease-in'
-        })
-        this.animation = animation
-        animation.translateY(0).step()
-        this.setData({
-            extraAnimationInfo: animation.export(),
-        })
-    },
-    onExtraHide() {
-        var animation = dd.createAnimation({
-            duration: 500,
-            timeFunction: 'ease-in'
-        })
-        this.animation = animation
-        animation.translateY(1000).step()
-        this.setData({
-            extraAnimationInfo: animation.export(),
-        })
-    },
     getBorrowIdFromStorage() {
-        const borrowId = dd.getStorageSync({
-            key: 'borrowId',
-            success: res => {
-                const borrowId = res.data
-                if (!!borrowId) {
-                    console.log('借款人id已经获取', borrowId)
-                    console.log(this.data.borrowList, 'borrowList')
-                    var borrowIndex = 0
-                    this.data.borrowList.forEach((item, index) => {
-                        if (item.id === borrowId) {
-                            borrowIndex = index
-                        }
-                    })
-                    this.setData({
-                        borrowIndex,
-                        submitData: {
-                            ...this.data.submitData,
-                            applicantId: borrowId
-                        }
-                    })
-                    setTimeout(() => {
-                        this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
-                    })
+        // 从缓存里获取借款人id
+        const borrowId = dd.getStorageSync({key: 'borrowId'}).data
+        if (!!borrowId) {
+            console.log('借款人id已经获取', borrowId)
+            var borrowIndex = 0
+            this.data.borrowList.forEach((item, index) => {
+                if (item.id === borrowId) {
+                    borrowIndex = index
                 }
-            }
-        })
+            })
+            this.setData({
+                borrowIndex,
+                submitData: {
+                    ...this.data.submitData,
+                    applicantId: borrowId
+                }
+            })
+            this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+        }
     },
     getSelectedBorrowListFromStorage() {
         dd.getStorage({
             key: 'importList',
             success: res => {
                 const importList = res.data
-                if(!!importList && importList.length) {
+                if (!!importList && importList.length) {
                     console.log('获取选择的借款列表成功', importList)
                     this.setData({
                         importList
@@ -442,10 +317,11 @@ Page({
             key: 'newBaoxiaoDetailArr',
             success: res => {
                 const baoxiaoDetail = res.data
-                if(!!baoxiaoDetail) {
+                console.log(baoxiaoDetail, 'baoxiaoDetail....')
+                if (!!baoxiaoDetail) {
                     let baoxiaoList = clone(this.data.baoxiaoList)
                     console.log(index)
-                    if(!!index || index == 0) {
+                    if (!!index || index == 0) {
                         baoxiaoList.splice(index, 1)
                         dd.removeStorage({
                             key: 'index',
@@ -458,12 +334,11 @@ Page({
                         this.setData({
                             baoxiaoList: baoxiaoList
                         })
-                    }else{
+                    } else {
                         this.setData({
                             baoxiaoList: baoxiaoList.concat(baoxiaoDetail)
                         })
                     }
-                    console.log(baoxiaoList, 'final....')
                     this.setApplicationAmount(baoxiaoList)
                     this.setTotalAmount()
                 }
@@ -475,12 +350,6 @@ Page({
                 console.log('清除newbaoxiaoDetailArr成功...')
             }
         })
-        dd.removeStorage({
-            key: 'baoxiaoDetail',
-            success: res => {
-                console.log('清除baoxiaoDetail成功...')
-            }
-        })
     },
     onShow() {
         // 从缓存里获取借款列表
@@ -489,39 +358,6 @@ Page({
         this.getBorrowIdFromStorage()
         // 从缓存里获取baoxiaoDetail
         this.getBaoxiaoDetailFromStorage()
-        // hesuan 弹框
-        var animation1 = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.hesuanaAnimation = animation1
-        this.setData({
-            hesuanAnimationInfo: animation1.export()
-        })
-        // 附加信息
-        var animation = dd.createAnimation({
-            duration: 250,
-            timeFunction: 'ease-in'
-        })
-        this.animation = animation
-        this.setData({
-            extraAnimationInfo: animation.export()
-        })
-
-    },
-    bindKeyInput(e) {
-        // 借款详情
-        if (e.currentTarget.dataset.type === 'borrowAmount') {
-            this.setData({
-                borrowDetail: e.detail.value
-            })
-        }
-        // 备注
-        if (e.currentTarget.dataset.type === 'remark') {
-            this.setData({
-                remark: e.detail.value
-            })
-        }
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearListSubmitData(submitData) {
@@ -573,7 +409,7 @@ Page({
      * @param 上传图片字符串列表
      */
     uploadFile(array) {
-        if(array.length) {
+        if (array.length) {
             this.addLoading()
             let promiseList = []
             array.forEach(item => {
@@ -589,10 +425,10 @@ Page({
                         },
                         success: res => {
                             const result = JSON.parse(res.data)
-                            if(result.obj&&result.obj.length) {
+                            if (result.obj && result.obj.length) {
                                 const file = result.obj[0]
                                 resolve(file)
-                            }else{
+                            } else {
                                 reject('上传失败')
                             }
                         },
@@ -616,7 +452,7 @@ Page({
                         billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
                     }
                 })
-            }).catch( error => {
+            }).catch(error => {
                 this.hideLoading()
                 console.log(error, 'catch')
                 dd.alert({
@@ -647,7 +483,7 @@ Page({
         // 清理借款人缓存
         dd.removeStorage({
             key: 'borrowId',
-            success: function(){
+            success: function () {
                 console.log('借款人缓存删除成功')
             }
         });
@@ -668,7 +504,6 @@ Page({
             type
         })
         var id = query.id
-        console.log(id)
         this.setData({
             billId: id
         })
@@ -741,18 +576,6 @@ Page({
                 })
                 var submitterDepartmentId = data ? data.submitterDepartmentId : ''
                 var applicantType = data ? data.applicantType : 10
-                // edit设置借款类型
-                var applicantIndex = 0
-                if(applicantType) {
-                    this.data.applicantTypeList.forEach((item, index) => {
-                        if (item.id == applicantType) {
-                            applicantIndex = index
-                        }
-                    })
-                }
-                this.setData({
-                    applicantIndex
-                })
                 var applicantId = data ? data.applicantId : ''
                 var incomeBankName = data ? data.incomeBankName : ''
                 var billDetailList = data ? data.billDetailList : []
@@ -764,7 +587,6 @@ Page({
     },
     // 获取申请部门
     getDepartmentList(accountbookId, departmentId, billDetailList) {
-        console.log('getDetap', billDetailList)
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
@@ -909,33 +731,25 @@ Page({
     },
     // 组成初始详情数据
     generateBaseDetail() {
-        console.log(this.data.subjectObject, '.........')
-        if (this.data.subjectObject.subjectList.length) {
-            var newSubjectObj = clone(this.data.subjectObject)
+        if (this.data.subjectList.length) {
+            var subjectList = clone(this.data.subjectList)
             var newTaxRageObj = clone(this.data.taxRageObject)
             var obj = {
-                subjectObject: clone(newSubjectObj),
+                subjectList: subjectList,
+                selectedAuxpty: null,
+                allAuxptyList: {},
                 accountbookId: this.data.submitData.accountbookId,
-                subjectId: this.data.subjectObject.subjectList[0].id,
-                trueSubjectId: this.data.subjectObject.subjectList[0].id,
-                subjectExtraId: this.data.subjectObject.subjectList[0].subjectExtraId,
+                submitterDepartmentId: this.data.submitData.submitterDepartmentId,
+                applicantId: this.data.submitData.applicantId,
+                applicantType: this.data.submitData.applicantType,
                 applicationAmount: '',
                 invoiceTypeArr: this.data.invoiceTypeArr,
                 invoiceType: this.data.invoiceTypeArr[0].id,
                 taxRageObject: clone(newTaxRageObj),
                 taxRageArr: clone(newTaxRageObj).taxRageArr,
                 taxRageIndex: clone(newTaxRageObj).taxRageIndex,
-                taxRate: this.data.taxRageObject.taxRageArr[0].id,
+                taxRate: '',
                 remark: '',
-                allAuxptyList: clone(newSubjectObj).allAuxptyList,
-                trueAllAuxptyList: clone(newSubjectObj).allAuxptyList,
-                subjectList: clone(newSubjectObj).subjectList,
-                trueSubjectList: clone(newSubjectObj).subjectList,
-                // 科目index
-                subjectIndex: clone(newSubjectObj).subjectIndex,
-                trueSubjectIndex: clone(newSubjectObj).subjectIndex,
-                trueSubjectAuxptyList: clone(newSubjectObj).subjectAuxptyList,
-                subjectAuxptyList: clone(newSubjectObj).subjectAuxptyList
             }
 
             return obj
@@ -943,6 +757,7 @@ Page({
     },
     onAddBaoxiao() {
         var obj = this.generateBaseDetail()
+        console.log(obj, 'obj')
         dd.setStorage({
             key: 'initBaoxiaoDetail',
             data: obj,
@@ -954,66 +769,17 @@ Page({
             }
         })
     },
-    checkFocus(e) {
-        var name = e.currentTarget.dataset.name
-        var subjectAuxptyName = e.currentTarget.dataset.subjectAuxptyName
-        var index = e.currentTarget.dataset.index
-        console.log(this.data.baoxiaoList)
-        console.log(index)
-        console.log(subjectAuxptyName)
-        console.log(this.data.baoxiaoList[index])
-        if (name === 'auxpropertyNames') {
-            this.setData({
-                hesuanShowIndex: e.currentTarget.dataset.index
-            })
-        } else {
-            this.setData({
-                trueHesuanShowIndex: e.currentTarget.dataset.index
-            })
-        }
-        var type = name === 'auxpropertyNames' ? 'hesuan' : 'yusuan'
-        if(this.data.baoxiaoList[index][subjectAuxptyName].length) {
-            this.onHesuanShow(type)
-        }
-    },
-    onHesuanSubmit(e) {
-        // 辅助核算字符串拼接
-        var tempData = clone(this.data.baoxiaoList)
-        if (this.data.hesuanType === 'hesuan') {
-            var billDetailApEntityListObj = []
-            var auxptyNameStr = ''
-            var tempAllAuxptyList = tempData[this.data.hesuanShowIndex].allAuxptyList
-            for (var i in tempAllAuxptyList) {
-                auxptyNameStr += `${tempAllAuxptyList[i].auxptyName}_${tempAllAuxptyList[i].data[tempAllAuxptyList[i].index][this.getAuxptyNameMap(tempAllAuxptyList[i].auxptyId)]},`
-                billDetailApEntityListObj.push({
-                    auxptyId: tempAllAuxptyList[i].auxptyId,
-                    auxptyDetailId: tempAllAuxptyList[i]["data"][tempAllAuxptyList[i].index].id
-                })
-            }
-            tempData[this.data.hesuanShowIndex].auxpropertyNames = auxptyNameStr.slice(0, -1)
-            tempData[this.data.hesuanShowIndex].billDetailApEntityListObj = billDetailApEntityListObj
-        } else {
-            var billDetailTrueApEntityListObj = []
-            var trueAuxptyNameStr = ''
-            var trueTempAllAuxptyList = tempData[this.data.trueHesuanShowIndex].trueAllAuxptyList
-            for (var i in trueTempAllAuxptyList) {
-                trueAuxptyNameStr += `${trueTempAllAuxptyList[i].auxptyName}_${trueTempAllAuxptyList[i].data[trueTempAllAuxptyList[i].index][this.getAuxptyNameMap(trueTempAllAuxptyList[i].auxptyId)]},`
-                billDetailTrueApEntityListObj.push({
-                    auxptyId: trueTempAllAuxptyList[i].auxptyId,
-                    auxptyDetailId: trueTempAllAuxptyList[i]["data"][trueTempAllAuxptyList[i].index].id
-                })
-            }
-            tempData[this.data.trueHesuanShowIndex].trueAuxpropertyNames = trueAuxptyNameStr.slice(0, -1)
-            tempData[this.data.trueHesuanShowIndex].billDetailTrueApEntityListObj = billDetailTrueApEntityListObj
-        }
-        this.setData({
-            baoxiaoList: tempData
-        })
-        this.onHesuanHide()
-    },
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
+        // 加一个编辑标志
+        dd.setStorage({
+            key: 'edit',
+            data: true,
+            success: res => {
+                console.log('编辑标志缓存成功...')
+            }
+        })
         dd.httpRequest({
             url: app.globalData.url + 'reimbursementBillController.do?getDetail&id=' + id,
             method: 'GET',
@@ -1042,9 +808,11 @@ Page({
                 return item
             })
         }
+
         // 设置数据
         this.setData({
             ...this.data,
+            // baoxiaoList,
             importList,
             submitData: {
                 ...this.data.submitData,
@@ -1121,6 +889,7 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
+                console.log(res, '科目类型')
                 var arr = []
                 if (res.data.length) {
                     res.data.forEach(item => {
@@ -1132,40 +901,36 @@ Page({
                             })
                         }
                     })
-                    // edit的时候，设置subjectIndex
-                    if (!!billDetailList && !!billDetailList.length) {
-                        var tempData = []
-                        billDetailList.forEach((item, index) => {
-                            var subjectIndex = 0
-                            var trueSubjectIndex = 0
-                            var subjectId = item.subjectId
-                            var trueSubjectId = item.trueSubjectId
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: arr,
+                        success: res => {
+                            console.log(arr, '..............................')
+                            console.log('写入科目成功')
+                        }
+                    })
+                    this.setData({
+                        subjectList: arr
+                    })
+                    // billDetailList
+                    if (billDetailList && billDetailList.length) {
+                        var baoxiaoList = billDetailList.map(item => {
+                            var obj = {}
                             var subjectExtraId = ''
+                            var subjectId = item.subjectId
                             arr.forEach((arrItem, arrIndex) => {
                                 if (arrItem.id === subjectId) {
                                     // 附加信息科目ID
-                                    subjectIndex = arrIndex
                                     subjectExtraId = arrItem.subjectExtraId
                                 }
-                                if (arrItem.id === trueSubjectId) {
-                                    trueSubjectIndex = arrIndex
-                                }
                             })
-                            // 重组数据， 钉钉我草你妈！！！
-                            var obj = {}
+                            obj.accountbookId = accountbookId
                             obj.subjectId = item.subjectId
+                            obj.subjectName = item.subject.subjectName
                             obj.subjectExtraId = subjectExtraId
-                            obj.subjectIndex = subjectIndex
-                            obj.subjectList = arr
-                            obj.subjectAuxptyList = []
-                            obj.allAuxptyList = {}
-                            obj.auxpropertyNames = item.auxpropertyNames
                             obj.trueSubjectId = item.trueSubjectId
-                            obj.trueSubjectIndex = trueSubjectIndex
-                            obj.trueSubjectList = arr
-                            obj.trueSubjectAuxptyList = []
-                            obj.trueAllAuxptyList = {}
-                            obj.trueAuxpropertyNames = item.trueAuxpropertyNames
+                            obj.trueSubjectName = item.subject.trueSubjectName
                             obj.applicationAmount = item.applicationAmount
                             // 附加信息
                             if (!!item.extraMessage) {
@@ -1179,22 +944,33 @@ Page({
                                     obj.extraList = extraList
                                 }
                             }
-                            var auxptyObj = []
-                            item.billDetailApEntityList.forEach(auxptyItem => {
-                                auxptyObj.push({
+                            // 用户之前有的辅助核算项
+                            const auxptyObj = item.billDetailApEntityList.map(auxptyItem => {
+                                return {
                                     auxptyId: auxptyItem.auxptyId,
-                                    auxptyDetailId: auxptyItem.auxptyDetailId
-                                })
+                                    auxptyDetailId: auxptyItem.auxptyDetailId,
+                                    auxptyDetailName: auxptyItem.auxptyDetailName
+                                }
                             })
+                            const billDetailApEntityObj = {}
+                            auxptyObj.forEach(item => {
+                                billDetailApEntityObj[item.auxptyId] = {
+                                    auxptyId: item.auxptyId,
+                                    id: item.auxptyDetailId,
+                                    name: item.auxptyDetailName
+                                }
+                            })
+                            obj.selectedAuxpty = billDetailApEntityObj
                             obj.billDetailApEntityListObj = auxptyObj
-                            var trueAuxptyObj = []
-                            item.billDetailTrueApEntityList.forEach(auxptyItem => {
-                                trueAuxptyObj.push({
-                                    auxptyId: auxptyItem.auxptyId,
-                                    auxptyDetailId: auxptyItem.auxptyDetailId
+                            obj.allAuxptyList = {}
+                            if (item.subject.subjectAuxptyList && item.subject.subjectAuxptyList.length) {
+                                obj.subjectAuxptyList = item.subject.subjectAuxptyList.map(item => {
+                                    return {
+                                        auxptyId: item.auxptyId,
+                                        auxptyName: item.auxpropertyConfig.auxptyName
+                                    }
                                 })
-                            })
-                            obj.billDetailTrueApEntityListObj = trueAuxptyObj
+                            }
                             obj.remark = item.remark
                             obj.taxRageObject = this.data.taxRageObject
                             if (item.invoiceType == 2) {
@@ -1205,7 +981,7 @@ Page({
                                         obj.taxRageIndex = index
                                     }
                                 })
-                            }else{
+                            } else {
                                 obj.taxRageArr = []
                                 obj.taxRate = ''
                                 obj.taxRageIndex = 0
@@ -1213,189 +989,28 @@ Page({
                             obj.id = item.id
                             obj.invoiceType = item.invoiceType
                             obj.invoiceTypeArr = this.data.invoiceTypeArr
-                            this.setData({
-                                baoxiaoList: [...this.data.baoxiaoList, obj],
-                            })
-                            this.getSubjectAuxptyList('hesuan', subjectId, this.data.submitData.accountbookId, false, auxptyObj, index)
-                            this.getSubjectAuxptyList('yusuan', trueSubjectId, this.data.submitData.accountbookId, false, trueAuxptyObj, index)
+
+                            return obj
                         })
-                    } else {
-                        this.getSubjectAuxptyList('hesuan', arr[0].id, this.data.submitData.accountbookId, false, null, 0)
+                        this.setData({
+                            baoxiaoList
+                        })
                     }
-                    this.setData({
-                        subjectObject: {
-                            subjectList: arr,
-                            subjectIndex: 0,
-                            allAuxptyList: {},
-                            subjectAuxptyList: []
+                } else {
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: [],
+                        success: res => {
+                            console.log(arr, '..............................')
+                            console.log('写入科目成功')
                         }
                     })
-                } else {
                     this.setData({
-                        subjectObject: {
-                            subjectList: [],
-                            subjectIndex: 0,
-                            allAuxptyList: {},
-                            subjectAuxptyList: []
-                        }
+                        subjectList: [],
                     })
                 }
 
-                this.hideLoading()
-            }
-        })
-    },
-    // 获取科目对应的辅助核算 (每一个都是单独调用)
-    getSubjectAuxptyList(type, subjectId, accountbookId, flag, auxptyObj, index) {
-        var idx = index
-        this.addLoading()
-        dd.httpRequest({
-            url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
-            method: 'GET',
-            dataType: 'json',
-            success: res => {
-                if (!!res.data.obj.subjectAuxptyList.length) {
-                    var arr = res.data.obj.subjectAuxptyList.map(item => {
-                        return {
-                            auxptyId: item.auxptyId,
-                            auxptyName: item.auxpropertyConfig.auxptyName
-                        }
-                    })
-                    var tempData = clone(this.data.baoxiaoList)
-                    if (tempData.length) {
-                        if (type === 'hesuan') {
-                            tempData[idx].subjectAuxptyList = arr
-                            tempData[idx].allAuxptyList = {}
-                        } else {
-                            tempData[idx].trueSubjectAuxptyList = arr
-                            tempData[idx].trueAllAuxptyList = {}
-                        }
-                    }
-                    this.setData({
-                        baoxiaoList: tempData
-                    })
-                    this.setData({
-                        subjectObject: {
-                            ...this.data.subjectObject,
-                            subjectAuxptyList: arr,
-                            allAuxptyList: {}
-                        }
-                    })
-                    // 请求辅助核算列表
-                    arr.forEach(item => {
-                        this.getAuxptyList(type, this.data.submitData.accountbookId, item.auxptyId, auxptyObj, idx)
-                    })
-                    if (flag) {
-                        this.onHesuanShow(type)
-                    }
-                } else {
-                    var tempData = clone(this.data.baoxiaoList)
-                    if (tempData.length) {
-                        if (type === 'hesuan') {
-                            tempData[idx].subjectAuxptyList = []
-                            tempData[idx].allAuxptyList = {}
-                            tempData[idx].auxpropertyNames = ''
-                        } else {
-                            tempData[idx].trueSubjectAuxptyList = []
-                            tempData[idx].trueAllAuxptyList = {}
-                            tempData[idx].trueAuxpropertyNames = ''
-                        }
-                    }
-                    this.setData({
-                        baoxiaoList: tempData
-                    })
-                    this.setData({
-                        subjectObject: {
-                            ...this.data.subjectObject,
-                            subjectAuxptyList: [],
-                            allAuxptyList: []
-                        }
-                    })
-                }
-                this.hideLoading()
-            }
-        })
-    },
-    // 请求辅助核算列表
-    getAuxptyList(type, accountbookId, auxptyid, auxptyObj, idx) {
-        this.addLoading()
-        dd.httpRequest({
-            url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
-            method: 'GET',
-            dataType: 'json',
-            success: res => {
-                console.log(res.data.rows)
-                console.log(auxptyid)
-                console.log(auxptyObj)
-                console.log(idx)
-                // 处理index
-                var auxptyIndex = 0
-                if (auxptyObj && auxptyObj.length) {
-                    auxptyObj.forEach((item, index) => {
-                        if (item.auxptyId == auxptyid) {
-                            res.data.rows.forEach((row, rowIndex) => {
-                                if (row.id == item.auxptyDetailId) {
-                                    auxptyIndex = rowIndex
-                                }
-                            })
-                        }
-                    })
-                }
-                if (this.data.baoxiaoList.length > 0) {
-                    if (type === 'hesuan') {
-                        var obj = {
-                            [auxptyid]: {
-                                data: res.data.rows,
-                                index: auxptyIndex,
-                                name: this.getAuxptyNameMap(auxptyid),
-                                auxptyName: this.data.baoxiaoList[idx].subjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
-                                auxptyId: auxptyid
-                            }
-                        }
-                        var tempData = clone(this.data.baoxiaoList)
-                        var newObj = Object.assign({}, this.data.baoxiaoList[idx].allAuxptyList, obj)
-                        tempData[idx].allAuxptyList = newObj
-                    } else {
-                        var trueObj = {
-                            [auxptyid]: {
-                                data: res.data.rows,
-                                index: auxptyIndex,
-                                name: this.getAuxptyNameMap(auxptyid),
-                                auxptyName: this.data.baoxiaoList[idx].trueSubjectAuxptyList.filter(item => auxptyid == item.auxptyId)[0].auxptyName,
-                                auxptyId: auxptyid
-                            }
-                        }
-                        var trueNewObj = Object.assign({}, this.data.baoxiaoList[idx].trueAllAuxptyList, trueObj)
-                        var tempData = clone(this.data.baoxiaoList)
-                        tempData[idx].trueAllAuxptyList = trueNewObj
-                    }
-                    this.setData({
-                        baoxiaoList: tempData
-                    })
-                }
-                if (this.data.subjectObject.subjectAuxptyList.length) {
-                    var auxptyName = ''
-                    var filterArr = this.data.subjectObject.subjectAuxptyList.filter(item => auxptyid == item.auxptyId)
-                    if (filterArr.length) {
-                        auxptyName = filterArr[0].auxptyName
-                    }
-                    var obj = {
-                        [auxptyid]: {
-                            data: res.data.rows,
-                            index: auxptyIndex,
-                            name: this.getAuxptyNameMap(auxptyid),
-                            auxptyName,
-                            auxptyId: auxptyid
-                        }
-                    }
-                }
-                var newObj = Object.assign({}, this.data.subjectObject.allAuxptyList, obj)
-                this.setData({
-                    subjectObject: {
-                        ...this.data.subjectObject,
-                        allAuxptyList: newObj
-                    }
-                })
                 this.hideLoading()
             }
         })
@@ -1485,57 +1100,8 @@ Page({
         this.setBorrowAmount(tempArr)
         this.setTotalAmount()
     },
-    // openExtraInfo(e) {
-    //     var index = e.currentTarget.dataset.index
-    //     var extraId = e.currentTarget.dataset.extraId
-    //     if (this.data.baoxiaoList[index].subjectExtraId) {
-    //         this.onExtraShow()
-    //         this.getExtraInfo(extraId, index)
-    //         this.setData({
-    //             extraIndex: index
-    //         })
-    //     }
-    // },
-    // getExtraInfo(extraId, index) {
-    //     // 接口有问题
-    //     dd.httpRequest({
-    //         url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
-    //         method: 'GET',
-    //         dataType: 'json',
-    //         success: res => {
-    //             console.log(res)
-    //             if (res.data.success) {
-    //                 this.setData({
-    //                     subjectExtraConf: JSON.parse(res.data.obj),
-    //                 })
-    //                 // 回显
-    //                 var tempData = clone(this.data.baoxiaoList)
-    //                 if (!tempData[index].extraMessage) {
-    //                     tempData[index].extraMessage = []
-    //                     tempData[index].extraList = []
-    //                     this.setData({
-    //                         baoxiaoList: tempData
-    //                     })
-    //                 }
-    //             }
-    //         }
-    //     })
-    // },
-    // onAddExtra() {
-    //     console.log('add', this.data.baoxiaoList)
-    //     if (this.data.subjectExtraConf) {
-    //         var obj = this.generateExtraList(this.data.subjectExtraConf)
-    //         var tempData = clone(this.data.baoxiaoList)
-    //         tempData[this.data.extraIndex].extraList.push({conf: obj.array})
-    //         tempData[this.data.extraIndex].extraMessage.push(obj.extraMessage)
-    //         this.setData({
-    //             baoxiaoList: tempData
-    //         })
-    //     }
-    // },
     generateExtraList(conf) {
         var tempData = clone(conf)
-        console.log(tempData, '////////////////////////////')
         var array = []
         var extraMessage = []
         tempData.name.forEach((item, index) => {
@@ -1554,60 +1120,6 @@ Page({
             extraMessage
         }
     },
-    // onExtraDateFocus(e) {
-    //     console.log(this.data.baoxiaoList, 'datetimefocus')
-    //
-    //     var idx = e.currentTarget.dataset.index
-    //     var extraIdx = e.currentTarget.dataset.extraIndex
-    //     dd.datePicker({
-    //         format: 'yyyy-MM-dd',
-    //         currentDate: moment().format('YYYY-MM-DD'),
-    //         success: (res) => {
-    //             // var tempData = this.data.extraMessage.concat()
-    //             // tempData[extraIndex][idx] = res.date
-    //             // this.setData({
-    //             //     extraMessage: tempData
-    //             // })
-    //             var tempData = clone(this.data.baoxiaoList)
-    //             if (!!res.date) {
-    //                 tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = res.date
-    //                 this.setData({
-    //                     baoxiaoList: tempData
-    //                 })
-    //             }
-    //             // 解除focus不触发的解决办法。
-    //             this.onClick()
-    //         },
-    //     })
-    // },
-    // onExtraBlur(e) {
-    //     var idx = e.currentTarget.dataset.index
-    //     var extraIdx = e.currentTarget.dataset.extraIndex
-    //     var tempData = clone(this.data.baoxiaoList)
-    //     tempData[this.data.extraIndex].extraMessage[extraIdx][idx] = e.detail.value
-    //     this.setData({
-    //         baoxiaoList: tempData
-    //     })
-    // },
-    // cancelExtra() {
-    //     this.onExtraHide()
-    //     // this.setData({
-    //     //     extraList: [],
-    //     // })
-    // },
-    // deleteExtra(e) {
-    //     var idx = e.currentTarget.dataset.index
-    //     var tempData = clone(this.data.baoxiaoList)
-    //     tempData[this.data.extraIndex].extraMessage = tempData[this.data.extraIndex].extraMessage.filter((item, index) => index != idx)
-    //     tempData[this.data.extraIndex].extraList = tempData[this.data.extraIndex].extraList.filter((item, index) => index != idx)
-    //     this.setData({
-    //         baoxiaoList: tempData
-    //     })
-    // },
-    // onExtraSubmit() {
-    //     this.onExtraHide()
-    //     console.log(this.data.baoxiaoList)
-    // },
     showBaoxiaoDetail(e) {
         this.addLoading()
         const index = e.currentTarget.dataset.index

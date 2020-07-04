@@ -76,3 +76,16 @@
     right: 40rpx;
     top:40rpx
 }
+.auxpty-wrapper{
+    padding: .1rem 0;
+    display:flex;
+    justify-content: space-between;
+    align-items:center
+}
+.auxpty-wrapper .left{
+    width: 5em;
+}
+.auxpty-wrapper .right{
+    margin-left: 20rpx;
+    text-align:right
+}

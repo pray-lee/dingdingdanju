@@ -49,11 +49,6 @@
                 <view class="form-row" onTap="goInfoList">
                     <view class="form-row-label">借款信息</view>
                     <view class="form-row-content borrowList-wrapper">
-<!--                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{borrowIndex}}"-->
-<!--                                range="{{borrowList}}" range-key="name" data-name="applicantId" data-index="borrowIndex"-->
-<!--                                data-list="borrowList">-->
-<!--                            <view class="row-extra">{{borrowList[borrowIndex].name}}</view>-->
-<!--                        </picker>-->
                         {{borrowList[borrowIndex].name}}
                     </view>
                     <view class="form-row-content incomeBankAccount">

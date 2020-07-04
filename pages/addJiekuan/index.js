@@ -77,18 +77,18 @@ Page({
         }
     },
     addLoading() {
-        if(app.globalData.loadingCount < 1) {
+        if (app.globalData.loadingCount < 1) {
             dd.showLoading({
                 content: '加载中...'
             })
         }
         app.globalData.loadingCount += 1
     },
-    hideLoading(){
-        if(app.globalData.loadingCount <= 1) {
+    hideLoading() {
+        if (app.globalData.loadingCount <= 1) {
             dd.hideLoading()
             app.globalData.loadingCount = 0
-        }else{
+        } else {
             app.globalData.loadingCount -= 1
         }
     },
@@ -174,12 +174,23 @@ Page({
         // --------------------------------------------------------
         if (name === 'accountbookId') {
             this.clearSubjectData()
+            this.setData({
+                applicantIndex: 0,
+                submitData: {
+                    ...this.data.submitData,
+                    applicantType: 10
+                }
+            })
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10)
             this.isCapitalTypeStart(this.data[listName][value].id)
         }
         if (name === 'submitterDepartmentId') {
             this.clearSubjectData()
+            this.setData({
+                applicantIndex: 0
+            })
+            this.getBorrowBillList(this.data.submitData.accountbookId, 10)
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         // if (name === 'subjectId') {
@@ -289,15 +300,14 @@ Page({
                     applicantId: borrowId
                 }
             })
-            setTimeout(() => {
-                this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
-            })
+            this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
+            this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
         }
     },
     getAuxptyIdFromStorage() {
         // 从缓存里获取auxpty
         const auxpty = dd.getStorageSync({key: 'auxpty'}).data
-        if(!!auxpty){
+        if (!!auxpty) {
             this.setSelectedAuxpty(auxpty)
             dd.removeStorage({
                 key: 'auxpty'
@@ -307,7 +317,7 @@ Page({
     getSubjectIdFromStorage() {
         // 从缓存里获取科目id
         const subject = dd.getStorageSync({key: 'subject'}).data
-        if(!!subject && subject !== null) {
+        if (!!subject && subject !== null) {
             this.setData({
                 selectedAuxpty: null,
                 submitData: {
@@ -326,7 +336,7 @@ Page({
         // 从缓存里获取科目id
         const capital = dd.getStorageSync({key: 'capital'}).data
         console.log(capital, 'apital')
-        if(!!capital && capital !== null) {
+        if (!!capital && capital !== null) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -524,7 +534,7 @@ Page({
         // 清理借款人缓存
         dd.removeStorage({
             key: 'borrowId',
-            success: function(){
+            success: function () {
                 console.log('借款人缓存删除成功')
             }
         });
@@ -584,7 +594,6 @@ Page({
                 var applicantId = data ? data.applicantId : ''
                 var incomeBankName = data ? data.incomeBankName : ''
                 var subjectId = data ? data.subjectId : ''
-                var billApEntityListObj = data ? data.billApEntityList : []
                 var capitalTypeDetailId = data ? data.capitalTypeDetailId : null
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
                 this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId)
@@ -733,7 +742,7 @@ Page({
         })
     },
     // 获取科目类型
-    getSubjectList(accountbookId, departId, subjectId) {
+    getSubjectList(accountbookId, departId) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=4&findAll=false',
@@ -755,6 +764,15 @@ Page({
                     dd.setStorage({
                         key: 'subjectList',
                         data: arr,
+                        success: res => {
+                            console.log('写入科目成功....')
+                        }
+                    })
+                } else {
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: [],
                         success: res => {
                             console.log('写入科目成功....')
                         }
@@ -854,26 +872,29 @@ Page({
                 })
                 const tempData = clone(this.data.allAuxptyList)
                 tempData[auxptyid] = newObj
+                console.log(newObj, auxptyid)
+                console.log(tempData)
                 this.setData({
                     allAuxptyList: tempData
                 })
                 // 设置默认值
-                let index = 0
-                if(auxptyid == 1) {
+                let index = null
+                if (auxptyid == 1) {
                     // 部门
                     index = this.setInitIndex(newObj, this.data.submitData.submitterDepartmentId)
                 }
-                if(auxptyid == 2 && this.data.submitData.applicantType == 10){
+                if (auxptyid == 2 && this.data.submitData.applicantType == 10) {
                     index = this.setInitIndex(newObj, this.data.submitData.applicantId)
                 }
-                if(auxptyid == 3 && this.data.submitData.applicantType == 20) {
+                if (auxptyid == 3 && this.data.submitData.applicantType == 20) {
                     index = this.setInitIndex(newObj, this.data.submitData.applicantId)
                 }
-                if(auxptyid == 4 && this.data.submitData.applicantType == 30) {
+                if (auxptyid == 4 && this.data.submitData.applicantType == 30) {
                     index = this.setInitIndex(newObj, this.data.submitData.applicantId)
                 }
-                this.setSelectedAuxpty(newObj[index])
-
+                if (index !== null) {
+                    this.setSelectedAuxpty(newObj[index])
+                }
             },
             complete: res => {
                 console.log('complete', res)
@@ -887,7 +908,7 @@ Page({
                 ...this.data.selectedAuxpty,
                 [auxpty.auxptyId]: {
                     id: auxpty.id,
-                    name:auxpty.name,
+                    name: auxpty.name,
                     auxptyId: auxpty.auxptyId
                 }
             }
@@ -908,7 +929,7 @@ Page({
     setInitIndex(newObj, id) {
         let initIndex = 0
         newObj.forEach((item, index) => {
-            if(item.id === id) {
+            if (item.id === id) {
                 initIndex = index
             }
         })
@@ -954,15 +975,15 @@ Page({
                     }
                 })
                 dd.setStorage({
-                    key:'capitalList',
+                    key: 'capitalList',
                     data: arr,
                     success: res => {
                         console.log('资金计划写入成功...')
                     }
                 })
-                if(!!capitalTypeDetailId) {
+                if (!!capitalTypeDetailId) {
                     arr.forEach(item => {
-                        if(item.id === capitalTypeDetailId) {
+                        if (item.id === capitalTypeDetailId) {
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -1067,8 +1088,8 @@ Page({
                 selectedAuxpty: obj
             })
         }
-
-        if(data.subject.subjectAuxptyList.length) {
+        // subjectAuxptyList
+        if (data.subject.subjectAuxptyList.length) {
             const subjectAuxptyList = data.subject.subjectAuxptyList.map(item => {
                 return {
                     auxptyId: item.auxptyId,

@@ -72,6 +72,7 @@
                     <view class="form-row-content auxpty-wrapper" a:for="{{subjectAuxptyList}}" data-id="{{item.auxptyId}}" onTap="goAuxptyPage">
                             <view class="mock-input left ellipsis">{{item.auxptyName}}</view>
                             <view class="mock-input right ellipsis" a:if="{{!!selectedAuxpty && selectedAuxpty[item.auxptyId]}}">{{selectedAuxpty[item.auxptyId].name}}</view>
+                            <view class="mock-input right ellipsis" a:else>请选择</view>
 <!--默认-->
 
                     </view>

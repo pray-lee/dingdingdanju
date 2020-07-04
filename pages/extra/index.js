@@ -151,7 +151,7 @@ Page({
     },
 
     onExtraSubmit() {
-        // this.onExtraHide()
+        console.log('extraSubmit....')
         this.addLoading()
         this.setApplicationAmount()
         var tempData = clone(this.data.baoxiaoDetail)

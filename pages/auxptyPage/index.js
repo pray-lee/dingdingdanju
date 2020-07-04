@@ -24,13 +24,15 @@ Page({
             name,
             auxptyId
         }
-        dd.setStorageSync({
+        dd.setStorage({
             key: 'auxpty',
             data: obj,
-        })
-        console.log('设置辅助核算成功...')
-        dd.navigateBack({
-            delta: 1
+            success: res => {
+                console.log('设置辅助核算成功...')
+                dd.navigateBack({
+                    delta: 1
+                })
+            }
         })
     },
     onInput(e) {
