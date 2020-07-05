@@ -66,7 +66,6 @@ Page({
     getSubjectIdFromStorage() {
         // 从缓存里获取科目id
         const subject = dd.getStorageSync({key: 'subject'}).data
-        console.log(subject, 'alksdjflaskdfj')
         if(!!subject && subject !== null) {
             this.setData({
                 baoxiaoDetail: {
@@ -74,7 +73,9 @@ Page({
                     selectedAuxpty: null,
                     subjectId: subject.id,
                     subjectExtraId: subject.subjectExtraId,
-                    subjectName: subject.name
+                    subjectName: subject.name,
+                    billDetailTrueApEntityListObj: [],
+                    billDetailApEntityListObj: []
                 }
             })
             dd.removeStorage({
@@ -164,6 +165,14 @@ Page({
                     })
                     arr.forEach(item => {
                         this.getAuxptyList(accountbookId, item.auxptyId)
+                    })
+                }else{
+                    this.setData({
+                        baoxiaoDetail: {
+                            ...this.data.baoxiaoDetail,
+                            subjectAuxptyList: [],
+                            allAuxptyList: {},
+                        }
                     })
                 }
                 this.hideLoading()
@@ -322,10 +331,16 @@ Page({
         this.setData({
             baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
         })
+        const tempData = clone(this.data.baoxiaoArr)
+        tempData.forEach(item => {
+            item.trueSubjectId = item.subjectId
+            item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
+        })
+        console.log(tempData)
         this.addLoading()
         dd.setStorage({
             key: 'newBaoxiaoDetailArr',
-            data: this.data.baoxiaoArr,
+            data: tempData,
             success: res => {
                 this.hideLoading()
                 dd.navigateBack({
@@ -395,8 +410,6 @@ Page({
     },
     goAuxptyPage(e) {
         const auxptyId = e.currentTarget.dataset.id
-        console.log(auxptyId)
-        console.log(this.data.baoxiaoDetail.allAuxptyList)
         dd.setStorage({
             key: 'auxptyList',
             data: this.data.baoxiaoDetail.allAuxptyList[auxptyId],

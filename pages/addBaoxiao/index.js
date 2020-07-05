@@ -73,11 +73,9 @@ Page({
         array.forEach((item, index) => {
             Object.keys(item).forEach(keys => {
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
-                    console.log(item[keys])
                     item[keys].forEach((arrItem, arrIndex) => {
-                        console.log(arrItem)
                         Object.keys(arrItem).forEach(arrKeys => {
-                            console.log(arrKeys)
+                            console.log(arrKeys, 'arrKeys')
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -127,6 +125,12 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 status
+            }
+        })
+        // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
+        Object.keys(this.data.submitData).forEach(item => {
+            if(item.indexOf('billDetailList') != -1) {
+                delete this.data.submitData[item]
             }
         })
         // 处理一下提交格式
@@ -313,11 +317,15 @@ Page({
     },
     getBaoxiaoDetailFromStorage() {
         const index = dd.getStorageSync({key: 'index'}).data
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+            }
+        })
         dd.getStorage({
             key: 'newBaoxiaoDetailArr',
             success: res => {
                 const baoxiaoDetail = res.data
-                console.log(baoxiaoDetail, 'baoxiaoDetail....')
                 if (!!baoxiaoDetail) {
                     let baoxiaoList = clone(this.data.baoxiaoList)
                     console.log(index)
@@ -1071,7 +1079,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                applicationAmount
+                applicationAmount:applicationAmount.toFixed(2)
             }
         })
         return applicationAmount

@@ -100,6 +100,14 @@ Page({
                 status
             }
         })
+        // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
+        console.log(this.data.submitData)
+        Object.keys(this.data.submitData).forEach(item => {
+            console.log(item)
+            if(item.indexOf('billApEntityList[') != -1) {
+                delete this.data.submitData[item]
+            }
+        })
         // 处理一下提交格式
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
@@ -324,7 +332,8 @@ Page({
                 submitData: {
                     ...this.data.submitData,
                     subjectId: subject.id,
-                    subjectName: subject.name
+                    subjectName: subject.name,
+                    billApEntityListObj: []
                 }
             })
             dd.removeStorage({
@@ -808,7 +817,8 @@ Page({
                     })
                 } else {
                     this.setData({
-                        subjectAuxptyList: []
+                        subjectAuxptyList: [],
+                        allAuxptyList: []
                     })
                 }
             },

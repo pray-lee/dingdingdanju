@@ -44,32 +44,34 @@ Page({
         })
     },
     onAddExtra(e) {
-        this.clearScrollView()
-        let index = null
-        if(!!e) {
-            index = e.currentTarget.dataset.index
-        }
-        if (this.data.subjectExtraConf) {
-            var obj = this.generateExtraList(this.data.subjectExtraConf)
-            var tempData = clone(this.data.baoxiaoDetail)
-            if(!index && index !== 0) {
-                tempData.extraList.push({conf: obj.array})
-                tempData.extraMessage.push(obj.extraMessage)
-            }else{
-                tempData.extraList.splice(index + 1, 0, {conf:obj.array})
-                tempData.extraMessage.splice(index + 1, 0, obj.extraMessage)
+        setTimeout(() => {
+            this.clearScrollView()
+            let index = null
+            if(!!e) {
+                index = e.currentTarget.dataset.index
             }
-            this.setData({
-                baoxiaoDetail: tempData
-            })
-            // 看哪一个是附加信息金额
-            this.data.baoxiaoDetail.extraList[0].conf.forEach((item,index) => {
-                if(item.field == '金额') {
-                    app.globalData.caculateIndex = index
+            if (this.data.subjectExtraConf) {
+                var obj = this.generateExtraList(this.data.subjectExtraConf)
+                var tempData = clone(this.data.baoxiaoDetail)
+                if(!index && index !== 0) {
+                    tempData.extraList.push({conf: obj.array})
+                    tempData.extraMessage.push(obj.extraMessage)
+                }else{
+                    tempData.extraList.splice(index + 1, 0, {conf:obj.array})
+                    tempData.extraMessage.splice(index + 1, 0, obj.extraMessage)
                 }
-            })
-            this.setScrollView(index + 2)
-        }
+                this.setData({
+                    baoxiaoDetail: tempData
+                })
+                // 看哪一个是附加信息金额
+                this.data.baoxiaoDetail.extraList[0].conf.forEach((item,index) => {
+                    if(item.field == '金额') {
+                        app.globalData.caculateIndex = index
+                    }
+                })
+                this.setScrollView(index + 2)
+            }
+        })
     },
     onCopyExtra(e) {
         this.clearScrollView()
