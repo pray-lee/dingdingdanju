@@ -6,7 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
-        disabled: false,
+        disabled: true,
         type: '',
         billId: '',
         borrowAmount: '',

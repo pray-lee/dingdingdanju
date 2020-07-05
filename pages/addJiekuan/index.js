@@ -9,7 +9,7 @@ Page({
         type: '',
         billId: '',
         maskHidden: true,
-        disabled: false,
+        disabled: true,
         hesuanMaskHidden: true,
         animationInfo: {},
         hesuanAnimationInfo: {},
