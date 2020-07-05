@@ -1,4 +1,4 @@
-<view class="form-wrapper" onTap="onClick">
+<view class="form-wrapper">
     <form onSubmit="formSubmit" onReset="formReset">
         <scroll-view scroll-y class="form-scroll-wrapper">
             <view class="block-wrapper">
@@ -170,4 +170,5 @@
         <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+    <view class="disabled" hidden="{{disabled}}" onTap="onDisabled"></disabled>
 </view>

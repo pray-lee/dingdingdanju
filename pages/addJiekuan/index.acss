@@ -218,3 +218,12 @@ input::-webkit-input-placeholder{
     margin-left: 20rpx;
     text-align:right
 }
+.disabled{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    z-index: 9999
+}

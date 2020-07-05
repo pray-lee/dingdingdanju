@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        disabled: false,
         type: '',
         billId: '',
         borrowAmount: '',
@@ -795,10 +796,30 @@ Page({
             success: res => {
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
+                    this.setDisabled(res.data.obj.status)
                 }
                 this.hideLoading()
             }
         })
+    },
+    setDisabled(status) {
+        if(status == 10 || status == 25) {
+            this.setData({
+                disabled: true
+            })
+        }else{
+            this.setData({
+                disabled: false
+            })
+        }
+    },
+    onDisabled() {
+        dd.showToast({
+            type: 'none',
+            content: '当前单据状态不可被编辑',
+            success: () => {
+            },
+        });
     },
     // 回显数据设置
     setRenderData(data) {

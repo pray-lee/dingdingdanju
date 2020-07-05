@@ -29,7 +29,6 @@ Page({
         })
     },
     onAddShow() {
-        console.log(11111)
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'
@@ -174,12 +173,17 @@ Page({
     onReachBottom() {
         // 页面被拉到底部
     },
-    // onShareAppMessage() {
-    //   // 返回自定义分享信息
-    //   return {
-    //     title: 'My App',
-    //     desc: 'My App description',
-    //     path: 'pages/index/index',
-    //   };
-    // },
+    goToEdit(e) {
+        var id = e.currentTarget.dataset.id
+        var flag = e.currentTarget.dataset.flag
+        if(flag === 'B') {
+            dd.navigateTo({
+                url: '../addBaoxiao/index?type=edit&id=' + id
+            })
+        }else{
+            dd.navigateTo({
+                url: '../addJiekuan/index?type=edit&id=' + id
+            })
+        }
+    },
 });

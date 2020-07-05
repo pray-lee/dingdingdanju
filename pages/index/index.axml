@@ -4,7 +4,7 @@
             <view class="title">我的借款单</view>
             <!--      <view class="completed-bill" onTap="seeAll" data-type="jiekuanCompleted">查看已完成单据</view>-->
             <view class="main">
-                <view a:if="{{jiekuanList.length}}">
+                <view a:if="{{jiekuanList.length}}" onTap="goToEdit" data-id="{{jiekuanList[0].id}}" data-flag="J">
                     <view class="status error">
                         <text>{{statusObj[jiekuanList[0].status]}}</text>
                         <text class="billCode">{{jiekuanList[0].billCode}}</text>
@@ -51,7 +51,7 @@
         <view class="baoxiao-content">
             <view class="title">我的报销单</view>
             <view class="main">
-                <view a:if="{{baoxiaoList.length}}">
+                <view a:if="{{baoxiaoList.length}}" onTap="goToEdit" data-id="{{baoxiaoList[0].id}}" data-flag="B">
                     <view class="status error">
                         <text>{{statusObj[baoxiaoList[0].status]}}</text>
                         <text class="billCode">{{baoxiaoList[0].billCode}}</text>
