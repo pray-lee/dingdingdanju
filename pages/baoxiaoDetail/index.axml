@@ -21,30 +21,16 @@
                 </view>
             </view>
             <view class="form-line"/>
-<!--             <view class="form-row" onTap="goSubjectPage"> -->
-<!--                 <view class="form-row-label"><text class="require">*</text>预算类型</view> -->
-<!--                 <view class="form-row-content auxpty-wrapper" a:for="{{subjectAuxptyList}}" data-id="{{item.auxptyId}}" onTap="goAuxptyPage"> -->
-<!--                         <view a:if="{{baoxiaoDetail.subjectId}}" class="mock-input">{{baoxiaoDetail.subjectName}}</view> -->
-<!--                         <view a:else class="mock-input nodata">请选择预算类型</view> -->
-<!--                 </view> -->
-<!--             </view> -->
-<!--             <view class="form-line"/> -->
-<!--             <view class="form-row"> -->
-<!--                 <view class="form-row-label"><text class="require">*</text>预算维度</view> -->
-<!--                 <view class="form-row-content"> -->
-<!--                         <view class="mock-input left ellipsis">{{item.auxptyName}}</view> -->
-<!--                         <view class="mock-input right ellipsis" a:if="{{!!selectedAuxpty && selectedAuxpty[item.auxptyId]}}">{{selectedAuxpty[item.auxptyId].name}}</view> -->
-<!--                         <view class="mock-input right ellipsis" a:else>请选择</view> -->
-<!--                 </view> -->
-<!--             </view> -->
-<!--             <view class="form-line"/> -->
-            <view class="form-row">
+            <view class="form-row" a:if="{{!baoxiaoDetail.subjectExtraId}}">
                 <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
-                <input a:if="{{!baoxiaoDetail.subjectExtraId}}" class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
+                <input class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
                        data-name="applicationAmount"/>
-                <input a:else disabled class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
+            </view>
+            <view class="form-row" a:else onTap="openExtraInfo" data-extraId="{{baoxiaoDetail.subjectExtraId}}" >
+                <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
+                <input disabled class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
                        data-name="applicationAmount"/>
-                <image a:if="{{!!baoxiaoDetail.subjectExtraId}}" class="extra-icon" onTap="openExtraInfo" data-extraId="{{baoxiaoDetail.subjectExtraId}}" mode="scaleToFill" src="../../images/extra-icon.png"></image>
+                <image class="extra-icon" mode="scaleToFill" src="../../images/extra-icon.png"></image>
             </view>
             <view class="form-line"/>
             <view class="form-row invoice-wrapper">

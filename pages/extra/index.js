@@ -5,6 +5,7 @@ const app = getApp()
 Page({
     data: {
         baoxiaoDetail: {},
+        scrollId: "",
         extraList: [],
         extraMessage: [],
         subjectExtraConf: null,
@@ -31,13 +32,33 @@ Page({
         })
     },
     onShow() {},
-
-    onAddExtra() {
+    setScrollView(id){
+        console.log(id)
+        this.setData({
+            scrollId: id.toString()
+        })
+    },
+    clearScrollView() {
+        this.setData({
+            scrollId: ''
+        })
+    },
+    onAddExtra(e) {
+        this.clearScrollView()
+        let index = null
+        if(!!e) {
+            index = e.currentTarget.dataset.index
+        }
         if (this.data.subjectExtraConf) {
             var obj = this.generateExtraList(this.data.subjectExtraConf)
             var tempData = clone(this.data.baoxiaoDetail)
-            tempData.extraList.push({conf: obj.array})
-            tempData.extraMessage.push(obj.extraMessage)
+            if(!index && index !== 0) {
+                tempData.extraList.push({conf: obj.array})
+                tempData.extraMessage.push(obj.extraMessage)
+            }else{
+                tempData.extraList.splice(index + 1, 0, {conf:obj.array})
+                tempData.extraMessage.splice(index + 1, 0, obj.extraMessage)
+            }
             this.setData({
                 baoxiaoDetail: tempData
             })
@@ -47,7 +68,23 @@ Page({
                     app.globalData.caculateIndex = index
                 }
             })
+            this.setScrollView(index + 2)
         }
+    },
+    onCopyExtra(e) {
+        this.clearScrollView()
+        const index = e.currentTarget.dataset.index
+        const obj = this.generateExtraList(this.data.subjectExtraConf)
+        const baoxiaoDetail = clone(this.data.baoxiaoDetail)
+        baoxiaoDetail.extraList.splice(index + 1, 0, {conf:obj.array})
+        baoxiaoDetail.extraMessage.splice(index + 1, 0, baoxiaoDetail.extraMessage[index])
+        this.setData({
+            baoxiaoDetail
+        })
+        this.setApplicationAmount()
+        setTimeout(() => {
+            this.setScrollView(index + 2)
+        })
     },
 
     generateExtraList(conf) {
@@ -125,6 +162,7 @@ Page({
         this.setApplicationAmount()
     },
     deleteExtra(e) {
+        this.clearScrollView()
         var idx = e.currentTarget.dataset.index
         var tempData = clone(this.data.baoxiaoDetail)
         if(tempData.extraList.length <= 1) {
@@ -135,6 +173,7 @@ Page({
         this.setData({
             baoxiaoDetail: tempData
         })
+        this.setScrollView(idx + 1)
         this.setApplicationAmount()
     },
     setApplicationAmount() {
@@ -145,7 +184,7 @@ Page({
         this.setData({
             baoxiaoDetail:{
                 ...this.data.baoxiaoDetail,
-                applicationAmount
+                applicationAmount:applicationAmount.toFixed(2)
             }
         })
     },

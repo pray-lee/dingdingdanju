@@ -104,7 +104,7 @@
 .operate-area{
   display:flex;
   justify-content: space-between;
-  padding-right: 40rpx;
+  padding: 40rpx;
 }
 .baoxiao-item-title{
   display:flex;

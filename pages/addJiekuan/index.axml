@@ -35,7 +35,8 @@
                 <view class="form-row" onTap="goInfoList">
                     <view class="form-row-label"><text class="require">*</text>借款信息</view>
                     <view class="form-row-content borrowList-wrapper">
-                        {{borrowList[borrowIndex].name}}
+                        <view a:if="{{borrowIndex}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}</view>
+                        <view a:else class="mock-input nodata">请选择借款人</view>
                     </view>
                     <view class="form-row-content incomeBankAccount">
                         <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">{{submitData.incomeBankAccount}}</view>

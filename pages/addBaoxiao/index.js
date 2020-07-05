@@ -273,7 +273,7 @@ Page({
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
-            var borrowIndex = 0
+            var borrowIndex = null
             this.data.borrowList.forEach((item, index) => {
                 if (item.id === borrowId) {
                     borrowIndex = index

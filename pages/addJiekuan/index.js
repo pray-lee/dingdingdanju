@@ -197,6 +197,7 @@ Page({
         //     this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
         // }
         if (name === 'applicantType') {
+            this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantId') {
@@ -287,7 +288,7 @@ Page({
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
-            var borrowIndex = 0
+            var borrowIndex = null
             this.data.borrowList.forEach((item, index) => {
                 if (item.id === borrowId) {
                     borrowIndex = index
@@ -348,6 +349,15 @@ Page({
                 key: 'capital'
             })
         }
+    },
+    onHide() {
+        // 清理借款人缓存
+        dd.removeStorage({
+            key: 'borrowId',
+            success: function () {
+                console.log('借款人缓存删除成功')
+            }
+        });
     },
     onShow() {
         app.globalData.loadingCount = 0
@@ -529,15 +539,6 @@ Page({
         dd.previewImage({
             urls: [url],
         })
-    },
-    onHide() {
-        // 清理借款人缓存
-        dd.removeStorage({
-            key: 'borrowId',
-            success: function () {
-                console.log('借款人缓存删除成功')
-            }
-        });
     },
     onLoad(query) {
         this.setData({
@@ -927,7 +928,7 @@ Page({
         })
     },
     setInitIndex(newObj, id) {
-        let initIndex = 0
+        let initIndex = null
         newObj.forEach((item, index) => {
             if (item.id === id) {
                 initIndex = index

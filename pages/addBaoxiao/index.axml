@@ -47,9 +47,10 @@
                 </view>
                 <view class="form-line"/>
                 <view class="form-row" onTap="goInfoList">
-                    <view class="form-row-label">借款信息</view>
+                    <view class="form-row-label">往来单位信息</view>
                     <view class="form-row-content borrowList-wrapper">
-                        {{borrowList[borrowIndex].name}}
+                        <view a:if="{{borrowIndex}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}</view>
+                        <view a:else class="mock-input nodata">请选择往来单位</view>
                     </view>
                     <view class="form-row-content incomeBankAccount">
                         <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">{{submitData.incomeBankAccount}}</view>
@@ -60,28 +61,6 @@
                         <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
                     </view>
                 </view>
-<!--                <view class="form-line"/>-->
-<!--                <view class="form-row">-->
-<!--                    <view class="form-row-label">收款银行</view>-->
-<!--                    <view class="form-row-content">-->
-<!--                        <block a:if="{{incomeBankList[incomeBankIndex].bankName}}">-->
-<!--                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{incomeBankIndex}}"-->
-<!--                                    range="{{incomeBankList}}" range-key="bankName" data-name="incomeBankName"-->
-<!--                                    data-list="incomeBankList" data-index="incomeBankIndex">-->
-<!--                                <view class="row-extra">{{incomeBankList[incomeBankIndex].bankName}}</view>-->
-<!--                            </picker>-->
-<!--                        </block>-->
-<!--                        <view a:else class="mock-input nodata">请选择收款银行</view>-->
-<!--                    </view>-->
-<!--                </view>-->
-<!--                <view class="form-line"/>-->
-<!--                <view class="form-row">-->
-<!--                    <view class="form-row-label">收款账号</view>-->
-<!--                    <view class="form-row-content">-->
-<!--                        <input class="input" disabled value="{{submitData.incomeBankAccount}}"-->
-<!--                               data-name="incomeBankAccount" placeholder="收款账号"/>-->
-<!--                    </view>-->
-<!--                </view>-->
             </view>
             <view class="block-wrapper">
                 <view class="title">单据信息</view>

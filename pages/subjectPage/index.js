@@ -21,15 +21,13 @@ Page({
         const subjectExtraId = e.currentTarget.dataset.extraId
         const obj = {id, name, subjectExtraId}
         console.log(obj, 'goBack')
-        dd.setStorage({
+        dd.setStorageSync({
             key: 'subject',
             data: obj,
-            success: res => {
-                console.log('设置科目id成功')
-                dd.navigateBack({
-                    delta: 1
-                })
-            }
+        })
+        console.log('设置科目id成功')
+        dd.navigateBack({
+            delta: 1
         })
     },
     onInput(e) {
