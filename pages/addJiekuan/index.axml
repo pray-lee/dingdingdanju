@@ -1,8 +1,8 @@
 <view class="form-wrapper">
     <form onSubmit="formSubmit" onReset="formReset">
         <scroll-view scroll-y class="form-scroll-wrapper">
+            <view class="title">申请方信息</view>
             <view class="block-wrapper">
-                <view class="title">申请方信息</view>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>申请组织</view>
                     <view class="form-row-content">
@@ -21,10 +21,10 @@
                     </view>
                 </view>
             </view>
+            <view class="title">收款方信息</view>
             <view class="block-wrapper">
-                <view class="title">收款方信息</view>
                 <view class="form-row">
-                    <view class="form-row-label"><text class="require">*</text>借款单位类型</view>
+                    <view class="form-row-label"><text class="require">*</text>收款方类型</view>
                     <view class="form-row-content">
                         <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}" range="{{applicantType}}" range-key="name" data-name="applicantType" data-list="applicantType" data-index="applicantIndex">
                             <view class="row-extra">{{applicantType[applicantIndex].name}}</view>
@@ -33,23 +33,30 @@
                 </view>
                 <view class="form-line"/>
                 <view class="form-row" onTap="goInfoList">
-                    <view class="form-row-label"><text class="require">*</text>借款信息</view>
+                    <view class="form-row-label"><text class="require">*</text>收款信息</view>
                     <view class="form-row-content borrowList-wrapper">
                         <view a:if="{{borrowIndex}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}</view>
-                        <view a:else class="mock-input nodata">请选择借款人</view>
+                        <view a:else class="mock-input nodata">请选择收款人</view>
                     </view>
-                    <view class="form-row-content incomeBankAccount">
-                        <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">{{submitData.incomeBankAccount}}</view>
-                        <view a:else class="mock-input nodata">暂无银行账号</view>
+                    <block a:if="{{submitData.incomeBankAccount}}">
+                        <view class="form-row-content incomeBankAccount">
+                            <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">{{submitData.incomeBankAccount}}</view>
+                            <view a:else class="mock-input nodata">暂无银行账号</view>
+                        </view>
+                        <view class="form-row-content incomeBankName">
+                            <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">{{incomeBankList[0].bankName}}</view>
+                            <view a:else class="mock-input nodata">银行信息暂无</view>
+                        </view>
+                    </block>
+                    <view a:else class="form-row-content incomeBankName">
+                        <view class="mock-input nodata">未匹配收款账户信息</view>
                     </view>
-                    <view class="form-row-content incomeBankName">
-                        <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">{{incomeBankList[0].bankName}}</view>
-                        <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
-                    </view>
+
                 </view>
             </view>
+            <view class="tips">如果没有收款账户信息，请联系系统相关人员添加。</view>
+            <view class="title">单据信息</view>
             <view class="block-wrapper">
-                <view class="title">单据信息</view>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>事由</view>
                     <view class="form-row-content">
@@ -103,8 +110,9 @@
                 </view>
             </view>
 <!-- 增加借款详情-->
+            <view class="title"></view>
             <view class="block-wrapper">
-                <view class="title">借款列表</view>
+                <view class="title special-title">借款列表</view>
                 <view class="borrow-list">
                     <view class="borrow-item" a:for="{{submitData.billDetailListObj}}">
                         <view class="form-row">
@@ -123,8 +131,9 @@
                     <view class="add-borrow-btn">添加借款金额</view>
                 </view>
             </view>
+            <view class="title"></view>
             <view class="block-wrapper">
-                <view class="title">附件上传</view>
+                <view class="title special-title">附件上传</view>
                 <view class="file-list">
                     <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
                         <view class="form-row">
@@ -140,6 +149,7 @@
                     <view class="add-file-btn">添加附件</view>
                 </view>
             </view>
+            <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
                     <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
@@ -154,16 +164,16 @@
 <!--增加借款弹框-->
     <view class="add-borrow-page" animation="{{animationInfo}}">
         <view class="form-row">
-            <view class="form-row-label">借款金额</view>
+            <view class="form-row-label"><text class="require">*</text>借款金额</view>
             <view class="form-row-content">
                 <input class="input" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
             </view>
         </view>
         <view class="form-line"/>
         <view class="form-row">
-            <view class="form-row-label">事由</view>
+            <view class="form-row-label">备注</view>
             <view class="form-row-content">
-                <input class="input" placeholder="请输入事由" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
+                <input class="input" placeholder="请输入备注" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
             </view>
         </view>
         <view class="form-line"/>

@@ -86,7 +86,7 @@
     height:87rpx;
     line-height: 87rpx;
     color:#1f65d8;
-    font-weight:200
+    font-size: 28rpx;
 }
 .borrow-item .form-row, .file-item .form-row, .baoxiao-item .form-row{
     padding: 0 40rpx;
@@ -100,7 +100,7 @@
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
-    background-size: 35rpx 40rpx;
+    background-size: 40rpx 40rpx;
     position:absolute;
     left: 20rpx;
     z-index: 999
@@ -140,7 +140,7 @@ input{
     height: 44rpx;
     line-height: 44rpx;
     width: 100%;
-    color:rgb(136,136,136)
+    color:#333
 }
 .mock-input.nodata{
     color:#c7c7cd

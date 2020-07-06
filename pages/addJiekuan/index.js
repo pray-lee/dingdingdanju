@@ -286,7 +286,7 @@ Page({
             timeFunction: 'ease-in'
         })
         this.animation = animation
-        animation.translateY(300).step()
+        animation.translateY('100%').step()
         this.setData({
             animationInfo: animation.export(),
             maskHidden: true
@@ -439,15 +439,6 @@ Page({
         if (this.data.borrowAmount === '') {
             dd.alert({
                 content: '请输入借款金额',
-                buttonText: '确定',
-                success: res => {
-                }
-            })
-            return
-        }
-        if (this.data.remark === '') {
-            dd.alert({
-                content: '请输入备注信息',
                 buttonText: '确定',
                 success: res => {
                 }

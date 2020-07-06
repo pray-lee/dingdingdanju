@@ -36,11 +36,11 @@ page {
 
 .form-row-label {
   min-width: 6em;
-  font-size: 28rpx;
+  font-size: 24rpx;
   margin-right: 10rpx;
   margin-bottom: 10rpx;
   text-align: left;
-  color: #000;
+  color: #666;
   line-height: 40rpx;
   display:flex;
   align-items: center;
@@ -50,9 +50,8 @@ page {
   height:44rpx;
   line-height: 44rpx;
   flex: 1;
-  font-size: 32rpx;
+  font-size: 28rpx;
   position:relative;
-  font-weight: 200
 }
 .form-row-content .picker-style {
   width: 100%
@@ -65,9 +64,9 @@ page {
 
 .input {
   width: 100%;
-  font-size: 32rpx;
+  font-size: 28rpx;
   padding:0;
-  color:rgb(136,136,136)
+  color:#333
 }
 
 .row {
@@ -87,7 +86,8 @@ page {
 .row-extra {
   flex-basis: initial;
   font-size: 24rpx;
-  color: #888;
+  color: #333;
+  font-weight:normal
 }
 
 .row-arrow {
@@ -210,7 +210,7 @@ page {
     top:50%;
     transform: translateY(-50%);
     width: 100%;
-    font-size: 32rpx
+    font-size: 28rpx
 }
 .ellipsis{
   text-overflow:ellipsis;

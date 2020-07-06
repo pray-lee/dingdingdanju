@@ -10,16 +10,18 @@
     height: calc(100vh - 120rpx)
 }
 .block-wrapper{
-    margin-bottom: 20rpx;
     background:#fff;
-    padding-top: 34rpx;
 }
 .title{
     margin:0 40rpx;
-    border-left: 4rpx solid #1f65d8;
+    padding: 20rpx 20rpx 20rpx 0;
+    font-size: 24rpx;
+    color:#999
+}
+.special-title{
+    font-size: 28rpx;
     padding-left: 14rpx;
-    font-size: 30rpx;
-    font-weight:600
+    color:#333;
 }
 .btn-area{
     display:flex;
@@ -75,7 +77,7 @@
     height: 87rpx;
     line-height: 87rpx;
     color:#1f65d8;
-    font-weight:200
+    font-size: 28rpx;
 }
 .borrow-item .form-row, .file-item .form-row{
     padding: 0 40rpx;
@@ -89,7 +91,7 @@
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
-    background-size: 35rpx 40rpx;
+    background-size: 40rpx 40rpx;
     position:absolute;
     left: 20rpx;
     z-index: 999
@@ -147,7 +149,7 @@
     height: 44rpx;
     line-height: 44rpx;
     width: 100%;
-    color:rgb(136,136,136);
+    color:#333;
 }
 .mock-input.nodata{
     color:#c7c7cd
@@ -171,7 +173,7 @@ input::-webkit-input-placeholder{
     justify-content: space-between;
 }
 .submit-info-wrapper{
-    padding-bottom: 34rpx
+    padding: 34rpx 0
 }
 .submit-info, .total{
     font-weight: 600
@@ -226,4 +228,9 @@ input::-webkit-input-placeholder{
     bottom:0;
     margin:auto;
     z-index: 9999
+}
+.tips{
+    padding:15rpx 40rpx;
+    color:#999;
+    font-size:22rpx;
 }

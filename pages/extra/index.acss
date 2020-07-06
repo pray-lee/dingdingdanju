@@ -54,7 +54,7 @@
   width: 60rpx;
   height: 88rpx;
   background:url(../../images/delete.png) center center no-repeat;
-  background-size: 35rpx 40rpx;
+  background-size: 40rpx 40rpx;
   position:absolute;
   left: 20rpx;
   z-index: 999
@@ -111,6 +111,6 @@
   justify-content: space-between;
 }
 .delete-icon{
-  width: 35rpx;
+  width: 40rpx;
   height: 40rpx;
 }
