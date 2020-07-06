@@ -12,7 +12,7 @@
                 </view>
             </view>
             <view class="form-line"/>
-            <view class="form-row">
+            <view class="form-row" a:if="{{baoxiaoDetail.subjectAuxptyList.length}}">
                 <view class="form-row-label"><text class="require">*</text>核算维度</view>
                 <view class="form-row-content auxpty-wrapper" a:for="{{baoxiaoDetail.subjectAuxptyList}}" data-id="{{item.auxptyId}}" onTap="goAuxptyPage">
                             <view class="mock-input left ellipsis">{{item.auxptyName}}</view>
@@ -20,7 +20,7 @@
                             <view class="mock-input right ellipsis" a:else>请选择</view>
                 </view>
             </view>
-            <view class="form-line"/>
+            <view class="form-line" a:if="{{baoxiaoDetail.subjectAuxptyList.length}}"/>
             <view class="form-row" a:if="{{!baoxiaoDetail.subjectExtraId}}">
                 <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
                 <input class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
@@ -33,7 +33,7 @@
                 <image class="extra-icon" mode="scaleToFill" src="../../images/extra-icon.png"></image>
             </view>
             <view class="form-line"/>
-            <view class="form-row invoice-wrapper">
+            <view class="form-row invoice-wrapper" a:if="{{baoxiaoDetail.taxpayerType == 2}}">
                 <view class="form-row-label">是否为专票</view>
                     <switch onChange="baoxiaoRadioChange" checked="{{baoxiaoDetail.invoiceType == 2}}" color="#1f76d8"/>
             </view>

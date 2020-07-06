@@ -121,7 +121,6 @@ Page({
         }
     },
     formSubmit(e) {
-        const status = e.currentTarget.dataset.status
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -566,12 +565,14 @@ Page({
                 console.log(res.data, 'accountbookList')
                 console.log(data)
                 var accountbookIndex = 0
+                var taxpayerType = null;
                 var accountbookId = !!data ? data.accountbookId : res.data[0].id
                 // edit的时候设置值
                 if (accountbookId) {
                     res.data.forEach((item, index) => {
                         if (item.id === accountbookId) {
                             accountbookIndex = index
+                            taxpayerType = item.taxpayerType
                         }
                     })
                 }
@@ -580,7 +581,8 @@ Page({
                     accountbookIndex: accountbookIndex,
                     submitData: {
                         ...this.data.submitData,
-                        accountbookId
+                        accountbookId,
+                        taxpayerType
                     }
                 })
                 var submitterDepartmentId = data ? data.submitterDepartmentId : ''
@@ -589,13 +591,13 @@ Page({
                 var incomeBankName = data ? data.incomeBankName : ''
                 var billDetailList = data ? data.billDetailList : []
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
-                this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList)
+                this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
                 this.hideLoading()
             }
         })
     },
     // 获取申请部门
-    getDepartmentList(accountbookId, departmentId, billDetailList) {
+    getDepartmentList(accountbookId, departmentId, billDetailList, taxpayerType) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
@@ -626,7 +628,7 @@ Page({
                         submitterDepartmentId
                     },
                 })
-                this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList)
+                this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
                 this.hideLoading()
             }
         })
@@ -743,17 +745,19 @@ Page({
         if (this.data.subjectList.length) {
             var subjectList = clone(this.data.subjectList)
             var newTaxRageObj = clone(this.data.taxRageObject)
+            var taxpayerType = this.data.submitData.taxpayerType
             var obj = {
                 subjectList: subjectList,
                 selectedAuxpty: null,
                 allAuxptyList: {},
                 accountbookId: this.data.submitData.accountbookId,
+                taxpayerType: this.data.submitData.taxpayerType,
                 submitterDepartmentId: this.data.submitData.submitterDepartmentId,
                 applicantId: this.data.submitData.applicantId,
                 applicantType: this.data.submitData.applicantType,
                 applicationAmount: '',
                 invoiceTypeArr: this.data.invoiceTypeArr,
-                invoiceType: this.data.invoiceTypeArr[0].id,
+                invoiceType: taxpayerType == 1 ? this.data.invoiceTypeArr[0].id : this.data.invoiceTypeArr[1].id,
                 taxRageObject: clone(newTaxRageObj),
                 taxRageArr: clone(newTaxRageObj).taxRageArr,
                 taxRageIndex: clone(newTaxRageObj).taxRageIndex,
@@ -911,7 +915,7 @@ Page({
         return name
     },
     // 获取科目类型
-    getSubjectList(accountbookId, departId, billDetailList) {
+    getSubjectList(accountbookId, departId, billDetailList, taxpayerType) {
         this.addLoading()
         dd.httpRequest({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=9&findAll=false',
@@ -955,6 +959,7 @@ Page({
                                 }
                             })
                             obj.accountbookId = accountbookId
+                            obj.taxpayerType = taxpayerType
                             obj.subjectId = item.subjectId
                             obj.subjectName = item.subject.subjectName
                             obj.subjectExtraId = subjectExtraId
