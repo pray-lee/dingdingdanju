@@ -117,11 +117,11 @@
                     <view class="borrow-item" a:for="{{submitData.billDetailListObj}}">
                         <view class="form-row">
                             <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowAmount}}"></view>
-                            <view class="form-row-content">
-                                <text>{{item.borrowAmount}}</text>
+                            <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
+                                <text>{{item.formatBorrowAmount}}</text>
                             </view>
                             <view class="borrow-line"></view>
-                            <view class="form-row-content">
+                            <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
                                 <text>{{item.remark}}</text>
                             </view>
                         </view>
@@ -154,7 +154,7 @@
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
                     <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        借款合计：</text><text class="total-word">{{submitData.amount == 0 ? '0.00' : submitData.amount}}</text></view>
+                        借款合计：</text><text class="total-word">{{submitData.formatAmount}}</text></view>
             </view>
         </scroll-view>
         <view class="btn-area" a:if="{{!disabled}}">
@@ -170,7 +170,7 @@
         <view class="form-row">
             <view class="form-row-label"><text class="require">*</text>借款金额</view>
             <view class="form-row-content">
-                <input class="input" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
+                <input class="input" type="digit" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
             </view>
         </view>
         <view class="form-line"/>

@@ -115,13 +115,14 @@
                         <view class="form-row">
                             <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
                                   data-id="{{item.billDetailId}}" data-index="{{index}}"></view>
-                            <view class="form-row-content" onTap="showBaoxiaoDetail" data-index="{{index}}">
-                                {{item.applicationAmount}}
+                            <view class="form-row-content baoxiaoDetail-left" onTap="showBaoxiaoDetail" data-index="{{index}}">
+                                <view class="subject-title">{{item.subjectName.split('_')[item.subjectName.split('_').length-1]}}</view>
+                                <view class="remark-title">事由：</view>
+                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                <view class="remark-content" a:else>无</view>
                             </view>
-                            <view class="borrow-line"></view>
-                            <view class="form-row-content ellipsis borrow-remark" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item.remark}}</view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item.applicationAmount}}</view>
                         </view>
-                        <view class="form-line"/>
                     </view>
                 </view>
                 <view class="add-borrow" onTap="onAddBaoxiao">
@@ -175,15 +176,15 @@
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
                     <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        报销金额：</text><text class="total-word">{{submitData.applicationAmount == 0 ? '0.00' : submitData.applicationAmount}}</text>
+                        报销金额：</text><text class="total-word">{{submitData.formatApplicationAmount}}</text>
                 </view>
                 <view class="total">
                     <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        核销借款：</text><text class="total-word">-{{submitData.verificationAmount == 0 ? '0.00' : submitData.verificationAmount}}</text>
+                        核销借款：</text><text class="total-word">-{{submitData.formatVerificationAmount}}</text>
                 </view>
                 <view class="total">
                     <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        支付总额：</text><text class="total-word">{{submitData.totalAmount == 0 ? '0.00' : submitData.totalAmount}}</text>
+                        支付总额：</text><text class="total-word">{{submitData.formatTotalAmount}}</text>
                 </view>
 <!--                <view class="submit-info">-->
 <!--                    <view class="block">提交人：{{submitData.userName}}</view>-->

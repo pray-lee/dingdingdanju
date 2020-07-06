@@ -15,8 +15,12 @@
                                 <block a:if="{{extraDetail.type == 2}}">
                                     <view onTap="onExtraDateFocus" data-name="{{item.field}}" data-index="{{idx}}" data-extraIndex="{{index}}">{{baoxiaoDetail.extraMessage[index][idx]}}</view>
                                 </block>
+                                <block a:else>
+                                <input a:if="{{extraDetail.field== '金额'}}" type="digit" class="input" onInput="onExtraInput" value="{{baoxiaoDetail.extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
+                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}" data-name="{{item.field}}"/>
                                 <input a:else class="input" onInput="onExtraInput" value="{{baoxiaoDetail.extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
-                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}"/>
+                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}" data-name="{{item.field}}"/>
+                                </block>
                             </view>
                         </view>
                         <view class="form-line"/>
@@ -40,7 +44,7 @@
         </scroll-view>
         <view class="total">
             <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                金额合计：</text><text class="total-word">{{baoxiaoDetail.applicationAmount}}</text>
+                金额合计：</text><text class="total-word">{{baoxiaoDetail.formatApplicationAmount}}</text>
         </view>
         <view class="btn-area">
             <button class="submit-btn cancel-extra save-draft" onTap="cancelExtra">取消</button>

@@ -1,5 +1,6 @@
 import moment from "moment";
 import clone from "lodash/cloneDeep";
+import {formatNumber} from "../../util/getErrorMessage";
 
 const app = getApp()
 Page({
@@ -136,6 +137,8 @@ Page({
     onExtraBlur(e) {
         var idx = e.currentTarget.dataset.index
         var extraIdx = e.currentTarget.dataset.extraIndex
+        var name = e.currentTarget.dataset.name
+        console.log(name)
         var tempData = clone(this.data.baoxiaoDetail)
         tempData.extraMessage[extraIdx][idx] = e.detail.value
         this.setData({
@@ -196,7 +199,8 @@ Page({
         this.setData({
             baoxiaoDetail:{
                 ...this.data.baoxiaoDetail,
-                applicationAmount:applicationAmount.toFixed(2)
+                applicationAmount:applicationAmount.toFixed(2),
+                formatApplicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
             }
         })
     },

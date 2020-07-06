@@ -1,6 +1,6 @@
 import moment from "moment";
 import clone from 'lodash/cloneDeep'
-import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
+import {getErrorMessage, submitSuccess, formatNumber} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -57,8 +57,9 @@ Page({
             invoice: 1,
             businessDateTime: moment().format('YYYY-MM-DD'),
             applicationAmount: 0,
-            totalAmount: 0,
-            verificationAmount: 0,
+            formatApplicationAmount: 0,
+            formatTotalAmount: 0,
+            formatVerificationAmount: 0,
             status: 20,
             userName: '',
             billCode: '',
@@ -846,7 +847,8 @@ Page({
         var importList = data.borrowBillList.map(item => {
             return {
                 billDetailId: item.billDetailId,
-                applicationAmount: item.applicationAmount
+                applicationAmount: item.applicationAmount,
+                formatApplicationAmount: formatNumber(Number(item.applicationAmount))
             }
         })
         //fileList
@@ -869,9 +871,13 @@ Page({
                 invoice: data.invoice,
                 businessDateTime: data.businessDateTime,
                 applicationAmount: data.applicationAmount,
+                formatApplicationAmount: formatNumber(Number(data.applicationAmount).toFixed(2)),
                 verificationAmount: data.verificationAmount,
+                formatVerificationAmount: formatNumber(Number(data.verificationAmount).toFixed(2)),
                 totalAmount: data.totalAmount,
+                formatTotalAmount: formatNumber(Number(data.totalAmount).toFixed(2)),
                 status: data.status,
+                remark: data.remark,
                 userName: app.globalData.realName,
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
@@ -975,11 +981,12 @@ Page({
                             obj.accountbookId = accountbookId
                             obj.taxpayerType = taxpayerType
                             obj.subjectId = item.subjectId
-                            obj.subjectName = item.subject.subjectName
+                            obj.subjectName = item.subject.fullSubjectName,
                             obj.subjectExtraId = subjectExtraId
                             obj.trueSubjectId = item.trueSubjectId
                             obj.trueSubjectName = item.subject.trueSubjectName
                             obj.applicationAmount = item.applicationAmount
+                            obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
                             // 附加信息
                             if (!!item.extraMessage) {
                                 obj.extraMessage = JSON.parse(item.extraMessage)
@@ -1097,6 +1104,7 @@ Page({
         var index = e.currentTarget.dataset.index
         var tempData = clone(this.data.importList)
         tempData[index].applicationAmount = value
+        tempData[index].formatApplicationAmount = formatNumber(Number(value).toFixed(2))
         this.setData({
             importList: tempData
         })
@@ -1113,7 +1121,8 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                verificationAmount: borrowTotalAmount
+                verificationAmount: borrowTotalAmount,
+                formatVerificationAmount: formatNumber(Number(borrowTotalAmount).toFixed(2))
             }
         })
         return borrowTotalAmount
@@ -1128,7 +1137,8 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                applicationAmount:applicationAmount.toFixed(2)
+                applicationAmount:applicationAmount,
+                formatApplicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
             }
         })
         return applicationAmount
@@ -1143,7 +1153,8 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                totalAmount: totalAmount.toFixed(2)
+                totalAmount: totalAmount,
+                formatTotalAmount: formatNumber(Number(totalAmount).toFixed(2))
             }
         })
     },

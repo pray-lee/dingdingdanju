@@ -1,5 +1,6 @@
 var app = getApp()
 app.globalData.loadingCount = 0
+import {formatNumber} from '../../util/getErrorMessage'
 Page({
     data: {
         type: '',
@@ -66,9 +67,24 @@ Page({
             url: url,
             method: 'GET',
             success: res => {
-                console.log(res)
+                let arr = []
+                if(this.data.flag === 'J') {
+                    arr = res.data.rows.map(item => {
+                        return {
+                            ...item,
+                            amount: formatNumber(item.amount)
+                        }
+                    })
+                }else{
+                    arr = res.data.rows.map(item => {
+                        return {
+                            ...item,
+                            amount: formatNumber(item.totalAmount)
+                        }
+                    })
+                }
                 this.setData({
-                    list: res.data.rows,
+                    list: arr,
                 })
             },
             fail: res => {
@@ -98,8 +114,24 @@ Page({
             method: 'GET',
             success: res => {
                 console.log(res)
+                let arr = []
+                if(flag === 'J') {
+                    arr = res.data.rows.map(item => {
+                        return {
+                            ...item,
+                            amount: formatNumber(item.amount)
+                        }
+                    })
+                }else{
+                    arr = res.data.rows.map(item => {
+                        return {
+                            ...item,
+                            amount: formatNumber(item.totalAmount)
+                        }
+                    })
+                }
                 this.setData({
-                    list: res.data.rows
+                    list: arr
                 })
             },
             fail: res => {

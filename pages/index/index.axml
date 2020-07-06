@@ -4,17 +4,17 @@
             <view class="title">我的借款单</view>
             <!--      <view class="completed-bill" onTap="seeAll" data-type="jiekuanCompleted">查看已完成单据</view>-->
             <view class="main">
-                <view a:if="{{jiekuanList.length}}" onTap="goToEdit" data-id="{{jiekuanList[0].id}}" data-flag="J">
+                <view a:if="{{jiekuan}}" onTap="goToEdit" data-id="{{jiekuan.id}}" data-flag="J">
                     <view class="status error">
-                        <text>{{statusObj[jiekuanList[0].status]}}</text>
-                        <text class="billCode">{{jiekuanList[0].billCode}}</text>
+                        <text>{{statusObj[jiekuan.status]}}</text>
+                        <text class="billCode">{{jiekuan.billCode}}</text>
                     </view>
                     <view class="content">
-                        <text a:if="{{jiekuanList[0].remark}}" class="left">{{jiekuanList[0].remark}}</text>
+                        <text a:if="{{jiekuan.remark}}" class="left">{{jiekuan.remark}}</text>
                         <text a:else class="left">
                             [无备注]
                         </text>
-                        <text class="right">￥{{jiekuanList[0].amount}}</text>
+                        <text class="right">￥{{jiekuan.amount}}</text>
                     </view>
                 </view>
                 <view a:else>
@@ -51,17 +51,17 @@
         <view class="baoxiao-content">
             <view class="title">我的报销单</view>
             <view class="main">
-                <view a:if="{{baoxiaoList.length}}" onTap="goToEdit" data-id="{{baoxiaoList[0].id}}" data-flag="B">
+                <view a:if="{{baoxiao}}" onTap="goToEdit" data-id="{{baoxiao.id}}" data-flag="B">
                     <view class="status error">
-                        <text>{{statusObj[baoxiaoList[0].status]}}</text>
-                        <text class="billCode">{{baoxiaoList[0].billCode}}</text>
+                        <text>{{statusObj[baoxiao.status]}}</text>
+                        <text class="billCode">{{baoxiao.billCode}}</text>
                     </view>
                     <view class="content">
-                        <text a:if="{{baoxiaoList[0].remark}}" class="left">{{baoxiaoList[0].remark}}</text>
+                        <text a:if="{{baoxiao.remark}}" class="left">{{baoxiao.remark}}</text>
                         <text a:else class="left">
                             [无备注]
                         </text>
-                        <text class="right">￥{{baoxiaoList[0].totalAmount}}</text>
+                        <text class="right">￥{{baoxiao.totalAmount}}</text>
                     </view>
                 </view>
                 <view a:else>

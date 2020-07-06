@@ -1,6 +1,6 @@
 import moment from 'moment';
 import clone from "lodash/cloneDeep";
-import {getErrorMessage, submitSuccess, formatData} from "../../util/getErrorMessage";
+import {getErrorMessage, submitSuccess, formatNumber} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -14,6 +14,7 @@ Page({
         animationInfo: {},
         hesuanAnimationInfo: {},
         borrowAmount: '',
+        formBorrowAmount: '',
         remark: '',
         accountbookIndex: 0,
         accountbookList: [],
@@ -264,7 +265,7 @@ Page({
     onClick() {
         console.log('onClick')
     },
-    onAddShow() {
+    onAddShow(index) {
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'
@@ -275,10 +276,20 @@ Page({
             animationInfo: animation.export(),
             maskHidden: false
         })
-        this.setData({
-            borrowAmount: '',
-            remark: ''
-        })
+        console.log(index, 'onAddShow')
+        if(index >= 0) {
+            this.setData({
+                borrowAmount: this.data.submitData.billDetailListObj[index].borrowAmount,
+                formatBorrowAmount: formatNumber(this.data.submitData.billDetailListObj[index].borrowAmount),
+                remark: this.data.submitData.billDetailListObj[index].remark
+            })
+        }else{
+            this.setData({
+                borrowAmount: '',
+                formatBorrowAmount: '',
+                remark: ''
+            })
+        }
     },
     onAddHide() {
         var animation = dd.createAnimation({
@@ -391,7 +402,8 @@ Page({
         // 借款详情
         if (e.currentTarget.dataset.type === 'borrowAmount') {
             this.setData({
-                borrowAmount: formatData(e.detail.value)
+                borrowAmount: e.detail.value,
+                formBorrowAmountAmount: formatNumber(Number(e.detail.value).toFixed(2))
             })
         }
         // 备注
@@ -409,6 +421,16 @@ Page({
             }
         })
     },
+    editBorrowDetail(e) {
+        const index = e.currentTarget.dataset.index
+        dd.setStorage({
+            key: 'borrowAmountIndex',
+            data: index,
+            success: res => {
+                this.onAddShow(index)
+            }
+        })
+    },
     deleteBorrowDetail(e) {
         var borrowAmount = e.currentTarget.dataset.detail
         var billDetailListObj = this.data.submitData['billDetailListObj'].filter(item => {
@@ -419,7 +441,8 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 billDetailListObj,
-                amount: formatData(Number(this.data.submitData.amount) - Number(borrowAmount))
+                amount: Number(this.data.submitData.amount) - Number(borrowAmount),
+                formatAmount: formatNumber(Number(this.data.submitData.amount) - Number(borrowAmount))
             }
         })
     },
@@ -437,6 +460,7 @@ Page({
         })
     },
     handleAddBorrow() {
+        const borrowAmountIndex = dd.getStorageSync({key: 'borrowAmountIndex'}).data
         if (this.data.borrowAmount === '') {
             dd.alert({
                 content: '请输入借款金额',
@@ -448,9 +472,19 @@ Page({
         }
         var obj = {
             borrowAmount: this.data.borrowAmount,
+            formatBorrowAmount: formatNumber(Number(this.data.borrowAmount).toFixed(2)),
             remark: this.data.remark
         }
-        var billDetailListObj = this.data.submitData['billDetailListObj'].concat(obj)
+        var billDetailListObj = []
+        if(borrowAmountIndex != null) {
+            billDetailListObj = clone(this.data.submitData['billDetailListObj'])
+            billDetailListObj.splice(borrowAmountIndex, 1, obj)
+            dd.removeStorage({
+                key: 'borrowAmountIndex'
+            })
+        }else{
+            billDetailListObj = this.data.submitData['billDetailListObj'].concat(obj)
+        }
         // 借款合计
         var amount = 0
         billDetailListObj.forEach(item => {
@@ -460,7 +494,8 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 billDetailListObj,
-                amount: formatData(amount)
+                amount: amount,
+                formatAmount: formatNumber(Number(amount).toFixed(2))
             }
         })
         this.onAddHide()
@@ -1092,6 +1127,7 @@ Page({
             var billDetailListObj = data.billDetailList.map(item => {
                 return {
                     borrowAmount: item.borrowAmount,
+                    formatBorrowAmount: formatNumber(Number(item.borrowAmount).toFixed(2)),
                     remark: item.remark
                 }
             })
@@ -1154,6 +1190,7 @@ Page({
                 subjectName: data.subject.fullSubjectName,
                 businessDateTime: data.businessDateTime,
                 amount: data.amount.toFixed(2),
+                formatAmount: formatNumber(data.amount),
                 remark: data.remark,
                 status: data.status,
                 userName: app.globalData.realName,

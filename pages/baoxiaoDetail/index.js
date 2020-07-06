@@ -1,5 +1,6 @@
 import clone from "lodash/cloneDeep";
 import moment from "moment";
+import {formatNumber} from "../../util/getErrorMessage";
 
 const app = getApp()
 Page({
@@ -109,6 +110,9 @@ Page({
         var tempData = clone(this.data.baoxiaoDetail)
         var name = e.currentTarget.dataset.name
         tempData[name] = e.detail.value
+        if(name === 'applicationAmount') {
+            tempData['formatApplicationAmount'] = formatNumber(Number(e.detail.value).toFixed(2))
+        }
         this.setData({
             baoxiaoDetail: tempData,
         })

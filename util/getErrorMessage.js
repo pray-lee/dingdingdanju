@@ -12,15 +12,9 @@ const getErrorMessage = string => {
 
 const submitSuccess = () => {
     console.log('submit success...')
-    dd.alert({
-        content: '提交成功',
-        buttonText: '确定',
-        success: () => {
-            dd.navigateTo({
-                url: '/pages/index/index'
-            })
-        },
-    });
+    dd.navigateTo({
+        url: '/pages/index/index'
+    })
 }
 
 const loginFiled = (msg="") => {
@@ -35,40 +29,15 @@ const loginFiled = (msg="") => {
         },
     });
 }
-
-const formatData = (s, n) => {
-    s += "";
-    if (!s || isNaN(s) || s == "") {
-        return;
-    }
-    if (n === undefined) {
-        n = 2;
-    }
-    if (s.substr(0, 1) == "-") {
-        s = s.substr(1);
-        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
-        var l = s.split(".")[0].split("").reverse(),
-            r = s.split(".")[1];
-        t = "";
-        for (i = 0; i < l.length; i++) {
-            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
-        }
-        return "-" + t.split("").reverse().join("") + "." + r;
-    } else {
-        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
-        var l = s.split(".")[0].split("").reverse(),
-            r = s.split(".")[1];
-        t = "";
-        for (i = 0; i < l.length; i++) {
-            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
-        }
-        return t.split("").reverse().join("") + "." + r;
-    }
+const formatNumber = (num) => {
+    return num && num.toString().replace(/\d+/, function(s){
+            return s.replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+        })
 }
 
 export {
     getErrorMessage,
     submitSuccess,
     loginFiled,
-    formatData
+    formatNumber,
 }

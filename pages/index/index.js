@@ -1,4 +1,4 @@
-import {loginFiled} from "../../util/getErrorMessage";
+import {loginFiled, formatNumber} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -112,8 +112,10 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
+                const obj = res.data.rows[0]
+                obj.amount = formatNumber(obj.amount)
                 this.setData({
-                    jiekuanList: res.data.rows,
+                    jiekuan: obj,
                 })
                 this.hideLoading()
             }
@@ -126,8 +128,10 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
+                const obj = res.data.rows[0]
+                obj.totalAmount = formatNumber(obj.totalAmount)
                 this.setData({
-                    baoxiaoList: res.data.rows,
+                    baoxiao: obj,
                 })
                 this.hideLoading()
             }
