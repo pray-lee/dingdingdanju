@@ -211,6 +211,7 @@ Page({
                 submitData: {
                     ...this.data.submitData,
                     applicantType: 10,
+                    taxpayerType: this.data.accountbookList[value].taxpayerType,
                     applicationAmount: '',
                     totalAmount: '',
                     verificationAmount: ''
@@ -576,6 +577,7 @@ Page({
                         }
                     })
                 }
+                console.log(taxpayerType,' taxpayerType')
                 this.setData({
                     accountbookList: res.data,
                     accountbookIndex: accountbookIndex,
