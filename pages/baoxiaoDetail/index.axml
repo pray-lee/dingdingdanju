@@ -37,7 +37,7 @@
                 <view class="form-row-label">是否为专票</view>
                     <switch onChange="baoxiaoRadioChange" checked="{{baoxiaoDetail.invoiceType == 2}}" color="#1f76d8"/>
             </view>
-            <view class="form-line"/>
+            <view class="form-line" a:if="{{baoxiaoDetail.taxpayerType}}"/>
             <view class="form-row" a:if="{{baoxiaoDetail.invoiceType == 2}}">
                 <view class="form-row-label"><text class="require">*</text>税率</view>
                 <view class="form-row-content">

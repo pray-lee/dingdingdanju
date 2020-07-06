@@ -764,23 +764,31 @@ Page({
                 taxRate: '',
                 remark: '',
             }
-
-            return obj
         }
+        return obj
     },
     onAddBaoxiao() {
         var obj = this.generateBaseDetail()
         console.log(obj, 'obj')
-        dd.setStorage({
-            key: 'initBaoxiaoDetail',
-            data: obj,
-            success: res => {
-                console.log('写入报销详情成功...')
-                dd.navigateTo({
-                    url: '/pages/baoxiaoDetail/index'
-                })
-            }
-        })
+        if(!!obj) {
+            dd.setStorage({
+                key: 'initBaoxiaoDetail',
+                data: obj,
+                success: res => {
+                    console.log('写入报销详情成功...')
+                    dd.navigateTo({
+                        url: '/pages/baoxiaoDetail/index'
+                    })
+                }
+            })
+        }else{
+            dd.showToast({
+                type: 'none',
+                content: '当前账簿下没有费用类型',
+                success: () => {
+                },
+            });
+        }
     },
     // 请求编辑回显数据
     getEditData(id) {
@@ -1056,16 +1064,25 @@ Page({
             dataType: 'json',
             success: res => {
                 console.log(res, '借款单列表...')
-                dd.setStorage({
-                    key: 'tempImportList',
-                    data: res.data.rows,
-                    success: res => {
-                        console.log('写入成功，借款列表')
-                        dd.navigateTo({
-                            url: '/pages/importBorrowList/index'
-                        })
-                    }
-                });
+                if(res.data.rows.length) {
+                    dd.setStorage({
+                        key: 'tempImportList',
+                        data: res.data.rows,
+                        success: res => {
+                            console.log('写入成功，借款列表')
+                            dd.navigateTo({
+                                url: '/pages/importBorrowList/index'
+                            })
+                        }
+                    });
+                }else{
+                    dd.showToast({
+                        type: 'none',
+                        content: '未找到借款单',
+                        success: () => {
+                        },
+                    });
+                }
             }
         })
     },
