@@ -328,33 +328,37 @@ Page({
         }
     },
     submitBaoxiaoDetail() {
-        this.setData({
-            baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
-        })
-        const tempData = clone(this.data.baoxiaoArr)
-        tempData.forEach(item => {
-            item.trueSubjectId = item.subjectId
-            item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
-        })
-        console.log(tempData)
-        this.addLoading()
-        dd.setStorage({
-            key: 'newBaoxiaoDetailArr',
-            data: tempData,
-            success: res => {
-                this.hideLoading()
-                dd.navigateBack({
-                    delta: 1
-                })
-            }
+        setTimeout(() => {
+            this.setData({
+                baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+            })
+            const tempData = clone(this.data.baoxiaoArr)
+            tempData.forEach(item => {
+                item.trueSubjectId = item.subjectId
+                item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
+            })
+            console.log(tempData)
+            this.addLoading()
+            dd.setStorage({
+                key: 'newBaoxiaoDetailArr',
+                data: tempData,
+                success: res => {
+                    this.hideLoading()
+                    dd.navigateBack({
+                        delta: 1
+                    })
+                }
+            })
         })
     },
     addDetail() {
-        this.setData({
-            baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
-        })
-        this.setData({
-            baoxiaoDetail: dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
+        setTimeout(() => {
+            this.setData({
+                baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+            })
+            this.setData({
+                baoxiaoDetail: dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
+            })
         })
     },
     openExtraInfo(e) {
@@ -365,7 +369,6 @@ Page({
     },
     getExtraInfo(extraId) {
         this.addLoading()
-        // 接口有问题
         dd.httpRequest({
             url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
             method: 'GET',

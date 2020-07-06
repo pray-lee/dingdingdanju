@@ -61,7 +61,7 @@
                         <text a:else class="left">
                             [无备注]
                         </text>
-                        <text class="right">￥{{baoxiaoList[0].unpaidAmount}}</text>
+                        <text class="right">￥{{baoxiaoList[0].totalAmount}}</text>
                     </view>
                 </view>
                 <view a:else>

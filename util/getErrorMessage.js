@@ -36,8 +36,39 @@ const loginFiled = (msg="") => {
     });
 }
 
+const formatData = (s, n) => {
+    s += "";
+    if (!s || isNaN(s) || s == "") {
+        return;
+    }
+    if (n === undefined) {
+        n = 2;
+    }
+    if (s.substr(0, 1) == "-") {
+        s = s.substr(1);
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(),
+            r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return "-" + t.split("").reverse().join("") + "." + r;
+    } else {
+        s = parseFloat((s + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+        var l = s.split(".")[0].split("").reverse(),
+            r = s.split(".")[1];
+        t = "";
+        for (i = 0; i < l.length; i++) {
+            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
+        }
+        return t.split("").reverse().join("") + "." + r;
+    }
+}
+
 export {
     getErrorMessage,
     submitSuccess,
-    loginFiled
+    loginFiled,
+    formatData
 }

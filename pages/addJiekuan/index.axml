@@ -35,7 +35,7 @@
                 <view class="form-row" onTap="goInfoList">
                     <view class="form-row-label"><text class="require">*</text>收款信息</view>
                     <view class="form-row-content borrowList-wrapper">
-                        <view a:if="{{borrowIndex}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}</view>
+                        <view a:if="{{borrowIndex >= 0}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}</view>
                         <view a:else class="mock-input nodata">请选择收款人</view>
                     </view>
                     <block a:if="{{submitData.incomeBankAccount}}">
@@ -138,7 +138,8 @@
                     <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
                         <view class="form-row">
                             <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
-                            <view class="form-row-content">{{item.name}}</view>
+
+                            <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
                             <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
                                 <image src="{{item.uri}}" class="img"></image>
                             </view>
@@ -156,9 +157,12 @@
                         借款合计：</text><text class="total-word">{{submitData.amount == 0 ? '0.00' : submitData.amount}}</text></view>
             </view>
         </scroll-view>
-        <view class="btn-area">
+        <view class="btn-area" a:if="{{!disabled}}">
             <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
             <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
+        </view>
+        <view class="btn-area" a:else>
+            <button onTap="goBack" class="submit-btn">返回</button>
         </view>
     </form>
 <!--增加借款弹框-->
@@ -180,5 +184,4 @@
         <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
-    <view class="disabled" hidden="{{disabled}}" onTap="onDisabled"></disabled>
 </view>

@@ -11,8 +11,8 @@
                 <view class="content">
                     <text a:if="{{!!item.remark}}">{{item.remark}}</text>
                     <text a:else>[无备注]</text>
-                    <text class="right" a:if="{{type.indexOf('jiekuan') != -1}}">￥{{item.amount}}</text>
-                    <text a:else class="right">￥{{item.unpaidAmount}}</text>
+                    <text class="right" a:if="{{type.indexOf('J') != -1}}">￥{{item.amount}}</text>
+                    <text a:else class="right">￥{{item.totalAmount}}</text>
                 </view>
                 <view class="bill-number">
                     <text class="bill-number-span">单据编号</text>

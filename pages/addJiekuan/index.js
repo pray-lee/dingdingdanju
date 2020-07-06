@@ -1,6 +1,6 @@
 import moment from 'moment';
 import clone from "lodash/cloneDeep";
-import {getErrorMessage, submitSuccess} from "../../util/getErrorMessage";
+import {getErrorMessage, submitSuccess, formatData} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -9,7 +9,7 @@ Page({
         type: '',
         billId: '',
         maskHidden: true,
-        disabled: true,
+        disabled: false,
         hesuanMaskHidden: true,
         animationInfo: {},
         hesuanAnimationInfo: {},
@@ -295,6 +295,7 @@ Page({
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
+        console.log(borrowId, '---------------')
         if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
             var borrowIndex = null
@@ -390,7 +391,7 @@ Page({
         // 借款详情
         if (e.currentTarget.dataset.type === 'borrowAmount') {
             this.setData({
-                borrowAmount: e.detail.value
+                borrowAmount: formatData(e.detail.value)
             })
         }
         // 备注
@@ -418,7 +419,7 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 billDetailListObj,
-                amount: (Number(this.data.submitData.amount) - Number(borrowAmount)).toFixed(2)
+                amount: formatData(Number(this.data.submitData.amount) - Number(borrowAmount))
             }
         })
     },
@@ -459,14 +460,14 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 billDetailListObj,
-                amount: amount.toFixed(2)
+                amount: formatData(amount)
             }
         })
         this.onAddHide()
     },
     handleUpload() {
         dd.chooseImage({
-            count: 6,
+            count: 9,
             success: res => {
                 this.uploadFile(res.filePaths)
             },
@@ -1061,13 +1062,18 @@ Page({
     setDisabled(status) {
        if(status == 10 || status == 25) {
             this.setData({
-                disabled: true
+                disabled: false
             })
        }else{
            this.setData({
-               disabled: false
+               disabled: true
            })
        }
+    },
+    goBack() {
+        dd.navigateBack({
+            delta: 1
+        })
     },
     onDisabled() {
         dd.showToast({

@@ -164,19 +164,29 @@ Page({
         this.setApplicationAmount()
     },
     deleteExtra(e) {
-        this.clearScrollView()
-        var idx = e.currentTarget.dataset.index
-        var tempData = clone(this.data.baoxiaoDetail)
-        if(tempData.extraList.length <= 1) {
-            return
-        }
-        tempData.extraMessage = tempData.extraMessage.filter((item, index) => index != idx)
-        tempData.extraList = tempData.extraList.filter((item, index) => index != idx)
-        this.setData({
-            baoxiaoDetail: tempData
-        })
-        this.setScrollView(idx + 1)
-        this.setApplicationAmount()
+        dd.confirm({
+            title: '温馨提示',
+            content: '是否删除当前附加信息?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: (result) => {
+                if(result.confirm) {
+                    this.clearScrollView()
+                    var idx = e.currentTarget.dataset.index
+                    var tempData = clone(this.data.baoxiaoDetail)
+                    if(tempData.extraList.length <= 1) {
+                        return
+                    }
+                    tempData.extraMessage = tempData.extraMessage.filter((item, index) => index != idx)
+                    tempData.extraList = tempData.extraList.filter((item, index) => index != idx)
+                    this.setData({
+                        baoxiaoDetail: tempData
+                    })
+                    this.setScrollView(idx + 1)
+                    this.setApplicationAmount()
+                }
+            },
+        });
     },
     setApplicationAmount() {
         let applicationAmount = 0

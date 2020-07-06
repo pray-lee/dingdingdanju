@@ -6,7 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
-        disabled: true,
+        disabled: false,
         type: '',
         billId: '',
         borrowAmount: '',
@@ -121,6 +121,7 @@ Page({
         }
     },
     formSubmit(e) {
+        const status = e.currentTarget.dataset.status
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -401,9 +402,15 @@ Page({
             }
         })
     },
+    previewFile(e) {
+        var url = e.currentTarget.dataset.url
+        dd.previewImage({
+            urls: [url],
+        })
+    },
     handleUpload() {
         dd.chooseImage({
-            count: 6,
+            count: 9,
             success: res => {
                 console.log(res)
                 this.uploadFile(res.filePaths)
@@ -763,7 +770,7 @@ Page({
                 taxRageObject: clone(newTaxRageObj),
                 taxRageArr: clone(newTaxRageObj).taxRageArr,
                 taxRageIndex: clone(newTaxRageObj).taxRageIndex,
-                taxRate: '',
+                taxRate: taxpayerType == 2 ? clone(newTaxRageObj).taxRageArr[0].id : '',
                 remark: '',
             }
         }
@@ -819,21 +826,18 @@ Page({
     setDisabled(status) {
         if(status == 10 || status == 25) {
             this.setData({
-                disabled: true
+                disabled: false
             })
         }else{
             this.setData({
-                disabled: false
+                disabled: true
             })
         }
     },
-    onDisabled() {
-        dd.showToast({
-            type: 'none',
-            content: '当前单据状态不可被编辑',
-            success: () => {
-            },
-        });
+    goBack(){
+        dd.navigateBack({
+            delta: 1
+        })
     },
     // 回显数据设置
     setRenderData(data) {
@@ -1080,7 +1084,7 @@ Page({
                 }else{
                     dd.showToast({
                         type: 'none',
-                        content: '未找到借款单',
+                        content: '没有需要核销的借款',
                         success: () => {
                         },
                     });
@@ -1139,7 +1143,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                totalAmount
+                totalAmount: totalAmount.toFixed(2)
             }
         })
     },

@@ -32,6 +32,7 @@
   left:0;
   z-index:999;
   width: 100%;
+  border-top: 1px solid #f1f1f1
 }
 .btn-area button{
   width: 100%;
@@ -61,7 +62,7 @@
 }
 .total{
   display:flex;
-  z-index:9999;
+  z-index:999;
   justify-content: space-between;
   align-items: baseline;
   padding: 40rpx;
@@ -71,8 +72,7 @@
   left:0;
   width: 100%;
   box-sizing:border-box;
-  border: 1rpx solid #ddd;
-  /*padding-top: 20rpx;*/
+  border-bottom: 1rpx solid #ddd;
 }
 .btn-area .save-draft{
   background:#fff;
@@ -85,21 +85,33 @@
   vertical-align: top;
 }
 .block-wrapper{
-  margin-bottom: 20rpx;
   background:#fff;
-  padding-top: 34rpx;
 }
 .title{
   margin:0 40rpx;
-  border-left: 4rpx solid #1f65d8;
-  padding-left: 14rpx;
-  font-size: 30rpx;
-  font-weight:600
+  padding: 20rpx 20rpx 20rpx 0;
+  font-size: 24rpx;
+  color:#999
 }
 .add-icon{
-  width: 42rpx;
-  height: 42rpx;
-  margin-right: 20rpx;
+  background:url(../images/add-icon.png) left center no-repeat;
+  background-size: 40rpx 40rpx;
+}
+.add-icon, .copy-icon, .delete-icon{
+  font-size:28rpx;
+  padding-left: 50rpx;
+  color:#1f65d8;
+  line-height: 40rpx;
+  height:40rpx;
+}
+.copy-icon{
+  background:url(../images/copy.png) left center no-repeat;
+  background-size: 40rpx 40rpx;
+}
+.delete-icon{
+  width: auto !important;
+  background:url(../images/delete.png) left center no-repeat;
+  background-size: 40rpx 40rpx;
 }
 .operate-area{
   display:flex;

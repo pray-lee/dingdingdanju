@@ -10,16 +10,18 @@
     height: calc(100vh - 120rpx)
 }
 .block-wrapper{
-    margin-bottom: 20rpx;
     background:#fff;
-    padding-top: 34rpx;
 }
 .title{
     margin:0 40rpx;
-    border-left: 4rpx solid #1f65d8;
+    padding: 20rpx 20rpx 20rpx 0;
+    font-size: 24rpx;
+    color:#999
+}
+.special-title{
+    font-size: 28rpx;
     padding-left: 14rpx;
-    font-size: 30rpx;
-    font-weight:600
+    color:#333;
 }
 .btn-area{
     display:flex;
@@ -164,7 +166,7 @@ input::-webkit-input-placeholder{
     justify-content: space-between;
 }
 .submit-info-wrapper{
-    padding-bottom: 34rpx
+    padding: 34rpx 0
 }
 .submit-info, .total{
     font-weight: 600
@@ -242,4 +244,9 @@ input::-webkit-input-placeholder{
     bottom:0;
     margin:auto;
     z-index: 9999
+}
+.tips{
+    padding:15rpx 40rpx;
+    color:#999;
+    font-size:22rpx;
 }

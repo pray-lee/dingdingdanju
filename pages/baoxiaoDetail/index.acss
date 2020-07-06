@@ -54,16 +54,22 @@
     z-index: 1000
 }
 .block-wrapper{
-    margin-bottom: 20rpx;
     background:#fff;
-    padding-top: 34rpx;
+}
+.mock-input{
+    height: 44rpx;
+    line-height: 44rpx;
+    width: 100%;
+    color:#333;
+}
+.mock-input.nodata{
+    color:#c7c7cd
 }
 .title{
     margin:0 40rpx;
-    border-left: 4rpx solid #1f65d8;
-    padding-left: 14rpx;
-    font-size: 30rpx;
-    font-weight:600
+    padding: 20rpx 20rpx 20rpx 0;
+    font-size: 24rpx;
+    color:#999
 }
 .invoice-wrapper{
     display:flex;
@@ -74,7 +80,7 @@
     height: 47rpx;
     position:absolute;
     right: 40rpx;
-    top:40rpx
+    top:80rpx
 }
 .auxpty-wrapper{
     padding: .1rem 0;
