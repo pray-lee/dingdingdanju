@@ -1,10 +1,11 @@
 import moment from "moment";
 import clone from "lodash/cloneDeep";
-import {formatNumber} from "../../util/getErrorMessage";
+import {formatNumber, validFn} from "../../util/getErrorMessage";
 
 const app = getApp()
 Page({
     data: {
+        btnHidden: false,
         baoxiaoDetail: {},
         scrollId: "",
         extraList: [],
@@ -24,7 +25,7 @@ Page({
                         this.setData({
                             baoxiaoDetail: res1.data
                         })
-                        if(!res1.data.extraList.length){
+                        if (!res1.data.extraList.length) {
                             this.onAddExtra()
                         }
                     }
@@ -32,8 +33,9 @@ Page({
             }
         })
     },
-    onShow() {},
-    setScrollView(id){
+    onShow() {
+    },
+    setScrollView(id) {
         console.log(id)
         this.setData({
             scrollId: id.toString()
@@ -45,41 +47,49 @@ Page({
         })
     },
     onAddExtra(e) {
-        setTimeout(() => {
-            this.clearScrollView()
-            let index = null
-            if(!!e) {
-                index = e.currentTarget.dataset.index
+        this.clearScrollView()
+        let index = null
+        if (!!e) {
+            index = e.currentTarget.dataset.index
+            // 校验
+            const validSuccess = this.valid(this.data.baoxiaoDetail, index)
+            if(!validSuccess) {
+                return false
             }
-            if (this.data.subjectExtraConf) {
-                var obj = this.generateExtraList(this.data.subjectExtraConf)
-                var tempData = clone(this.data.baoxiaoDetail)
-                if(!index && index !== 0) {
-                    tempData.extraList.push({conf: obj.array})
-                    tempData.extraMessage.push(obj.extraMessage)
-                }else{
-                    tempData.extraList.splice(index + 1, 0, {conf:obj.array})
-                    tempData.extraMessage.splice(index + 1, 0, obj.extraMessage)
+        }
+        if (this.data.subjectExtraConf) {
+            var obj = this.generateExtraList(this.data.subjectExtraConf)
+            var tempData = clone(this.data.baoxiaoDetail)
+            if (!index && index !== 0) {
+                tempData.extraList.push({conf: obj.array})
+                tempData.extraMessage.push(obj.extraMessage)
+            } else {
+                tempData.extraList.splice(index + 1, 0, {conf: obj.array})
+                tempData.extraMessage.splice(index + 1, 0, obj.extraMessage)
+            }
+            this.setData({
+                baoxiaoDetail: tempData
+            })
+            // 看哪一个是附加信息金额
+            this.data.baoxiaoDetail.extraList[0].conf.forEach((item, index) => {
+                if (item.field == '金额') {
+                    app.globalData.caculateIndex = index
                 }
-                this.setData({
-                    baoxiaoDetail: tempData
-                })
-                // 看哪一个是附加信息金额
-                this.data.baoxiaoDetail.extraList[0].conf.forEach((item,index) => {
-                    if(item.field == '金额') {
-                        app.globalData.caculateIndex = index
-                    }
-                })
-                this.setScrollView(index + 2)
-            }
-        })
+            })
+            this.setScrollView(index + 2)
+        }
     },
     onCopyExtra(e) {
+        // 校验
         this.clearScrollView()
         const index = e.currentTarget.dataset.index
+        const validSuccess = this.valid(this.data.baoxiaoDetail, index)
+        if(!validSuccess) {
+            return false
+        }
         const obj = this.generateExtraList(this.data.subjectExtraConf)
         const baoxiaoDetail = clone(this.data.baoxiaoDetail)
-        baoxiaoDetail.extraList.splice(index + 1, 0, {conf:obj.array})
+        baoxiaoDetail.extraList.splice(index + 1, 0, {conf: obj.array})
         baoxiaoDetail.extraMessage.splice(index + 1, 0, baoxiaoDetail.extraMessage[index])
         this.setData({
             baoxiaoDetail
@@ -117,11 +127,6 @@ Page({
             format: 'yyyy-MM-dd',
             currentDate: moment().format('YYYY-MM-DD'),
             success: (res) => {
-                // var tempData = this.data.extraMessage.concat()
-                // tempData[extraIndex][idx] = res.date
-                // this.setData({
-                //     extraMessage: tempData
-                // })
                 var tempData = clone(this.data.baoxiaoDetail)
                 if (!!res.date) {
                     tempData.extraMessage[extraIdx][idx] = res.date
@@ -158,7 +163,7 @@ Page({
         tempData.extraMessage[extraIdx][idx] = e.detail.value
         // 算附加信息金额
         const field = tempData.extraList[extraIdx].conf[idx].field
-        if(field == '金额') {
+        if (field == '金额') {
             app.globalData.caculateIndex = idx
         }
         this.setData({
@@ -173,11 +178,11 @@ Page({
             confirmButtonText: '是',
             cancelButtonText: '否',
             success: (result) => {
-                if(result.confirm) {
+                if (result.confirm) {
                     this.clearScrollView()
                     var idx = e.currentTarget.dataset.index
                     var tempData = clone(this.data.baoxiaoDetail)
-                    if(tempData.extraList.length <= 1) {
+                    if (tempData.extraList.length <= 1) {
                         return
                     }
                     tempData.extraMessage = tempData.extraMessage.filter((item, index) => index != idx)
@@ -197,9 +202,9 @@ Page({
             applicationAmount += Number(item[app.globalData.caculateIndex])
         })
         this.setData({
-            baoxiaoDetail:{
+            baoxiaoDetail: {
                 ...this.data.baoxiaoDetail,
-                applicationAmount:applicationAmount.toFixed(2),
+                applicationAmount: applicationAmount.toFixed(2),
                 formatApplicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
             }
         })
@@ -210,9 +215,12 @@ Page({
         this.addLoading()
         this.setApplicationAmount()
         var tempData = clone(this.data.baoxiaoDetail)
-        console.log(tempData, 'tempDasta')
-        let applicationAmount = 0
         tempData.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
+        for(let i = 0; i < tempData.extraMessage.length; i++) {
+            if (!this.valid(tempData, i)) {
+               return
+            }
+        }
         dd.setStorage({
             key: 'baoxiaoDetail',
             data: tempData,
@@ -238,4 +246,25 @@ Page({
             dd.hideLoading()
         }
     },
+    valid(obj, index) {
+        const array = obj.extraMessage[index]
+        const conf = obj.extraList[0].conf
+        for(let i = 0; i < array.length; i++) {
+            if(array[i] == '') {
+                validFn(`请输入详情${index+1}的${conf[i].field}`)
+                return false
+            }
+        }
+        return true
+    },
+    onKeyboardShow() {
+        this.setData({
+            btnHidden: true
+        })
+    },
+    onKeyboardHide() {
+        this.setData({
+            btnHidden: false
+        })
+    }
 })

@@ -1,10 +1,11 @@
 import clone from "lodash/cloneDeep";
 import moment from "moment";
-import {formatNumber} from "../../util/getErrorMessage";
+import {formatNumber, validFn} from "../../util/getErrorMessage";
 
 const app = getApp()
 Page({
     data: {
+        btnHidden: false,
         baoxiaoDetail: {},
         baoxiaoArr: [],
     },
@@ -12,12 +13,12 @@ Page({
         const isEdit = dd.getStorageSync({key: 'edit'}).data
         const initBaoxiaoDetail = dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
         const baoxiaoDetail = dd.getStorageSync({key: 'baoxiaoDetail'}).data
-        if(!baoxiaoDetail) {
+        if (!baoxiaoDetail) {
             this.setData({
                 baoxiaoDetail: initBaoxiaoDetail
             })
-        }else{
-            if(isEdit) {
+        } else {
+            if (isEdit) {
                 this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId)
                 dd.removeStorage({
                     key: 'edit',
@@ -28,7 +29,7 @@ Page({
             }
             this.setData({
                 baoxiaoDetail: baoxiaoDetail
-           })
+            })
         }
         console.log('onLoad')
     },
@@ -57,7 +58,7 @@ Page({
     getAuxptyIdFromStorage() {
         // 从缓存里获取auxpty
         const auxpty = dd.getStorageSync({key: 'auxpty'}).data
-        if(!!auxpty){
+        if (!!auxpty) {
             this.setSelectedAuxpty(auxpty)
             dd.removeStorage({
                 key: 'auxpty'
@@ -67,7 +68,7 @@ Page({
     getSubjectIdFromStorage() {
         // 从缓存里获取科目id
         const subject = dd.getStorageSync({key: 'subject'}).data
-        if(!!subject && subject !== null) {
+        if (!!subject && subject !== null) {
             this.setData({
                 baoxiaoDetail: {
                     ...this.data.baoxiaoDetail,
@@ -76,7 +77,8 @@ Page({
                     subjectExtraId: subject.subjectExtraId,
                     subjectName: subject.name,
                     billDetailTrueApEntityListObj: [],
-                    billDetailApEntityListObj: []
+                    billDetailApEntityListObj: [],
+                    applicationAmount: '',
                 }
             })
             dd.removeStorage({
@@ -94,7 +96,7 @@ Page({
         const baoxiaoDetail = dd.getStorageSync({
             key: 'baoxiaoDetail',
         }).data
-        if(!!baoxiaoDetail) {
+        if (!!baoxiaoDetail) {
             this.setData({
                 baoxiaoDetail
             })
@@ -110,7 +112,7 @@ Page({
         var tempData = clone(this.data.baoxiaoDetail)
         var name = e.currentTarget.dataset.name
         tempData[name] = e.detail.value
-        if(name === 'applicationAmount') {
+        if (name === 'applicationAmount') {
             tempData['formatApplicationAmount'] = formatNumber(Number(e.detail.value).toFixed(2))
         }
         this.setData({
@@ -125,7 +127,8 @@ Page({
             baoxiaoItem.taxRageArr = baoxiaoItem.taxRageObject.taxRageArr
             baoxiaoItem.taxRageIndex = 0
             baoxiaoItem.taxRate = baoxiaoItem.taxRageObject.taxRageArr[0].id
-            this.setData({ baoxiaoDetail: baoxiaoItem
+            this.setData({
+                baoxiaoDetail: baoxiaoItem
             })
         } else {
             baoxiaoItem.taxRageArr = []
@@ -170,7 +173,7 @@ Page({
                     arr.forEach(item => {
                         this.getAuxptyList(accountbookId, item.auxptyId)
                     })
-                }else{
+                } else {
                     this.setData({
                         baoxiaoDetail: {
                             ...this.data.baoxiaoDetail,
@@ -211,20 +214,20 @@ Page({
                 })
                 // 设置默认值
                 let index = null
-                if(auxptyid == 1) {
+                if (auxptyid == 1) {
                     // 部门
                     index = this.setInitIndex(newObj, this.data.baoxiaoDetail.submitterDepartmentId)
                 }
-                if(auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10){
+                if (auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
                     index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
                 }
-                if(auxptyid == 3 && this.data.baoxiaoDetail.baoxiaoDetailype == 20) {
+                if (auxptyid == 3 && this.data.baoxiaoDetail.baoxiaoDetailype == 20) {
                     index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
                 }
-                if(auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
+                if (auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
                     index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
                 }
-                if(index!==null) {
+                if (index !== null) {
                     this.setSelectedAuxpty(newObj[index])
                 }
                 this.hideLoading()
@@ -234,12 +237,12 @@ Page({
     setSelectedAuxpty(auxpty) {
         this.setData({
             baoxiaoDetail: {
-               ...this.data.baoxiaoDetail,
+                ...this.data.baoxiaoDetail,
                 selectedAuxpty: {
                     ...this.data.baoxiaoDetail.selectedAuxpty,
                     [auxpty.auxptyId]: {
                         id: auxpty.id,
-                        name:auxpty.name,
+                        name: auxpty.name,
                         auxptyId: auxpty.auxptyId
                     }
                 }
@@ -261,7 +264,7 @@ Page({
     setInitIndex(newObj, id) {
         let initIndex = 0
         newObj.forEach((item, index) => {
-            if(item.id === id) {
+            if (item.id === id) {
                 initIndex = index
             }
         })
@@ -332,7 +335,8 @@ Page({
         }
     },
     submitBaoxiaoDetail() {
-        setTimeout(() => {
+        const validSuccess = this.valid(this.data.baoxiaoDetail)
+        if(validSuccess) {
             this.setData({
                 baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
             })
@@ -341,7 +345,6 @@ Page({
                 item.trueSubjectId = item.subjectId
                 item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
             })
-            console.log(tempData)
             this.addLoading()
             dd.setStorage({
                 key: 'newBaoxiaoDetailArr',
@@ -353,17 +356,18 @@ Page({
                     })
                 }
             })
-        })
+        }
     },
     addDetail() {
-        setTimeout(() => {
+        const validSuccess = this.valid(this.data.baoxiaoDetail)
+        if (validSuccess) {
             this.setData({
                 baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
             })
             this.setData({
                 baoxiaoDetail: dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
             })
-        })
+        }
     },
     openExtraInfo(e) {
         var extraId = e.currentTarget.dataset.extraId
@@ -425,6 +429,27 @@ Page({
                     url: '/pages/auxptyPage/index'
                 })
             }
+        })
+    },
+    valid(obj) {
+        if (!obj.subjectId) {
+            validFn('请选择费用类型')
+            return false
+        }
+        if (Number(obj.applicationAmount) <= 0) {
+            validFn('申请报销金额为空')
+            return false
+        }
+        return true
+    },
+    onKeyboardShow() {
+        this.setData({
+            btnHidden: true
+        })
+    },
+    onKeyboardHide() {
+        this.setData({
+            btnHidden: false
         })
     }
 })

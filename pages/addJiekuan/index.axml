@@ -127,7 +127,7 @@
                         </view>
                         <view class="form-line"/></view>
                 </view>
-                <view class="add-borrow" onTap="onAddShow">
+                <view class="add-borrow" onTap="onAddShow" hidden="{{btnHidden}}">
                     <view class="add-borrow-btn">添加借款金额</view>
                 </view>
             </view>
@@ -157,7 +157,7 @@
                         借款合计：</text><text class="total-word">{{submitData.formatAmount}}</text></view>
             </view>
         </scroll-view>
-        <view class="btn-area" a:if="{{!disabled}}">
+        <view class="btn-area" a:if="{{!disabled}}" hidden="{{btnHidden}}">
             <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
             <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
         </view>
@@ -181,7 +181,7 @@
             </view>
         </view>
         <view class="form-line"/>
-        <view class="borrow-submit" onTap="handleAddBorrow">添加</view>
+        <view class="borrow-submit" onTap="handleAddBorrow" hidden="{{btnHidden}}">添加</view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

@@ -12,7 +12,7 @@
                     <view class="content">
                         <text a:if="{{jiekuan.remark}}" class="left">{{jiekuan.remark}}</text>
                         <text a:else class="left">
-                            [无备注]
+                            [无事由]
                         </text>
                         <text class="right">￥{{jiekuan.amount}}</text>
                     </view>
@@ -23,7 +23,7 @@
                         <text class="billCode">单据编号</text>
                     </view>
                     <view class="content">
-                        <text class="left">备注</text>
+                        <text class="left">事由</text>
                         <text class="right">￥0.00</text>
                     </view>
                 </view>
@@ -59,7 +59,7 @@
                     <view class="content">
                         <text a:if="{{baoxiao.remark}}" class="left">{{baoxiao.remark}}</text>
                         <text a:else class="left">
-                            [无备注]
+                            [无事由]
                         </text>
                         <text class="right">￥{{baoxiao.totalAmount}}</text>
                     </view>
@@ -70,7 +70,7 @@
                         <text class="billCode">单据编号</text>
                     </view>
                     <view class="content">
-                        <text class="left">备注</text>
+                        <text class="left">事由</text>
                         <text class="right">￥0.00</text>
                     </view>
                 </view>

@@ -36,7 +36,7 @@
             </view>
             <view class="form-line"/>
             <view class="form-row invoice-wrapper" a:if="{{baoxiaoDetail.taxpayerType == 2}}">
-                <view class="form-row-label">是否为专票</view>
+                <view class="form-row-label"><text class="require">*</text>是否为专票</view>
                     <switch onChange="baoxiaoRadioChange" checked="{{baoxiaoDetail.invoiceType == 2}}" color="#1f76d8"/>
             </view>
             <view class="form-line" a:if="{{baoxiaoDetail.taxpayerType == 2}}"/>
@@ -59,7 +59,7 @@
         </view>
 
     </scroll-view>
-    <view class="btn-area">
+    <view class="btn-area" hidden="{{btnHidden}}">
         <button onTap="addDetail" class="submit-btn save-draft">再加一笔</button>
         <button onTap="submitBaoxiaoDetail" class="submit-btn">保存报销</button>
     </view>

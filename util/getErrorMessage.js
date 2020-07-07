@@ -35,9 +35,17 @@ const formatNumber = (num) => {
         })
 }
 
+const validFn = message => {
+    dd.showToast({
+        type: 'none',
+        content: message
+    })
+}
+
 export {
     getErrorMessage,
     submitSuccess,
     loginFiled,
     formatNumber,
+    validFn
 }

@@ -82,8 +82,6 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>业务日期</view>
                     <view class="form-row-content">
-                        <!--                    <input class="input businessTime" placeholder="业务日期" onFocus="onBusinessFocus"-->
-                        <!--                           value="{{submitData.businessDateTime}}" data-name="businessDateTime" onBlur="onBlur"/>-->
                         <view onTap="onBusinessFocus" data-name="businessDateTime">{{submitData.businessDateTime}}</view>
                     </view>
                     <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
@@ -91,18 +89,6 @@
                 <view class="form-line"/>
                 <view class="form-row invoice-wrapper">
                     <view class="form-row-label">是否有发票</view>
-                    <!--                 <view class="form-row-content"> -->
-                    <!--                     <radio-group data-name="invoice" onChange="radioChange"> -->
-                    <!--                         <label class="radio"> -->
-                    <!--                             <radio value="1" checked="{{submitData.invoice == 1}}"></radio> -->
-                    <!--                             是 -->
-                    <!--                         </label> -->
-                    <!--                         <label class="radio"> -->
-                    <!--                             <radio value="0" checked="{{submitData.invoice == 0}}" class="radio-control"></radio> -->
-                    <!--                             否 -->
-                    <!--                         </label> -->
-                    <!--                     </radio-group> -->
-                    <!--                 </view> -->
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
@@ -121,7 +107,7 @@
                                 <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
                                 <view class="remark-content" a:else>无</view>
                             </view>
-                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item.applicationAmount}}</view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}</view>
                         </view>
                     </view>
                 </view>
@@ -140,7 +126,7 @@
                             <view class="delete-borrow" onTap="deleteBorrowDetail"
                                   data-id="{{item.billDetailId}}"></view>
                             <view class="form-row-content special-content">
-                                <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" data-index="{{index}}"/>
+                                <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" onBlur="borrowBlur" data-index="{{index}}"/>
                                 <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
                             </view>
                             <view class="borrow-line"></view>
@@ -192,7 +178,7 @@
 <!--                </view>-->
             </view>
         </scroll-view>
-        <view class="btn-area" a:if="{{!disabled}}">
+        <view class="btn-area" a:if="{{!disabled}}" hidden="{{btnHidden}}">
             <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
             <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
         </view>

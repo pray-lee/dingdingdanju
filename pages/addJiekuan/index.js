@@ -9,6 +9,7 @@ Page({
         type: '',
         billId: '',
         maskHidden: true,
+        btnHidden: false,
         disabled: false,
         hesuanMaskHidden: true,
         animationInfo: {},
@@ -1224,6 +1225,16 @@ Page({
                     url: '/pages/auxptyPage/index'
                 })
             }
+        })
+    },
+    onKeyboardShow() {
+        this.setData({
+            btnHidden: true
+        })
+    },
+    onKeyboardHide() {
+        this.setData({
+            btnHidden: false
         })
     }
 })

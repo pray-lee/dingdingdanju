@@ -18,11 +18,11 @@ Page({
     },
     onCheckboxSubmit(e) {
         var arr = e.detail.value
-        console.log(arr)
         var newArr = []
         for (var i in arr) {
             if (arr[i].length) {
                 var temp = {
+                    ...arr[i][0],
                     billDetailId: arr[i][0].id,
                     applicationAmount: arr[i][0].unverifyAmount,
                     remark: arr[i][0].remark

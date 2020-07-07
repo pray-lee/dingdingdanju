@@ -253,7 +253,7 @@ input::-webkit-input-placeholder{
 .form-row .baoxiaoDetail-left{
     text-align:left;
     height: auto;
-    flex: 5;
+    flex: 2;
     padding-left: 60rpx;
 }
 .form-row .baoxiaoDetail-right{

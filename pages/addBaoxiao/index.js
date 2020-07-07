@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        btnHidden: false,
         disabled: false,
         type: '',
         billId: '',
@@ -303,10 +304,12 @@ Page({
                 const importList = res.data
                 if (!!importList && importList.length) {
                     console.log('获取选择的借款列表成功', importList)
+                    const newImportList = this.caculateImportList(importList)
+                    console.log(newImportList, 'newImportList')
                     this.setData({
-                        importList
+                        importList: newImportList
                     })
-                    this.setBorrowAmount(importList)
+                    this.setBorrowAmount(newImportList)
                     this.setTotalAmount()
                 }
             }
@@ -317,6 +320,27 @@ Page({
                 console.log('清除imoprtList成功...')
             }
         })
+    },
+    caculateImportList(importList) {
+        let totalApplicationAmount = Number(this.data.submitData.applicationAmount)
+        const newImportList = importList.map(item => {
+            let applicationAmount = totalApplicationAmount - Number(item.applicationAmount)
+            if(applicationAmount <= 0 && totalApplicationAmount > 0) {
+                applicationAmount = totalApplicationAmount
+                totalApplicationAmount = 0
+            }else if(applicationAmount <= 0 && totalApplicationAmount <= 0){
+                applicationAmount = 0
+                totalApplicationAmount = 0
+            }else{
+                applicationAmount = item.applicationAmount
+                totalApplicationAmount = totalApplicationAmount - Number(item.applicationAmount)
+            }
+            return {
+                ...item,
+                applicationAmount
+            }
+        })
+        return newImportList
     },
     getBaoxiaoDetailFromStorage() {
         const index = dd.getStorageSync({key: 'index'}).data
@@ -1071,8 +1095,9 @@ Page({
         })
     },
     getImportBorrowList() {
+        const invoice = this.data.submitData.invoice == 0 ? 1 : 0
         dd.httpRequest({
-            url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + this.data.submitData.invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
+            url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
             method: 'GET',
             dataType: 'json',
             success: res => {
@@ -1089,6 +1114,11 @@ Page({
                         }
                     });
                 }else{
+                    dd.setStorage({
+                        key: 'tempImportList',
+                        data: [],
+                        success: () =>{}
+                    })
                     dd.showToast({
                         type: 'none',
                         content: '没有需要核销的借款',
@@ -1099,16 +1129,22 @@ Page({
             }
         })
     },
+    borrowBlur(e) {
+        console.log(this.data.importList, 'borrowBlur........')
+    },
     borrowInput(e) {
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         var tempData = clone(this.data.importList)
+        if(this.data.importList[index])
+        // 本次核销金额
         tempData[index].applicationAmount = value
         tempData[index].formatApplicationAmount = formatNumber(Number(value).toFixed(2))
+        const newImportList = this.caculateImportList(tempData)
         this.setData({
-            importList: tempData
+            importList: newImportList
         })
-        this.setBorrowAmount(tempData)
+        this.setBorrowAmount(newImportList)
         this.setTotalAmount()
     },
     setBorrowAmount(array) {
@@ -1220,6 +1256,16 @@ Page({
     goInfoList() {
         dd.navigateTo({
             url: '/pages/infoList/index'
+        })
+    },
+    onKeyboardShow() {
+        this.setData({
+            btnHidden: true
+        })
+    },
+    onKeyboardHide() {
+        this.setData({
+            btnHidden: false
         })
     }
 })
