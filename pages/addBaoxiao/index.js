@@ -1,6 +1,6 @@
 import moment from "moment";
 import clone from 'lodash/cloneDeep'
-import {getErrorMessage, submitSuccess, formatNumber} from "../../util/getErrorMessage";
+import {getErrorMessage, submitSuccess, formatNumber, validFn} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -321,7 +321,7 @@ Page({
             }
         })
     },
-    caculateImportList(importList) {
+    caculateImportList(importList, inputValue, index) {
         let totalApplicationAmount = Number(this.data.submitData.applicationAmount)
         const newImportList = importList.map(item => {
             let applicationAmount = totalApplicationAmount - Number(item.applicationAmount)
@@ -337,6 +337,7 @@ Page({
             }
             return {
                 ...item,
+                formatUnverifyAmount: formatNumber(item.unverifyAmount),
                 applicationAmount
             }
         })
@@ -414,12 +415,21 @@ Page({
         this.setApplicationAmount(baoxiaoList)
         this.setTotalAmount()
     },
+    // 删除得时候把submitData里面之前存的报销列表数据清空
+    clearFileList(submitData) {
+        Object.keys(submitData).forEach(key => {
+            if (key.indexOf('billFiles') != -1) {
+                delete submitData[key]
+            }
+        })
+    },
+
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
         var fileList = this.data.submitData.billFilesObj.filter(item => {
             return item.name !== file
         })
-        this.clearListSubmitData(this.data.submitData, 'billFiles')
+        this.clearFileList(this.data.submitData)
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -918,15 +928,15 @@ Page({
                 break
             case "2":
                 // 职员
-                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId
+                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             case "3":
                 // 供应商
-                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId
+                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             case "4":
                 // 客户
-                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId
+                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             default:
                 url = "auxpropertyDetailController.do?datagridByAuxpropertyPop&field=id,auxptyDetailName&auxptyId=" + auxptyid + "&accountbookId=" + accountbookId
@@ -1136,13 +1146,22 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         var tempData = clone(this.data.importList)
-        if(this.data.importList[index])
         // 本次核销金额
         tempData[index].applicationAmount = value
         tempData[index].formatApplicationAmount = formatNumber(Number(value).toFixed(2))
-        const newImportList = this.caculateImportList(tempData)
+        const newImportList = this.caculateImportList(tempData, value, index)
+        // 验证输入
+        if(Number(value) - Number(newImportList[index].applicationAmount) > 0) {
+            validFn('输入金额不能大于申请核销金额')
+            return
+        }
+
+        if(Number(value) - Number(newImportList[index].unverifyAmount) > 0) {
+            validFn('输入金额不能大于未核销金额')
+            return
+        }
         this.setData({
-            importList: newImportList
+            importList: newImportList,
         })
         this.setBorrowAmount(newImportList)
         this.setTotalAmount()
@@ -1194,10 +1213,17 @@ Page({
             }
         })
     },
-
+    clearBorrowList(submitData) {
+        Object.keys(submitData).forEach(key => {
+            if (key.indexOf('borrowBillList') != -1) {
+                delete submitData[key]
+            }
+        })
+    },
     deleteBorrowDetail(e) {
         var id = e.currentTarget.dataset.id
         var tempArr = this.data.importList.filter(item => item.billDetailId !== id)
+        this.clearBorrowList(this.data.submitData)
         this.setData({
             importList: tempArr
         })

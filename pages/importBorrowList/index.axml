@@ -12,9 +12,6 @@
                                     <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
                                     <view class="import-borrow-info">
                                         <view class="import-borrow-time">{{item.businessDateTime}}</view>
-                                        <view class="import-borrow-money">￥
-                                            <text>{{item.amount}}</text>
-                                        </view>
                                     </view>
                                 </view>
                                 <view class="import-borrow-item-right">

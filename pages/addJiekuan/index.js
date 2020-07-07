@@ -879,15 +879,15 @@ Page({
                 break
             case "2":
                 // 职员
-                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId
+                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             case "3":
                 // 供应商
-                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId
+                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             case "4":
                 // 客户
-                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId
+                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId + "&id=" + this.data.submitData.applicantId
                 break
             default:
                 url = "auxpropertyDetailController.do?datagridByAuxpropertyPop&field=id,auxptyDetailName&auxptyId=" + auxptyid + "&accountbookId=" + accountbookId

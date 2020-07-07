@@ -226,10 +226,8 @@ input::-webkit-input-placeholder{
     padding: 0 .6rem;
 }
 .edit{
-    width: 20rpx;
-    height: 20rpx;
-    position:absolute;
-    right: 10rpx
+    width: 30rpx;
+    height: 30rpx;
 }
 .title-word{
     width: 7em;
@@ -260,13 +258,17 @@ input::-webkit-input-placeholder{
     text-align:right;
     flex: 1;
 }
+.form-row .baoxiaoDetail-right input{
+    flex: 1;
+    padding-right: 20rpx
+}
 
-.baoxiao-item .form-row {
+.baoxiao-item .form-row, .borrow-item .form-row {
     align-items: flex-start;
     border-bottom: 1rpx solid #f1f1f1;
     padding: 20rpx 40rpx;
 }
-.delete-baoxiao-item{
+.delete-baoxiao-item, .delete-borrow{
     width: 40rpx;
     height: 40rpx;
     background-position: center
@@ -282,4 +284,9 @@ input::-webkit-input-placeholder{
 .remark-content{
     font-size: 28rpx;
     color:#666
+}
+
+.edit-wrapper{
+    display:flex;
+    align-items: center;
 }
