@@ -68,7 +68,7 @@
   padding: 40rpx;
   background:#fff;
   position:fixed;
-  bottom: calc(100rpx - 2rpx);
+  bottom: 0;
   left:0;
   width: 100%;
   box-sizing:border-box;

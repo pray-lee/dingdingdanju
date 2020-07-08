@@ -1,41 +1,47 @@
 import moment from "moment";
 import clone from "lodash/cloneDeep";
-import {formatNumber, validFn} from "../../util/getErrorMessage";
+import {formatNumber} from "../../util/getErrorMessage";
 
 const app = getApp()
+app.globalData.loadingCount = 0
 Page({
     data: {
-        result: null
+        baoxiaoDetail: null
     },
     onLoad() {
         dd.getStorage({
             key: 'extraObj',
             success: res => {
-                this.setData({
-                    result: res.data,
+                let {subjectExtraConf, extraMessage, applicationAmount} = res.data
+                subjectExtraConf = JSON.parse(subjectExtraConf)
+                extraMessage = JSON.parse(extraMessage)
+                let extraList = []
+                const array = this.generateExtraList(subjectExtraConf)
+                extraMessage.forEach(item => {
+                    extraList.push({conf: array})
                 })
-            }
+                const tempData = {
+                    extraList,
+                    extraMessage,
+                    applicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
+                }
+                console.log(tempData)
+                this.setData({
+                    baoxiaoDetail: tempData,
+                })
+            },
         })
     },
     generateExtraList(conf) {
         var tempData = clone(conf)
         var array = []
-        var extraMessage = []
         tempData.name.forEach((item, index) => {
             var obj = {}
             obj.field = item
             obj.type = tempData.type[index]
             array.push(obj)
-            if (obj.type == 2) {
-                extraMessage.push(moment().format('YYYY-MM-DD'))
-            } else {
-                extraMessage.push('')
-            }
         })
-        return {
-            array,
-            extraMessage
-        }
+        return array
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {

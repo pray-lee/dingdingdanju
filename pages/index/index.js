@@ -72,7 +72,6 @@ Page({
         this.addLoading()
         dd.getAuthCode({
             success: (res) => {
-                console.log(res)
                 dd.httpRequest({
                     url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode,
                     method: "GET",
@@ -92,13 +91,19 @@ Page({
                         }
                     },
                     fail: res => {
-                        loginFiled('网络错误！')
+                        console.log(res, 'fail')
+                        if(res.error == 19) {
+                            loginFiled('服务器异常')
+                        }
+                        if(res.error == 12) {
+                            loginFiled('网络异常')
+                        }
                         this.hideLoading()
-                        console.log(res, 'failed')
                     },
                 })
             },
             fail: res => {
+                console.log(res, 'outer failed')
                 loginFiled('当前组织没有该小程序')
             }
         })
@@ -180,14 +185,27 @@ Page({
     goToEdit(e) {
         var id = e.currentTarget.dataset.id
         var flag = e.currentTarget.dataset.flag
+        var status = e.currentTarget.dataset.status
         if(flag === 'B') {
-            dd.navigateTo({
-                url: '../addBaoxiao/index?type=edit&id=' + id
-            })
+            if(status == 10 || status == 25) {
+                dd.navigateTo({
+                    url: '../addBaoxiao/index?type=edit&id=' + id
+                })
+            }else{
+                dd.navigateTo({
+                    url: '../viewBaoxiao/index?id=' + id
+                })
+            }
         }else{
-            dd.navigateTo({
-                url: '../addJiekuan/index?type=edit&id=' + id
-            })
+            if(status == 10 || status == 25) {
+                dd.navigateTo({
+                    url: '../addJiekuan/index?type=edit&id=' + id
+                })
+            }else{
+                dd.navigateTo({
+                    url: '../viewJiekuan/index?id=' + id
+                })
+            }
         }
     },
 });

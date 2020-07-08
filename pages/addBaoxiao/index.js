@@ -858,26 +858,9 @@ Page({
             success: res => {
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
-                    this.setDisabled(res.data.obj.status)
                 }
                 this.hideLoading()
             }
-        })
-    },
-    setDisabled(status) {
-        if(status == 10 || status == 25) {
-            this.setData({
-                disabled: false
-            })
-        }else{
-            this.setData({
-                disabled: true
-            })
-        }
-    },
-    goBack(){
-        dd.navigateBack({
-            delta: 1
         })
     },
     // 回显数据设置

@@ -1,6 +1,5 @@
-import moment from 'moment';
 import clone from "lodash/cloneDeep";
-import {getErrorMessage, submitSuccess, formatNumber} from "../../util/getErrorMessage";
+import {formatNumber} from "../../util/getErrorMessage";
 
 var app = getApp()
 Page({
@@ -23,15 +22,6 @@ Page({
             app.globalData.loadingCount -= 1
         }
     },
-    onHide() {
-        // 清理借款人缓存
-        dd.removeStorage({
-            key: 'borrowId',
-            success: function () {
-                console.log('借款人缓存删除成功')
-            }
-        });
-    },
     previewFile(e) {
         var url = e.currentTarget.dataset.url
         dd.previewImage({
@@ -47,9 +37,15 @@ Page({
             dataType: 'json',
             success: res => {
                 console.log(res.data.obj)
+                const result = clone(res.data.obj)
+                console.log(result)
+                result.amount = formatNumber(Number(result.amount).toFixed(2))
+                result.billDetailList.forEach(item => {
+                    item.borrowAmount = formatNumber(Number(item.borrowAmount).toFixed(2))
+                })
                 if(res.data.success) {
                     this.setData({
-                        result: res.data.obj
+                        result
                     })
                 }else{
                     dd.showToast({

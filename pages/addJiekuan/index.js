@@ -9,6 +9,7 @@ Page({
         type: '',
         billId: '',
         maskHidden: true,
+        dialogHidden: true,
         btnHidden: false,
         disabled: false,
         hesuanMaskHidden: true,
@@ -275,9 +276,9 @@ Page({
         animation.translateY(0).step()
         this.setData({
             animationInfo: animation.export(),
-            maskHidden: false
+            maskHidden: false,
+            dialogHidden: false
         })
-        console.log(index, 'onAddShow')
         if(index >= 0) {
             this.setData({
                 borrowAmount: this.data.submitData.billDetailListObj[index].borrowAmount,
@@ -303,6 +304,12 @@ Page({
             animationInfo: animation.export(),
             maskHidden: true
         })
+        const t = setTimeout(() => {
+            this.setData({
+                dialogHidden: true
+            })
+            clearTimeout(t)
+        }, 250)
     },
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
@@ -1086,29 +1093,11 @@ Page({
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                     this.hideLoading()
-                    // 查看
-                    this.setDisabled(res.data.obj.status)
                 }
             },
             complete: res => {
                 console.log('complete', res)
             }
-        })
-    },
-    setDisabled(status) {
-       if(status == 10 || status == 25) {
-            this.setData({
-                disabled: false
-            })
-       }else{
-           this.setData({
-               disabled: true
-           })
-       }
-    },
-    goBack() {
-        dd.navigateBack({
-            delta: 1
         })
     },
     onDisabled() {
@@ -1179,6 +1168,7 @@ Page({
         // 设置数据
         this.setData({
             ...this.data,
+            status: data.status,
             submitData: {
                 ...this.data.submitData,
                 billApEntityListObj,

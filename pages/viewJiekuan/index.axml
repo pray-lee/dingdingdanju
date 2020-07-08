@@ -93,7 +93,7 @@
                 </block>
                 <view class="form-row invoice-wrapper">
                     <view class="form-row-label"><text class="require">*</text>是否有发票</view>
-                    <switch checked="{{!!result.invoice}}" color="#1f76d8"/>
+                    <switch disabled checked="{{!!result.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
 <!-- 增加借款详情-->
@@ -107,26 +107,64 @@
                                 <text>{{item.borrowAmount}}</text>
                             </view>
                             <view class="borrow-line"></view>
-                            <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
-                                <text>{{item.remark}}</text>
-                            </view>
+                            <block>
+                                <view a:if="{{item.remark}}" class="form-row-content">
+                                    <text>{{item.remark}}</text>
+                                </view>
+                                <view a:else class="form-row-content">无</view>
+                            </block>
                         </view>
                         <view class="form-line"/></view>
                 </view>
             </view>
-            <view class="title"></view>
-            <view class="block-wrapper">
-                <view class="title special-title">附件上传</view>
-                <view class="file-list">
-                    <view class="file-item" a:if="{{result.billFiles.length}}" a:for="{{result.billFiles}}">
-                        <view class="form-row">
-                            <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
-                            <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
-                                <image src="{{item.uri}}" class="img"></image>
+            <block a:if="{{result.billFiles.length}}">
+                <view class="title"></view>
+                <view class="block-wrapper">
+                    <view class="title special-title">附件上传</view>
+                    <view class="file-list">
+                        <view class="file-item" a:for="{{result.billFiles}}">
+                            <view class="form-row">
+                                <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                                <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
+                                    <image src="{{item.uri}}" class="img"></image>
+                                </view>
+                            </view>
+                            <view class="form-line"/></view>
+                    </view>
+                </view>
+            </block>
+<!--              流程图-->
+            <view class="progress">
+                <view class="package-status">
+                        <view class="status-box" >
+                            <view class="status-list">
+                                <view class="li">
+                                    <view class="status-content-before">您的订单开始处理</view>
+                                    <view class="status-time-before">2017-08-17 23:31 周四</view>
+                                    <view class="status-line"></view>
+                                </view>
+                                <view class="li">
+                                    <view class="status-content-before">卖家发货</view>
+                                    <view class="status-time-before">2017-08-18 09:11 周五</view>
+                                    <view class="status-line"></view>
+                                </view>
+                                <view class="li">
+                                    <view class="status-content-before">发往深圳中转站</view>
+                                    <view class="status-time-before">2017-08-19 01:21 周六</view>
+                                    <view class="status-line"></view>
+                                </view>
+                                <view class="li">
+                                    <view class="status-content-before">到达深圳</view>
+                                    <view class="status-time-before">2017-08-19 06:21 周六</view>
+                                    <view class="status-line"></view>
+                                </view>
+                                <view class="li">
+                                    <view class="status-content-before">发往潮汕中心</view>
+                                    <view class="status-time-before">2017-08-19 09:21 周六</view>
+                                    <view class="status-line"></view>
+                                </view>
                             </view>
                         </view>
-                        <view class="form-line"/></view>
-                </view>
             </view>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">

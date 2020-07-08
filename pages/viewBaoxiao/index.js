@@ -35,9 +35,15 @@ Page({
             dataType: 'json',
             success: res => {
                 if (res.data.obj) {
-                    console.log(res.data.obj)
+                    const result = clone(res.data.obj)
+                    result.applicationAmount = formatNumber(Number(result.applicationAmount).toFixed(2))
+                    result.verificationAmount = formatNumber(Number(result.verificationAmount).toFixed(2))
+                    result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
+                    result.billDetailList.forEach(item => {
+                        item.applicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                    })
                     this.setData({
-                        result: res.data.obj
+                        result
                     })
                 }
                 this.hideLoading()

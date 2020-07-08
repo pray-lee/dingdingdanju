@@ -1,4 +1,5 @@
 import {formatNumber} from "../../util/getErrorMessage";
+import clone from 'lodash/cloneDeep'
 
 const app = getApp()
 Page({
@@ -9,8 +10,10 @@ Page({
         dd.getStorage({
             key: 'baoxiaoDetail',
             success: res => {
+                const baoxiaoDetail = clone(res.data)
+                baoxiaoDetail.applicationAmount = formatNumber(Number(baoxiaoDetail.applicationAmount).toFixed(2))
                 this.setData({
-                    baoxiaoDetail: res.data
+                    baoxiaoDetail
                 })
                 dd.removeStorage({
                     key: 'baoxiaoDetail',
@@ -22,13 +25,15 @@ Page({
         })
     },
     openExtraInfo(e) {
-        const extraMessage = e.currentTarget.dataset.extraMessage
-        const subjectExtraConf = e.currentTarget.dataset.subjectExtraConf
+        const extraMessage = this.data.baoxiaoDetail.extraMessage
+        const subjectExtraConf =this.data.baoxiaoDetail.subjectExtraConf
+        const applicationAmount = this.data.baoxiaoDetail.applicationAmount
         dd.setStorage({
             key: 'extraObj',
             data: {
                 extraMessage,
-                subjectExtraConf
+                subjectExtraConf,
+                applicationAmount
             },
             success: res => {
                 dd.navigateTo({
