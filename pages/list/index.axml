@@ -6,11 +6,11 @@
     </view>
     <scroll-view scroll-y="{{true}}" class="scroll-view" scroll-top="{{scrollTop}}" onScroll="onScroll">
         <view class="list-wrapper">
-            <view class="list-item" a:for="{{list}}" onTap="goToEdit" data-id={{item.id}}>
+            <view class="list-item" a:for="{{list}}" onTap="goToEdit" data-id="{{item.id}}" data-status="{{item.status}}">
                 <view class="status error">{{statusObj[item.status]}}</view>
                 <view class="content">
                     <text a:if="{{!!item.remark}}">{{item.remark}}</text>
-                    <text a:else>[无备注]</text>
+                    <text a:else>[无事由]</text>
                     <text class="right" a:if="{{type.indexOf('J') != -1}}">￥{{item.amount}}</text>
                     <text a:else class="right">￥{{item.totalAmount}}</text>
                 </view>

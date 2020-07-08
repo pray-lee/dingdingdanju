@@ -208,25 +208,28 @@ Page({
     },
     goToEdit(e) {
         var id = e.currentTarget.dataset.id
+        const status = e.currentTarget.dataset.status
         console.log(this.data.type, 'type')
         if(this.data.type.indexOf('B') != -1) {
-            dd.navigateTo({
-                url: '../addBaoxiao/index?type=edit&id=' + id
-            })
+            if(status == 10 || status == 25) {
+                dd.navigateTo({
+                    url: '../addBaoxiao/index?type=edit&id=' + id
+                })
+            }else{
+                dd.navigateTo({
+                    url: '../viewBaoxiao/index?id=' + id
+                })
+            }
         }else{
-            dd.navigateTo({
-                url: '../addJiekuan/index?type=edit&id=' + id
-            })
+            if(status == 10 || status == 25) {
+                dd.navigateTo({
+                    url: '../addJiekuan/index?type=edit&id=' + id
+                })
+            }else{
+                dd.navigateTo({
+                    url: '../viewJiekuan/index?id=' + id
+                })
+            }
         }
     },
-    onPullDownRefresh() {
-        dd.alert({
-            content: '下拉刷新',
-            buttonText: '确定',
-            success: res => {
-
-            }
-        })
-        console.log('onPullDownRefresh', new Date())
-    }
 })

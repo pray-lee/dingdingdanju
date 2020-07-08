@@ -145,7 +145,6 @@
                                 <view class="tip">本次核销金额</view>
                             </view>
                         </view>
-                        <view class="form-line"/>
                     </view>
                 </view>
                 <view class="add-borrow">
@@ -192,6 +191,7 @@
             </view>
         </scroll-view>
         <view class="btn-area" a:if="{{!disabled}}" hidden="{{btnHidden}}">
+            <view class="delete-file" onTap="deleteBill"></view>
             <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
             <button onTap="formSubmit" class="submit-btn" data-status="20">提交单据</button>
         </view>

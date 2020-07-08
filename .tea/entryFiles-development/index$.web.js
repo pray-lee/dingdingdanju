@@ -14,3 +14,7 @@ require('../../pages/extra/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68')
 require('../../pages/subjectPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/auxptyPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/capitalPage/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/viewJiekuan/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/viewBaoxiao/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/viewBaoxiaoDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/viewExtra/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');

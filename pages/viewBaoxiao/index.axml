@@ -1,0 +1,150 @@
+<view class="form-wrapper" onTap="onClick">
+    <form onSubmit="formSubmit">
+        <scroll-view scroll-y class="form-scroll-wrapper">
+            <view class="title">申请方信息</view>
+            <view class="block-wrapper">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>申请组织</view>
+                    <view class="form-row-content">
+                        <view class="mock-input">{{result.accountbook.accountbookName}}</view>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>申请部门</view>
+                    <view class="form-row-content">
+                        <view class="mock-input">{{result.departDetail.depart.departName}}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="title">收款方信息</view>
+            <view class="block-wrapper">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>收款方类型</view>
+                    <view class="form-row-content">
+                        <view a:if="{{result.applicantType == 10}}" class="mock-input">职员</view>
+                        <view a:if="{{result.applicantType == 20}}" class="mock-input">供应商</view>
+                        <view a:if="{{result.applicantType == 30}}" class="mock-input">客户</view>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>收款信息</view>
+                    <view class="form-row-content borrowList-wrapper">
+                        <view class="mock-input">{{result.applicantName}}</view>
+                    </view>
+                    <block>
+                        <view class="form-row-content incomeBankAccount">
+                            <view a:if="{{result.incomeBankAccount}}" class="mock-input ellipsis">{{result.incomeBankAccount}}</view>
+                            <view a:else class="mock-input nodata">暂无银行账号</view>
+                        </view>
+                        <view class="form-row-content incomeBankName">
+                            <view a:if="{{result.incomeBankName}}" class="mock-input ellipsis">{{result.incomeBankName}}</view>
+                            <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+            <view class="tips">如果没有收款账户信息，请联系系统相关人员添加。</view>
+
+            <view class="title">单据信息</view>
+            <view class="block-wrapper">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>事由</view>
+                    <view class="form-row-content">
+                        <view class="mock-input" a:if="{{result.remark}}">{{result.remark}}</view>
+                        <view class="mock-input nodata" a:else>无</view>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>业务日期</view>
+                    <view class="form-row-content">
+                        <view >{{result.businessDateTime}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row invoice-wrapper">
+                    <view class="form-row-label">是否有发票</view>
+                    <switch checked="{{!!result.invoice}}" color="#1f76d8"/>
+                </view>
+            </view>
+            <!-- 增加报销详情-->
+            <view class="title"></view>
+            <view class="block-wrapper">
+                <view class="title special-title">报销详情</view>
+                <view class="baoxiao-list">
+                    <view class="baoxiao-item" a:for="{{result.billDetailList}}" a:if="{{result.billDetailList.length}}">
+                        <view class="form-row">
+                            <view class="form-row-content baoxiaoDetail-left" onTap="showBaoxiaoDetail" data-index="{{index}}">
+                                <view class="subject-title">{{item.subject.subjectName}}</view>
+                                <view class="remark-title">事由：</view>
+                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                <view class="remark-content" a:else>无</view>
+                            </view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">￥{{item.applicationAmount}}</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+
+            <!--核销借款-->
+            <view class="title"></view>
+            <view class="block-wrapper">
+                <view class="title special-title">核销借款</view>
+                <view class="borrow-list">
+                    <view class="borrow-item" a:for="{{result.borrowBillList}}" a:if="{{result.borrowBillList}}">
+                        <view class="form-row">
+                            <view class="form-row-content baoxiaoDetail-left">
+                                <view class="subject-title">{{item.subject.fullSubjectName}}</view>
+<!--                                <view class="remark-title">未核销金额：{{item.unpaidAmount}}</view>-->
+                                <view class="remark-title">事由：</view>
+                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                <view class="remark-content" a:else>无</view>
+                            </view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
+                                <view class="edit-wrapper">
+                                    <view class="mock-input">{{item.applicationAmount}}</view>
+                                </view>
+                                <view class="tip">本次核销金额</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="title"></view>
+            <!--上传附件-->
+            <view class="block-wrapper">
+                <view class="title special-title">附件上传</view>
+                <view class="file-list">
+                    <view class="file-item" a:if="{{result.billFiles.length}}" a:for="{{result.billFiles}}">
+                        <view class="form-row">
+                            <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                            <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
+                                <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
+                            </view>
+                        </view>
+                        <view class="form-line"/></view>
+                </view>
+            </view>
+            <view class="title"></view>
+            <view class="block-wrapper submit-info-wrapper">
+                <view class="total">
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        报销金额：</text><text class="total-word">{{result.applicationAmount}}</text>
+                </view>
+                <view class="total">
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        核销借款：</text><text class="total-word">-{{result.verificationAmount}}</text>
+                </view>
+                <view class="total">
+                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                        支付总额：</text><text class="total-word">{{result.totalAmount}}</text>
+                </view>
+            </view>
+        </scroll-view>
+    </form>
+</view>
+</view>
+</view>

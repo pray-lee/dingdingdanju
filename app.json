@@ -12,7 +12,11 @@
     "pages/extra/index",
     "pages/subjectPage/index",
     "pages/auxptyPage/index",
-    "pages/capitalPage/index"
+    "pages/capitalPage/index",
+    "pages/viewJiekuan/index",
+    "pages/viewBaoxiao/index",
+    "pages/viewBaoxiaoDetail/index",
+    "pages/viewExtra/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

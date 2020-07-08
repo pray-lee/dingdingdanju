@@ -50,6 +50,8 @@ Page({
         extraList: [],
         extraMessage: [],
         nowDate: moment().format('YYYY-MM-DD'),
+        // 删除用的status
+        status: 0,
         submitData: {
             billFilesObj: [],
             submitDate: moment().format('YYYY-MM-DD'),
@@ -138,6 +140,10 @@ Page({
         })
         // 处理一下提交格式
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
+        // 提交的时候删除借款科目
+        this.data.importList.forEach(item => {
+            delete item['subject.fullSubjectName']
+        })
         this.formatSubmitData(this.data.importList, 'borrowBillList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -897,6 +903,7 @@ Page({
             ...this.data,
             // baoxiaoList,
             importList,
+            status: data.status,
             submitData: {
                 ...this.data.submitData,
                 billFilesObj: billFilesObj || [],
@@ -1160,6 +1167,7 @@ Page({
             validFn('输入金额不能大于未核销金额')
             return
         }
+
         this.setData({
             importList: newImportList,
         })
