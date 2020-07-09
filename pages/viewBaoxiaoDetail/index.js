@@ -11,7 +11,7 @@ Page({
             key: 'baoxiaoDetail',
             success: res => {
                 const baoxiaoDetail = clone(res.data)
-                baoxiaoDetail.applicationAmount = formatNumber(Number(baoxiaoDetail.applicationAmount).toFixed(2))
+                console.log(baoxiaoDetail, '..........')
                 this.setData({
                     baoxiaoDetail
                 })

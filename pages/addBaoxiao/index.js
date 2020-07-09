@@ -1284,5 +1284,39 @@ Page({
         this.setData({
             btnHidden: false
         })
+    },
+    // 删除单据
+    deleteBill() {
+        this.addLoading()
+        dd.confirm({
+            title: '温馨提示',
+            content: '确认删除该单据吗?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: res => {
+                if(res.confirm) {
+                    dd.httpRequest({
+                        url: app.globalData.url + 'reimbursementBillController.do?doBatchDel&ids=' + this.data.billId,
+                        method: 'GET',
+                        success: res => {
+                            console.log(res)
+                            if(res.data.success) {
+                                dd.navigateBack({
+                                    delta: 1
+                                })
+                            }else{
+                                dd.showToast({
+                                    type: 'none',
+                                    content: '报销单删除失败'
+                                })
+                            }
+                        },
+                        complete: res => {
+                            this.hideLoading()
+                        }
+                    })
+                }
+            }
+        })
     }
 })

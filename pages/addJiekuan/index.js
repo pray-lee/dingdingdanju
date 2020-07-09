@@ -1113,7 +1113,7 @@ Page({
         // 请求
         this.getAccountbookList(data)
         // billDetailList
-        if (data.billDetailList.length) {
+        if (data.billDetailList && data.billDetailList.length) {
             var billDetailListObj = data.billDetailList.map(item => {
                 return {
                     borrowAmount: item.borrowAmount,
@@ -1124,7 +1124,7 @@ Page({
         }
         // billApEntityList
         var billApEntityListObj = []
-        if (data.billApEntityList.length) {
+        if (data.billApEntityList && data.billApEntityList.length) {
             billApEntityListObj = data.billApEntityList.map(item => {
                 return {
                     auxptyId: item.auxptyId,
@@ -1145,7 +1145,7 @@ Page({
             })
         }
         // subjectAuxptyList
-        if (data.subject.subjectAuxptyList.length) {
+        if (data.subject && data.subject.subjectAuxptyList.length) {
             const subjectAuxptyList = data.subject.subjectAuxptyList.map(item => {
                 return {
                     auxptyId: item.auxptyId,
@@ -1178,7 +1178,7 @@ Page({
                 applicantType: data.applicantType,
                 invoice: data.invoice,
                 subjectId: data.subjectId,
-                subjectName: data.subject.fullSubjectName,
+                subjectName: data.subject ? data.subject.fullSubjectName : '',
                 businessDateTime: data.businessDateTime,
                 amount: data.amount.toFixed(2),
                 formatAmount: formatNumber(data.amount),
@@ -1225,6 +1225,40 @@ Page({
     onKeyboardHide() {
         this.setData({
             btnHidden: false
+        })
+    },
+    // 删除单据
+    deleteBill() {
+        this.addLoading()
+        dd.confirm({
+            title: '温馨提示',
+            content: '确认删除该单据吗?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: res => {
+                if(res.confirm) {
+                    dd.httpRequest({
+                        url: app.globalData.url + 'borrowBillController.do?doBatchDel&ids=' + this.data.billId,
+                        method: 'GET',
+                        success: res => {
+                            console.log(res)
+                            if(res.data.success) {
+                                dd.navigateBack({
+                                    delta: 1
+                                })
+                            }else{
+                                dd.showToast({
+                                    type: 'none',
+                                    content: '借款单删除失败'
+                                })
+                            }
+                        },
+                        complete: res => {
+                            this.hideLoading()
+                        }
+                    })
+                }
+            }
         })
     }
 })

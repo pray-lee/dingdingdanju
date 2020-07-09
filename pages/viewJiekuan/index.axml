@@ -133,39 +133,6 @@
                     </view>
                 </view>
             </block>
-<!--              流程图-->
-            <view class="progress">
-                <view class="package-status">
-                        <view class="status-box" >
-                            <view class="status-list">
-                                <view class="li">
-                                    <view class="status-content-before">您的订单开始处理</view>
-                                    <view class="status-time-before">2017-08-17 23:31 周四</view>
-                                    <view class="status-line"></view>
-                                </view>
-                                <view class="li">
-                                    <view class="status-content-before">卖家发货</view>
-                                    <view class="status-time-before">2017-08-18 09:11 周五</view>
-                                    <view class="status-line"></view>
-                                </view>
-                                <view class="li">
-                                    <view class="status-content-before">发往深圳中转站</view>
-                                    <view class="status-time-before">2017-08-19 01:21 周六</view>
-                                    <view class="status-line"></view>
-                                </view>
-                                <view class="li">
-                                    <view class="status-content-before">到达深圳</view>
-                                    <view class="status-time-before">2017-08-19 06:21 周六</view>
-                                    <view class="status-line"></view>
-                                </view>
-                                <view class="li">
-                                    <view class="status-content-before">发往潮汕中心</view>
-                                    <view class="status-time-before">2017-08-19 09:21 周六</view>
-                                    <view class="status-line"></view>
-                                </view>
-                            </view>
-                        </view>
-            </view>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">

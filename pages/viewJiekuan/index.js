@@ -36,7 +36,6 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res.data.obj)
                 const result = clone(res.data.obj)
                 console.log(result)
                 result.amount = formatNumber(Number(result.amount).toFixed(2))
