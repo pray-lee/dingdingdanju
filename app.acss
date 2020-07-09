@@ -273,7 +273,8 @@ page {
 }
 .progress-user{
   font-size: 22rpx;
-  color:#999999
+  color:#999999;
+  padding-bottom: 8rpx
 }
 .avatar-wrapper{
   display:flex;
@@ -284,13 +285,13 @@ page {
   min-height: 140rpx
 }
 .small-avatar{
-  width: 40rpx;
-  height: 40rpx;
+  width: 50rpx;
+  height: 50rpx;
   border-radius: 50%;
   background:#1f65d8;
   color:#fff;
-  font-size: 12rpx;
-  line-height: 40rpx;
+  font-size: 14rpx;
+  line-height: 50rpx;
   text-align:center
 }
 .small-name{
@@ -326,6 +327,29 @@ page {
 }
 .progress-box:last-child .status-line{
   display:none
+}
+.avatar-block{
+  position:relative
+}
+.status-icon{
+  position:absolute;
+  right:0;
+  bottom:0;
+  width: 20rpx;
+  height: 20rpx;
+}
+.cc-title{
+  font-size: 24rpx;
+  padding: 20rpx 40rpx 20rpx 0;
+}
+.cc-wrapper{
+  display:flex;
+  padding: 20rpx 40rpx;
+  margin-top: -50rpx;
+  background:#fff
+}
+.cc-wrapper .cc-item{
+  margin-right: 30rpx;
 }
 
 

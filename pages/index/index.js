@@ -93,7 +93,7 @@ Page({
                     fail: res => {
                         console.log(res, 'fail')
                         if(res.error == 19) {
-                            loginFiled('服务器异常')
+                            loginFiled()
                         }
                         if(res.error == 12) {
                             loginFiled('网络异常')

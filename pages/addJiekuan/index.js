@@ -838,7 +838,7 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                if (!!res.data.obj.subjectAuxptyList.length) {
+                if (!!res.data.obj && !!res.data.obj.subjectAuxptyList.length) {
                     var arr = res.data.obj.subjectAuxptyList.map(item => {
                         return {
                             auxptyId: item.auxptyId,
@@ -1229,7 +1229,6 @@ Page({
     },
     // 删除单据
     deleteBill() {
-        this.addLoading()
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该单据吗?',
@@ -1241,6 +1240,7 @@ Page({
                         url: app.globalData.url + 'borrowBillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
                         success: res => {
+                            this.addLoading()
                             console.log(res)
                             if(res.data.success) {
                                 dd.navigateBack({

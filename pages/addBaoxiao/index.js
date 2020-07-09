@@ -1287,7 +1287,6 @@ Page({
     },
     // 删除单据
     deleteBill() {
-        this.addLoading()
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该单据吗?',
@@ -1295,6 +1294,7 @@ Page({
             cancelButtonText: '否',
             success: res => {
                 if(res.confirm) {
+                    this.addLoading()
                     dd.httpRequest({
                         url: app.globalData.url + 'reimbursementBillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
