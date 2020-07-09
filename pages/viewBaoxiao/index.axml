@@ -153,8 +153,10 @@
                 <view class="progress-box" a:for="{{process.operationRecords}}">
                     <view class="progress-left">
                         <view class="avatar-wrapper">
-                            <image a:if="{{item.avatar}}" src="{{item.avatar}}" class="avatar"></image>
-                            <view a:else class="avatar">{{item.realName}}</view>
+                            <view class="avatar-block">
+                                <image a:if="{{item.avatar}}" src="{{item.avatar}}" class="avatar"></image>
+                                <view a:else class="avatar">{{item.realName}}</view>
+                            </view>
                             <view class="status-line"></view>
                         </view>
                         <view class="status-content">
@@ -167,9 +169,10 @@
                 <view class="progress-box" a:if="{{process.tasks.length == 1}}">
                     <view class="progress-left">
                         <view class="avatar-wrapper">
-                            <image a:if="{{process.tasks[0].avatar}}" src="{{process.tasks[0].avatar}}" class="avatar"></image>
-                            <view a:else class="avatar">{{item.realName}}</view>
-<!--                            <view class="status-line"></view>-->
+                            <view class="avatar-block">
+                                <image a:if="{{process.tasks[0].avatar}}" src="{{process.tasks[0].avatar}}" class="avatar"></image>
+                                <view a:else class="avatar">{{item.realName}}</view>
+                            </view>
                         </view>
                         <view class="status-content">
                             <view class="progress-status">{{process.tasks[0].operationName}}</view>
@@ -181,7 +184,9 @@
                 <view class="progress-box" a:else="{{process.tasks.length > 1}}">
                     <view class="progress-left">
                         <view class="avatar-wrapper">
-                            <image src="../../images/avatar.png" class="avatar"></image>
+                            <view class="avatar-block">
+                                <image src="../../images/avatar.png" class="avatar"></image>
+                            </view>
                         </view>
                         <view class="status-content">
                             <view class="progress-status">{{process.tasks[0].operationName}}</view>

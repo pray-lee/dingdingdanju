@@ -254,6 +254,7 @@ page {
 .progress-box{
   display:flex;
   justify-content: space-between;
+  margin-bottom: 8rpx;
 }
 .progress-left{
   display:flex;
