@@ -130,11 +130,11 @@
                                 <view class="remark-content" a:else>无</view>
                             </view>
                             <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
+                                <view class="tip">本次核销金额</view>
                                 <view class="edit-wrapper">
                                     <input value="{{item.applicationAmount}}" onInput="borrowInput" onBlur="borrowBlur" data-index="{{index}}"/>
                                     <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
                                 </view>
-                                <view class="tip">本次核销金额</view>
                             </view>
                         </view>
                     </view>
@@ -151,7 +151,7 @@
                     <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
                         <view class="form-row">
                             <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
-                            <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                            <view class="form-row-content ellipsis" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
                             <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
                                 <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
                             </view>

@@ -1,6 +1,6 @@
 import moment from "moment";
 import clone from 'lodash/cloneDeep'
-import {getErrorMessage, submitSuccess, formatNumber, validFn} from "../../util/getErrorMessage";
+import {getErrorMessage, submitSuccess, formatNumber, validFn, request} from "../../util/getErrorMessage";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -8,6 +8,8 @@ Page({
     data: {
         btnHidden: false,
         disabled: false,
+        // 防止多次点击
+        clickFlag: true,
         type: '',
         billId: '',
         borrowAmount: '',
@@ -156,10 +158,10 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url,
             method: 'POST',
-            dataType: 'json',
             data: this.data.submitData,
             success: res => {
                 if (res.data && typeof res.data == 'string') {
@@ -169,14 +171,12 @@ Page({
                 if (res.data.success) {
                     submitSuccess()
                 }
-                this.hideLoading()
             },
             fail: res => {
                 if (res.data && typeof res.data == 'string') {
                     getErrorMessage(res.data)
                 }
                 console.log(res, 'fail')
-                this.hideLoading()
             }
         })
     },
@@ -556,7 +556,6 @@ Page({
             }
         })
         var type = query.type
-        console.log(type, 'type')
         this.setData({
             type
         })
@@ -575,12 +574,15 @@ Page({
     },
     // 获取税率
     getTaxRageArr() {
-        dd.httpRequest({
+        request({
             url: app.globalData.url + 'systemController.do?formTree&typegroupCode=VATRateForMost',
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 console.log(res, '税率')
+                res.data[0].children.unshift({
+                    id: null,
+                    text: '请选择'
+                })
                 this.setData({
                     taxRageObject: {
                         taxRageArr: res.data[0].children,
@@ -591,12 +593,10 @@ Page({
         })
     },
     getInvoiceTypeArr() {
-        dd.httpRequest({
+        request({
             url: app.globalData.url + 'systemController.do?formTree&typegroupCode=invoiceType',
             method: 'GET',
-            dataType: 'json',
             success: res => {
-                console.log(res, '发票类型')
                 this.setData({
                     invoiceTypeArr: res.data[0].children
                 })
@@ -606,10 +606,10 @@ Page({
     // 获取申请组织
     getAccountbookList(data) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId',
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 console.log(res.data, 'accountbookList')
                 console.log(data)
@@ -642,14 +642,14 @@ Page({
                 var billDetailList = data ? data.billDetailList : []
                 this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
                 this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
-                this.hideLoading()
             }
         })
     },
     // 获取申请部门
     getDepartmentList(accountbookId, departmentId, billDetailList, taxpayerType) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
             method: 'GET',
             dataType: 'json',
@@ -679,17 +679,16 @@ Page({
                     },
                 })
                 this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
-                this.hideLoading()
             }
         })
     },
     // 获取借款单位
     getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading:this.hideLoading,
             url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 var arr = res.data.map(item => {
                     return {
@@ -724,17 +723,16 @@ Page({
                     }
                 })
                 this.getIncomeBankList(applicantType, applicantId, incomeBankName)
-                this.hideLoading()
             }
         })
     },
     // 获取收款银行
     getIncomeBankList(applicantType, applicantId, incomeBankName) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'incomeBankInfoController.do?listInfo&applicantType=' + applicantType + '&applicantId=' + applicantId,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 console.log(res, 'incomeBankList')
                 var arr = res.data.obj
@@ -777,7 +775,6 @@ Page({
                     })
                     this.setIncomeBankAccount('')
                 }
-                this.hideLoading()
             }
         })
     },
@@ -851,7 +848,8 @@ Page({
                 console.log('编辑标志缓存成功...')
             }
         })
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'reimbursementBillController.do?getDetail&id=' + id,
             method: 'GET',
             dataType: 'json',
@@ -859,7 +857,6 @@ Page({
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                 }
-                this.hideLoading()
             }
         })
     },
@@ -961,10 +958,10 @@ Page({
     // 获取科目类型
     getSubjectList(accountbookId, departId, billDetailList, taxpayerType) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=9&findAll=false',
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 console.log(res, '科目类型')
                 var arr = []
@@ -1089,45 +1086,53 @@ Page({
                         subjectList: [],
                     })
                 }
-
-                this.hideLoading()
             }
         })
     },
     getImportBorrowList() {
         const invoice = this.data.submitData.invoice == 0 ? 1 : 0
-        dd.httpRequest({
-            url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
-            method: 'GET',
-            dataType: 'json',
-            success: res => {
-                console.log(res, '借款单列表...')
-                if(res.data.rows.length) {
-                    dd.setStorage({
-                        key: 'tempImportList',
-                        data: res.data.rows,
-                        success: res => {
-                            console.log('写入成功，借款列表')
-                            dd.navigateTo({
-                                url: '/pages/importBorrowList/index'
-                            })
-                        }
-                    });
-                }else{
-                    dd.setStorage({
-                        key: 'tempImportList',
-                        data: [],
-                        success: () =>{}
-                    })
-                    dd.showToast({
-                        type: 'none',
-                        content: '没有需要核销的借款',
-                        success: () => {
-                        },
-                    });
-                }
-            }
-        })
+        if(this.data.clickFlag) {
+            this.setData({
+                clickFlag: false
+            })
+            request({
+                url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
+                method: 'GET',
+                success: res => {
+                    console.log(res, '借款单列表...')
+                    if(res.data.rows.length) {
+                        dd.setStorage({
+                            key: 'tempImportList',
+                            data: res.data.rows,
+                            success: res => {
+                                console.log('写入成功，借款列表')
+                                dd.navigateTo({
+                                    url: '/pages/importBorrowList/index'
+                                })
+                                const t = setTimeout(() => {
+                                    this.setData({
+                                        clickFlag: true
+                                    })
+                                    clearTimeout(t)
+                                }, 300)
+                            }
+                        });
+                    }else{
+                        dd.setStorage({
+                            key: 'tempImportList',
+                            data: [],
+                            success: () =>{}
+                        })
+                        dd.showToast({
+                            type: 'none',
+                            content: '没有需要核销的借款',
+                            success: () => {
+                            },
+                        });
+                    }
+                },
+            })
+        }
     },
     borrowBlur(e) {
         console.log(this.data.importList, 'borrowBlur........')
@@ -1287,6 +1292,14 @@ Page({
     },
     // 删除单据
     deleteBill() {
+        // 写入缓存，回列表页的时候刷新列表
+        dd.setStorage({
+            key: 'query',
+            data: {
+                type: this.data.status,
+                flag: 'B'
+            }
+        })
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该单据吗?',
@@ -1295,7 +1308,8 @@ Page({
             success: res => {
                 if(res.confirm) {
                     this.addLoading()
-                    dd.httpRequest({
+                    request({
+                        hideLoading: this.hideLoading,
                         url: app.globalData.url + 'reimbursementBillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
                         success: res => {
@@ -1311,9 +1325,6 @@ Page({
                                 })
                             }
                         },
-                        complete: res => {
-                            this.hideLoading()
-                        }
                     })
                 }
             }

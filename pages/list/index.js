@@ -1,6 +1,6 @@
 var app = getApp()
 app.globalData.loadingCount = 0
-import {formatNumber} from '../../util/getErrorMessage'
+import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
         type: '',
@@ -63,7 +63,8 @@ Page({
         this.setData({
             active
         })
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: url,
             method: 'GET',
             success: res => {
@@ -90,10 +91,6 @@ Page({
             fail: res => {
                 console.log(res, 'failed')
             },
-            complete: res => {
-                console.log('completed')
-                this.hideLoading()
-            }
         })
     },
     onLoad(query) {
@@ -109,7 +106,8 @@ Page({
         // 页面加载完成,设置请求地址
         var url = this.setUrl(type + flag)
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: url,
             method: 'GET',
             success: res => {
@@ -137,10 +135,6 @@ Page({
             fail: res => {
                 console.log(res, 'failed')
             },
-            complete: res => {
-                console.log('completed')
-                this.hideLoading()
-            }
         })
     },
     addLoading() {
@@ -205,6 +199,20 @@ Page({
         this.setData({
             animationInfo: animation.export()
         })
+        //刷新
+        const query = dd.getStorageSync({key: 'query'}).data
+        console.log(query)
+
+        if(query) {
+            // 如果是审批驳回的，返回20，进未完成tab
+            if(query.type == 25) {
+                query.type = 20
+            }
+            dd.removeStorage({
+                key: 'query'
+            })
+            this.onLoad(query)
+        }
     },
     goToEdit(e) {
         var id = e.currentTarget.dataset.id

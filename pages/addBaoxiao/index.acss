@@ -228,6 +228,7 @@ input::-webkit-input-placeholder{
 .edit{
     width: 30rpx;
     height: 30rpx;
+    margin-top: -20rpx;
 }
 .title-word{
     width: 7em;
@@ -255,12 +256,14 @@ input::-webkit-input-placeholder{
     padding-left: 60rpx;
 }
 .form-row .baoxiaoDetail-right{
+    height: auto;
     text-align:right;
     flex: 1;
 }
 .form-row .baoxiaoDetail-right input{
     flex: 1;
-    padding-right: 20rpx
+    padding-right: 20rpx;
+    padding-bottom: 20rpx
 }
 
 .baoxiao-item .form-row, .borrow-item .form-row {

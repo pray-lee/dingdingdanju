@@ -1,3 +1,5 @@
+import {login} from "./util/getErrorMessage";
+
 App({
   onLaunch(options) {
     console.log('running....')
@@ -5,6 +7,7 @@ App({
   onShow(options) {
     // 从后台被 scheme 重新打开
     // options.query == {number:1}
+    login(this)
   },
   globalData: {
     "corpId": "dingd6db728a5a10ba1f35c2f4657eb6378f",

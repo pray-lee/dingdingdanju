@@ -1,6 +1,6 @@
 import clone from "lodash/cloneDeep";
 import moment from "moment";
-import {formatNumber, validFn} from "../../util/getErrorMessage";
+import {formatNumber, validFn, request} from "../../util/getErrorMessage";
 
 const app = getApp()
 Page({
@@ -152,10 +152,10 @@ Page({
     // 获取科目对应的辅助核算 (每一个都是单独调用)
     getSubjectAuxptyList(subjectId, accountbookId) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'subjectStartDetailController.do?getInfo&subjectId=' + subjectId + '&accountbookId=' + accountbookId,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 if (!!res.data.obj.subjectAuxptyList.length) {
                     var arr = res.data.obj.subjectAuxptyList.map(item => {
@@ -182,17 +182,26 @@ Page({
                         }
                     })
                 }
-                this.hideLoading()
             }
         })
     },
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid) {
         this.addLoading()
-        dd.httpRequest({
-            url: app.globalData.url + this.getAuxptyUrl(accountbookId, auxptyid),
+        let url = this.getAuxptyUrl(accountbookId, auxptyid)
+        if(auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
+            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        }
+        if(auxptyid == 3 && this.data.baoxiaoDetail.applicantType == 20) {
+            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        }
+        if(auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
+            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        }
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + url,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 const name = this.getAuxptyNameMap(auxptyid)
                 console.log(res.data.rows, 'res.data.rows')
@@ -230,7 +239,6 @@ Page({
                 if (index !== null) {
                     this.setSelectedAuxpty(newObj[index])
                 }
-                this.hideLoading()
             }
         })
     },
@@ -280,15 +288,15 @@ Page({
                 break
             case "2":
                 // 职员
-                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId + "&id=" + this.data.baoxiaoDetail.applicantId
+                url = "userController.do?datagrid&field=id,realName&accountbookIds=" + accountbookId
                 break
             case "3":
                 // 供应商
-                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId + "&id=" + this.data.baoxiaoDetail.applicantId
+                url = "supplierDetailController.do?datagrid&field=id,supplier.supplierName&status=1&accountbookId=" + accountbookId
                 break
             case "4":
                 // 客户
-                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId + "&id=" + this.data.baoxiaoDetail.applicantId
+                url = "customerDetailController.do?datagrid&field=id,customer.customerName&customerStatus=1&accountbookId=" + accountbookId
                 break
             default:
                 url = "auxpropertyDetailController.do?datagridByAuxpropertyPop&field=id,auxptyDetailName&auxptyId=" + auxptyid + "&accountbookId=" + accountbookId
@@ -377,10 +385,10 @@ Page({
     },
     getExtraInfo(extraId) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 console.log(res, '附加信息............')
                 if (res.data.success) {
@@ -404,7 +412,6 @@ Page({
                                 key: 'extraBaoxiaoDetail',
                                 data: this.data.baoxiaoDetail
                             })
-                            this.hideLoading()
                             dd.navigateTo({
                                 url: '/pages/extra/index'
                             })
@@ -432,12 +439,17 @@ Page({
         })
     },
     valid(obj) {
+        console.log(obj, '..........')
         if (!obj.subjectId) {
             validFn('请选择费用类型')
             return false
         }
         if (Number(obj.applicationAmount) <= 0) {
             validFn('申请报销金额为空')
+            return false
+        }
+        if (!obj.taxRate && obj.invoiceType == 2) {
+            validFn('请选择税率')
             return false
         }
         return true

@@ -124,7 +124,7 @@
                     <view class="file-list">
                         <view class="file-item" a:for="{{result.billFiles}}">
                             <view class="form-row">
-                                <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                                <view class="form-row-content ellipsis" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
                                 <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
                                     <image src="{{item.uri}}" class="img"></image>
                                 </view>

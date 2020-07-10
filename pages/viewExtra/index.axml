@@ -16,10 +16,7 @@
                                     <view onTap="onExtraDateFocus" data-name="{{item.field}}" data-index="{{idx}}" data-extraIndex="{{index}}">{{baoxiaoDetail.extraMessage[index][idx]}}</view>
                                 </block>
                                 <block a:else>
-                                <input disabled a:if="{{extraDetail.field== '金额'}}" type="digit" class="input" onInput="onExtraInput" value="{{baoxiaoDetail.extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
-                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}" data-name="{{item.field}}"/>
-                                <input disabled a:else class="input" onInput="onExtraInput" value="{{baoxiaoDetail.extraMessage[index][idx]}}" placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
-                                       onBlur="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}" data-name="{{item.field}}"/>
+                                <view class="mock-input" data-name="{{extraDetail.field}}" data-index="{{idx}}" data-extraIndex="{{index}}" data-name="{{item.field}}">{{baoxiaoDetail.extraMessage[index][idx]}}</view>
                                 </block>
                             </view>
                         </view>

@@ -51,8 +51,8 @@
             <view class="block-wrapper">
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>事由</view>
-                    <view class="form-row-content">
-                        <view class="mock-input" a:if="{{result.remark}}">{{result.remark}}</view>
+                    <view class="form-row-content" style="height: auto; min-height: 44rpx">
+                        <view class="mock-input" a:if="{{result.remark}}" style="height:auto; min-height: 44rpx">{{result.remark}}</view>
                         <view class="mock-input nodata" a:else>无</view>
                     </view>
                 </view>
@@ -79,7 +79,7 @@
                         <view class="form-row">
                             <view class="form-row-content baoxiaoDetail-left" onTap="showBaoxiaoDetail" data-index="{{index}}">
                                 <view class="subject-title">{{item.subject.subjectName}}</view>
-                                <view class="remark-title">事由：</view>
+                                <view class="remark-title">备注：</view>
                                 <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
                                 <view class="remark-content" a:else>无</view>
                             </view>
@@ -123,7 +123,7 @@
                     <view class="file-list">
                         <view class="file-item" a:for="{{result.billFiles}}">
                             <view class="form-row">
-                                <view class="form-row-content" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                                <view class="form-row-content ellipsis" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
                                 <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
                                     <image src="{{item.uri}}" class="img" mode="aspectFill"></image>
                                 </view>

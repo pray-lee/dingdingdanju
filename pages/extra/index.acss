@@ -7,7 +7,7 @@
   overflow:hidden
 }
 .form-scroll-wrapper{
-  height: calc(100vh - 220rpx)
+  height: calc(100vh - 200rpx);
 }
 .import-borrow-list-btn{
   position:fixed;
@@ -73,6 +73,7 @@
   width: 100%;
   box-sizing:border-box;
   border-bottom: 1rpx solid #ddd;
+  border-top: 1rpx solid #ddd;
 }
 .btn-area .save-draft{
   background:#fff;

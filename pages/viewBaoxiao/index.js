@@ -1,4 +1,4 @@
-import {formatNumber} from "../../util/getErrorMessage";
+import {formatNumber, request} from "../../util/getErrorMessage";
 import clone from 'lodash/cloneDeep'
 
 var app = getApp()
@@ -31,10 +31,10 @@ Page({
     onLoad(query) {
         this.addLoading()
         const id = query.id
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'reimbursementBillController.do?getDetail&id=' + id,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 if (res.data.obj) {
                     const result = clone(res.data.obj)
@@ -50,16 +50,15 @@ Page({
                     // 获取钉钉审批流
                     this.getProcessInstance(result.id, result.accountbookId)
                 }
-                this.hideLoading()
             }
         })
     },
     getProcessInstance(billId, accountbookId) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 if(res.data && res.data.length) {
                     const { title, operationRecords, tasks, ccUserids } = res.data[0]
@@ -124,15 +123,13 @@ Page({
                     })
                 }
             },
-            complete: res => {
-                this.hideLoading()
-            }
         })
     },
     showBaoxiaoDetail(e) {
         const index = e.currentTarget.dataset.index
         const tempData = clone(this.data.result.billDetailList[index])
         tempData.taxpayerType = this.data.result.accountbook.taxpayerType
+        console.log(tempData, 'viewBaoxiao')
         dd.setStorage({
             key: 'baoxiaoDetail',
             data: tempData,

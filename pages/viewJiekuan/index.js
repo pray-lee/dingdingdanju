@@ -1,5 +1,5 @@
 import clone from "lodash/cloneDeep";
-import {formatNumber} from "../../util/getErrorMessage";
+import {formatNumber, request} from "../../util/getErrorMessage";
 
 var app = getApp()
 Page({
@@ -32,10 +32,10 @@ Page({
     onLoad(query) {
         console.log(query.id)
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'borrowBillController.do?getDetail&id=' + query.id,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 const result = clone(res.data.obj)
                 result.amount = formatNumber(Number(result.amount).toFixed(2))
@@ -60,18 +60,14 @@ Page({
                     content:'数据请求失败'
                 })
             },
-            complete: res => {
-                console.log('complete', res)
-                this.hideLoading()
-            }
         })
     },
     getProcessInstance(billId, accountbookId) {
         this.addLoading()
-        dd.httpRequest({
+        request({
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 if(res.data && res.data.length) {
                     const { title, operationRecords, tasks, ccUserids } = res.data[0]
@@ -136,9 +132,6 @@ Page({
                     })
                 }
             },
-            complete: res => {
-                this.hideLoading()
-            }
         })
     },
 })

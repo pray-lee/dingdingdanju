@@ -1,4 +1,4 @@
-import {formatNumber} from "../../util/getErrorMessage";
+import {formatNumber, request} from "../../util/getErrorMessage";
 import clone from 'lodash/cloneDeep'
 
 const app = getApp()
@@ -27,6 +27,7 @@ Page({
     openExtraInfo(e) {
         const extraMessage = this.data.baoxiaoDetail.extraMessage
         const subjectExtraConf =this.data.baoxiaoDetail.subjectExtraConf
+        console.log(subjectExtraConf, 'subjectExtraConf')
         const applicationAmount = this.data.baoxiaoDetail.applicationAmount
         dd.setStorage({
             key: 'extraObj',

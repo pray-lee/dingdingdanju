@@ -211,11 +211,11 @@ Page({
     },
 
     onExtraSubmit() {
-        console.log('extraSubmit....')
         this.addLoading()
         this.setApplicationAmount()
         var tempData = clone(this.data.baoxiaoDetail)
         tempData.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
+        console.log(tempData.subjectExtraConf, '..............')
         for(let i = 0; i < tempData.extraMessage.length; i++) {
             if (!this.valid(tempData, i)) {
                return
