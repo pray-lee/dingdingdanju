@@ -1,6 +1,6 @@
 <!--   附加信息   -->
 <view class="form-wrapper">
-    <view class="add-extra-page">
+    <view class="add-extra-page" onTap="onClick">
     <form onSubmit="onExtraSubmit">
         <scroll-view scroll-y class="form-scroll-wrapper" onScroll="onScroll" scroll-into-view="{{scrollId}}" scroll-with-animation>
             <view class="baoxiao-item" a:if="{{baoxiaoDetail.extraList.length}}" a:for="{{baoxiaoDetail.extraList}}" id="{{index + 1}}">

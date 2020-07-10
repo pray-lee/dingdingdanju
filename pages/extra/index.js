@@ -46,7 +46,11 @@ Page({
             scrollId: ''
         })
     },
+    onClick() {
+        console.log('clicked')
+    },
     onAddExtra(e) {
+        this.onClick()
         this.clearScrollView()
         let index = null
         if (!!e) {

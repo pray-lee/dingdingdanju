@@ -86,14 +86,13 @@ Page({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount += 1
+        app.globalData.loadingCount++
     },
     hideLoading() {
-        if (app.globalData.loadingCount <= 1) {
+        console.log(app.globalData.loadingCount, 'loadingCount')
+        app.globalData.loadingCount--
+        if (app.globalData.loadingCount === 0) {
             dd.hideLoading()
-            app.globalData.loadingCount = 0
-        } else {
-            app.globalData.loadingCount -= 1
         }
     },
     formSubmit(e) {
@@ -205,7 +204,7 @@ Page({
         //     this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
         // }
         if (name === 'applicantType') {
-            // this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
+            this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantId') {
@@ -386,7 +385,6 @@ Page({
         });
     },
     onShow() {
-        app.globalData.loadingCount = 0
         this.getAuxptyIdFromStorage()
         this.getBorrowIdFromStorage()
         this.getSubjectIdFromStorage()
@@ -583,6 +581,7 @@ Page({
         })
     },
     onLoad(query) {
+        app.globalData.loadingCount = 0
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -684,7 +683,7 @@ Page({
     getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName) {
         this.addLoading()
         request({
-            hideLoding: this.hideLoading,
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType,
             method: 'GET',
             success: res => {
@@ -896,7 +895,6 @@ Page({
             hideLoading: this.hideLoading,
             url: app.globalData.url + url,
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 const name = this.getAuxptyNameMap(auxptyid)
                 const newObj = res.data.rows.map(item => {
@@ -999,7 +997,6 @@ Page({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'capitalTypeDetailController.do?getList',
             method: 'GET',
-            dataType: 'json',
             success: res => {
                 var arr = res.data.obj.map(item => {
                     return {
@@ -1074,7 +1071,6 @@ Page({
                 console.log(res.data.obj)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
-                    this.hideLoading()
                 }
             },
         })
