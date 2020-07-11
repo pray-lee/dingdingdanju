@@ -1,7 +1,7 @@
 const getErrorMessage = string => {
     const error = string.match(/<\/P>[\W\w]+<P>/gi)[0]
     const newError = error.replace(/<[^>]+>/gi, "")
-    const result = newError.replace(/[\r\n]/gi,"")
+    const result = newError.replace(/[\r\n]/gi, "")
     dd.alert({
         content: result,
         buttonText: '确定',
@@ -17,7 +17,7 @@ const submitSuccess = () => {
     })
 }
 
-const loginFiled = (msg="") => {
+const loginFiled = (msg = "") => {
     dd.alert({
         title: '登录失败',
         content: msg,
@@ -30,9 +30,9 @@ const loginFiled = (msg="") => {
     });
 }
 const formatNumber = (num) => {
-    return num && num.toString().replace(/\d+/, function(s){
-            return s.replace(/(\d)(?=(\d{3})+$)/g, '$1,')
-        })
+    return num && num.toString().replace(/\d+/, function (s) {
+        return s.replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+    })
 }
 
 const validFn = message => {
@@ -50,18 +50,18 @@ const login = (app) => {
                 method: "GET",
                 dataType: "json",
                 success: res => {
-                    if(res.data.success){
+                    if (res.data.success) {
 
-                    }else{
+                    } else {
                         loginFiled()
                     }
                 },
                 fail: res => {
                     console.log(res, 'fail')
-                    if(res.error == 19) {
+                    if (res.error == 19) {
                         loginFiled()
                     }
-                    if(res.error == 12) {
+                    if (res.error == 12) {
                         loginFiled('网络异常')
                     }
                 },
@@ -81,20 +81,26 @@ const request = option => {
         data: option.data,
         method: option.method,
         success: res => {
-            option.success(res)
+            if (typeof res.data !== 'string' || res.data.indexOf('主框架') === -1) {
+                option.success(res)
+            }else{
+                dd.navigateTo({
+                    url: '/pages/index/index'
+                })
+            }
         },
         fail: res => {
-            if(typeof option.fail === 'function') {
+            if (typeof option.fail === 'function') {
                 option.fail(res)
             }
         },
         complete: res => {
-            if(typeof option.complete === 'function') {
+            if (typeof option.complete === 'function') {
                 option.complete(res)
             }
             console.log(typeof option.hideLoading)
             console.log(option.url)
-            if(typeof option.hideLoading === 'function') {
+            if (typeof option.hideLoading === 'function') {
                 option.hideLoading()
             }
         }
