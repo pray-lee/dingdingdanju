@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        process: null,
         type: '',
         billId: '',
         maskHidden: true,
@@ -1071,6 +1072,7 @@ Page({
                 console.log(res.data.obj)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
+                    this.getProcessInstance(id, res.data.obj.accountbookId)
                 }
             },
         })
@@ -1242,5 +1244,77 @@ Page({
                 }
             }
         })
-    }
+    },
+    getProcessInstance(billId, accountbookId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
+            method: 'GET',
+            success: res => {
+                if(res.data && res.data.length) {
+                    const { title, operationRecords, tasks, ccUserids } = res.data[0]
+                    const taskArr = tasks.filter(item => {
+                        if(item.taskStatus === 'RUNNING') {
+                            if(item.userid.split(',')[2]){
+                                item.userName = item.userid.split(',')[2]
+                                item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                            }else{
+                                item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                            }
+                            item.avatar = item.userid.split(',')[1]
+                            item.resultName = '（审批中）'
+                            item.operationName = '审批人'
+                            return item
+                        }
+                    })
+
+                    // 抄送人
+                    let cc = []
+                    if(ccUserids && ccUserids.length) {
+                        cc = ccUserids.map(item => {
+                            return {
+                                userName: item.split(',')[0],
+                                realName: item.split(',')[0].length > 1 ? item.split(',')[0].slice(-2) : item.split(',')[0],
+                                avatar: item.split(',')[1]
+                            }
+                        })
+                    }
+
+                    const operationArr = operationRecords.filter(item => {
+                        if(item.userid.split(',')[2]){
+                            item.userName = item.userid.split(',')[2]
+                            item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                        }else{
+                            item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                        }
+                        item.avatar = item.userid.split(',')[1]
+                        if(item.operationType === 'START_PROCESS_INSTANCE') {
+                            item.operationName = '发起审批'
+                        } else if(item.operationType !== 'NONE') {
+                            item.operationName = '审批人'
+                        }
+                        if(item.operationResult === 'AGREE') {
+                            item.resultName = '（已同意）'
+                        }else if(item.operationResult === 'REFUSE') {
+                            item.resultName = '（已拒绝）'
+                        }else{
+                            item.resultName = ''
+                        }
+                        if(item.operationType !== 'NONE') {
+                            return item
+                        }
+                    })
+                    this.setData({
+                        process: {
+                            title,
+                            operationRecords: operationArr,
+                            tasks: taskArr,
+                            cc
+                        }
+                    })
+                }
+            },
+        })
+    },
 })

@@ -140,7 +140,7 @@
                         借款合计：</text><text class="total-word">{{result.amount}}</text></view>
             </view>
             <!--              流程图-->
-            <block a:if="{{process !== null}}">
+            <block a:if="{{process !== null && process.operationRecords.length}}">
                 <view class="title">{{process.title}}</view>
                 <view class="progress">
                     <view class="progress-box" a:for="{{process.operationRecords}}">

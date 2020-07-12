@@ -98,8 +98,6 @@ const request = option => {
             if (typeof option.complete === 'function') {
                 option.complete(res)
             }
-            console.log(typeof option.hideLoading)
-            console.log(option.url)
             if (typeof option.hideLoading === 'function') {
                 option.hideLoading()
             }
