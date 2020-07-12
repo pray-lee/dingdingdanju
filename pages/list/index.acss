@@ -1,6 +1,6 @@
 
 .scroll-view{
-    height: calc(100vh - 140rpx)
+    height: calc(100vh - 200rpx)
 }
 .list-item {
     margin:0px auto;
