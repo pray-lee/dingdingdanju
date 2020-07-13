@@ -79,11 +79,13 @@ Page({
             url: app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=1&sort=updateDate&order=desc&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,',
             method: 'GET',
             success: res => {
-                const obj = res.data.rows[0]
-                obj.amount = formatNumber(obj.amount)
-                this.setData({
-                    jiekuan: obj,
-                })
+                if(res.data.rows.length) {
+                    const obj = res.data.rows[0]
+                    obj.amount = formatNumber(obj.amount)
+                    this.setData({
+                        jiekuan: obj,
+                    })
+                }
             }
         })
     },
@@ -94,11 +96,13 @@ Page({
             url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=1&sort=updateDate&order=desc&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
             method: 'GET',
             success: res => {
-                const obj = res.data.rows[0]
-                obj.totalAmount = formatNumber(obj.totalAmount)
-                this.setData({
-                    baoxiao: obj,
-                })
+                if(res.data.rows.length) {
+                    const obj = res.data.rows[0]
+                    obj.totalAmount = formatNumber(obj.totalAmount)
+                    this.setData({
+                        baoxiao: obj,
+                    })
+                }
             }
         })
     },
@@ -125,7 +129,7 @@ Page({
                                 loginFiled(res.data.msg)
                             }
                         } else {
-                            loginFiled()
+                            loginFiled(res.data.msg)
                         }
                     },
                 })

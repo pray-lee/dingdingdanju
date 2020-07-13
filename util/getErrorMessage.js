@@ -53,7 +53,8 @@ const login = (app) => {
                     if (res.data.success) {
 
                     } else {
-                        loginFiled()
+                        console.log(res.data.msg)
+                        loginFiled(res.data.msg)
                     }
                 },
                 fail: res => {

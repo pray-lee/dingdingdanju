@@ -882,6 +882,7 @@ Page({
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid) {
         this.addLoading()
+        console.log(this.data.submitData)
         let url = this.getAuxptyUrl(accountbookId, auxptyid)
         if(auxptyid == 2 && this.data.submitData.applicantType == 10) {
             url = url + '&id=' + this.data.submitData.applicantId
@@ -1249,7 +1250,7 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
+            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=4&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
                 if(res.data && res.data.length) {
@@ -1261,6 +1262,7 @@ Page({
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             }else{
                                 item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                                item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             }
                             item.avatar = item.userid.split(',')[1]
                             item.resultName = '（审批中）'
@@ -1287,7 +1289,9 @@ Page({
                             item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                         }else{
                             item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
+                            item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                         }
+                        console.log(item.realName)
                         item.avatar = item.userid.split(',')[1]
                         if(item.operationType === 'START_PROCESS_INSTANCE') {
                             item.operationName = '发起审批'
