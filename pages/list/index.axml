@@ -8,7 +8,7 @@
         <view class="list-wrapper">
             <view class="list-item" a:for="{{list}}">
                 <movable-area a:if="{{item.status == 25 || item.status == 10}}">
-                   <movable-view direction="horizontal">
+                   <movable-view direction="horizontal" inertia="{{true}}" out-of-bounds="{{true}}" friction="1" damping="5">
                        <view onTap="goToEdit" data-id="{{item.id}}" data-status="{{item.status}}">
                            <view class="status error">{{statusObj[item.status]}}</view>
                            <view class="content">

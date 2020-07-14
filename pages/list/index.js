@@ -9,6 +9,7 @@ Page({
         maskHidden: true,
         animationInfo: {},
         list: [],
+        x: 0,
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -258,6 +259,9 @@ Page({
             confirmButtonText: '是',
             cancelButtonText: '否',
             success: res => {
+                this.setData({
+                    x: 0
+                })
                 if(res.confirm) {
                     this.addLoading()
                     request({
@@ -282,5 +286,14 @@ Page({
                 }
             }
         })
+    },
+    onChangeEnd(e) {
+        console.log(e)
+        this.setData({
+            x: 300
+        })
+    },
+    onChange(e) {
+        console.log(e)
     }
 })
