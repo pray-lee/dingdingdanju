@@ -1,10 +1,14 @@
 var app = getApp()
 Page({
    data:{
+      isPhoneXSeries: false,
       borrowList: [],
       searchResult: [],
    },
    onLoad() {
+      this.setData({
+         isPhoneXSeries: app.globalData.isPhoneXSeries
+      })
       dd.getStorage({
          key: 'borrowList',
          success: res => {

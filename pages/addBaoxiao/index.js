@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        isPhoneXSeries: false,
         process: null,
         btnHidden: false,
         disabled: false,
@@ -279,7 +280,7 @@ Page({
                     }
                 })
                 // 解除focus不触发的解决办法。
-                this.onClick()
+                // this.onClick()
             },
         })
     },
@@ -551,6 +552,7 @@ Page({
         this.getTaxRageArr()
         this.getInvoiceTypeArr()
         this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
             submitData: {
                 ...this.data.submitData,
                 userName: app.globalData.realName
@@ -1111,12 +1113,6 @@ Page({
                                 dd.navigateTo({
                                     url: '/pages/importBorrowList/index'
                                 })
-                                const t = setTimeout(() => {
-                                    this.setData({
-                                        clickFlag: true
-                                    })
-                                    clearTimeout(t)
-                                }, 300)
                             }
                         });
                     }else{
@@ -1133,6 +1129,14 @@ Page({
                         });
                     }
                 },
+                complete: res => {
+                    const t = setTimeout(() => {
+                        this.setData({
+                            clickFlag: true
+                        })
+                        clearTimeout(t)
+                    }, 300)
+                }
             })
         }
     },
@@ -1263,6 +1267,7 @@ Page({
             key: 'baoxiaoDetail',
             data: this.data.baoxiaoList[index],
             success: res => {
+                console.log(this.data.baoxiaoList[index])
                 console.log('写入报销详情成功！！')
                 dd.setStorage({
                     key: 'initBaoxiaoDetail',

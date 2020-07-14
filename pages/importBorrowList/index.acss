@@ -2,6 +2,12 @@
     height: 100%;
     transform: translateY(0)
 }
+.jiekuandan {
+    height: calc(100vh - 100rpx)
+}
+.jiekuandan.iphoneX{
+    height: calc(100vh - 168rpx)
+}
 .import-borrow-item{
     flex: 1
 }

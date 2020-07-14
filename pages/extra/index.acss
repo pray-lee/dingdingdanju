@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
   height: calc(100vh - 200rpx);
 }
+.form-scroll-wrapper.iphoneX{
+  height: calc(100vh - 268rpx)
+}
 .import-borrow-list-btn{
   position:fixed;
   z-index:1000;
@@ -32,7 +35,12 @@
   left:0;
   z-index:999;
   width: 100%;
-  border-top: 1px solid #f1f1f1
+  height: 100rpx;
+  border-top: 1px solid #f1f1f1;
+  background:#fff;
+}
+.btn-area.iphoneX{
+  height: 168rpx
 }
 .btn-area button{
   width: 100%;
@@ -74,6 +82,9 @@
   box-sizing:border-box;
   border-bottom: 1rpx solid #ddd;
   border-top: 1rpx solid #ddd;
+}
+.total.iphoneX{
+  bottom: calc(168rpx - 2rpx)
 }
 .btn-area .save-draft{
   background:#fff;

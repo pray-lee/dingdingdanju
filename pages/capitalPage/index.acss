@@ -1,6 +1,9 @@
 .scroll-info-list{
   height: calc(100vh - 160rpx)
 }
+.scroll-info-list.iphoneX{
+  height: calc(100vh - 228rpx)
+}
 .info-item{
   background:#fff;
   position:relative;

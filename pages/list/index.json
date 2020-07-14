@@ -1,4 +1,5 @@
 {
   "defaultTitle": "单据列表",
-  "pullRefresh": true
+  "pullRefresh": true,
+  "allowsBounceVertical": "NO"
 }

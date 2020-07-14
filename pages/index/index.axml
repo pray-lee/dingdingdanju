@@ -93,8 +93,10 @@
             </view>
         </view>
     </view>
-    <view class="add-btn" onTap="onAddShow">
-        新增单据
+    <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="add-btn" onTap="onAddShow">
+            新增单据
+        </view>
     </view>
     <!-- 新增单据弹框 -->
     <view class="add-page" animation="{{animationInfo}}">

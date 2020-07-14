@@ -5,6 +5,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        isPhoneXSeries: false,
         result: null,
         process: null,
     },
@@ -29,6 +30,9 @@ Page({
         })
     },
     onLoad(query) {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         this.addLoading()
         const id = query.id
         request({

@@ -3,6 +3,7 @@ app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
+        isPhoneXSeries: false,
         type: '',
         scrollTop: 0,
         maskHidden: true,
@@ -94,11 +95,13 @@ Page({
         })
     },
     onLoad(query) {
+        console.log(query)
         // type是状态码
         var type = query.type
         // 区分是借款还是报销
         var flag = query.flag
         this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
             type: type + flag,
             active: type,
             flag
@@ -240,4 +243,44 @@ Page({
             }
         }
     },
+    deleteBill(e) {
+        const {id, flag, status} = e.currentTarget.dataset
+        console.log(status, 'deleteBill')
+        let url = ''
+        if(flag === 'J') {
+            url = app.globalData.url + 'borrowBillController.do?doBatchDel&ids=' + id
+        }else{
+            url = app.globalData.url + 'reimbursementBillController.do?doBatchDel&ids=' + id
+        }
+        dd.confirm({
+            title: '温馨提示',
+            content: '确认删除该单据吗?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: res => {
+                if(res.confirm) {
+                    this.addLoading()
+                    request({
+                        hideLoading: this.hideLoading,
+                        url,
+                        method: 'GET',
+                        success: res => {
+                            console.log(res)
+                            if(res.data.success) {
+                                this.onLoad({
+                                    flag,
+                                    type: status == 25 ? 20 : status
+                                })
+                            }else{
+                                dd.showToast({
+                                    type: 'none',
+                                    content: '单据删除失败'
+                                })
+                            }
+                        },
+                    })
+                }
+            }
+        })
+    }
 })

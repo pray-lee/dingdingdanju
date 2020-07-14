@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
     height: calc(100vh - 100rpx)
 }
+.form-scroll-wrapper.iphoneX{
+    height: calc(100vh - 168rpx)
+}
 .block-wrapper{
     background:#fff;
 }
@@ -30,6 +33,11 @@
     left:0;
     z-index:990;
     width: 100%;
+    height: 100rpx;
+    background:#fff;
+}
+.btn-area.iphoneX{
+    height: 168rpx;
 }
 .btn-area button{
     flex: 1;

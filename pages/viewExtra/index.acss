@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
   height: calc(100vh - 100rpx)
 }
+.form-scroll-wrapper.iphoneX{
+  height: calc(100vh - 168rpx)
+}
 .import-borrow-list-btn{
   position:fixed;
   z-index:1000;

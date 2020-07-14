@@ -5,6 +5,7 @@ import {formatNumber, validFn} from "../../util/getErrorMessage";
 const app = getApp()
 Page({
     data: {
+        isPhoneXSeries: false,
         btnHidden: false,
         baoxiaoDetail: {},
         scrollId: "",
@@ -13,6 +14,9 @@ Page({
         subjectExtraConf: null,
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         dd.getStorage({
             key: 'subjectExtraConf',
             success: res => {
@@ -94,7 +98,7 @@ Page({
         const obj = this.generateExtraList(this.data.subjectExtraConf)
         const baoxiaoDetail = clone(this.data.baoxiaoDetail)
         baoxiaoDetail.extraList.splice(index + 1, 0, {conf: obj.array})
-        baoxiaoDetail.extraMessage.splice(index + 1, 0, baoxiaoDetail.extraMessage[index])
+        baoxiaoDetail.extraMessage.splice(index + 1, 0, clone(baoxiaoDetail.extraMessage[index]))
         this.setData({
             baoxiaoDetail
         })

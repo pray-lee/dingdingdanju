@@ -6,6 +6,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        isPhoneXSeries: false,
         process: null,
         type: '',
         billId: '',
@@ -253,7 +254,7 @@ Page({
                     })
                 }
                 // 解除focus不触发的解决办法。
-                this.onClick()
+                // this.onClick()
             },
             fail: res => {
                 console.log(res, 'failed dateTime')
@@ -475,7 +476,7 @@ Page({
             return
         }
         var obj = {
-            borrowAmount: this.data.borrowAmount,
+            borrowAmount: Number(this.data.borrowAmount).toFixed(2),
             formatBorrowAmount: formatNumber(Number(this.data.borrowAmount).toFixed(2)),
             remark: this.data.remark
         }
@@ -521,10 +522,10 @@ Page({
      */
     uploadFile(array) {
         if (array.length) {
-            this.addLoading()
             let promiseList = []
             array.forEach(item => {
                 promiseList.push(new Promise((resolve, reject) => {
+                    this.addLoading()
                     dd.uploadFile({
                         url: app.globalData.url + 'aliyunController/uploadImages.do',
                         fileType: 'image',
@@ -545,13 +546,15 @@ Page({
                         },
                         fail: res => {
                             reject(res)
+                        },
+                        complete: res => {
+                            this.hideLoading()
                         }
                     })
                 }))
             })
             Promise.all(promiseList).then(res => {
                 // 提交成功的处理逻辑
-                this.hideLoading()
                 var billFilesList = []
                 res.forEach(item => {
                     billFilesList.push(item)
@@ -563,13 +566,12 @@ Page({
                     }
                 })
             }).catch(error => {
-                this.hideLoading()
                 console.log(error, 'catch')
                 dd.alert({
                     content: '上传失败',
                     buttonText: '好的',
                     success: res => {
-
+                        console.log(res, '上传失败')
                     }
                 })
             })
@@ -584,6 +586,7 @@ Page({
     onLoad(query) {
         app.globalData.loadingCount = 0
         this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
             submitData: {
                 ...this.data.submitData,
                 userName: app.globalData.realName
@@ -647,11 +650,13 @@ Page({
     // 获取申请部门
     getDepartmentList(accountbookId, departmentId, subjectId) {
         this.addLoading()
+        console.log(app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId + '-')
         request({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
+                console.log(res, '部门')
                 var arr = res.data.map(item => {
                     return {
                         id: item.departDetail.id,
@@ -1321,4 +1326,11 @@ Page({
             },
         })
     },
+    // onShareAppMessage() {
+    //     return {
+    //         title: '财咖借款单',
+    //         desc: '财咖借款单测试',
+    //         path: 'page/addJiekuan/index'
+    //     };
+    // },
 })

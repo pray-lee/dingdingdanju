@@ -2,11 +2,13 @@
 .scroll-view{
     height: calc(100vh - 200rpx)
 }
+.scroll-view.iphoneX{
+    height: calc(100vh - 268rpx)
+}
 .list-item {
     margin:0px auto;
     margin-bottom: 20rpx;
     background:#fff;
-    padding: 25px;
 }
 .tabs{
     display:flex;
@@ -23,4 +25,38 @@
     text-align:center;
     line-height: 80rpx;
     border-bottom: 5rpx solid transparent
+}
+movable-area{
+    position:relative;
+    width: 100vw;
+    height: calc(140rpx + 50rpx);
+    box-sizing:border-box
+}
+movable-view{
+    box-sizing:border-box;
+    padding: 25rpx 25px;
+    padding-right: calc(25px + 4em);
+    height: calc(140rpx + 50rpx);
+    width: calc(100vw + 4em)
+}
+.slide-delete{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    position:absolute;
+    right:0;
+    top:0;
+    width: 4em;
+    height: 100%;
+    background:#ff5252;
+    color:#fff
+}
+.content{
+    display:flex;
+    justify-content: space-between;
+}
+.remark{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }

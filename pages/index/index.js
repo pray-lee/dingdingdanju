@@ -4,6 +4,7 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        isPhoneXSeries: false,
         animationInfo: {},
         maskHidden: true,
         jiekuanList: [],
@@ -69,6 +70,9 @@ Page({
         }
     },
     onLoad(query) {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
     },
     onReady() {
     },

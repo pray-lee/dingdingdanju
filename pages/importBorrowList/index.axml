@@ -1,7 +1,7 @@
 <!--增加导入借款单弹框-->
 <view class="add-borrow-page">
     <form onSubmit="onCheckboxSubmit">
-        <scroll-view class="jiekuandan" scroll-y style="height: calc(100vh - 1rem)">
+        <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>
             <block a:if="{{tempImportList.length}}">
                 <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{tempImportList}}">
                     <label class="checkbox-label">

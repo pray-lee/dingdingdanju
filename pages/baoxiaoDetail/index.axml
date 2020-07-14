@@ -59,7 +59,7 @@
         </view>
 
     </scroll-view>
-    <view class="btn-area" hidden="{{btnHidden}}">
+    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}" hidden="{{btnHidden}}">
         <button onTap="addDetail" class="submit-btn save-draft">再加一笔</button>
         <button onTap="submitBaoxiaoDetail" class="submit-btn">保存报销</button>
     </view>

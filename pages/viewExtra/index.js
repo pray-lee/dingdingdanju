@@ -6,9 +6,13 @@ const app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        isPhoneXSeries: false,
         baoxiaoDetail: null
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         dd.getStorage({
             key: 'extraObj',
             success: res => {

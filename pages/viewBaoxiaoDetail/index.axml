@@ -1,5 +1,5 @@
 <view class="form-wrapper" onTap="onClick">
-    <scroll-view scroll-y class="form-scroll-wrapper">
+    <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
         <view class="block-wrapper">
              <view class="form-row" onTap="goSubjectPage">
                 <view class="form-row-label"><text class="require">*</text>费用类型：</view>

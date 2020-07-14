@@ -4,9 +4,13 @@ import clone from 'lodash/cloneDeep'
 const app = getApp()
 Page({
     data: {
+        isPhoneXSeries: false,
         baoxiaoDetail: null
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         dd.getStorage({
             key: 'baoxiaoDetail',
             success: res => {

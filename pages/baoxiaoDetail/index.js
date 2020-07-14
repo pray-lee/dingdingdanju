@@ -5,11 +5,15 @@ import {formatNumber, validFn, request} from "../../util/getErrorMessage";
 const app = getApp()
 Page({
     data: {
+        isPhoneXSeries: false,
         btnHidden: false,
         baoxiaoDetail: {},
         baoxiaoArr: [],
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         const isEdit = dd.getStorageSync({key: 'edit'}).data
         const initBaoxiaoDetail = dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
         const baoxiaoDetail = dd.getStorageSync({key: 'baoxiaoDetail'}).data
@@ -30,6 +34,7 @@ Page({
             this.setData({
                 baoxiaoDetail: baoxiaoDetail
             })
+            console.log(baoxiaoDetail, '..................')
         }
         console.log('onLoad')
     },
@@ -85,6 +90,8 @@ Page({
                 key: 'subject'
             })
             this.getSubjectAuxptyList(subject.id, this.data.baoxiaoDetail.accountbookId)
+        }else{
+            this.getSubjectAuxptyList(this.data.baoxiaoDetail.subjectId, this.data.baoxiaoDetail.accountbookId)
         }
     },
     onShow() {
@@ -428,6 +435,7 @@ Page({
     },
     goAuxptyPage(e) {
         const auxptyId = e.currentTarget.dataset.id
+        console.log(auxptyId, 'auxptyId,......')
         dd.setStorage({
             key: 'auxptyList',
             data: this.data.baoxiaoDetail.allAuxptyList[auxptyId],

@@ -1,10 +1,14 @@
 var app = getApp()
 Page({
     data:{
+        isPhoneXSeries: false,
         capitalList: [],
         searchResult: [],
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         dd.getStorage({
             key: 'capitalList',
             success: res => {

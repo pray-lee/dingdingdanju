@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
     height: 100vh
 }
+.form-scroll-wrapper.iphoneX{
+    height: calc(100vh - 68rpx)
+}
 .block-wrapper{
     background:#fff;
 }

@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
     height: calc(100vh - 100rpx)
 }
+.form-scroll-wrapper.iphoneX{
+    height: calc(100vh - 168rpx)
+}
 .add-hesuanweidu-page{
     transform:translateY('605rpx')
 }
@@ -89,7 +92,7 @@
     align-items:center
 }
 .auxpty-wrapper .left{
-    width: 5em;
+    min-width: 5em;
 }
 .auxpty-wrapper .right{
     margin-left: 20rpx;

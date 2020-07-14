@@ -9,6 +9,9 @@
 .form-scroll-wrapper{
     height: 100vh
 }
+.form-scroll-wrapper.iphoneX{
+    height: calc(100vh - 68rpx)
+}
 .block-wrapper{
     background:#fff;
 }
@@ -214,7 +217,7 @@ input::-webkit-input-placeholder{
     align-items:center
 }
 .auxpty-wrapper .left{
-  width: 5em;
+  min-width: 5em;
 }
 .auxpty-wrapper .right{
     margin-left: 20rpx;

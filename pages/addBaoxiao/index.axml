@@ -1,6 +1,6 @@
 <view class="form-wrapper" onTap="onClick">
     <form onSubmit="formSubmit">
-        <scroll-view scroll-y class="form-scroll-wrapper">
+        <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
             <view class="title">申请方信息</view>
             <view class="block-wrapper">
                 <view class="form-row">
@@ -71,10 +71,10 @@
                     </view>
                 </view>
                 <view class="form-line"/>
-                <view class="form-row">
+                <view class="form-row" onTap="onBusinessFocus">
                     <view class="form-row-label"><text class="require">*</text>业务日期</view>
                     <view class="form-row-content">
-                        <view onTap="onBusinessFocus" data-name="businessDateTime">{{submitData.businessDateTime}}</view>
+                        <view data-name="businessDateTime">{{submitData.businessDateTime}}</view>
                     </view>
                     <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
                 </view>
@@ -251,7 +251,7 @@
                 </view>
             </block>
         </scroll-view>
-        <view class="btn-area">
+        <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
             <view class="delete-file" onTap="deleteBill" a:if="{{status == 10 || status == 25}}"></view>
             <button onTap="formSubmit" class="submit-btn save-draft" data-status="10">保存草稿</button>
             <button onTap="formSubmit" class="submit-btn" data-status="20">{{status == 25 ? '再次提交' : '提交单据'}}</button>

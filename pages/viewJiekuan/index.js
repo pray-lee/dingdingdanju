@@ -4,6 +4,7 @@ import {formatNumber, request} from "../../util/getErrorMessage";
 var app = getApp()
 Page({
     data: {
+        isPhoneXSeries: false,
         result: null,
         process: null,
     },
@@ -30,7 +31,9 @@ Page({
         })
     },
     onLoad(query) {
-        console.log(query.id)
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
