@@ -12,7 +12,7 @@ const getErrorMessage = string => {
 
 const submitSuccess = () => {
     console.log('submit success...')
-    dd.navigateTo({
+    dd.reLaunch({
         url: '/pages/index/index'
     })
 }
@@ -23,7 +23,7 @@ const loginFiled = (msg = "") => {
         content: msg,
         buttonText: '确定',
         success: () => {
-            dd.navigateTo({
+            dd.reLaunch({
                 url: '../error/index'
             })
         },
@@ -85,7 +85,7 @@ const request = option => {
             if (typeof res.data !== 'string' || res.data.indexOf('主框架') === -1) {
                 option.success(res)
             }else{
-                dd.navigateTo({
+                dd.reLaunch({
                     url: '/pages/index/index'
                 })
             }
