@@ -40,7 +40,7 @@
   background:#fff;
 }
 .btn-area.iphoneX{
-  height: 168rpx
+  padding-bottom: 68rpx
 }
 .btn-area button{
   width: 100%;
