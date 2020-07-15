@@ -219,7 +219,6 @@ Page({
     },
 
     onExtraSubmit() {
-        this.addLoading()
         this.setApplicationAmount()
         var tempData = clone(this.data.baoxiaoDetail)
         tempData.subjectExtraConf = JSON.stringify(this.data.subjectExtraConf)
@@ -229,6 +228,7 @@ Page({
                return
             }
         }
+        this.addLoading()
         dd.setStorage({
             key: 'baoxiaoDetail',
             data: tempData,

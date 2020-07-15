@@ -555,7 +555,8 @@ Page({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
             submitData: {
                 ...this.data.submitData,
-                userName: app.globalData.realName
+                userName: app.globalData.realName,
+                applicantId: app.globalData.applicantId
             }
         })
         var type = query.type
@@ -843,14 +844,6 @@ Page({
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
-        // 加一个编辑标志
-        dd.setStorage({
-            key: 'edit',
-            data: true,
-            success: res => {
-                console.log('编辑标志缓存成功...')
-            }
-        })
         request({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'reimbursementBillController.do?getDetail&id=' + id,
@@ -1253,8 +1246,18 @@ Page({
         }
     },
     showBaoxiaoDetail(e) {
+        // 加一个编辑标志
+        dd.setStorage({
+            key: 'edit',
+            data: true,
+            success: res => {
+                console.log('编辑标志缓存成功...')
+            }
+        })
         this.addLoading()
         const index = e.currentTarget.dataset.index
+        this.data.baoxiaoList[index].applicantType = this.data.submitData.applicantType
+        this.data.baoxiaoList[index].applicantId = this.data.submitData.applicantId
         var obj = this.generateBaseDetail()
         dd.setStorage({
             key: 'index',

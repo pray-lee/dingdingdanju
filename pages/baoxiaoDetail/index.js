@@ -23,7 +23,7 @@ Page({
             })
         } else {
             if (isEdit) {
-                this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId)
+                this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId, false)
                 dd.removeStorage({
                     key: 'edit',
                     success: res => {
@@ -89,9 +89,7 @@ Page({
             dd.removeStorage({
                 key: 'subject'
             })
-            this.getSubjectAuxptyList(subject.id, this.data.baoxiaoDetail.accountbookId)
-        }else{
-            this.getSubjectAuxptyList(this.data.baoxiaoDetail.subjectId, this.data.baoxiaoDetail.accountbookId)
+            this.getSubjectAuxptyList(subject.id, this.data.baoxiaoDetail.accountbookId, true)
         }
     },
     onShow() {
@@ -157,7 +155,7 @@ Page({
         })
     },
     // 获取科目对应的辅助核算 (每一个都是单独调用)
-    getSubjectAuxptyList(subjectId, accountbookId) {
+    getSubjectAuxptyList(subjectId, accountbookId, flag) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -178,7 +176,7 @@ Page({
                         }
                     })
                     arr.forEach(item => {
-                        this.getAuxptyList(accountbookId, item.auxptyId)
+                        this.getAuxptyList(accountbookId, item.auxptyId, flag)
                     })
                 } else {
                     this.setData({
@@ -193,7 +191,9 @@ Page({
         })
     },
     // 请求辅助核算列表
-    getAuxptyList(accountbookId, auxptyid) {
+    getAuxptyList(accountbookId, auxptyid, flag) {
+        console.log(auxptyid, 'auxptyid')
+        console.log(this.data.baoxiaoDetail)
         this.addLoading()
         let url = this.getAuxptyUrl(accountbookId, auxptyid)
         if(auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
@@ -228,23 +228,25 @@ Page({
                         allAuxptyList: tempData
                     }
                 })
-                // 设置默认值
-                let index = null
-                if (auxptyid == 1) {
-                    // 部门
-                    index = this.setInitIndex(newObj, this.data.baoxiaoDetail.submitterDepartmentId)
-                }
-                if (auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
-                    index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
-                }
-                if (auxptyid == 3 && this.data.baoxiaoDetail.baoxiaoDetailype == 20) {
-                    index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
-                }
-                if (auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
-                    index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
-                }
-                if (index !== null) {
-                    this.setSelectedAuxpty(newObj[index])
+                if(flag) {
+                    // 设置默认值
+                    let index = null
+                    if (auxptyid == 1) {
+                        // 部门
+                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.submitterDepartmentId)
+                    }
+                    if (auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
+                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    }
+                    if (auxptyid == 3 && this.data.baoxiaoDetail.baoxiaoDetailype == 20) {
+                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    }
+                    if (auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
+                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    }
+                    if (index !== null) {
+                        this.setSelectedAuxpty(newObj[index])
+                    }
                 }
             }
         })

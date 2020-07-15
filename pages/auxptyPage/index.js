@@ -1,10 +1,14 @@
 var app = getApp()
 Page({
     data:{
+        isPhoneXSeries: false,
         auxptyList: [],
         searchResult: [],
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries
+        })
         dd.getStorage({
             key: 'auxptyList',
             success: res => {

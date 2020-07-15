@@ -206,7 +206,7 @@ Page({
         //     this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
         // }
         if (name === 'applicantType') {
-            this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
+            // this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantId') {
@@ -589,7 +589,8 @@ Page({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
             submitData: {
                 ...this.data.submitData,
-                userName: app.globalData.realName
+                userName: app.globalData.realName,
+                applicantId: app.globalData.applicantId
             }
         })
         var type = query.type
@@ -887,7 +888,6 @@ Page({
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid) {
         this.addLoading()
-        console.log(this.data.submitData)
         let url = this.getAuxptyUrl(accountbookId, auxptyid)
         if(auxptyid == 2 && this.data.submitData.applicantType == 10) {
             url = url + '&id=' + this.data.submitData.applicantId

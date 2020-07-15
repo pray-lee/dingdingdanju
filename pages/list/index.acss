@@ -38,7 +38,7 @@
 
 .movable-area{
   width: 100%;
-  height: 160rpx;
+  height: 190rpx;
 }
 .movable-view{
   width: 100%;

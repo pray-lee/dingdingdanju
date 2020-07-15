@@ -133,7 +133,7 @@ Page({
                     arr = res.data.rows.map(item => {
                         return {
                             ...item,
-                            amount: formatNumber(item.totalAmount)
+                            totalAmount: formatNumber(item.totalAmount)
                         }
                     })
                 }
@@ -179,13 +179,14 @@ Page({
                     arr = res.data.rows.map(item => {
                         return {
                             ...item,
-                            amount: formatNumber(item.totalAmount)
+                            totalAmount: formatNumber(item.totalAmount)
                         }
                     })
                 }
                 this.setData({
                     list: arr
                 })
+                console.log(arr)
             },
             fail: res => {
                 console.log(res, 'failed')
