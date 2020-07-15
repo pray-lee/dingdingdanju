@@ -84,7 +84,7 @@
     background:#fff;
 }
 .submit-btn-wrapper.iphoneX{
-   height: 168rpx
+  padding-bottom: 68rpx
 }
 .add-borrow, .upload-wrapper{
 }
