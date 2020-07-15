@@ -84,6 +84,7 @@ Page({
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             }
                             item.avatar = item.userid.split(',')[1]
+                            console.log(item.avatar)
                             item.resultName = '（审批中）'
                             item.operationName = '审批人'
                             return item
