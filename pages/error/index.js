@@ -12,16 +12,8 @@ Page({
         },
     },
     handleBack() {
-        dd.showToast({
-            content: 'back to pages/index in 1s',
-            success: (res) => {
-                setTimeout(() => {
-                    // dd.navigateBack();
-                    dd.navigateTo({
-                        url: '/pages/index/index'
-                    })
-                }, 1000);
-            },
-        });
+        dd.reLaunch({
+            url: '/pages/index/index'
+        })
     }
 })

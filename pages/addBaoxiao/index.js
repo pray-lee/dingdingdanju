@@ -612,40 +612,52 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId',
+            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
                 console.log(res.data, 'accountbookList')
                 console.log(data)
-                var accountbookIndex = 0
-                var taxpayerType = null;
-                var accountbookId = !!data ? data.accountbookId : res.data[0].id
-                // edit的时候设置值
-                if (accountbookId) {
-                    res.data.forEach((item, index) => {
-                        if (item.id === accountbookId) {
-                            accountbookIndex = index
-                            taxpayerType = item.taxpayerType
+                if(res.data.success) {
+                    var accountbookIndex = 0
+                    var taxpayerType = null;
+                    var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
+                    // edit的时候设置值
+                    if (accountbookId) {
+                        res.data.obj.forEach((item, index) => {
+                            if (item.id === accountbookId) {
+                                accountbookIndex = index
+                                taxpayerType = item.taxpayerType
+                            }
+                        })
+                    }
+                    console.log(taxpayerType,' taxpayerType')
+                    this.setData({
+                        accountbookList: res.data.obj,
+                        accountbookIndex: accountbookIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            accountbookId,
+                            taxpayerType
+                        }
+                    })
+                    var submitterDepartmentId = data ? data.submitterDepartmentId : ''
+                    var applicantType = data ? data.applicantType : 10
+                    var applicantId = data ? data.applicantId : ''
+                    var incomeBankName = data ? data.incomeBankName : ''
+                    var billDetailList = data ? data.billDetailList : []
+                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
+                    this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的',
+                        success: res => {
+                            dd.reLaunch({
+                                url: '/pages/index/index'
+                            })
                         }
                     })
                 }
-                console.log(taxpayerType,' taxpayerType')
-                this.setData({
-                    accountbookList: res.data,
-                    accountbookIndex: accountbookIndex,
-                    submitData: {
-                        ...this.data.submitData,
-                        accountbookId,
-                        taxpayerType
-                    }
-                })
-                var submitterDepartmentId = data ? data.submitterDepartmentId : ''
-                var applicantType = data ? data.applicantType : 10
-                var applicantId = data ? data.applicantId : ''
-                var incomeBankName = data ? data.incomeBankName : ''
-                var billDetailList = data ? data.billDetailList : []
-                this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
-                this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
             }
         })
     },
@@ -658,31 +670,43 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                var arr = res.data.map(item => {
-                    return {
-                        id: item.departDetail.id,
-                        name: item.departDetail.depart.departName
+                if(res.data && res.data.length) {
+                    var arr = res.data.map(item => {
+                        return {
+                            id: item.departDetail.id,
+                            name: item.departDetail.depart.departName
+                        }
+                    })
+                    // edit 的时候设置departmentIndex
+                    var departmentIndex = 0
+                    var submitterDepartmentId = !!departmentId ? departmentId : arr[0].id
+                    if (submitterDepartmentId) {
+                        arr.forEach((item, index) => {
+                            if (item.id === submitterDepartmentId) {
+                                departmentIndex = index
+                            }
+                        })
                     }
-                })
-                // edit 的时候设置departmentIndex
-                var departmentIndex = 0
-                var submitterDepartmentId = !!departmentId ? departmentId : arr[0].id
-                if (submitterDepartmentId) {
-                    arr.forEach((item, index) => {
-                        if (item.id === submitterDepartmentId) {
-                            departmentIndex = index
+                    this.setData({
+                        departmentList: arr,
+                        departmentIndex: departmentIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            submitterDepartmentId
+                        },
+                    })
+                    this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
+                }else{
+                    dd.alert({
+                        content: '当前用户未设置部门或者所属部门已禁用',
+                        buttonText: '好的',
+                        success: res => {
+                            dd.reLaunch({
+                                url: '/pages/index/index'
+                            })
                         }
                     })
                 }
-                this.setData({
-                    departmentList: arr,
-                    departmentIndex: departmentIndex,
-                    submitData: {
-                        ...this.data.submitData,
-                        submitterDepartmentId
-                    },
-                })
-                this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
             }
         })
     },
@@ -691,7 +715,7 @@ Page({
         this.addLoading()
         request({
             hideLoading:this.hideLoading,
-            url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType,
+            url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType + '&billType=9',
             method: 'GET',
             success: res => {
                 var arr = res.data.map(item => {
@@ -833,10 +857,11 @@ Page({
                 }
             })
         }else{
-            dd.showToast({
-                type: 'none',
-                content: '当前账簿下没有费用类型',
+            dd.alert({
+                content: '当前部门没有可用的费用类型',
+                buttonText: '好的',
                 success: () => {
+                    //
                 },
             });
         }
@@ -1114,10 +1139,11 @@ Page({
                             data: [],
                             success: () =>{}
                         })
-                        dd.showToast({
-                            type: 'none',
+                        dd.alert({
                             content: '没有需要核销的借款',
+                            buttonText: '好的',
                             success: () => {
+                                //
                             },
                         });
                     }
@@ -1329,9 +1355,9 @@ Page({
                                     delta: 1
                                 })
                             }else{
-                                dd.showToast({
-                                    type: 'none',
-                                    content: '报销单删除失败'
+                                dd.alert({
+                                    content: '报销单删除失败',
+                                    buttonText: '好的'
                                 })
                             }
                         },

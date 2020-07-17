@@ -50,17 +50,17 @@ Page({
                         result
                     })
                 }else{
-                    dd.showToast({
-                        type: 'none',
-                        content:'数据请求失败'
+                    dd.alert({
+                        content:'数据请求失败',
+                        buttonText: '好的'
                     })
                 }
                 this.getProcessInstance(result.id, result.accountbookId)
             },
             fail: res => {
-                dd.showToast({
-                    type: 'none',
-                    content:'数据请求失败'
+                dd.alert({
+                    content:'数据请求失败',
+                    buttonText: '好的'
                 })
             },
         })

@@ -328,9 +328,9 @@ Page({
                                     type: status == 25 ? 20 : status
                                 })
                             }else{
-                                dd.showToast({
-                                    type: 'none',
-                                    content: '单据删除失败'
+                                dd.alert({
+                                    content: '单据删除失败',
+                                    buttonText: '好的'
                                 })
                             }
                         },

@@ -116,9 +116,10 @@ Page({
             success: (res) => {
                 this.hideLoading()
                 this.addLoading()
+                console.log(res.authCode, '授权码')
                 request({
                     hideLoading: this.hideLoading,
-                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode,
+                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
                     method: 'GET',
                     success: res => {
                         if (res.data.success) {
@@ -136,6 +137,21 @@ Page({
                             loginFiled(res.data.msg)
                         }
                     },
+                    fail: res => {
+                        console.log(res)
+                    }
+                })
+            },
+            fail: res => {
+                console.log(res ,'获取授权码失败')
+                dd.alert({
+                    content: '当前组织没有该小程序',
+                    buttonText: '好的',
+                    success: res => {
+                        dd.reLaunch({
+                            url: '/pages/error/index'
+                        })
+                    }
                 })
             }
         })

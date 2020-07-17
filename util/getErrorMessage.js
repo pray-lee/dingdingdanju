@@ -46,7 +46,7 @@ const login = (app) => {
     dd.getAuthCode({
         success: (res) => {
             dd.httpRequest({
-                url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode,
+                url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
                 method: "GET",
                 dataType: "json",
                 success: res => {
