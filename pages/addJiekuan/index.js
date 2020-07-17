@@ -191,7 +191,7 @@ Page({
                 }
             })
             this.getDepartmentList(this.data[listName][value].id)
-            this.getBorrowBillList(this.data[listName][value].id, 10)
+            this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
             this.isCapitalTypeStart(this.data[listName][value].id)
         }
         if (name === 'submitterDepartmentId') {
@@ -199,7 +199,7 @@ Page({
             this.setData({
                 applicantIndex: 0
             })
-            this.getBorrowBillList(this.data.submitData.accountbookId, 10)
+            this.getBorrowBillList(this.data.submitData.accountbookId, 10, null, null, true)
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         // if (name === 'subjectId') {
@@ -207,7 +207,12 @@ Page({
         // }
         if (name === 'applicantType') {
             // this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
-            this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
+            // uisCurrentUser 判断是否应该选择当前登录的用户的applicantId
+            var isCurrentUser = true
+            if(this.data[listName][value].id !== 10) {
+                isCurrentUser = false
+            }
+            this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id, null, null, isCurrentUser)
         }
         if (name === 'applicantId') {
             this.getIncomeBankList(this.data.submitData.applicantType, this.data[listName][value].id)
@@ -641,10 +646,19 @@ Page({
                     var submitterDepartmentId = data ? data.submitterDepartmentId : ''
                     var applicantType = data ? data.applicantType : 10
                     var applicantId = data ? data.applicantId : ''
+                    var applicantIndex = 0
+                    this.data.applicantType.forEach((item, index) => {
+                        if(item.id === applicantType) {
+                            applicantIndex = index
+                        }
+                    })
+                    this.setData({
+                        applicantIndex
+                    })
                     var incomeBankName = data ? data.incomeBankName : ''
                     var subjectId = data ? data.subjectId : ''
                     var capitalTypeDetailId = data ? data.capitalTypeDetailId : null
-                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
+                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName, true)
                     this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId)
                     this.isCapitalTypeStart(accountbookId, capitalTypeDetailId)
                 }else{
@@ -712,7 +726,7 @@ Page({
         })
     },
     // 获取借款单位
-    getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName) {
+    getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName, isCurrentUser) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -734,7 +748,14 @@ Page({
                 })
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
-                var applicantId = !!applicant ? applicant : app.globalData.applicantId
+                var applicantId = ''
+                if(isCurrentUser) {
+                    applicantId = !!applicant ? applicant : app.globalData.applicantId
+                }else{
+                    applicantId = arr[0].id
+                }
+                console.log(applicantId, '.........')
+                console.log(app.globalData.applicantId)
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {
@@ -1205,9 +1226,18 @@ Page({
         })
     },
     goSubjectPage() {
-        dd.navigateTo({
-            url: '/pages/subjectPage/index'
-        })
+        const subjectList = dd.getStorageSync({key: 'subjectList'}).data
+        console.log(subjectList)
+        if(subjectList.length) {
+            dd.navigateTo({
+                url: '/pages/subjectPage/index'
+            })
+        }else{
+            dd.alert({
+                content: '未找到借款类型',
+                buttonText: '好的',
+            })
+        }
     },
     goCapitalPage() {
         dd.navigateTo({

@@ -230,7 +230,7 @@ Page({
             })
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
-            this.getBorrowBillList(this.data[listName][value].id, 10)
+            this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
         }
         if (name === 'submitterDepartmentId') {
             // 重新获取科目以后，就要置空报销列表
@@ -246,11 +246,16 @@ Page({
                 },
             })
             this.setTotalAmount()
-            this.getBorrowBillList(this.data.submitData.accountbookId, 10)
+            this.getBorrowBillList(this.data.submitData.accountbookId, 10, null, null, true)
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
         if (name === 'applicantType') {
-            this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id)
+            // uisCurrentUser 判断是否应该选择当前登录的用户的applicantId
+            var isCurrentUser = true
+            if(this.data[listName][value].id !== 10) {
+                isCurrentUser = false
+            }
+            this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id, null, null, isCurrentUser)
         }
         if (name === 'applicantId') {
             this.getIncomeBankList(this.data.submitData.applicantType, this.data[listName][value].id)
@@ -643,9 +648,18 @@ Page({
                     var submitterDepartmentId = data ? data.submitterDepartmentId : ''
                     var applicantType = data ? data.applicantType : 10
                     var applicantId = data ? data.applicantId : ''
+                    var applicantIndex = 0
+                    this.data.applicantTypeList.forEach((item, index) => {
+                        if(item.id === applicantType) {
+                            applicantIndex = index
+                        }
+                    })
+                    this.setData({
+                        applicantIndex
+                    })
                     var incomeBankName = data ? data.incomeBankName : ''
                     var billDetailList = data ? data.billDetailList : []
-                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName)
+                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName, true)
                     this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
                 }else{
                     dd.alert({
@@ -711,7 +725,7 @@ Page({
         })
     },
     // 获取借款单位
-    getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName) {
+    getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName, isCurrentUser) {
         this.addLoading()
         request({
             hideLoading:this.hideLoading,
@@ -733,7 +747,12 @@ Page({
                 })
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
-                var applicantId = !!applicant ? applicant : app.globalData.applicantId
+                var applicantId = ''
+                if(isCurrentUser) {
+                    applicantId = !!applicant ? applicant : app.globalData.applicantId
+                }else{
+                    applicantId = arr[0].id
+                }
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {
