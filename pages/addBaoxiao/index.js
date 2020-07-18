@@ -103,12 +103,22 @@ Page({
                             }
                         })
                     } else {
-                        this.setData({
-                            submitData: {
-                                ...this.data.submitData,
-                                [`${name}[${index}].${keys}`]: item[keys]
-                            }
-                        })
+                        console.log(name, index, keys, item[keys])
+                        if(keys === 'subjectExtraConf' && typeof item[keys] === 'object') {
+                            this.setData({
+                                submitData: {
+                                    ...this.data.submitData,
+                                    [`${name}[${index}].${keys}`]: JSON.stringify(item[keys])
+                                }
+                            })
+                        }else{
+                            this.setData({
+                                submitData: {
+                                    ...this.data.submitData,
+                                    [`${name}[${index}].${keys}`]: item[keys]
+                                }
+                            })
+                        }
                     }
                 }
             })
@@ -136,12 +146,14 @@ Page({
                 status
             }
         })
+        console.log(this.data.submitData)
         // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
         Object.keys(this.data.submitData).forEach(item => {
             if(item.indexOf('billDetailList') != -1) {
                 delete this.data.submitData[item]
             }
         })
+        console.log(this.data.baoxiaoList, '------')
         // 处理一下提交格式
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
         // 提交的时候删除借款科目
@@ -622,7 +634,7 @@ Page({
             success: res => {
                 console.log(res.data, 'accountbookList')
                 console.log(data)
-                if(res.data.success) {
+                if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
                     var taxpayerType = null;
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id

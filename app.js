@@ -18,8 +18,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // CaiKa
-        // "url": "https://www.caika.net/CaiKa/",
-        // "agentId": '827902921'
+        "url": "https://www.caika.net/CaiKa/",
+        "agentId": '827902921'
         // zszh
         // "url": "https://www.caika.net/zszh/",
         // "agentId": "831167331",
@@ -27,12 +27,20 @@ App({
         // "url": "https://www.caika.net/WH/",
         // "agentId": "831342992"
         // 测试环境
-        "url": "http://39.96.59.19:8081/Test/",
+        // "url": "http://39.96.59.19:8081/Test/",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
-        "agentId": '830995107'
+        // "agentId": '830995107'
         // 测试环境钉钉
         // "agentId": '659831320'
+        // 王佩云
+        // "agentId": "833040724"
+        //李宗英
+        // "agentId": "833082754"
+        //刘旭梦
+        // "agentId": "833070768"
+        // 唱红丽
+        // "agentId": "833091620"
     }
 });

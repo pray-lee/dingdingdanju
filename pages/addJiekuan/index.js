@@ -624,7 +624,7 @@ Page({
             method: 'GET',
             success: res => {
                 console.log(res)
-                if(res.data.success) {
+                if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
                     // edit的时候设置值
