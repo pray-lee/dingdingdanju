@@ -228,6 +228,7 @@
                         <view class="small-name">{{item.userName}}</view>
                     </view>
                 </view>
+            </block>
         </scroll-view>
         <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
             <view class="delete-file" onTap="deleteBill" a:if="{{status == 10 || status == 25}}"></view>

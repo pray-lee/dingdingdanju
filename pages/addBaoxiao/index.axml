@@ -258,6 +258,3 @@
         </view>
     </form>
 </view>
-</view>
-<!--<view class="disabled" hidden="{{disabled}}" onTap="onDisabled"></disabled>-->
-</view>
