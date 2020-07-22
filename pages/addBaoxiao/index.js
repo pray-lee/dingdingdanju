@@ -103,7 +103,6 @@ Page({
                             }
                         })
                     } else {
-                        console.log(name, index, keys, item[keys])
                         if(keys === 'subjectExtraConf' && typeof item[keys] === 'object') {
                             this.setData({
                                 submitData: {
