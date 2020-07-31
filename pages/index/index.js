@@ -143,6 +143,7 @@ Page({
                 })
             },
             fail: res => {
+                this.hideLoading()
                 console.log(res ,'获取授权码失败')
                 dd.alert({
                     content: '当前组织没有该小程序',

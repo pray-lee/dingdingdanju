@@ -26,8 +26,12 @@ App({
         // 文化
         // "url": "https://www.caika.net/WH/",
         // "agentId": "831342992"
-        // 测试环境
+        // 测试环境进销存
         // "url": "http://39.96.59.19:8081/Test/",
+        // 测试环境test
+        // "url": "https://www.caika.net/Test/",
+        // 于龙测试
+        // "agentId": "835144677"
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

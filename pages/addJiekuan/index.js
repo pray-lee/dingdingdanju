@@ -542,6 +542,7 @@ Page({
                         },
                         success: res => {
                             const result = JSON.parse(res.data)
+                            console.log(result)
                             if (result.obj && result.obj.length) {
                                 const file = result.obj[0]
                                 resolve(file)
@@ -968,7 +969,13 @@ Page({
                 let index = null
                 if (auxptyid == 1) {
                     // 部门
-                    index = this.setInitIndex(newObj, this.data.submitData.submitterDepartmentId)
+                    let submitterDepartmentId = ''
+                    if(this.data.selectedAuxpty && this.data.selectedAuxpty[auxptyid]) {
+                        submitterDepartmentId = this.data.selectedAuxpty[auxptyid].id
+                    }else{
+                        submitterDepartmentId = this.data.submitData.submitterDepartmentId
+                    }
+                    index = this.setInitIndex(newObj, submitterDepartmentId)
                 }
                 if (auxptyid == 2 && this.data.submitData.applicantType == 10) {
                     index = this.setInitIndex(newObj, this.data.submitData.applicantId)
