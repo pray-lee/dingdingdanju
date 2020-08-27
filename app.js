@@ -18,8 +18,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // CaiKa
-        "url": "https://www.caika.net/CaiKa/",
-        "agentId": '827902921'
+        // "url": "https://www.caika.net/CaiKa/",
+        // "agentId": '827902921'
         // zszh
         // "url": "https://www.caika.net/zszh/",
         // "agentId": "831167331",
@@ -35,7 +35,8 @@ App({
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
-        // "agentId": '830995107'
+        "url": "https://www.caika.net/CaiKaDemo/",
+        "agentId": '830995107'
         // 测试环境钉钉
         // "agentId": '659831320'
         // 王佩云
