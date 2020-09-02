@@ -7,8 +7,8 @@ Page({
         isPhoneXSeries: false,
         animationInfo: {},
         maskHidden: true,
-        jiekuanList: [],
-        baoxiaoList: [],
+        jiekuan: null,
+        baoxiao: null,
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -89,6 +89,10 @@ Page({
                     this.setData({
                         jiekuan: obj,
                     })
+                }else{
+                    this.setData({
+                        jiekuan: null
+                    })
                 }
             }
         })
@@ -105,6 +109,10 @@ Page({
                     obj.totalAmount = formatNumber(obj.totalAmount)
                     this.setData({
                         baoxiao: obj,
+                    })
+                }else{
+                    this.setData({
+                        baoxiao: null
                     })
                 }
             }

@@ -131,18 +131,19 @@ page {
   font-weight:200
 }
 .content{
-  overflow:hidden;
+  display:flex;
+  justify-content: space-between;
   font-size: 26rpx;
   padding: 5px 0;
   padding-bottom: 20rpx;
   font-weight:600
 }
-.content .left{
-  float:left
-}
-.content .right{
-  float:right
-}
+/*.content .left{*/
+/*  float:left*/
+/*}*/
+/*.content .right{*/
+/*  float:right*/
+/*}*/
 .bill-number{
   color:#999;
   font-size: 22rpx
