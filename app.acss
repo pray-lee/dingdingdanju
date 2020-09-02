@@ -138,9 +138,12 @@ page {
   padding-bottom: 20rpx;
   font-weight:600
 }
-/*.content .left{*/
-/*  float:left*/
-/*}*/
+.content .left{
+  max-width:15em;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 /*.content .right{*/
 /*  float:right*/
 /*}*/
