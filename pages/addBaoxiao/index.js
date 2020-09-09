@@ -918,9 +918,13 @@ Page({
         this.getAccountbookList(data)
         var importList = data.borrowBillList.map(item => {
             return {
+                "subject.fullSubjectName": item.subject.fullSubjectName,
                 billDetailId: item.billDetailId,
+                remark: item.remark,
                 applicationAmount: item.applicationAmount,
-                formatApplicationAmount: formatNumber(Number(item.applicationAmount))
+                formatApplicationAmount: formatNumber(Number(item.applicationAmount)),
+                // formatUnverifyAmount: formatNumber(Number(item.borrowBillUnverifyAmount)),
+                // unverifyAmount: item.borrowBillUnverifyAmount
             }
         })
         //fileList
