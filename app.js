@@ -17,12 +17,18 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 电商 (爱在当下)
+        // "url": "https://www.caika.net/DS/",
+        // "agentId": "886493470"
         // 票房宝
-        "url": "https://www.caika.net/WH/",
-        "agentId": "874431275"
+        // "url": "https://www.caika.net/WH/",
+        // "agentId": "874431275"
         // 医疗
         // "url": "https://www.caika.net/MedicalService/",
         // "agentId": "878913385"
+        // 智取科技
+        "url": "https://www.caika.net/MedicalService/",
+        "agentId": "893637276"
         // CaiKa
         // "url": "https://www.caika.net/CaiKa/",
         // "agentId": '827902921'
