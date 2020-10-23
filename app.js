@@ -27,8 +27,8 @@ App({
         // "url": "https://www.caika.net/MedicalService/",
         // "agentId": "878913385"
         // 智取科技
-        "url": "https://www.caika.net/MedicalService/",
-        "agentId": "893637276"
+        // "url": "https://www.caika.net/MedicalService/",
+        // "agentId": "893637276"
         // CaiKa
         // "url": "https://www.caika.net/CaiKa/",
         // "agentId": '827902921'
@@ -41,9 +41,9 @@ App({
         // 测试环境进销存
         // "url": "http://39.96.59.19:8081/Test/",
         // 测试环境test
-        // "url": "https://www.caika.net/Test/",
+        "url": "https://www.caika.net/Test/",
         // 于龙测试
-        // "agentId": "835144677"
+        "agentId": "835144677"
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

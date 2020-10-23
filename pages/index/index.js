@@ -180,6 +180,12 @@ Page({
         })
         this.onAddHide()
     },
+    onShowAddKaipiao(e) {
+        dd.navigateTo({
+            url: '../addKaipiao/index?type=add'
+        })
+        this.onAddHide()
+    },
     onShowAddBaoxiao(e) {
         dd.navigateTo({
             url: '../addBaoxiao/index?type=add'

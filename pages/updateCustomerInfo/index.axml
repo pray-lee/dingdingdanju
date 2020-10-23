@@ -1,0 +1,40 @@
+<view class="custom-info">
+    <view class="form-row">
+        <view class="form-row-label"><text class="require">*</text>纳税人识别号</view>
+        <view class="form-row-content">
+            <input class="input" placeholder="纳税人识别号" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
+        </view>
+    </view>
+    <view class="form-line"/>
+    <view class="form-row">
+        <view class="form-row-label"><text class="require">*</text>开票地址</view>
+        <view class="form-row-content">
+            <input class="input" placeholder="开票地址" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
+        </view>
+    </view>
+    <view class="form-line"/>
+    <view class="form-row">
+        <view class="form-row-label"><text class="require">*</text>开票电话</view>
+        <view class="form-row-content">
+            <input class="input" type="digit" placeholder="开票电话" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+        </view>
+    </view>
+    <view class="form-line"/>
+    <view class="form-row">
+        <view class="form-row-label"><text class="require">*</text>开户行名称</view>
+        <view class="form-row-content">
+            <input class="input" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+        </view>
+    </view>
+    <view class="form-line"/>
+    <view class="form-row">
+        <view class="form-row-label"><text class="require">*</text>开户行账号</view>
+        <view class="form-row-content">
+            <input class="input" type="digit" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+        </view>
+    </view>
+    <view class="form-line"/>
+    <view class="submit-btn-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="borrow-submit" onTap="updateInfo" hidden="{{btnHidden}}">修改</view>
+    </view>
+</view>

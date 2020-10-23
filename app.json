@@ -16,7 +16,12 @@
     "pages/viewJiekuan/index",
     "pages/viewBaoxiao/index",
     "pages/viewBaoxiaoDetail/index",
-    "pages/viewExtra/index"
+    "pages/viewExtra/index",
+    "pages/addKaipiao/index",
+    "pages/updateCustomerInfo/index",
+    "pages/express/index",
+    "pages/addExpressInfo/index",
+    "pages/kaipiaoDetail/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

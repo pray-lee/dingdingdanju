@@ -1,0 +1,32 @@
+<view class="app">
+    <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
+        <view class="list-wrapper">
+            <view class="list-item" a:for="{{list}}">
+                <movable-area class='movable-area'>
+                    <movable-view direction="horizontal" class='movable-view'>
+                        <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
+                            <view class="content" style="display:block">
+                                <view>
+                                    <text>{{item.username}}</text>
+                                    <text>    {{item.phone}}</text>
+                                </view>
+                                <view>
+                                    {{item.address}}
+                                </view>
+                            </view>
+                            <view class="move-wrapper">
+                                <view class="move-block edit" onTap="update" data-id="{{item.id}}">编辑</view>
+                                <view class="move-block del" onTap="delete" data-id="{{item.id}}">删除</view>
+                            </view>
+                        </view>
+                    </movable-view>
+                </movable-area>
+            </view>
+        </view>
+    </scroll-view>
+    <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="add-btn" onTap="addExpressInfo">
+            新建物流信息
+        </view>
+    </view>
+</view>
