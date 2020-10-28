@@ -1,0 +1,59 @@
+<!--增加导入借款单弹框-->
+<view class="add-borrow-page">
+    <view class="search-wrapper">
+        <input type="text" placeholder="销售类型或者备注" onInput="onInput">
+    </view>
+    <view class="date-wrapper">
+        <view class="start" onTap="startTimeChange">
+            <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+            <view>开始时间</view>
+        </view>
+        <view class="end" onTap="endTimeChange">
+            <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+            <view>结束时间</view>
+        </view>
+    </view>
+    <form onSubmit="onCheckboxSubmit">
+        <view class="selectAll-wrapper">
+            <checkbox-group onChange="onAllSelect" class="selectAll">
+                <label class="checkbox">
+                    <checkbox value="" checked="" class="checkbox"/>
+                    <text class="checkbox-text">全选</text>
+                </label>
+            </checkbox-group>
+            <view class="total-wrapper">
+                已选2张，共计200000元
+            </view>
+        </view>
+        <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>
+            <block a:if="{{tempImportList.length}}">
+                <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{tempImportList}}">
+                    <label class="checkbox-label">
+                        <checkbox value="{{item}}" class="checkbox"></checkbox>
+                        <view class="import-borrow-item">
+                            <view class="form-row" style="display:flex;align-items: center">
+                                <view>
+                                    <view class="import-borrow-item-left">
+                                        <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
+                                        <view class="import-borrow-info">
+                                            <view class="import-borrow-time">{{item.businessDateTime}}</view>
+                                        </view>
+                                    </view>
+                                    <view class="import-borrow-item-right">
+                                        ￥
+                                        <text>{{item.unverifyAmount}}</text>
+                                    </view>
+                                </view>
+                                <view class="ellipsis" style="width:12em;text-align:right">{{item.remark}}</view>
+                            </view>
+                            <view class="form-line"/>
+                        </view>
+                    </label>
+                </checkbox-group>
+            </block>
+        </scroll-view>
+        <view class="btn-area">
+            <button formType="submit" class="import-borrow-list-btn">导入应付单</button>
+        </view>
+    </form>
+</view>

@@ -1,26 +1,38 @@
 <view class="app">
-    <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
-        <view class="list-wrapper">
+    <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}"
+                 onScroll="onScroll">
+        <view class="list-wrapper" a:if="{{!!list.length}}">
             <view class="list-item" a:for="{{list}}">
                 <movable-area class='movable-area'>
                     <movable-view direction="horizontal" class='movable-view'>
-                        <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
-                            <view class="content" style="display:block">
+                        <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}"
+                              data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
+                            <view class="content" style="display:block" onTap="selectExpress" data-id="{{item.customerDetailId}}">
                                 <view>
-                                    <text>{{item.username}}</text>
-                                    <text>    {{item.phone}}</text>
+                                    <text>{{item.contacts}}</text>
+                                    <text> {{item.telephone}}</text>
                                 </view>
                                 <view>
                                     {{item.address}}
                                 </view>
                             </view>
                             <view class="move-wrapper">
-                                <view class="move-block edit" onTap="update" data-id="{{item.id}}">编辑</view>
-                                <view class="move-block del" onTap="delete" data-id="{{item.id}}">删除</view>
+                                <view class="move-block edit" onTap="update" data-id="{{item.customerDetailId}}">编辑</view>
+                                <view class="move-block del" onTap="delete" data-id="{{item.customerDetailId}}">删除</view>
                             </view>
                         </view>
                     </movable-view>
                 </movable-area>
+            </view>
+        </view>
+        <view a:else>
+            <view class="a-error-view-wrapper">
+                <image
+                        class="a-error-view-pic"
+                        src="{{errorImg
+                || '/images/error-view/' + (type || 'empty') + '.png'}}"
+                />
+                <view class="a-error-view-title">暂无物流信息</view>
             </view>
         </view>
     </scroll-view>

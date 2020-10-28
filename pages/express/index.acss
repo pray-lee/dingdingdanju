@@ -1,3 +1,4 @@
+@import '../components/errorView/index.acss';
 
 .scroll-view{
     height: calc(100vh - 200rpx)

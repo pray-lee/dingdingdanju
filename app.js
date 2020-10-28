@@ -39,7 +39,7 @@ App({
         // "url": "https://www.caika.net/WH/",
         // "agentId": "831342992"
         // 测试环境进销存
-        // "url": "http://39.96.59.19:8081/Test/",
+        // "url": "https://www.caika.net/TestJxc/",
         // 测试环境test
         "url": "https://www.caika.net/Test/",
         // 于龙测试

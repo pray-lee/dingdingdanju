@@ -23,3 +23,5 @@ require('../../pages/updateCustomerInfo/index?hash=32d7d2807ed4e666ef03b4b3fe8c3
 require('../../pages/express/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/addExpressInfo/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/kaipiaoDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/importYingshouList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/customerList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');

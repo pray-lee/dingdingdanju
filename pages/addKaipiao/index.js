@@ -9,6 +9,19 @@ Page({
         process: null,
         type: '',
         btnHidden: false,
+        accountbookIndex: 0,
+        accountbookList: [],
+        departmentIndex: 0,
+        departmentList: [],
+        customerList: [],
+        customerDetail: {},
+        taxRateIndex: 0,
+        taxRateArr: [],
+        isExpress: 1,
+        subjectList: [],
+        submitData: {
+            invoiceType:  1,
+        }
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -30,74 +43,150 @@ Page({
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
         // 设置当前框的值
-        if (name !== 'incomeBankName') {
-            this.setData({
-                [index]: e.detail.value,
-                submitData: {
-                    ...this.data.submitData,
-                    [name]: this.data[listName][value].id
-                }
-            })
-        } else {
-            this.setData({
-                [index]: e.detail.value,
-                submitData: {
-                    ...this.data.submitData,
-                    [name]: this.data[listName][value].bankName
-                }
-            })
-        }
+        this.setData({
+            [index]: e.detail.value,
+            submitData: {
+                ...this.data.submitData,
+                [name]: this.data[listName][value].id
+            }
+        })
         // --------------------------------------------------------
         if (name === 'accountbookId') {
-            this.clearSubjectData()
+            this.clearCustomerList()
+            this.getDepartmentList(this.data[listName][value].id)
+            this.getCustomerList(this.data[listName][value].id)
+            this.getTaxRateFromAccountbookId(this.data[listName][value].id)
+            this.getRemarks(this.data[listName][value].id)
+        }
+        if(name === 'submitterDepartmentId') {
+            // 重新获取科目以后，就要置空开票列表
             this.setData({
-                applicantIndex: 0,
+                kaipiaoList: [],
                 submitData: {
                     ...this.data.submitData,
-                    applicantType: 10
-                }
+                    applicationAmount: '',
+                    totalAmount: '',
+                    verificationAmount: '',
+                },
             })
-            this.getDepartmentList(this.data[listName][value].id)
-            this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
-            this.isCapitalTypeStart(this.data[listName][value].id)
-        }
-        if (name === 'submitterDepartmentId') {
-            this.clearSubjectData()
-            this.setData({
-                applicantIndex: 0
-            })
-            this.getBorrowBillList(this.data.submitData.accountbookId, 10, null, null, true)
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
         }
-        // if (name === 'subjectId') {
-        //     this.getSubjectAuxptyList(this.data[listName][value].id, this.data.submitData.accountbookId, true)
-        // }
-        if (name === 'applicantType') {
-            // this.getSubjectAuxptyList(this.data.submitData.subjectId, this.data.submitData.accountbookId)
-            // uisCurrentUser 判断是否应该选择当前登录的用户的applicantId
-            var isCurrentUser = true
-            if(this.data[listName][value].id !== 10) {
-                isCurrentUser = false
+    },
+    // 获取开票内容
+    getRemarks(accountbookId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            method: 'GET',
+            url: app.globalData.url + 'invoicebillDetailController.do?findRemark&accountbookId=' + accountbookId,
+            success: res => {
+                dd.setStorage({
+                    key: 'remarks',
+                    data: res.data.obj
+                })
             }
-            this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id, null, null, isCurrentUser)
+        })
+    },
+    // 组成初始详情数据
+    generateBaseDetail() {
+        console.log(this.data.subjectList)
+        if (this.data.subjectList.length) {
+            var subjectList = clone(this.data.subjectList)
+            var obj = {
+                subjectList: subjectList,
+                selectedAuxpty: null,
+                allAuxptyList: {},
+                accountbookId: this.data.submitData.accountbookId,
+                submitterDepartmentId: this.data.submitData.submitterDepartmentId,
+                applicationAmount: '',
+            }
         }
-        if (name === 'applicantId') {
-            this.getIncomeBankList(this.data.submitData.applicantType, this.data[listName][value].id)
-        }
-        if (name === 'incomeBankName') {
-            this.setIncomeBankAccount(this.data[listName][value].bankAccount)
+        return obj
+    },
+    onAddKaipiao() {
+        var obj = this.generateBaseDetail()
+        if(!!obj) {
+            dd.setStorage({
+                key: 'initKaipiaoDetail',
+                data: obj,
+                success: res => {
+                    console.log('写入开票详情成功...')
+                    dd.navigateTo({
+                        url: '/pages/kaipiaoDetail/index'
+                    })
+                }
+            })
+        }else{
+            dd.alert({
+                content: '当前部门没有可用的开票类型',
+                buttonText: '好的',
+                success: () => {
+                    //
+                },
+            });
         }
     },
+    clearCustomerList() {
+        this.setData({
+            customerList: [],
+            customerDetail: {},
+            submitData: {
+                ...this.data.submitData,
+                invoiceType: 1
+            }
+        })
+    },
+    invoiceTypeChange(e) {
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                invoiceType: e.detail.value
+            }
+        })
+    },
     radioChange(e) {
-        console.log(e.detail.value)
         if(e.detail.value == 2) {
             // 去快递页面选择
-            dd.navigateTo({
-                url: '/pages/express/index'
+            this.setData({
+                isExpress: 2
+            })
+            // 获取快递信息
+            this.getExpressList()
+        }else{
+            // 自取
+            this.setData({
+                isExpress: 1
             })
         }
     },
+    getExpressList() {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            url: app.globalData.url + 'customerSpecialDeliveryController.do?listInfo&customerDetailId=' + this.data.customerDetail.id,
+            method: 'GET',
+            success: res => {
+                dd.setStorageSync({
+                    key: 'customerDetailId',
+                    data: this.data.customerDetail.id
+                })
+                dd.setStorage({
+                    key: 'expressList',
+                    data: res.data.obj,
+                    success: res => {
+                        dd.navigateTo({
+                            url: '/pages/express/index'
+                        })
+                    }
+                })
+            }
+        })
+    },
     goUpdateCustomer() {
+        dd.setStorageSync({
+            key:"updateCustomerDetailData",
+            data: this.data.customerDetail
+        })
         dd.navigateTo({
             url: '/pages/updateCustomerInfo/index'
         })
@@ -107,10 +196,17 @@ Page({
             url: '/pages/kaipiaoDetail/index'
         })
     },
+    goYingshouList() {
+        dd.navigateTo({
+            url: '/pages/importYingshouList/index'
+        })
+    },
     onHide() {
     },
     onShow() {
-        console.log('爸爸返回来了草你妈的')
+        this.getCustomerDetailFromStorage()
+        this.getUpdatedCustomerFromStorage()
+        this.getExpressInfoFromStorage()
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
@@ -210,8 +306,6 @@ Page({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
             submitData: {
                 ...this.data.submitData,
-                userName: app.globalData.realName,
-                applicantId: app.globalData.applicantId
             }
         })
         var type = query.type
@@ -231,7 +325,246 @@ Page({
             this.getEditData(id)
         }
     },
-    getAccountbookList() {
+    getAccountbookList(data) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
+            method: 'GET',
+            success: res => {
+                if(res.data.success && res.data.obj.length) {
+                    var accountbookIndex = 0
+                    var accountbookId = !!data ? data.accountbookId:res.data.obj[0].id
+                    const accountbookList = res.data.obj
+                    if(accountbookId) {
+                        accountbookList.forEach((item, index) => {
+                            if(item.id === accountbookId) {
+                                accountbookIndex = index
+                            }
+                        })
+                    }
+                    this.setData({
+                        accountbookList,
+                        accountbookIndex: accountbookIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            accountbookId,
+                        }
+                    })
+                    var submitterDepartmentId = data ? data.submitterDepartmentId : ''
+                    var subjectId = data ? data.subjectId : ''
+                    this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId)
+                    this.getCustomerList(accountbookId)
+                    this.getTaxRateFromAccountbookId(accountbookId)
+                    this.getRemarks(accountbookId)
+                }
+            }
+        })
+    },
+    // 获取申请部门
+    getDepartmentList(accountbookId, departmentId, subjectId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
+            method: 'GET',
+            success: res => {
+                console.log(res, '部门')
+                if(res.data && res.data.length) {
+                    var arr = res.data.map(item => {
+                        return {
+                            id: item.departDetail.id,
+                            name: item.departDetail.depart.departName
+                        }
+                    })
+                    // edit 的时候设置departmentIndex
+                    var departmentIndex = 0
+                    var submitterDepartmentId = !!departmentId ? departmentId : arr[0].id
+                    if (submitterDepartmentId) {
+                        arr.forEach((item, index) => {
+                            if (item.id === submitterDepartmentId) {
+                                departmentIndex = index
+                            }
+                        })
+                    }
+                    this.setData({
+                        departmentList: arr,
+                        departmentIndex: departmentIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            submitterDepartmentId
+                        }
+                    })
+                    this.getSubjectList(accountbookId, submitterDepartmentId, subjectId)
+                }else{
+                    dd.alert({
+                        content: '当前用户未设置部门或者所属部门已禁用',
+                        buttonText: '好的',
+                        success: res => {
+                            dd.reLaunch({
+                                url: '/pages/index/index'
+                            })
+                        }
+                    })
+                }
+            },
+        })
+    },
+    // 获取科目类型
+    getSubjectList(accountbookId, departId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=5&findAll=false',
+            method: 'GET',
+            success: res => {
+                console.log(res, '科目类型')
+                var arr = []
+                if (res.data.length) {
+                    res.data.forEach(item => {
+                        if (!item.childrenCount) {
+                            arr.push({
+                                id: item.id,
+                                name: item.text
+                            })
+                        }
+                    })
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: arr,
+                        success: res => {
+                            console.log('写入科目成功....')
+                        }
+                    })
+                    this.setData({
+                        subjectList: arr
+                    })
+                } else {
+                    // 写入缓存
+                    dd.setStorage({
+                        key: 'subjectList',
+                        data: [],
+                        success: res => {
+                            console.log('写入科目成功....')
+                        }
+                    })
+                }
+            },
+        })
+    },
+    // 获取客户信息
+    getCustomerList(accountbookId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            url: app.globalData.url + 'customerDetailController.do?json&accountbook.id=' + accountbookId,
+            method: 'GET',
+            success: res => {
+                if(res.status === 200) {
+                   this.setData({
+                       customerList: res.data
+                   })
+                }
+            }
+        })
+    },
+    goCustomerList() {
+        this.addLoading()
+        dd.setStorage({
+            key: 'customerList',
+            data: this.data.customerList,
+            success: () => {
+                this.hideLoading()
+                dd.navigateTo({
+                    url: '/pages/customerList/index'
+                })
+            }
+        })
+    },
+    // 获取选择的客户信息和客户快递列表
+    getCustomerDetailFromStorage() {
+        const customerDetail = dd.getStorageSync({key: 'customerDetail'}).data
+        if(!!customerDetail) {
+            this.setData({
+                customerDetail: customerDetail,
+                submitData: {
+                    ...this.data.submitData,
+                    invoiceType: customerDetail.invoiceType
+                }
+            })
+            dd.removeStorage({
+                key: 'customerDetail',
+                success: () => {
+                    console.log('清除客户缓存...')
+                }
+            })
+        }
+    },
+    // 获取修改后的客户信息
+    getUpdatedCustomerFromStorage() {
+        const updatedCustomInfo = dd.getStorageSync({key: 'updatedCustomInfo'}).data
+        if(updatedCustomInfo) {
+            this.setData({
+                customerDetail: updatedCustomInfo,
+            })
+        }
+        dd.removeStorage({
+            key: 'updatedCustomInfo',
+            success: () => {
+                console.log('清除修改后的客户数据缓存...')
+            }
+        })
+    },
+    // 获取用户选择或者修改后的快递信息用于页面渲染
+    getExpressInfoFromStorage(){
+        const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
+        if(expressInfo) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    ...expressInfo
+                }
+            })
+            console.log(this.data.submitData, 'submitDasta')
+            dd.removeStorage({
+                key: 'expressInfo',
+                success: () => {
+                    console.log('清除快递信息成功...')
+                }
+            })
+        }else{
+            this.setData({
+                isExpress: 1
+            })
+        }
+    },
+    // 获取某个账簿的税率
+    getTaxRateFromAccountbookId(accountbookId) {
+        console.log(accountbookId, 'accountbookId')
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            method: 'GET',
+            url: app.globalData.url + 'accountbookController.do?findAccountbookTaxrate&accountbookId=' + accountbookId,
+            success: res => {
+                if(res.data.success) {
+                    if(res.data.obj.length) {
+                        const arr = res.data.obj.map(item => item.taxRate)
+                        arr.unshift('请选择')
+                        // 如果只有一个税率，默认选中第一个
+                        if(arr.length <= 2) {
+                           this.setData({
+                               taxRateIndex: 1
+                           })
+                        }
+                        this.setData({
+                            taxRateArr: arr
+                        })
+                    }
+                }
+            }
+        })
     },
     onKeyboardShow() {
         this.setData({

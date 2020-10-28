@@ -1,21 +1,31 @@
 <view class="form-wrapper">
     <form onSubmit="formSubmit" onReset="formReset">
         <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
-            <view class="title">申请方信息</view>
+            <view class="title">销售方信息</view>
             <view class="block-wrapper">
                 <view class="form-row">
-                    <view class="form-row-label"><text class="require">*</text>销售组织</view>
+                    <view class="form-row-label">
+                        <text class="require">*</text>
+                        销售组织
+                    </view>
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}"
+                                range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex"
+                                data-name="accountbookId" data-list="accountbookList">
                             <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
                         </picker>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
-                    <view class="form-row-label picker"><text class="require">*</text>销售部门</view>
+                    <view class="form-row-label picker">
+                        <text class="require">*</text>
+                        销售部门
+                    </view>
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}" range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId" data-list="departmentList" data-index="departmentIndex">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{departmentIndex}}"
+                                range="{{departmentList}}" range-key="name" data-name="submitterDepartmentId"
+                                data-list="departmentList" data-index="departmentIndex">
                             <view class="row-extra">{{departmentList[departmentIndex].name}}</view>
                         </picker>
                     </view>
@@ -23,47 +33,84 @@
             </view>
             <view class="title">客户开票信息</view>
             <view class="block-wrapper">
-                <view class="form-row">
-                    <view class="form-row-label"><text class="require">*</text>客户名称</view>
+                <view class="form-row" onTap="goCustomerList">
+                    <view class="form-row-label">
+                        <text class="require">*</text>
+                        客户名称
+                    </view>
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{applicantIndex}}" range="{{applicantType}}" range-key="name" data-name="applicantType" data-list="applicantType" data-index="applicantIndex">
-                            <view class="row-extra">{{applicantType[applicantIndex].name}}</view>
-                        </picker>
+                        <view a:if="{{!!customerDetail.customerName}}" class="mock-input">{{customerDetail.customerName}}</view>
+                        <view a:else class="mock-input nodata">请选择客户</view>
                     </view>
                 </view>
-                <view class="form-line"/>
-                <view class="form-row" onTap="goInfoList">
-                    <view class="form-row-label"><text class="require">*</text>发票类型</view>
-                    <view class="form-row-content borrowList-wrapper">
-                        专票普票
-                    </view>
-                </view>
-                <view class="form-line"/>
-                <view class="form-row" onTap="goUpdateCustomer">
-                    <view class="form-row-label"><text class="require">*</text>客户开票信息</view>
-                    <view class="form-row-content express">
-                        <view class="info-content">
-                            <view>纳税人识别号：</view>
-                            <view>891928312391237912</view>
+                <block a:if="{{!!customerDetail.id}}">
+                    <view class="form-line"/>
+                    <view class="form-row" onTap="goInfoList">
+                        <view class="form-row-label">
+                            <text class="require">*</text>
+                            发票类型
                         </view>
-                        <view class="info-content">
-                            <view>地址、电话：</view>
-                            <view>北京市打卡设计费拉可视角度冷风机 123182973912</view>
-                        </view>
-                        <view class="info-content">
-                            <view>开户行及账号：</view>
-                            <view>掌上银行卡束带结发 619287381238712398129</view>
+                        <view class="form-row-content invoice-wrapper">
+                            <radio-group class="radio-group" onChange="invoiceTypeChange">
+                                <label class="radio">
+                                    <radio value="1" checked="{{submitData.invoiceType == 1}}"/>
+                                    普票
+                                </label>
+                                <label class="radio">
+                                    <radio value="2" checked="{{submitData.invoiceType == 2}}"/>
+                                    专票
+                                </label>
+                            </radio-group>
                         </view>
                     </view>
-                </view>
+                    <view class="form-line"/>
+                    <view class="form-row" onTap="goInfoList">
+                        <view class="form-row-label">
+                            <text class="require">*</text>
+                            税率
+                        </view>
+                        <view class="form-row-content invoice-wrapper">
+                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{taxRateIndex}}"
+                                    range="{{taxRateArr}}" data-index="taxRateIndex"
+                                    data-name="taxRate" data-list="taxRateArr">
+                                <view class="row-extra">{{taxRateArr[taxRateIndex]}}</view>
+                            </picker>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                    <view class="form-row" onTap="goUpdateCustomer">
+                        <view class="form-row-label">
+                            <text class="require">*</text>
+                            客户开票信息
+                        </view>
+                        <view class="form-row-content express">
+                            <view class="info-content">
+                                <view>纳税人识别号：</view>
+                                <view>{{customerDetail.taxCode}}</view>
+                            </view>
+                            <view class="info-content">
+                                <view>地址、电话：</view>
+                                <view>{{customerDetail.invoiceAddress || ''}}
+                                    {{customerDetail.invoicePhone || ''}}
+                                </view>
+                            </view>
+                            <view class="info-content">
+                                <view>开户行及账号：</view>
+                                <view>{{customerDetail.bankName}} {{customerDetail.bankAccount}}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
             </view>
+            </block>
             <!-- 增加借款详情-->
             <view class="title">开票详情</view>
             <view class="block-wrapper">
                 <view class="borrow-list">
                     <view class="borrow-item" a:for="{{submitData.billDetailListObj}}">
                         <view class="form-row">
-                            <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowAmount}}"></view>
+                            <view class="delete-borrow" onTap="deleteBorrowDetail"
+                                  data-detail="{{item.borrowAmount}}"></view>
                             <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
                                 <text>{{item.formatBorrowAmount}}</text>
                             </view>
@@ -72,51 +119,71 @@
                                 <text>{{item.remark}}</text>
                             </view>
                         </view>
-                        <view class="form-line"/></view>
+                        <view class="form-line"/>
+                    </view>
                 </view>
                 <view class="add-borrow">
-                    <view class="add-borrow-btn" onTap="goKaipiaoDetail">直接添加</view>
+                    <view class="add-borrow-btn" onTap="onAddKaipiao">直接添加</view>
                     <view class="line"></view>
-                    <view class="add-borrow-btn">从应收单生成</view>
+                    <view class="add-borrow-btn" onTap="goYingshouList">从应收单生成</view>
                 </view>
             </view>
-            <view class="title">其他信息</view>
-            <view class="block-wrapper">
-                <view class="form-row">
-                    <view class="form-row-label"><text class="require">*</text>发票移交方式</view>
-                    <view class="form-row-content">
-                        <radio-group class="radio-group" onChange="radioChange">
-                            <label class="radio">
-                                <radio value="1" checked="{{true}}"/>自取
-                            </label>
-                            <label class="radio">
-                                <radio value="2" checked="{{false}}"/>快递
-                            </label>
-                        </radio-group>
+            <block a:if="{{customerDetail.id}}">
+                <view class="title">其他信息</view>
+                <view class="block-wrapper">
+                    <view class="form-row">
+                        <view class="form-row-label">
+                            <text class="require">*</text>
+                            发票移交方式
+                        </view>
+                        <view class="form-row-content">
+                            <radio-group class="radio-group" onChange="radioChange">
+                                <label class="radio">
+                                    <radio value="1" checked="{{isExpress == 1}}"/>
+                                    自取
+                                </label>
+                                <label class="radio">
+                                    <radio value="2" checked="{{isExpress == 2}}"/>
+                                    快递
+                                </label>
+                            </radio-group>
+                        </view>
                     </view>
+                    <block a:if="{{!!submitData.contacts && isExpress == 2}}">
+                        <view class="form-line"/>
+                        <view class="form-row" onTap="getExpressList">
+                            <view class="form-row-label">
+                                <text class="require">*</text>
+                                快递信息
+                            </view>
+                            <view class="form-row-content express">
+                                <view>
+                                    <text>{{submitData.contacts}}</text>
+                                    <text style="margin-left: 15rpx">{{submitData.telephone}}</text>
+                                </view>
+                                <view>{{submitData.address}}</view>
+                            </view>
+                        </view>
+                    </block>
                 </view>
-                <view class="form-line"/>
-                <view class="form-row">
-                    <view class="form-row-label"><text class="require">*</text>快递信息</view>
-                    <view class="form-row-content express">
-                        <view><text>陈冠希</text><text style="margin-left: 15rpx">15155555555</text></view>
-                        <view>北京市朝阳区咋咋咋咋阿萨德会计法说的了仿会计阿斯蒂芬发咋</view>
-                    </view>
-                </view>
-            </view>
+            </block>
             <view class="title">附件上传</view>
             <view class="block-wrapper">
                 <view class="file-list">
-                    <view class="file-item" a:if="{{submitData.billFilesObj.length}}" a:for="{{submitData.billFilesObj}}">
+                    <view class="file-item" a:if="{{submitData.billFilesObj.length}}"
+                          a:for="{{submitData.billFilesObj}}">
                         <view class="form-row">
                             <view class="delete-file" onTap="deleteFile" data-file="{{item.name}}"></view>
 
-                            <view class="form-row-content ellipsis" onTap="previewFile" data-url="{{item.uri}}">{{item.name}}</view>
+                            <view class="form-row-content ellipsis" onTap="previewFile" data-url="{{item.uri}}">
+                                {{item.name}}
+                            </view>
                             <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{item.uri}}">
                                 <image src="{{item.uri}}" class="img"></image>
                             </view>
                         </view>
-                        <view class="form-line"/></view>
+                        <view class="form-line"/>
+                    </view>
                 </view>
                 <view class="upload-wrapper" onTap="handleUpload">
                     <view class="add-file-btn">添加附件</view>
@@ -125,8 +192,12 @@
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        借款合计：</text><text class="total-word">{{submitData.formatAmount}}</text></view>
+                    <text>
+                        <image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon"/>
+                        借款合计：
+                    </text>
+                    <text class="total-word">{{submitData.formatAmount}}</text>
+                </view>
             </view>
             <!--              流程图-->
             <block a:if="{{process !== null && process.operationRecords.length}}">
@@ -138,8 +209,11 @@
                                 <view class="avatar-block">
                                     <image a:if="{{item.avatar}}" src="{{item.avatar}}" class="avatar"></image>
                                     <view a:else class="avatar">{{item.realName}}</view>
-                                    <image class="status-icon" a:if="{{item.operationResult === 'AGREE' || item.operationType === 'START_PROCESS_INSTANCE'}}" src="../../images/1.png"></image>
-                                    <image class="status-icon" a:if="{{item.operationResult === 'REFUSE'}}" src="../../images/2.png"></image>
+                                    <image class="status-icon"
+                                           a:if="{{item.operationResult === 'AGREE' || item.operationType === 'START_PROCESS_INSTANCE'}}"
+                                           src="../../images/1.png"></image>
+                                    <image class="status-icon" a:if="{{item.operationResult === 'REFUSE'}}"
+                                           src="../../images/2.png"></image>
                                 </view>
                                 <view class="status-line"></view>
                             </view>
@@ -155,14 +229,17 @@
                         <view class="progress-left">
                             <view class="avatar-wrapper">
                                 <view class="avatar-block">
-                                    <image a:if="{{process.tasks[0].avatar}}" src="{{process.tasks[0].avatar}}" class="avatar"></image>
+                                    <image a:if="{{process.tasks[0].avatar}}" src="{{process.tasks[0].avatar}}"
+                                           class="avatar"></image>
                                     <view a:else class="avatar">{{process.tasks[0].realName}}</view>
                                     <image class="status-icon" src="../../images/3.png"></image>
                                 </view>
                             </view>
                             <view class="status-content">
                                 <view class="progress-status">{{process.tasks[0].operationName}}</view>
-                                <view class="progress-user">{{process.tasks[0].userName}}{{process.tasks[0].resultName}}</view>
+                                <view class="progress-user">
+                                    {{process.tasks[0].userName}}{{process.tasks[0].resultName}}
+                                </view>
                                 <view class="progress-user" a:if="{{item.remark}}">"{{item.remark}}"</view>
                             </view>
                         </view>
@@ -178,11 +255,13 @@
                             </view>
                             <view class="status-content">
                                 <view class="progress-status">{{process.tasks[0].operationName}}</view>
-                                <view class="progress-user">{{process.tasks.length}}人审批{{process.tasks[0].resultName}}</view>
+                                <view class="progress-user">{{process.tasks.length}}人审批{{process.tasks[0].resultName}}
+                                </view>
                                 <view class="progress-user" a:if="{{item.remark}}">"{{item.remark}}"</view>
                                 <view class="task-name-list">
                                     <view class="task-name" a:for="{{process.tasks}}">
-                                        <image class="small-avatar" src="{{item.avatar}}" a:if="{{item.avatar}}"></image>
+                                        <image class="small-avatar" src="{{item.avatar}}"
+                                               a:if="{{item.avatar}}"></image>
                                         <view class="small-avatar" a:else>{{item.realName}}</view>
                                         <view class="small-name">{{item.userName}}</view>
                                     </view>
@@ -208,45 +287,4 @@
             <button onTap="formSubmit" class="submit-btn" data-status="20">{{status == 25 ? '再次提交' : '提交单据'}}</button>
         </view>
     </form>
-<!--修改客户信息弹框-->
-    <view class="add-borrow-page" animation="{{animationInfo}}" hidden="{{dialogHidden}}">
-        <view class="form-row">
-            <view class="form-row-label"><text class="require">*</text>纳税人识别号</view>
-            <view class="form-row-content">
-                <input class="input" placeholder="纳税人识别号" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
-            </view>
-        </view>
-        <view class="form-line"/>
-        <view class="form-row">
-            <view class="form-row-label"><text class="require">*</text>开票地址</view>
-            <view class="form-row-content">
-                <input class="input" placeholder="开票地址" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
-            </view>
-        </view>
-        <view class="form-line"/>
-        <view class="form-row">
-            <view class="form-row-label"><text class="require">*</text>开票电话</view>
-            <view class="form-row-content">
-                <input class="input" type="digit" placeholder="开票电话" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
-            </view>
-        </view>
-        <view class="form-line"/>
-        <view class="form-row">
-            <view class="form-row-label"><text class="require">*</text>开户行名称</view>
-            <view class="form-row-content">
-                <input class="input" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
-            </view>
-        </view>
-        <view class="form-line"/>
-        <view class="form-row">
-            <view class="form-row-label"><text class="require">*</text>开户行账号</view>
-            <view class="form-row-content">
-                <input class="input" type="digit" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
-            </view>
-        </view>
-        <view class="form-line"/>
-        <view class="submit-btn-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
-            <view class="borrow-submit" onTap="handleAddBorrow" hidden="{{btnHidden}}">添加</view>
-        </view>
-    </view>
 </view>

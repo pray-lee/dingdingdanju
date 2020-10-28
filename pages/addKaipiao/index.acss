@@ -263,6 +263,9 @@ input::-webkit-input-placeholder{
     height: auto !important;
     font-size: 24rpx;
 }
+.info-content{
+    overflow:hidden
+}
 .info-content view:first-child{
     float:left;
     width: 7em

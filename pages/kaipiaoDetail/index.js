@@ -7,23 +7,23 @@ Page({
     data: {
         isPhoneXSeries: false,
         btnHidden: false,
-        baoxiaoDetail: {},
-        baoxiaoArr: [],
+        kaipiaoDetail: {},
+        kaipiaoArr: [],
     },
     onLoad() {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
         const isEdit = dd.getStorageSync({key: 'edit'}).data
-        const initBaoxiaoDetail = dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
-        const baoxiaoDetail = dd.getStorageSync({key: 'baoxiaoDetail'}).data
-        if (!baoxiaoDetail) {
+        const initKaipiaoDetail = dd.getStorageSync({key: 'initKaipiaoDetail'}).data
+        const kaipiaoDetail = dd.getStorageSync({key: 'kaipiaoDetail'}).data
+        if (!kaipiaoDetail) {
             this.setData({
-                baoxiaoDetail: initBaoxiaoDetail
+                kaipiaoDetail: initKaipiaoDetail
             })
         } else {
             if (isEdit) {
-                this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId, false)
+                this.getSubjectAuxptyList(kaipiaoDetail.subjectId, kaipiaoDetail.accountbookId, false)
                 dd.removeStorage({
                     key: 'edit',
                     success: res => {
@@ -32,33 +32,11 @@ Page({
                 })
             }
             this.setData({
-                baoxiaoDetail: baoxiaoDetail
+                kaipiaoDetail: kaipiaoDetail
             })
-            console.log(baoxiaoDetail, '..................')
+            console.log(kaipiaoDetail, '..................')
         }
         console.log('onLoad')
-    },
-    getBorrowIdFromStorage() {
-        // 从缓存里获取借款人id
-        const borrowId = dd.getStorageSync({key: 'borrowId'}).data
-        if (!!borrowId) {
-            var borrowIndex = 0
-            this.data.borrowList.forEach((item, index) => {
-                if (item.id === borrowId) {
-                    borrowIndex = index
-                }
-            })
-            this.setData({
-                borrowIndex,
-                submitData: {
-                    ...this.data.submitData,
-                    applicantId: borrowId
-                }
-            })
-            setTimeout(() => {
-                this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
-            })
-        }
     },
     getAuxptyIdFromStorage() {
         // 从缓存里获取auxpty
@@ -75,11 +53,10 @@ Page({
         const subject = dd.getStorageSync({key: 'subject'}).data
         if (!!subject && subject !== null) {
             this.setData({
-                baoxiaoDetail: {
-                    ...this.data.baoxiaoDetail,
+                kaipiaoDetail: {
+                    ...this.data.kaipiaoDetail,
                     selectedAuxpty: null,
                     subjectId: subject.id,
-                    subjectExtraId: subject.subjectExtraId,
                     subjectName: subject.name,
                     billDetailTrueApEntityListObj: [],
                     billDetailApEntityListObj: [],
@@ -89,60 +66,39 @@ Page({
             dd.removeStorage({
                 key: 'subject'
             })
-            this.getSubjectAuxptyList(subject.id, this.data.baoxiaoDetail.accountbookId, true)
+            this.getSubjectAuxptyList(subject.id, this.data.kaipiaoDetail.accountbookId, true)
         }
     },
     onShow() {
         setTimeout(() => {
             this.getAuxptyIdFromStorage()
-            this.getBorrowIdFromStorage()
             this.getSubjectIdFromStorage()
         }, 300)
-        const baoxiaoDetail = dd.getStorageSync({
-            key: 'baoxiaoDetail',
+        const kaipiaoDetail = dd.getStorageSync({
+            key: 'kaipiaoDetail',
         }).data
-        if (!!baoxiaoDetail) {
+        if (!!kaipiaoDetail) {
             this.setData({
-                baoxiaoDetail
+                kaipiaoDetail
             })
         }
         dd.removeStorage({
-            key: 'baoxiaoDetail',
+            key: 'kaipiaoDetail',
             success: res => {
                 console.log('清除编辑详情数据成功...')
             }
         })
     },
-    onBaoxiaoBlur(e) {
-        var tempData = clone(this.data.baoxiaoDetail)
+    onKaipiaoBlur(e) {
+        var tempData = clone(this.data.kaipiaoDetail)
         var name = e.currentTarget.dataset.name
         tempData[name] = e.detail.value
         if (name === 'applicationAmount') {
             tempData['formatApplicationAmount'] = formatNumber(Number(e.detail.value).toFixed(2))
         }
         this.setData({
-            baoxiaoDetail: tempData,
+            kaipiaoDetail: tempData,
         })
-    },
-    baoxiaoRadioChange(e) {
-        var value = e.detail.value ? 2 : 1
-        var baoxiaoItem = clone(this.data.baoxiaoDetail)
-        baoxiaoItem.invoiceType = value
-        if (value == 2) {
-            baoxiaoItem.taxRageArr = baoxiaoItem.taxRageObject.taxRageArr
-            baoxiaoItem.taxRageIndex = 0
-            baoxiaoItem.taxRate = baoxiaoItem.taxRageObject.taxRageArr[0].id
-            this.setData({
-                baoxiaoDetail: baoxiaoItem
-            })
-        } else {
-            baoxiaoItem.taxRageArr = []
-            baoxiaoItem.taxRageIndex = 0
-            baoxiaoItem.taxRate = ''
-            this.setData({
-                baoxiaoDetail: baoxiaoItem
-            })
-        }
     },
     // 获取科目对应的辅助核算 (每一个都是单独调用)
     getSubjectAuxptyList(subjectId, accountbookId, flag) {
@@ -160,8 +116,8 @@ Page({
                         }
                     })
                     this.setData({
-                        baoxiaoDetail: {
-                            ...this.data.baoxiaoDetail,
+                        kaipiaoDetail: {
+                            ...this.data.kaipiaoDetail,
                             subjectAuxptyList: arr
                         }
                     })
@@ -170,8 +126,8 @@ Page({
                     })
                 } else {
                     this.setData({
-                        baoxiaoDetail: {
-                            ...this.data.baoxiaoDetail,
+                        kaipiaoDetail: {
+                            ...this.data.kaipiaoDetail,
                             subjectAuxptyList: [],
                             allAuxptyList: {},
                         }
@@ -209,12 +165,12 @@ Page({
                         auxptyId: auxptyid
                     }
                 })
-                const tempData = clone(this.data.baoxiaoDetail.allAuxptyList)
+                const tempData = clone(this.data.kaipiaoDetail.allAuxptyList)
                 tempData[auxptyid] = newObj
                 console.log(tempData)
                 this.setData({
-                    baoxiaoDetail: {
-                        ...this.data.baoxiaoDetail,
+                    kaipiaoDetail: {
+                        ...this.data.kaipiaoDetail,
                         allAuxptyList: tempData
                     }
                 })
@@ -225,21 +181,21 @@ Page({
                         // 部门
                         // 部门
                         let submitterDepartmentId = ''
-                        if(this.data.baoxiaoDetail.selectedAuxpty && this.data.baoxiaoDetail.selectedAuxpty[auxptyid]) {
-                            submitterDepartmentId = this.data.baoxiaoDetail.selectedAuxpty[auxptyid].id
+                        if(this.data.kaipiaoDetail.selectedAuxpty && this.data.kaipiaoDetail.selectedAuxpty[auxptyid]) {
+                            submitterDepartmentId = this.data.kaipiaoDetail.selectedAuxpty[auxptyid].id
                         }else{
-                            submitterDepartmentId = this.data.baoxiaoDetail.submitterDepartmentId
+                            submitterDepartmentId = this.data.kaipiaoDetail.submitterDepartmentId
                         }
                         index = this.setInitIndex(newObj, submitterDepartmentId)
                     }
-                    if (auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
-                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    if (auxptyid == 2 && this.data.kaipiaoDetail.applicantType == 10) {
+                        index = this.setInitIndex(newObj, this.data.kaipiaoDetail.applicantId)
                     }
-                    if (auxptyid == 3 && this.data.baoxiaoDetail.applicantType == 20) {
-                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    if (auxptyid == 3 && this.data.kaipiaoDetail.applicantType == 20) {
+                        index = this.setInitIndex(newObj, this.data.kaipiaoDetail.applicantId)
                     }
-                    if (auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
-                        index = this.setInitIndex(newObj, this.data.baoxiaoDetail.applicantId)
+                    if (auxptyid == 4 && this.data.kaipiaoDetail.applicantType == 30) {
+                        index = this.setInitIndex(newObj, this.data.kaipiaoDetail.applicantId)
                     }
                     if (index !== null) {
                         this.setSelectedAuxpty(newObj[index])
@@ -250,10 +206,10 @@ Page({
     },
     setSelectedAuxpty(auxpty) {
         this.setData({
-            baoxiaoDetail: {
-                ...this.data.baoxiaoDetail,
+            kaipiaoDetail: {
+                ...this.data.kaipiaoDetail,
                 selectedAuxpty: {
-                    ...this.data.baoxiaoDetail.selectedAuxpty,
+                    ...this.data.kaipiaoDetail.selectedAuxpty,
                     [auxpty.auxptyId]: {
                         id: auxpty.id,
                         name: auxpty.name,
@@ -262,15 +218,15 @@ Page({
                 }
             }
         })
-        const obj = Object.values(this.data.baoxiaoDetail.selectedAuxpty).map(item => {
+        const obj = Object.values(this.data.kaipiaoDetail.selectedAuxpty).map(item => {
             return {
                 auxptyId: item.auxptyId,
                 auxptyDetailId: item.id
             }
         })
         this.setData({
-            baoxiaoDetail: {
-                ...this.data.baoxiaoDetail,
+            kaipiaoDetail: {
+                ...this.data.kaipiaoDetail,
                 billDetailApEntityListObj: obj
             }
         })
@@ -349,19 +305,19 @@ Page({
         }
     },
     submitBaoxiaoDetail() {
-        const validSuccess = this.valid(this.data.baoxiaoDetail)
+        const validSuccess = this.valid(this.data.kaipiaoDetail)
         if(validSuccess) {
             this.setData({
-                baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+                kaipiaoArr: this.data.kaipiaoArr.concat(this.data.kaipiaoDetail)
             })
-            const tempData = clone(this.data.baoxiaoArr)
+            const tempData = clone(this.data.kaipiaoArr)
             tempData.forEach(item => {
                 item.trueSubjectId = item.subjectId
                 item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
             })
             this.addLoading()
             dd.setStorage({
-                key: 'newBaoxiaoDetailArr',
+                key: 'newKaipiaoDetailArr',
                 data: tempData,
                 success: res => {
                     this.hideLoading()
@@ -373,59 +329,15 @@ Page({
         }
     },
     addDetail() {
-        const validSuccess = this.valid(this.data.baoxiaoDetail)
+        const validSuccess = this.valid(this.data.kaipiaoDetail)
         if (validSuccess) {
             this.setData({
-                baoxiaoArr: this.data.baoxiaoArr.concat(this.data.baoxiaoDetail)
+                kaipiaoArr: this.data.kaipiaoArr.concat(this.data.kaipiaoDetail)
             })
             this.setData({
-                baoxiaoDetail: dd.getStorageSync({key: 'initBaoxiaoDetail'}).data
+                kaipiaoDetail: dd.getStorageSync({key: 'initKaipiaoDetail'}).data
             })
         }
-    },
-    openExtraInfo(e) {
-        var extraId = e.currentTarget.dataset.extraId
-        if (this.data.baoxiaoDetail.subjectExtraId) {
-            this.getExtraInfo(extraId)
-        }
-    },
-    getExtraInfo(extraId) {
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading,
-            url: app.globalData.url + 'reimbursementBillExtraController.do?getDetail&subjectExtraId=' + extraId,
-            method: 'GET',
-            success: res => {
-                console.log(res, '附加信息............')
-                if (res.data.success) {
-                    this.setData({
-                        subjectExtraConf: JSON.parse(res.data.obj),
-                    })
-                    // 回显
-                    var tempData = clone(this.data.baoxiaoDetail)
-                    if (!tempData.extraMessage) {
-                        tempData.extraMessage = []
-                        tempData.extraList = []
-                        this.setData({
-                            baoxiaoDetail: tempData
-                        })
-                    }
-                    dd.setStorage({
-                        key: 'subjectExtraConf',
-                        data: JSON.parse(res.data.obj),
-                        success: res => {
-                            dd.setStorageSync({
-                                key: 'extraBaoxiaoDetail',
-                                data: this.data.baoxiaoDetail
-                            })
-                            dd.navigateTo({
-                                url: '/pages/extra/index'
-                            })
-                        }
-                    })
-                }
-            }
-        })
     },
     goSubjectPage() {
         dd.navigateTo({
@@ -437,7 +349,7 @@ Page({
         console.log(auxptyId, 'auxptyId,......')
         dd.setStorage({
             key: 'auxptyList',
-            data: this.data.baoxiaoDetail.allAuxptyList[auxptyId],
+            data: this.data.kaipiaoDetail.allAuxptyList[auxptyId],
             success: res => {
                 dd.navigateTo({
                     url: '/pages/auxptyPage/index'
@@ -449,14 +361,6 @@ Page({
         console.log(obj, '..........')
         if (!obj.subjectId) {
             validFn('请选择费用类型')
-            return false
-        }
-        if (Number(obj.applicationAmount) <= 0) {
-            validFn('申请报销金额为空')
-            return false
-        }
-        if (!obj.taxRate && obj.invoiceType == 2) {
-            validFn('请选择税率')
             return false
         }
         return true

@@ -21,7 +21,9 @@
     "pages/updateCustomerInfo/index",
     "pages/express/index",
     "pages/addExpressInfo/index",
-    "pages/kaipiaoDetail/index"
+    "pages/kaipiaoDetail/index",
+    "pages/importYingshouList/index",
+    "pages/customerList/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

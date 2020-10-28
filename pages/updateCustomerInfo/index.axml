@@ -2,35 +2,35 @@
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>纳税人识别号</view>
         <view class="form-row-content">
-            <input class="input" placeholder="纳税人识别号" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
+            <input class="input" placeholder="纳税人识别号" onInput="bindKeyInput" data-type="taxCode" value="{{customInfo.taxCode || ''}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开票地址</view>
         <view class="form-row-content">
-            <input class="input" placeholder="开票地址" onInput="bindKeyInput" data-type="remark" value="{{remark}}"/>
+            <input class="input" placeholder="开票地址" onInput="bindKeyInput" data-type="invoiceAddress" value="{{customInfo.invoiceAddress || ''}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开票电话</view>
         <view class="form-row-content">
-            <input class="input" type="digit" placeholder="开票电话" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+            <input class="input" type="digit" placeholder="开票电话" onInput="bindKeyInput" data-type="invoicePhone" value="{{customInfo.invoicePhone}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开户行名称</view>
         <view class="form-row-content">
-            <input class="input" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+            <input class="input" placeholder="开户行名称" onInput="bindKeyInput" data-type="bankName" value="{{customInfo.bankName}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开户行账号</view>
         <view class="form-row-content">
-            <input class="input" type="digit" placeholder="开户行名称" onInput="bindKeyInput" data-type="remark" value="{{digit}}"/>
+            <input class="input" type="digit" placeholder="开户行名称" onInput="bindKeyInput" data-type="bankAccount" value="{{customInfo.bankAccount}}"/>
         </view>
     </view>
     <view class="form-line"/>
