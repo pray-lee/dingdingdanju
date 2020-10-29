@@ -21,6 +21,7 @@ Page({
         subjectList: [],
         submitData: {
             invoiceType:  1,
+            billFilesObj: []
         },
         kaipiaoList: [],
     },
@@ -92,9 +93,18 @@ Page({
             method: 'GET',
             url: app.globalData.url + 'invoicebillDetailController.do?findRemark&accountbookId=' + accountbookId,
             success: res => {
+                console.log(res, '开票内容')
+                const remarks = res.data.obj.map(item => ({
+                    id: item.id,
+                    remark: item.remark
+                }))
+                remarks.unshift({
+                    id: '',
+                    remark: '请选择'
+                })
                 dd.setStorage({
                     key: 'remarks',
-                    data: res.data.obj
+                    data: remarks
                 })
             }
         })
@@ -247,7 +257,7 @@ Page({
                             kaipiaoList: kaipiaoList.concat(kaipiaoDetail)
                         })
                     }
-                    console.log(this.data.kaipiaoList)
+                    console.log(this.data.kaipiaoList, 'this.data.kaipiaoListtttttttttttt')
                     dd.removeStorage({
                         key: 'newKaipiaoDetailArr',
                         success: res => {
@@ -264,6 +274,14 @@ Page({
         this.getExpressInfoFromStorage()
         // 从缓存里获取baoxiaoDetail
         this.getKaipiaoDetailFromStorage()
+    },
+    // 删除得时候把submitData里面之前存的报销列表数据清空
+    clearListSubmitData(submitData) {
+        Object.keys(submitData).forEach(key => {
+            if (key.indexOf('billDetailList') != -1) {
+                delete submitData[key]
+            }
+        })
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
@@ -621,6 +639,54 @@ Page({
                     }
                 }
             }
+        })
+    },
+    showKaipiaoDetail(e) {
+        // 加一个编辑标志
+        dd.setStorage({
+            key: 'edit',
+            data: true,
+            success: res => {
+                console.log('编辑标志缓存成功...')
+            }
+        })
+        this.addLoading()
+        const index = e.currentTarget.dataset.index
+        var obj = this.generateBaseDetail()
+        dd.setStorage({
+            key: 'index',
+            data: index,
+            success: res => {
+                console.log('index设置成功...')
+            }
+        })
+        dd.setStorage({
+            key: 'kaipiaoDetail',
+            data: this.data.kaipiaoList[index],
+            success: res => {
+                console.log(this.data.kaipiaoList[index])
+                console.log('写入报销详情成功！！')
+                dd.setStorage({
+                    key: 'initKaipiaoDetail',
+                    data: obj,
+                    success: res => {
+                        this.hideLoading()
+                        dd.navigateTo({
+                            url: '/pages/kaipiaoDetail/index'
+                        })
+                    }
+                })
+            }
+        })
+    },
+    deleteKaipiaoDetail(e) {
+        var idx = e.currentTarget.dataset.index
+        var kaipiaoList = this.data.kaipiaoList.filter((item, index) => {
+            return idx !== index
+        })
+        this.clearListSubmitData(this.data.submitData)
+        this.setData({
+            kaipiaoList
         })
     },
     onKeyboardShow() {

@@ -9,11 +9,17 @@ Page({
         btnHidden: false,
         kaipiaoDetail: {},
         kaipiaoArr: [],
+        remarks: [],
+        remarkIndex: 0,
+        remark: ''
     },
     onLoad() {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
+        // 获取开票内容
+        this.getRemarksFromStorage()
+
         const isEdit = dd.getStorageSync({key: 'edit'}).data
         const initKaipiaoDetail = dd.getStorageSync({key: 'initKaipiaoDetail'}).data
         const kaipiaoDetail = dd.getStorageSync({key: 'kaipiaoDetail'}).data
@@ -34,9 +40,7 @@ Page({
             this.setData({
                 kaipiaoDetail: kaipiaoDetail
             })
-            console.log(kaipiaoDetail, '..................')
         }
-        console.log('onLoad')
     },
     getAuxptyIdFromStorage() {
         // 从缓存里获取auxpty
@@ -51,7 +55,6 @@ Page({
     getSubjectIdFromStorage() {
         // 从缓存里获取科目id
         const subject = dd.getStorageSync({key: 'subject'}).data
-        console.log(subject, '...........')
         if (!!subject && subject !== null) {
             this.setData({
                 kaipiaoDetail: {
@@ -68,6 +71,26 @@ Page({
                 key: 'subject'
             })
             this.getSubjectAuxptyList(subject.id, this.data.kaipiaoDetail.accountbookId, true)
+        }
+    },
+    getRemarksFromStorage(){
+        const remarks = dd.getStorageSync({key: 'remarks'}).data
+        if(!!remarks && remarks.length) {
+            this.setData({
+                remarks,
+            })
+        }
+    },
+    bindObjPickerChange(e) {
+        const index = e.detail.value
+        if(this.data.remarks[index].id !== '') {
+            this.setData({
+                remarkIndex: index,
+                kaipiaoDetail: {
+                    ...this.data.kaipiaoDetail,
+                    remark: this.data.remarks[e.detail.value].remark
+                }
+            })
         }
     },
     onShow() {
