@@ -304,7 +304,7 @@ Page({
             dd.hideLoading()
         }
     },
-    submitBaoxiaoDetail() {
+    submitKaipiaoDetail() {
         const validSuccess = this.valid(this.data.kaipiaoDetail)
         if(validSuccess) {
             this.setData({

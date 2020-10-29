@@ -21,7 +21,8 @@ Page({
         subjectList: [],
         submitData: {
             invoiceType:  1,
-        }
+        },
+        kaipiaoList: [],
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -37,6 +38,7 @@ Page({
             dd.hideLoading()
         }
     },
+
     bindObjPickerChange(e) {
         var name = e.currentTarget.dataset.name
         var listName = e.currentTarget.dataset.list
@@ -52,6 +54,16 @@ Page({
         })
         // --------------------------------------------------------
         if (name === 'accountbookId') {
+            this.setData({
+                kaipiaoList: [],
+                submitData: {
+                    ...this.data.submitData,
+                    taxpayerType: this.data.accountbookList[value].taxpayerType,
+                    applicationAmount: '',
+                    totalAmount: '',
+                    verificationAmount: ''
+                },
+            })
             this.clearCustomerList()
             this.getDepartmentList(this.data[listName][value].id)
             this.getCustomerList(this.data[listName][value].id)
@@ -203,10 +215,54 @@ Page({
     },
     onHide() {
     },
+    getKaipiaoDetailFromStorage() {
+        const index = dd.getStorageSync({key: 'index'}).data
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+            }
+        })
+        dd.getStorage({
+            key: 'newKaipiaoDetailArr',
+            success: res => {
+                const kaipiaoDetail = res.data
+                if (!!kaipiaoDetail) {
+                    let kaipiaoList = clone(this.data.kaipiaoList)
+                    console.log(index)
+                    if (!!index || index == 0) {
+                        kaipiaoList.splice(index, 1)
+                        dd.removeStorage({
+                            key: 'index',
+                            success: res => {
+                                console.log('清除index成功')
+                            }
+                        })
+                        kaipiaoList.splice(index, 0, kaipiaoDetail[0])
+                        kaipiaoList = kaipiaoList.concat(kaipiaoDetail.slice(1))
+                        this.setData({
+                            kaipiaoList: kaipiaoList
+                        })
+                    } else {
+                        this.setData({
+                            kaipiaoList: kaipiaoList.concat(kaipiaoDetail)
+                        })
+                    }
+                }
+            }
+        })
+        dd.removeStorage({
+            key: 'newKaipiaoDetailArr',
+            success: res => {
+                console.log('清除newkaipiaoDetailArr成功...')
+            }
+        })
+    },
     onShow() {
         this.getCustomerDetailFromStorage()
         this.getUpdatedCustomerFromStorage()
         this.getExpressInfoFromStorage()
+        // 从缓存里获取baoxiaoDetail
+        this.getKaipiaoDetailFromStorage()
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
