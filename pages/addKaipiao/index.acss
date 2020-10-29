@@ -31,16 +31,16 @@
     position:fixed;
     bottom:0;
     left:0;
-    z-index:999;
+    z-index:990;
     width: 100%;
-    height:100rpx;
+    height: 100rpx;
     background:#fff;
 }
 .btn-area.iphoneX{
-  padding-bottom: 68rpx;
+    padding-bottom: 68rpx;
 }
 .btn-area button{
-    width: 100%;
+    flex: 1;
     border:0;
     background:#3276c3;
     border-radius: 0;
@@ -48,10 +48,6 @@
     font-size: 32rpx;
     height: 100rpx;
     line-height: 100rpx
-}
-.btn-area .reset-btn{
-    background:#f1f1f1;
-    color:#3276c3
 }
 .radio{
     margin-right: 30rpx
@@ -62,11 +58,31 @@
     padding:0
 }
 .add-borrow-page{
+    height:100%
+}
+.add-borrow-page, .add-hesuanweidu-page{
     z-index:1000;
-    height: 800rpx;
     transform:translateY(100%)
 }
+.add-extra-page{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    background:#fff;
+    transform: translateY(1000px);
+    z-index: 999
+}
+.extraBtn{
+    color:#ccc
+}
 .borrow-submit{
+    position:fixed;
+    z-index:1000;
+    bottom:0;
+    left:0;
     text-align: center;
     background:#3276c3;
     color:#fff;
@@ -75,44 +91,22 @@
     height: 100rpx;
     line-height: 100rpx;
 }
-.submit-btn-wrapper{
-    position:fixed;
-    z-index:1000;
-    bottom:0;
-    left:0;
-    width: 100%;
-    height: 100rpx;
-    background:#fff;
-}
-.submit-btn-wrapper.iphoneX{
-  padding-bottom: 68rpx
-}
-.add-borrow{
-    display:flex;
-    align-items: center;
-    justify-content: space-around;
-}
-.add-borrow .line{
-    width:4rpx;
-    height: 40rpx;
-    background:#3276c3;
-}
 .add-borrow-btn, .add-file-btn{
     text-align:center;
-    height: 87rpx;
+    height:87rpx;
     line-height: 87rpx;
     color:#1f65d8;
     font-size: 28rpx;
 }
-.borrow-item .form-row, .file-item .form-row{
+.borrow-item .form-row, .file-item .form-row, .baoxiao-item .form-row{
     padding: 0 40rpx;
     display:flex;
     align-items: center;
 }
-.borrow-item .form-row-content, .file-list .form-row-content{
+.borrow-item .form-row-content, .file-list .form-row-content, .baoxiao-item .form-row-content{
     text-align:center
 }
-.delete-borrow, .delete-file{
+.delete-borrow, .delete-file, .delete-baoxiao-item{
     width: 60rpx;
     height: 88rpx;
     background:url(../../images/delete.png) center center no-repeat;
@@ -121,60 +115,42 @@
     left: 20rpx;
     z-index: 999
 }
-.borrow-line{
-    width: 1rpx;
-    height: 36rpx;
-    background:#ddd
-}
 .img{
     width:40rpx;
     height: 40rpx
 }
-.jiekuan-icon{
-    width: 30rpx;
-    height: 30rpx;
-    margin-right: 10rpx;
-    vertical-align: top;
+
+.baoxiao-item{
+    margin: 20rpx 0
 }
-.add-icon{
-    width: 42rpx;
-    height: 42rpx;
-}
-.img-wrapper{
+.baoxiao-item-title{
+    background:#f1f1f1;
+    padding: 0 60rpx;
+    font-size: 26rpx;
     display:flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
 .special-btn{
     width: 99%;
     height: 88rpx;
     line-height: 88rpx;
     text-align:right;
-    color:rgb(136,136,136)
+    color:rgb(136,136,136);
+    font-size: 24rpx
 }
-.add-hesuanweidu-page{
-    z-index: 1000
+input{
+    padding-right:0
 }
-.import-borrow-list-btn{
-    position:fixed;
-    z-index:1000;
-    bottom:0px;
-    left:0px;
-    text-align:center;
-    background:rgb(50, 118, 195);
-    color:rgb(255, 255, 255);
-    font-size:0.32rem;
-    width:100%;
-    height:1rem;
-    line-height:1rem;
-    text-align:center;
-    border:0px;
-    border-radius:0px;
+.btn-area .cancel-extra{
+    background:#fff;
+    color:#3276c3;
 }
 .mock-input{
     height: 44rpx;
     line-height: 44rpx;
     width: 100%;
-    color:#333;
+    color:#333
 }
 .mock-input.nodata{
     color:#c7c7cd
@@ -213,11 +189,16 @@ input::-webkit-input-placeholder{
     display:flex;
     justify-content: space-between;
     align-items: baseline;
-    padding: 0 40rpx;
-    /*padding-top: 20rpx;*/
+    padding:0 40rpx;
 }
 .total-word{
     font-size: 40rpx;
+}
+.jiekuan-icon{
+    width: 30rpx;
+    height: 30rpx;
+    margin-right: 10rpx;
+    vertical-align: top;
 }
 .incomeBankAccount, .incomeBankName{
     color:#BBBBBB
@@ -232,18 +213,35 @@ input::-webkit-input-placeholder{
     background:#fff;
     color:#1f65d8;
 }
-.auxpty-wrapper{
-    padding: .1rem 0;
+.img-wrapper{
     display:flex;
-    justify-content: space-between;
-    align-items:center
+    justify-content: flex-end;
 }
-.auxpty-wrapper .left{
-  min-width: 5em;
+.borrow-line{
+    width: 1rpx;
+    height: 36rpx;
+    background:#ddd
 }
-.auxpty-wrapper .right{
-    margin-left: 20rpx;
-    text-align:right
+.borrow-remark {
+    padding: 0 10rpx
+}
+.special-content{
+    display:flex;
+    align-items: center;
+}
+.special-input{
+    width: auto !important;
+    padding: 0 .6rem;
+}
+.edit{
+    width: 30rpx;
+    height: 30rpx;
+    margin-top: -20rpx;
+}
+.title-word{
+    width: 7em;
+    margin-right: 20rpx;
+    text-align:left
 }
 .disabled{
     position:fixed;
@@ -254,6 +252,56 @@ input::-webkit-input-placeholder{
     margin:auto;
     z-index: 9999
 }
+.tips{
+    padding:15rpx 40rpx;
+    color:#999;
+    font-size:22rpx;
+}
+.form-row .baoxiaoDetail-left{
+    text-align:left;
+    height: auto;
+    flex: 1;
+    padding-left: 60rpx;
+}
+.form-row .baoxiaoDetail-right{
+    height: auto;
+    text-align:right;
+    flex: 1;
+}
+.form-row .baoxiaoDetail-right input{
+    flex: 1;
+    padding-right: 20rpx;
+    padding-bottom: 20rpx
+}
+
+.baoxiao-item .form-row, .borrow-item .form-row {
+    align-items: flex-start;
+    border-bottom: 1rpx solid #f1f1f1;
+    padding: 20rpx 40rpx;
+}
+.delete-baoxiao-item, .delete-borrow{
+    width: 40rpx;
+    height: 40rpx;
+    background-position: center
+}
+.subject-title{
+    font-size: 32rpx;
+    color:#333
+}
+.remark-title{
+    font-size: 24rpx;
+    color:#999
+}
+.remark-content{
+    font-size: 28rpx;
+    color:#666
+}
+
+.edit-wrapper{
+    display:flex;
+    align-items: center;
+}
+
 .tips{
     padding:15rpx 40rpx;
     color:#999;
@@ -272,4 +320,21 @@ input::-webkit-input-placeholder{
 }
 .info-content view:last-child{
     overflow:hidden
+}
+.add-borrow{
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.add-borrow .line{
+    width:4rpx;
+    height: 40rpx;
+    background:#3276c3;
+}
+.add-borrow-btn, .add-file-btn{
+    text-align:center;
+    height: 87rpx;
+    line-height: 87rpx;
+    color:#1f65d8;
+    font-size: 28rpx;
 }

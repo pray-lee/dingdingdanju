@@ -247,13 +247,14 @@ Page({
                             kaipiaoList: kaipiaoList.concat(kaipiaoDetail)
                         })
                     }
+                    console.log(this.data.kaipiaoList)
+                    dd.removeStorage({
+                        key: 'newKaipiaoDetailArr',
+                        success: res => {
+                            console.log('清除newkaipiaoDetailArr成功...')
+                        }
+                    })
                 }
-            }
-        })
-        dd.removeStorage({
-            key: 'newKaipiaoDetailArr',
-            success: res => {
-                console.log('清除newkaipiaoDetailArr成功...')
             }
         })
     },

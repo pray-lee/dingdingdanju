@@ -51,6 +51,7 @@ Page({
     getSubjectIdFromStorage() {
         // 从缓存里获取科目id
         const subject = dd.getStorageSync({key: 'subject'}).data
+        console.log(subject, '...........')
         if (!!subject && subject !== null) {
             this.setData({
                 kaipiaoDetail: {
