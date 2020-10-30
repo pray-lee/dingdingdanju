@@ -39,7 +39,9 @@
                         客户名称
                     </view>
                     <view class="form-row-content">
-                        <view a:if="{{!!customerDetail.customerName}}" class="mock-input">{{customerDetail.customerName}}</view>
+                        <view a:if="{{!!customerDetail.customerName}}" class="mock-input">
+                            {{customerDetail.customerName}}
+                        </view>
                         <view a:else class="mock-input nodata">请选择客户</view>
                     </view>
                 </view>
@@ -111,20 +113,26 @@
                         <view class="form-row">
                             <view class="delete-baoxiao-item" onTap="deleteKaipiaoDetail"
                                   data-id="{{item.billDetailId}}" data-index="{{index}}"></view>
-                            <view class="form-row-content baoxiaoDetail-left" onTap="showKaipiaoDetail" data-index="{{index}}">
-                                <view class="subject-title">{{item.subjectName.split('_')[item.subjectName.split('_').length-1]}}</view>
+                            <view class="form-row-content baoxiaoDetail-left" onTap="showKaipiaoDetail"
+                                  data-index="{{index}}">
+                                <view class="subject-title">
+                                    {{item.subjectName.split('_')[item.subjectName.split('_').length-1]}}
+                                </view>
                                 <view class="remark-title">开票内容：view>
-                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
-                                <view class="remark-content" a:else>无</view>
+                                    <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                    <view class="remark-content" a:else>无</view>
+                                </view>
+                                <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right"
+                                      onTap="showKaipiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}
+                                </view>
                             </view>
-                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showKaipiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}</view>
                         </view>
                     </view>
-                </view>
-                <view class="add-borrow">
-                    <view class="add-borrow-btn" onTap="onAddKaipiao">直接添加</view>
-                    <view class="line"></view>
-                    <view class="add-borrow-btn" onTap="goYingshouList">从应收单生成</view>
+                    <view class="add-borrow">
+                        <view class="add-borrow-btn" onTap="onAddKaipiao">直接添加</view>
+                        <view class="line"></view>
+                        <view class="add-borrow-btn" onTap="goYingshouList">从应收单生成</view>
+                    </view>
                 </view>
             </view>
             <block a:if="{{customerDetail.id}}">
@@ -254,7 +262,8 @@
                             </view>
                             <view class="status-content">
                                 <view class="progress-status">{{process.tasks[0].operationName}}</view>
-                                <view class="progress-user">{{process.tasks.length}}人审批{{process.tasks[0].resultName}}
+                                <view class="progress-user">
+                                    {{process.tasks.length}}人审批{{process.tasks[0].resultName}}
                                 </view>
                                 <view class="progress-user" a:if="{{item.remark}}">"{{item.remark}}"</view>
                                 <view class="task-name-list">
