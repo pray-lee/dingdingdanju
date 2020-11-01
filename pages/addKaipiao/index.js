@@ -87,6 +87,14 @@ Page({
             }
         })
         // 处理一下提交格式
+        // const newKaipiaoList = this.data.kaipiaoList.map(item => {
+        //     return {
+        //         billId: item.billId,
+        //         amount:item.amount,
+        //         unverifyAmount: item.unverifyAmount,
+        //         applicationAmount: item.applicationAmount
+        //     }
+        // })
         this.formatSubmitData(this.data.kaipiaoList, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         // 处理快递信息
@@ -473,7 +481,7 @@ Page({
         const importList = dd.getStorageSync({key: 'importList'}).data
         if (!!importList) {
             this.setData({
-                importList
+                kaipiaoList: this.data.kaipiaoList.concat(importList)
             })
         }
         console.log(importList, '.........')
@@ -604,10 +612,10 @@ Page({
         this.setData({
             billId: id
         })
-        // ========================= test =========================
-        type = 'edit'
-        id='2c91e3e97579b6550175830140640169'
-        // ========================= test =========================
+        // ================test======================
+        // type='edit'
+        // id='2c91e3e97579b6550175842b74c1024e'
+        // ================test======================
         // 获取账簿列表
         if (type === 'add') {
             this.getAccountbookList()

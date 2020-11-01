@@ -23,6 +23,9 @@ Page({
                 importList: Object.assign([], importList, savedImportList)
             })
         }
+        this.data.importList.forEach(item => {
+            item.applicationAmount = item.unverifyAmount
+        })
         dd.removeStorageSync({
             key: 'savedImportList'
         })
@@ -39,7 +42,7 @@ Page({
         const tempData = clone(this.data.importList)
         tempData.forEach(item => {
             if(item.id === id) {
-                item.unverifyAmount = value
+                item.applicationAmount = value
             }
         })
         this.setData({
@@ -47,6 +50,10 @@ Page({
         })
     },
     saveImportList() {
+        this.data.importList.forEach(item => {
+            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+            item.billId = item.id
+        })
         dd.setStorage({
             key: 'importList',
             data: this.data.importList,

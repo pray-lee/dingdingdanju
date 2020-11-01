@@ -123,8 +123,11 @@
                                   data-id="{{item.billDetailId}}" data-index="{{index}}"></view>
                             <view class="form-row-content baoxiaoDetail-left" onTap="showKaipiaoDetail"
                                   data-index="{{index}}">
-                                <view class="subject-title">
+                                <view class="subject-title" a:if="{{item.subjectName}}">
                                     {{item.subjectName.split('_')[item.subjectName.split('_').length-1]}}
+                                </view>
+                                <view class="subject-title" a:if="{{item['subjectEntity.fullSubjectName']}}">
+                                    {{item['subjectEntity.fullSubjectName'].split('_')[item['subjectEntity.fullSubjectName'].split('_').length-1]}}
                                 </view>
                                 <view class="remark-title">开票内容：</view>
                                 <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
