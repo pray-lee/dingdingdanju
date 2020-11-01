@@ -23,7 +23,8 @@
     "pages/addExpressInfo/index",
     "pages/kaipiaoDetail/index",
     "pages/importYingshouList/index",
-    "pages/customerList/index"
+    "pages/customerList/index",
+    "pages/importYingshouInputList/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

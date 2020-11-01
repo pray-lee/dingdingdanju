@@ -103,6 +103,14 @@
                             </view>
                         </view>
                     </view>
+                    <view class="form-line"></view>
+                    <view class="form-row" onTap="onBusinessFocus">
+                        <view class="form-row-label"><text class="require">*</text>业务日期</view>
+                        <view class="form-row-content">
+                            <view data-name="businessDateTime">{{submitData.businessDateTime}}</view>
+                        </view>
+                        <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                    </view>
             </view>
             </block>
             <!-- 增加借款详情-->
@@ -118,13 +126,12 @@
                                 <view class="subject-title">
                                     {{item.subjectName.split('_')[item.subjectName.split('_').length-1]}}
                                 </view>
-                                <view class="remark-title">开票内容：view>
-                                    <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
-                                    <view class="remark-content" a:else>无</view>
-                                </view>
-                                <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right"
-                                      onTap="showKaipiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}
-                                </view>
+                                <view class="remark-title">开票内容：</view>
+                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                <view class="remark-content" a:else>无</view>
+                            </view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right"
+                                  onTap="showKaipiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}
                             </view>
                         </view>
                     </view>

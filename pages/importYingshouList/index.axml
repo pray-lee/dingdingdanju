@@ -4,47 +4,49 @@
         <input type="text" placeholder="销售类型或者备注" onInput="onInput">
     </view>
     <view class="date-wrapper">
-        <view class="start" onTap="startTimeChange">
+        <view class="start">
             <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
-            <view>开始时间</view>
+            <view onTap="startTimeChange">{{startTime ? startTime : '开始时间'}}</view>
+            <view class="del-date" onTap="clearStartTime">清空</view>
         </view>
-        <view class="end" onTap="endTimeChange">
+        <view class="end">
             <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
-            <view>结束时间</view>
+            <view onTap="endTimeChange">{{endTime ? endTime : '结束时间'}}</view>
+            <view class="del-date" onTap="clearEndTime">清空</view>
         </view>
     </view>
     <form onSubmit="onCheckboxSubmit">
-        <view class="selectAll-wrapper">
-            <checkbox-group onChange="onAllSelect" class="selectAll">
-                <label class="checkbox">
-                    <checkbox value="" checked="" class="checkbox"/>
-                    <text class="checkbox-text">全选</text>
-                </label>
-            </checkbox-group>
-            <view class="total-wrapper">
-                已选2张，共计200000元
-            </view>
-        </view>
+<!--        <view class="selectAll-wrapper">-->
+<!--            <checkbox-group onChange="onAllSelect" class="selectAll">-->
+<!--                <label class="checkbox">-->
+<!--                    <checkbox value="{{isAllSelect}}" class="checkbox" checked="{{isAllSelect}}"/>-->
+<!--                    <text class="checkbox-text">全选</text>-->
+<!--                </label>-->
+<!--            </checkbox-group>-->
+<!--            <view class="total-wrapper">-->
+<!--                已选2张，共计200000元-->
+<!--            </view>-->
+<!--        </view>-->
         <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>
-            <block a:if="{{tempImportList.length}}">
-                <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{tempImportList}}">
+            <block a:if="{{filterList.length}}">
+                <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{filterList}}">
                     <label class="checkbox-label">
                         <checkbox value="{{item}}" class="checkbox"></checkbox>
                         <view class="import-borrow-item">
                             <view class="form-row" style="display:flex;align-items: center">
                                 <view>
                                     <view class="import-borrow-item-left">
-                                        <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
+                                        <view class="import-borrow-remark">{{item['subjectEntity.fullSubjectName']}}</view>
                                         <view class="import-borrow-info">
-                                            <view class="import-borrow-time">{{item.businessDateTime}}</view>
+                                            <view class="import-borrow-time">业务日期：{{item.businessDateTime.split(' ')[0]}}</view>
                                         </view>
-                                    </view>
-                                    <view class="import-borrow-item-right">
-                                        ￥
-                                        <text>{{item.unverifyAmount}}</text>
+                                        <view class="ellipsis import-borrow-info" style="width:12em;text-align:right">备注：{{item.remark || '无'}}</view>
                                     </view>
                                 </view>
-                                <view class="ellipsis" style="width:12em;text-align:right">{{item.remark}}</view>
+                                <view class="import-borrow-item-right">
+                                    ￥
+                                    <text>{{item.unverifyAmount}}</text>
+                                </view>
                             </view>
                             <view class="form-line"/>
                         </view>

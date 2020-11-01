@@ -1,10 +1,12 @@
 import clone from "lodash/cloneDeep";
 import {getErrorMessage, submitSuccess, formatNumber, request} from "../../util/getErrorMessage";
+import moment from "moment";
 
 var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        billId: '',
         isPhoneXSeries: false,
         process: null,
         type: '',
@@ -20,10 +22,30 @@ Page({
         isExpress: 1,
         subjectList: [],
         submitData: {
-            invoiceType:  1,
-            billFilesObj: []
+            invoiceType: 1,
+            billFilesObj: [],
+            businessDateTime: moment().format('YYYY-MM-DD'),
+            amount: 0,
+            status: 20
         },
         kaipiaoList: [],
+        importList: []
+    },
+    onBusinessFocus() {
+        dd.datePicker({
+            format: 'yyyy-MM-dd',
+            currentDate: moment().format('YYYY-MM-DD'),
+            success: (res) => {
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        businessDateTime: res.date
+                    }
+                })
+                // 解除focus不触发的解决办法。
+                // this.onClick()
+            },
+        })
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -39,7 +61,96 @@ Page({
             dd.hideLoading()
         }
     },
-
+    formatExpress() {
+        const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
+        if(!!expressInfo) {
+            this.setData({
+                submitData: {
+                   ...this.data.submitData,
+                   ...expressInfo
+                }
+            })
+        }
+    },
+    formSubmit(e) {
+        const status = e.currentTarget.dataset.status
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                status
+            }
+        })
+        // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
+        Object.keys(this.data.submitData).forEach(item => {
+            if (item.indexOf('billDetailList') != -1) {
+                delete this.data.submitData[item]
+            }
+        })
+        // 处理一下提交格式
+        this.formatSubmitData(this.data.kaipiaoList, 'billDetailList')
+        this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
+        // 处理快递信息
+        this.formatExpress()
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        console.log(this.data)
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        this.addLoading()
+        var url = ''
+        if (this.data.type === 'add') {
+            url = app.globalData.url + 'invoicebillController.do?doAdd'
+        } else {
+            url = app.globalData.url + 'invoicebillController.do?doUpdate&id=' + this.data.billId
+        }
+        request({
+            hideLoading: this.hideLoading,
+            url,
+            method: 'POST',
+            data: this.data.submitData,
+            success: res => {
+                if (res.data && typeof res.data == 'string') {
+                    getErrorMessage(res.data)
+                }
+                // 提交成功
+                if (res.data.success) {
+                    submitSuccess()
+                }
+            },
+            fail: res => {
+                if (res.data && typeof res.data == 'string') {
+                    getErrorMessage(res.data)
+                }
+                console.log(res, 'fail')
+            }
+        })
+    },
+    // 把baoxiaoList的数据，重组一下，拼在submitData里提交
+    formatSubmitData(array, name) {
+        console.log(array, 'array')
+        array.forEach((item, index) => {
+            Object.keys(item).forEach(keys => {
+                if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
+                    item[keys].forEach((arrItem, arrIndex) => {
+                        Object.keys(arrItem).forEach(arrKeys => {
+                            console.log(arrKeys, 'arrKeys')
+                            this.setData({
+                                submitData: {
+                                    ...this.data.submitData,
+                                    [`${name}[${index}].${keys.slice(0, -3)}[${arrIndex}].${arrKeys}`]: arrItem[arrKeys]
+                                }
+                            })
+                        })
+                    })
+                } else {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            [`${name}[${index}].${keys}`]: item[keys]
+                        }
+                    })
+                }
+            })
+        })
+    },
     bindObjPickerChange(e) {
         var name = e.currentTarget.dataset.name
         var listName = e.currentTarget.dataset.list
@@ -71,7 +182,7 @@ Page({
             this.getTaxRateFromAccountbookId(this.data[listName][value].id)
             this.getRemarks(this.data[listName][value].id)
         }
-        if(name === 'submitterDepartmentId') {
+        if (name === 'submitterDepartmentId') {
             // 重新获取科目以后，就要置空开票列表
             this.setData({
                 kaipiaoList: [],
@@ -125,9 +236,66 @@ Page({
         }
         return obj
     },
+    // 请求编辑回显数据
+    getEditData(id) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoicebillController.do?getDetail&id=' + id,
+            method: 'GET',
+            dataType: 'json',
+            success: res => {
+                console.log(res)
+                if (res.data.obj) {
+                    this.setRenderData(res.data.obj)
+                }
+            }
+        })
+    },
+    // 回显数据设置
+    setRenderData(data) {
+        // 请求
+        this.getAccountbookList(data)
+        //fileList
+        if (data.billFiles.length) {
+            var billFilesObj = data.billFiles.map(item => {
+                return item
+            })
+        }
+        // customerDetail
+        if(data.customerDetailEntity && data.customerDetailEntity.customer) {
+            var customerDetail = {
+                id: data.customerDetailEntity.id,
+                bankAccount: data.customerDetailEntity.customer.bankAccount,
+                bankName: data.customerDetailEntity.customer.bankName,
+                customerName: data.customerDetailEntity.customer.customerName,
+                taxCode: data.customerDetailEntity.customer.taxCode,
+                invoiceAddress: data.customerDetailEntity.customer.invoiceAddress,
+                invoicePhone: data.customerDetailEntity.customer.invoicePhone,
+                invoiceType: data.customerDetailEntity.customer.invoiceType
+            }
+        }
+        // 设置数据
+        this.setData({
+            ...this.data,
+            // importList,
+            customerDetail,
+            status: data.status,
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: billFilesObj || [],
+                customerDetailId: data.customerDetailEntity.id,
+                submitDate: moment().format('YYYY-MM-DD'),
+                businessDateTime: data.businessDateTime,
+                status: data.status,
+                accountbookId: data.accountbookId,
+                billCode: data.billCode,
+            },
+        })
+    },
     onAddKaipiao() {
         var obj = this.generateBaseDetail()
-        if(!!obj) {
+        if (!!obj) {
             dd.setStorage({
                 key: 'initKaipiaoDetail',
                 data: obj,
@@ -138,7 +306,7 @@ Page({
                     })
                 }
             })
-        }else{
+        } else {
             dd.alert({
                 content: '当前部门没有可用的开票类型',
                 buttonText: '好的',
@@ -167,14 +335,14 @@ Page({
         })
     },
     radioChange(e) {
-        if(e.detail.value == 2) {
+        if (e.detail.value == 2) {
             // 去快递页面选择
             this.setData({
                 isExpress: 2
             })
             // 获取快递信息
             this.getExpressList()
-        }else{
+        } else {
             // 自取
             this.setData({
                 isExpress: 1
@@ -206,7 +374,7 @@ Page({
     },
     goUpdateCustomer() {
         dd.setStorageSync({
-            key:"updateCustomerDetailData",
+            key: "updateCustomerDetailData",
             data: this.data.customerDetail
         })
         dd.navigateTo({
@@ -219,8 +387,31 @@ Page({
         })
     },
     goYingshouList() {
-        dd.navigateTo({
-            url: '/pages/importYingshouList/index'
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            url: app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
+            method: 'GET',
+            success: res => {
+                if (res.data.rows.length) {
+                    dd.setStorage({
+                        key: 'tempImportList',
+                        data: res.data.rows,
+                        success: () => {
+                            dd.navigateTo({
+                                url: '/pages/importYingshouList/index'
+                            })
+                        }
+                    })
+                } else {
+                    dd.alert({
+                        content: '暂无应收单',
+                        buttonText: '好的',
+                        success: () => {
+                        }
+                    })
+                }
+            }
         })
     },
     onHide() {
@@ -257,7 +448,17 @@ Page({
                             kaipiaoList: kaipiaoList.concat(kaipiaoDetail)
                         })
                     }
-                    console.log(this.data.kaipiaoList, 'this.data.kaipiaoListtttttttttttt')
+                    // 计算一下总价
+                    let amount = 0
+                    this.data.kaipiaoList.forEach(item => {
+                        amount += Number(item.applicationAmount)
+                    })
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            amount: amount.toFixed(2).toString()
+                        }
+                    })
                     dd.removeStorage({
                         key: 'newKaipiaoDetailArr',
                         success: res => {
@@ -268,12 +469,24 @@ Page({
             }
         })
     },
+    getImportYingshouList() {
+        const importList = dd.getStorageSync({key: 'importList'}).data
+        if (!!importList) {
+            this.setData({
+                importList
+            })
+        }
+        console.log(importList, '.........')
+    },
     onShow() {
         this.getCustomerDetailFromStorage()
         this.getUpdatedCustomerFromStorage()
         this.getExpressInfoFromStorage()
         // 从缓存里获取baoxiaoDetail
         this.getKaipiaoDetailFromStorage()
+        // 从缓存里获取导入应收单
+        this.getImportYingshouList()
+
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearListSubmitData(submitData) {
@@ -391,6 +604,10 @@ Page({
         this.setData({
             billId: id
         })
+        // ========================= test =========================
+        type = 'edit'
+        id='2c91e3e97579b6550175830140640169'
+        // ========================= test =========================
         // 获取账簿列表
         if (type === 'add') {
             this.getAccountbookList()
@@ -407,13 +624,13 @@ Page({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
-                if(res.data.success && res.data.obj.length) {
+                if (res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
-                    var accountbookId = !!data ? data.accountbookId:res.data.obj[0].id
+                    var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
                     const accountbookList = res.data.obj
-                    if(accountbookId) {
+                    if (accountbookId) {
                         accountbookList.forEach((item, index) => {
-                            if(item.id === accountbookId) {
+                            if (item.id === accountbookId) {
                                 accountbookIndex = index
                             }
                         })
@@ -428,7 +645,8 @@ Page({
                     })
                     var submitterDepartmentId = data ? data.submitterDepartmentId : ''
                     var subjectId = data ? data.subjectId : ''
-                    this.getDepartmentList(accountbookId, submitterDepartmentId, subjectId)
+                    var billDetailList = data ? data.billDetailList : []
+                    this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList)
                     this.getCustomerList(accountbookId)
                     this.getTaxRateFromAccountbookId(accountbookId)
                     this.getRemarks(accountbookId)
@@ -437,7 +655,7 @@ Page({
         })
     },
     // 获取申请部门
-    getDepartmentList(accountbookId, departmentId, subjectId) {
+    getDepartmentList(accountbookId, departmentId, billDetailList) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -445,7 +663,7 @@ Page({
             method: 'GET',
             success: res => {
                 console.log(res, '部门')
-                if(res.data && res.data.length) {
+                if (res.data && res.data.length) {
                     var arr = res.data.map(item => {
                         return {
                             id: item.departDetail.id,
@@ -470,8 +688,8 @@ Page({
                             submitterDepartmentId
                         }
                     })
-                    this.getSubjectList(accountbookId, submitterDepartmentId, subjectId)
-                }else{
+                    this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList)
+                } else {
                     dd.alert({
                         content: '当前用户未设置部门或者所属部门已禁用',
                         buttonText: '好的',
@@ -486,7 +704,7 @@ Page({
         })
     },
     // 获取科目类型
-    getSubjectList(accountbookId, departId) {
+    getSubjectList(accountbookId, departId, billDetailList) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -515,6 +733,53 @@ Page({
                     this.setData({
                         subjectList: arr
                     })
+                    // billDetailList
+                    if (billDetailList && billDetailList.length) {
+                        var kaipiaoList = billDetailList.map(item => {
+                            var obj = {}
+                            var subjectId = item.subjectId
+                            obj.accountbookId = accountbookId
+                            obj.subjectId = item.subjectId
+                            obj.subjectName = item.subjectEntity.fullSubjectName,
+                            obj.trueSubjectId = item.trueSubjectId
+                            obj.trueSubjectName = item.subjectEntity.trueSubjectName
+                            obj.applicationAmount = item.applicationAmount
+                            obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                            // 用户之前有的辅助核算项
+                            const auxptyObj = item.billDetailApEntityList.map(auxptyItem => {
+                                return {
+                                    auxptyId: auxptyItem.auxptyId,
+                                    auxptyDetailId: auxptyItem.auxptyDetailId,
+                                    auxptyDetailName: auxptyItem.auxptyDetailName
+                                }
+                            })
+                            const billDetailApEntityObj = {}
+                            auxptyObj.forEach(item => {
+                                billDetailApEntityObj[item.auxptyId] = {
+                                    auxptyId: item.auxptyId,
+                                    id: item.auxptyDetailId,
+                                    name: item.auxptyDetailName
+                                }
+                            })
+                            obj.selectedAuxpty = billDetailApEntityObj
+                            obj.billDetailApEntityListObj = auxptyObj
+                            obj.allAuxptyList = {}
+                            if (item.subjectEntity.subjectAuxptyList && item.subjectEntity.subjectAuxptyList.length) {
+                                obj.subjectAuxptyList = item.subjectEntity.subjectAuxptyList.map(item => {
+                                    return {
+                                        auxptyId: item.auxptyId,
+                                        auxptyName: item.auxpropertyConfig.auxptyName
+                                    }
+                                })
+                            }
+                            obj.remark = item.remark
+                            obj.id = item.id
+                            return obj
+                        })
+                        this.setData({
+                            kaipiaoList
+                        })
+                    }
                 } else {
                     // 写入缓存
                     dd.setStorage({
@@ -536,10 +801,10 @@ Page({
             url: app.globalData.url + 'customerDetailController.do?json&accountbook.id=' + accountbookId,
             method: 'GET',
             success: res => {
-                if(res.status === 200) {
-                   this.setData({
-                       customerList: res.data
-                   })
+                if (res.status === 200) {
+                    this.setData({
+                        customerList: res.data
+                    })
                 }
             }
         })
@@ -560,14 +825,16 @@ Page({
     // 获取选择的客户信息和客户快递列表
     getCustomerDetailFromStorage() {
         const customerDetail = dd.getStorageSync({key: 'customerDetail'}).data
-        if(!!customerDetail) {
+        if (!!customerDetail) {
             this.setData({
                 customerDetail: customerDetail,
                 submitData: {
                     ...this.data.submitData,
-                    invoiceType: customerDetail.invoiceType
+                    invoiceType: customerDetail.invoiceType,
+                    customerDetailId: customerDetail.id
                 }
             })
+            console.log(customerDetail, '....custoerDetail.....')
             dd.removeStorage({
                 key: 'customerDetail',
                 success: () => {
@@ -579,7 +846,7 @@ Page({
     // 获取修改后的客户信息
     getUpdatedCustomerFromStorage() {
         const updatedCustomInfo = dd.getStorageSync({key: 'updatedCustomInfo'}).data
-        if(updatedCustomInfo) {
+        if (updatedCustomInfo) {
             this.setData({
                 customerDetail: updatedCustomInfo,
             })
@@ -592,9 +859,9 @@ Page({
         })
     },
     // 获取用户选择或者修改后的快递信息用于页面渲染
-    getExpressInfoFromStorage(){
+    getExpressInfoFromStorage() {
         const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
-        if(expressInfo) {
+        if (expressInfo) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -608,7 +875,7 @@ Page({
                     console.log('清除快递信息成功...')
                 }
             })
-        }else{
+        } else {
             this.setData({
                 isExpress: 1
             })
@@ -623,15 +890,19 @@ Page({
             method: 'GET',
             url: app.globalData.url + 'accountbookController.do?findAccountbookTaxrate&accountbookId=' + accountbookId,
             success: res => {
-                if(res.data.success) {
-                    if(res.data.obj.length) {
+                if (res.data.success) {
+                    if (res.data.obj.length) {
                         const arr = res.data.obj.map(item => item.taxRate)
                         arr.unshift('请选择')
                         // 如果只有一个税率，默认选中第一个
-                        if(arr.length <= 2) {
-                           this.setData({
-                               taxRateIndex: 1
-                           })
+                        if (arr.length <= 2) {
+                            this.setData({
+                                taxRateIndex: 1,
+                                submitData: {
+                                    ...this.data.submitData,
+                                    taxRate: arr[1]
+                                }
+                            })
                         }
                         this.setData({
                             taxRateArr: arr
@@ -697,81 +968,6 @@ Page({
     onKeyboardHide() {
         this.setData({
             btnHidden: false
-        })
-    },
-    getProcessInstance(billId, accountbookId) {
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading,
-            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=4&billId=' + billId + '&accountbookId=' + accountbookId,
-            method: 'GET',
-            success: res => {
-                if(res.data && res.data.length) {
-                    const { title, operationRecords, tasks, ccUserids } = res.data[0]
-                    const taskArr = tasks.filter(item => {
-                        if(item.taskStatus === 'RUNNING') {
-                            if(item.userid.split(',')[2]){
-                                item.userName = item.userid.split(',')[2]
-                                item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                            }else{
-                                item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                                item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                            }
-                            item.avatar = item.userid.split(',')[1]
-                            item.resultName = '（审批中）'
-                            item.operationName = '审批人'
-                            return item
-                        }
-                    })
-
-                    // 抄送人
-                    let cc = []
-                    if(ccUserids && ccUserids.length) {
-                        cc = ccUserids.map(item => {
-                            return {
-                                userName: item.split(',')[0],
-                                realName: item.split(',')[0].length > 1 ? item.split(',')[0].slice(-2) : item.split(',')[0],
-                                avatar: item.split(',')[1]
-                            }
-                        })
-                    }
-
-                    const operationArr = operationRecords.filter(item => {
-                        if(item.userid.split(',')[2]){
-                            item.userName = item.userid.split(',')[2]
-                            item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                        }else{
-                            item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                            item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                        }
-                        console.log(item.realName)
-                        item.avatar = item.userid.split(',')[1]
-                        if(item.operationType === 'START_PROCESS_INSTANCE') {
-                            item.operationName = '发起审批'
-                        } else if(item.operationType !== 'NONE') {
-                            item.operationName = '审批人'
-                        }
-                        if(item.operationResult === 'AGREE') {
-                            item.resultName = '（已同意）'
-                        }else if(item.operationResult === 'REFUSE') {
-                            item.resultName = '（已拒绝）'
-                        }else{
-                            item.resultName = ''
-                        }
-                        if(item.operationType !== 'NONE') {
-                            return item
-                        }
-                    })
-                    this.setData({
-                        process: {
-                            title,
-                            operationRecords: operationArr,
-                            tasks: taskArr,
-                            cc
-                        }
-                    })
-                }
-            },
         })
     },
 })

@@ -1,5 +1,4 @@
 import clone from "lodash/cloneDeep";
-import moment from "moment";
 import {formatNumber, validFn, request} from "../../util/getErrorMessage";
 
 const app = getApp()
@@ -338,6 +337,7 @@ Page({
             tempData.forEach(item => {
                 item.trueSubjectId = item.subjectId
                 item.billDetailTrueApEntityListObj = clone(item.billDetailApEntityListObj)
+                item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
             })
             this.addLoading()
             dd.setStorage({

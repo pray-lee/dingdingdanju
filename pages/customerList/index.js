@@ -23,7 +23,7 @@ Page({
         const id = e.currentTarget.dataset.customerId
         const obj = this.data.customerList.filter(item => item.customerId === id)[0]
         const newObj = {
-            id: obj.customer.id,
+            id: obj.id,
             invoiceAddress: obj.customer.invoiceAddress,
             invoicePhone: obj.customer.invoicePhone,
             bankName: obj.customer.bankName,

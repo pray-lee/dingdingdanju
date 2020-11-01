@@ -1,0 +1,56 @@
+<!--   导入应收单修改   -->
+<view class="form-wrapper">
+    <view class="add-extra-page" onTap="onClick">
+    <form>
+        <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}" onScroll="onScroll" scroll-into-view="{{scrollId}}" scroll-with-animation>
+            <view class="baoxiao-item" a:if="{{importList.length}}" a:for="{{importList}}" id="{{index + 1}}">
+                <view class="baoxiao-item-title">
+                    <view class="title">详情（{{index + 1}}）</view>
+                </view>
+                <view class="block-wrapper">
+                    <view class="form-row">
+                        <view class="form-row-label"><text class="require">*</text>销售类型</view>
+                        <view class="form-row-content">
+                            <view class="mock-input">{{item['subjectEntity.fullSubjectName']}}</view>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                    <view class="form-row">
+                        <view class="form-row-label"><text class="require">*</text>核算维度</view>
+                        <view class="form-row-content">
+                            <view class="mock-input">{{item['auxpropertyNames']}}</view>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                    <view class="form-row">
+                        <view class="form-row-label"><text class="require">*</text>开票内容</view>
+                        <view class="form-row-content">
+                            <view class="mock-input">{{item['remark']}}</view>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                    <view class="form-row-wrapper">
+                        <view class="form-row">
+                            <view class="form-row-label"><text class="require">*</text>开票金额（含税）</view>
+                            <view class="form-row-content">
+                                <input class="input" data-id="{{item.id}}" onInput="onInput" value="{{item.unverifyAmount}}" placeholder="开票金额"/>
+                            </view>
+                        </view>
+                        <view class="form-row" style="color:#ff5252">
+                            <view class="form-row-label"><text class="require"></text>可申请余额</view>
+                            <view class="form-row-content">
+                                <view class="mock-input">{{item.readOnlyAmount}}</view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="form-line"/>
+                </view>
+            </view>
+        </scroll-view>
+        <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}" hidden="{{btnHidden}}">
+            <button class="submit-btn cancel-extra save-draft" onTap="suppleImportList">补充导入</button>
+            <button class="submit-btn" onTap="saveImportList">保存信息</button>
+        </view>
+        </form>
+    </view>
+</view>
