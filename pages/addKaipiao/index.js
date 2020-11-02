@@ -471,23 +471,32 @@ Page({
     },
     getImportYingshouList() {
         const importList = dd.getStorageSync({key: 'importList'}).data
-        console.log(importList)
         if (!!importList && importList.length) {
-            const oldImportList = this.data.kaipiaoList.filter(item => !!item.billId )
-            console.log(oldImportList, 'oldImportList')
-            const arr = []
-            if(oldImportList.length) {
+            // 之前导入的单据
+            let oldList = this.data.kaipiaoList.concat()
+            if(oldList.length) {
                 for(let i = 0; i < importList.length; i++) {
-                    if(oldImportList.every(item => item.billId !== importList[i].billId)) {
-                        arr.push(importList[i])
+                    if(oldList.every(item => item.billId !== importList[i].billId)) {
+                        oldList.push(importList[i])
+                    }else{
+                        oldList = oldList.map(item => {
+                            if(item.billId === importList[i].billId) {
+                                return Object.assign({}, importList[i])
+                            }else{
+                                return item
+                            }
+                        })
                     }
+                    // 数据组合
+                    this.setData({
+                        kaipiaoList: oldList
+                    })
                 }
+            }else{
+                this.setData({
+                    kaipiaoList: this.data.kaipiaoList.concat(importList)
+                })
             }
-            console.log(arr, '过滤已经存在的数据')
-            // 数据组合
-            this.setData({
-                kaipiaoList: this.data.kaipiaoList.concat(importList)
-            })
         }
         dd.removeStorage({
             key: 'importList'
@@ -621,7 +630,7 @@ Page({
         })
         // ================test======================
         // type='edit'
-        // id='2c91e3e97587329b01758794d2850036'
+        // id='2c91e3e975887c510175889467720019'
         // ================test======================
         // 获取账簿列表
         if (type === 'add') {
@@ -754,6 +763,7 @@ Page({
                             var obj = {}
                             var subjectId = item.subjectId
                             obj.accountbookId = accountbookId
+                            obj.billId = item.billId
                             obj.subjectId = item.subjectId
                             obj.subjectName = item.subjectEntity.fullSubjectName,
                             obj.trueSubjectId = item.trueSubjectId
