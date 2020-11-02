@@ -87,14 +87,6 @@ Page({
             }
         })
         // 处理一下提交格式
-        // const newKaipiaoList = this.data.kaipiaoList.map(item => {
-        //     return {
-        //         billId: item.billId,
-        //         amount:item.amount,
-        //         unverifyAmount: item.unverifyAmount,
-        //         applicationAmount: item.applicationAmount
-        //     }
-        // })
         this.formatSubmitData(this.data.kaipiaoList, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         // 处理快递信息
@@ -479,12 +471,27 @@ Page({
     },
     getImportYingshouList() {
         const importList = dd.getStorageSync({key: 'importList'}).data
-        if (!!importList) {
+        console.log(importList)
+        if (!!importList && importList.length) {
+            const oldImportList = this.data.kaipiaoList.filter(item => !!item.billId )
+            console.log(oldImportList, 'oldImportList')
+            const arr = []
+            if(oldImportList.length) {
+                for(let i = 0; i < importList.length; i++) {
+                    if(oldImportList.every(item => item.billId !== importList[i].billId)) {
+                        arr.push(importList[i])
+                    }
+                }
+            }
+            console.log(arr, '过滤已经存在的数据')
+            // 数据组合
             this.setData({
                 kaipiaoList: this.data.kaipiaoList.concat(importList)
             })
         }
-        console.log(importList, '.........')
+        dd.removeStorage({
+            key: 'importList'
+        })
     },
     onShow() {
         this.getCustomerDetailFromStorage()
@@ -614,7 +621,7 @@ Page({
         })
         // ================test======================
         // type='edit'
-        // id='2c91e3e97579b6550175842b74c1024e'
+        // id='2c91e3e97587329b01758794d2850036'
         // ================test======================
         // 获取账簿列表
         if (type === 'add') {
