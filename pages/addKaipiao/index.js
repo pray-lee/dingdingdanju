@@ -131,7 +131,6 @@ Page({
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
                     item[keys].forEach((arrItem, arrIndex) => {
                         Object.keys(arrItem).forEach(arrKeys => {
-                            console.log(arrKeys, 'arrKeys')
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -232,6 +231,7 @@ Page({
                 accountbookId: this.data.submitData.accountbookId,
                 submitterDepartmentId: this.data.submitData.submitterDepartmentId,
                 applicationAmount: '',
+                remarkIndex: 0
             }
         }
         return obj
@@ -327,6 +327,21 @@ Page({
         })
     },
     invoiceTypeChange(e) {
+        dd.confirm({
+            title: '温馨提示',
+            content: '修改此项会清除导入的单据，是否继续',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: (result) => {
+                if(result.confirm) {
+                    // 清除导入单据
+                    const newList = this.data.kaipiaoList.filter(item => !item.billId)
+                    this.setData({
+                        kaipiaoList: newList
+                    })
+                }
+            },
+        });
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -471,6 +486,8 @@ Page({
     },
     getImportYingshouList() {
         const importList = dd.getStorageSync({key: 'importList'}).data
+        console.log(this.data.kaipiaoList, 'kaipiaoList')
+        console.log(importList, 'importList')
         if (!!importList && importList.length) {
             // 之前导入的单据
             let oldList = this.data.kaipiaoList.concat()
@@ -629,8 +646,8 @@ Page({
             billId: id
         })
         // ================test======================
-        // type='edit'
-        // id='2c91e3e975887c510175889467720019'
+        type='edit'
+        id='2c91e3e9758cdcec01758d15f2a60052'
         // ================test======================
         // 获取账簿列表
         if (type === 'add') {
@@ -893,7 +910,6 @@ Page({
                     ...expressInfo
                 }
             })
-            console.log(this.data.submitData, 'submitDasta')
             dd.removeStorage({
                 key: 'expressInfo',
                 success: () => {
@@ -937,8 +953,23 @@ Page({
             }
         })
     },
+
+    // 给导入的数据加上辅助核算的信息
+    setImportSelectedAuxptyList(data) {
+        const obj = {}
+        data.forEach(item => {
+            obj[item.auxptyId] = {
+                id: item.auxptyDetailId,
+                name: item.auxptyDetailName,
+                auxptyId: item.auxptyId
+            }
+        })
+         return obj
+    },
     showKaipiaoDetail(e) {
         // 加一个编辑标志
+        const index = e.currentTarget.dataset.index
+        // return
         dd.setStorage({
             key: 'edit',
             data: true,
@@ -947,7 +978,6 @@ Page({
             }
         })
         this.addLoading()
-        const index = e.currentTarget.dataset.index
         var obj = this.generateBaseDetail()
         dd.setStorage({
             key: 'index',
@@ -956,24 +986,67 @@ Page({
                 console.log('index设置成功...')
             }
         })
-        dd.setStorage({
-            key: 'kaipiaoDetail',
-            data: this.data.kaipiaoList[index],
-            success: res => {
-                console.log(this.data.kaipiaoList[index])
-                console.log('写入报销详情成功！！')
-                dd.setStorage({
-                    key: 'initKaipiaoDetail',
-                    data: obj,
-                    success: res => {
-                        this.hideLoading()
-                        dd.navigateTo({
-                            url: '/pages/kaipiaoDetail/index'
+        this.data.kaipiaoList[index].allAuxptyList = {}
+        if(!!this.data.kaipiaoList[index].billId && !this.data.kaipiaoList[index].selectedAuxpty) {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'receivableBillController.do?getDetail&id=' + this.data.kaipiaoList[index].billId,
+                method: 'GET',
+                dataType: 'json',
+                success: res => {
+                    console.log(res)
+                    console.log('==================')
+                    if (res.data.obj) {
+                        const renderObj = res.data.obj
+                        const selectedAuxptyList = this.setImportSelectedAuxptyList(renderObj.billApEntityList)
+                        this.data.kaipiaoList[index].selectedAuxpty = selectedAuxptyList
+                        this.data.kaipiaoList[index].subjectAuxptyList = renderObj.subjectEntity.subjectAuxptyList
+                        this.data.kaipiaoList[index].subjectId = renderObj.subjectId
+                        this.data.kaipiaoList[index].subjectName = renderObj.subjectEntity.fullSubjectName
+                        this.data.kaipiaoList[index].trueSubjectId = renderObj.trueSubjectId
+                        this.data.kaipiaoList[index].trueSubjectName = renderObj.trueSubjectEntity.fullSubjectName
+                        dd.setStorage({
+                            key: 'kaipiaoDetail',
+                            data: this.data.kaipiaoList[index],
+                            success: res => {
+                                console.log(this.data.kaipiaoList[index])
+                                console.log('写入报销详情成功！！')
+                                dd.setStorage({
+                                    key: 'initKaipiaoDetail',
+                                    data: obj,
+                                    success: res => {
+                                        this.hideLoading()
+                                        dd.navigateTo({
+                                            url: '/pages/kaipiaoDetail/index'
+                                        })
+                                    }
+                                })
+                            }
                         })
                     }
-                })
-            }
-        })
+                }
+            })
+        }else{
+            dd.setStorage({
+                key: 'kaipiaoDetail',
+                data: this.data.kaipiaoList[index],
+                success: res => {
+                    console.log(this.data.kaipiaoList[index])
+                    console.log('写入报销详情成功！！')
+                    dd.setStorage({
+                        key: 'initKaipiaoDetail',
+                        data: obj,
+                        success: res => {
+                            this.hideLoading()
+                            dd.navigateTo({
+                                url: '/pages/kaipiaoDetail/index'
+                            })
+                        }
+                    })
+                }
+            })
+        }
     },
     deleteKaipiaoDetail(e) {
         var idx = e.currentTarget.dataset.index
@@ -993,6 +1066,45 @@ Page({
     onKeyboardHide() {
         this.setData({
             btnHidden: false
+        })
+    },
+    // 删除单据
+    deleteBill() {
+        // 写入缓存，回列表页的时候刷新列表
+        dd.setStorage({
+            key: 'query',
+            data: {
+                type: this.data.status,
+                flag: 'B'
+            }
+        })
+        dd.confirm({
+            title: '温馨提示',
+            content: '确认删除该单据吗?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: res => {
+                if(res.confirm) {
+                    this.addLoading()
+                    request({
+                        hideLoading: this.hideLoading,
+                        url: app.globalData.url + 'invoicebillController.do?doBatchDel&ids=' + this.data.billId,
+                        method: 'GET',
+                        success: res => {
+                            if(res.data.success) {
+                                dd.navigateBack({
+                                    delta: 1
+                                })
+                            }else{
+                                dd.alert({
+                                    content: '报销单删除失败',
+                                    buttonText: '好的'
+                                })
+                            }
+                        },
+                    })
+                }
+            }
         })
     },
 })

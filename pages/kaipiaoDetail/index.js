@@ -9,15 +9,11 @@ Page({
         kaipiaoDetail: {},
         kaipiaoArr: [],
         remarks: [],
-        remarkIndex: 0,
-        remark: ''
     },
     onLoad() {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
-        // 获取开票内容
-        this.getRemarksFromStorage()
 
         const isEdit = dd.getStorageSync({key: 'edit'}).data
         const initKaipiaoDetail = dd.getStorageSync({key: 'initKaipiaoDetail'}).data
@@ -40,6 +36,19 @@ Page({
                 kaipiaoDetail: kaipiaoDetail
             })
         }
+        // 获取开票内容
+        this.getRemarksFromStorage()
+        // 设置remarkIndex的值
+        this.data.remarks.forEach((item, index) => {
+            if(item.remark === this.data.kaipiaoDetail.remark) {
+                this.setData({
+                    kaipiaoDetail: {
+                        ...this.data.kaipiaoDetail,
+                        remarkIndex: index
+                    }
+                })
+            }
+        })
     },
     getAuxptyIdFromStorage() {
         // 从缓存里获取auxpty
@@ -84,10 +93,10 @@ Page({
         const index = e.detail.value
         if(this.data.remarks[index].id !== '') {
             this.setData({
-                remarkIndex: index,
                 kaipiaoDetail: {
                     ...this.data.kaipiaoDetail,
-                    remark: this.data.remarks[e.detail.value].remark
+                    remark: this.data.remarks[e.detail.value].remark,
+                    remarkIndex: index,
                 }
             })
         }
@@ -105,6 +114,7 @@ Page({
                 kaipiaoDetail
             })
         }
+
         dd.removeStorage({
             key: 'kaipiaoDetail',
             success: res => {
@@ -161,18 +171,16 @@ Page({
     },
     // 请求辅助核算列表
     getAuxptyList(accountbookId, auxptyid, flag) {
-        console.log(auxptyid, 'auxptyid')
-        console.log(this.data.baoxiaoDetail)
         this.addLoading()
         let url = this.getAuxptyUrl(accountbookId, auxptyid)
-        if(auxptyid == 2 && this.data.baoxiaoDetail.applicantType == 10) {
-            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        if(auxptyid == 2 && this.data.kaipiaoDetail.applicantType == 10) {
+            url = url + '&id=' + this.data.kaipiaoDetail.applicantId
         }
-        if(auxptyid == 3 && this.data.baoxiaoDetail.applicantType == 20) {
-            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        if(auxptyid == 3 && this.data.kaipiaoDetail.applicantType == 20) {
+            url = url + '&id=' + this.data.kaipiaoDetail.applicantId
         }
-        if(auxptyid == 4 && this.data.baoxiaoDetail.applicantType == 30) {
-            url = url + '&id=' + this.data.baoxiaoDetail.applicantId
+        if(auxptyid == 4 && this.data.kaipiaoDetail.applicantType == 30) {
+            url = url + '&id=' + this.data.kaipiaoDetail.applicantId
         }
         request({
             hideLoading: this.hideLoading,
@@ -180,7 +188,6 @@ Page({
             method: 'GET',
             success: res => {
                 const name = this.getAuxptyNameMap(auxptyid)
-                console.log(res.data.rows, 'res.data.rows')
                 const newObj = res.data.rows.map(item => {
                     return {
                         id: item.id,
@@ -190,7 +197,6 @@ Page({
                 })
                 const tempData = clone(this.data.kaipiaoDetail.allAuxptyList)
                 tempData[auxptyid] = newObj
-                console.log(tempData)
                 this.setData({
                     kaipiaoDetail: {
                         ...this.data.kaipiaoDetail,
@@ -353,6 +359,15 @@ Page({
         }
     },
     addDetail() {
+        const subjectList = dd.getStorageSync({key: 'subjectList'}).data
+        if(!subjectList || !subjectList.length) {
+            dd.alert({
+                content: '暂无销售类型',
+                buttonText: '好的',
+                success: () => {}
+            })
+            return
+        }
         const validSuccess = this.valid(this.data.kaipiaoDetail)
         if (validSuccess) {
             this.setData({
@@ -364,25 +379,27 @@ Page({
         }
     },
     goSubjectPage() {
-        dd.navigateTo({
-            url: '/pages/subjectPage/index'
-        })
+        if(!this.data.kaipiaoDetail.billId) {
+            dd.navigateTo({
+                url: '/pages/subjectPage/index'
+            })
+        }
     },
     goAuxptyPage(e) {
-        const auxptyId = e.currentTarget.dataset.id
-        console.log(auxptyId, 'auxptyId,......')
-        dd.setStorage({
-            key: 'auxptyList',
-            data: this.data.kaipiaoDetail.allAuxptyList[auxptyId],
-            success: res => {
-                dd.navigateTo({
-                    url: '/pages/auxptyPage/index'
-                })
-            }
-        })
+        if(!this.data.kaipiaoDetail.billId) {
+            const auxptyId = e.currentTarget.dataset.id
+            dd.setStorage({
+                key: 'auxptyList',
+                data: this.data.kaipiaoDetail.allAuxptyList[auxptyId],
+                success: res => {
+                    dd.navigateTo({
+                        url: '/pages/auxptyPage/index'
+                    })
+                }
+            })
+        }
     },
     valid(obj) {
-        console.log(obj, '..........')
         if (!obj.subjectId) {
             validFn('请选择费用类型')
             return false

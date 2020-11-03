@@ -8,12 +8,28 @@ Page({
         isPhoneXSeries: false,
         btnHidden: false,
         importList: [],
+        remarkIndex: 0,
+        remarks: []
     },
     onLoad() {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
-
+    },
+    bindObjPickerChange(e) {
+        var id = e.currentTarget.dataset.id
+        var value = e.detail.value
+        // 设置当前框的值
+        const importList = this.data.importList.map(item => {
+            if(item.id === id) {
+                item.remarkIndex = value
+                item.remark = this.data.remarks[value].remark
+            }
+            return item
+        })
+        this.setData({
+           importList
+        })
     },
     getImportListFromStorage() {
         const importList = dd.getStorageSync({key: 'importList'}).data
@@ -25,6 +41,13 @@ Page({
         }
         this.data.importList.forEach(item => {
             item.applicationAmount = item.unverifyAmount
+            this.data.remarks.forEach((remark, index) => {
+                if(item.remark === remark) {
+                    item.remarkIndex = index
+                }else{
+                    item.remarkIndex = 0
+                }
+            })
         })
         dd.removeStorageSync({
             key: 'savedImportList'
@@ -33,7 +56,17 @@ Page({
             key: 'importList'
         })
     },
+    // 获取开票内容
+    getRemarksFromStorage(){
+        const remarks = dd.getStorageSync({key: 'remarks'}).data
+        if(!!remarks && remarks.length) {
+            this.setData({
+                remarks,
+            })
+        }
+    },
     onShow() {
+        this.getRemarksFromStorage()
         this.getImportListFromStorage()
     },
     onInput(e) {
@@ -53,6 +86,7 @@ Page({
         this.data.importList.forEach(item => {
             item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
             item.billId = item.id
+            item.subjectName = item['subjectEntity.fullSubjectName']
         })
         dd.setStorage({
             key: 'importList',

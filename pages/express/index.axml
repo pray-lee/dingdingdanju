@@ -7,7 +7,7 @@
                     <movable-view direction="horizontal" class='movable-view'>
                         <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}"
                               data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
-                            <view class="content" style="display:block" onTap="selectExpress" data-id="{{item.customerDetailId}}">
+                            <view class="content" style="display:block" onTap="selectExpress" data-id="{{item.id}}">
                                 <view>
                                     <text>{{item.contacts}}</text>
                                     <text> {{item.telephone}}</text>
@@ -17,8 +17,8 @@
                                 </view>
                             </view>
                             <view class="move-wrapper">
-                                <view class="move-block edit" onTap="update" data-id="{{item.customerDetailId}}">编辑</view>
-                                <view class="move-block del" onTap="delete" data-id="{{item.customerDetailId}}">删除</view>
+                                <view class="move-block edit" onTap="update" data-id="{{item.id}}">编辑</view>
+                                <view class="move-block del" onTap="delete" data-id="{{item.id}}">删除</view>
                             </view>
                         </view>
                     </movable-view>

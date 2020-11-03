@@ -11,6 +11,7 @@ Page({
         isPhoneXSeries: false,
         scrollTop: 0,
         list: [],
+        customerDetailId: ''
     },
     //手指触摸动作开始 记录起点X坐标
     touchstart: function (e) {
@@ -68,11 +69,19 @@ Page({
             list: expressList
         })
     },
+    getCustomerDetailId() {
+        const customerDetailId = dd.getStorageSync({key: 'customerDetailId'}).data
+        console.log(customerDetailId,'customerDetailId')
+        if(!!customerDetailId) {
+           this.setData({
+              customerDetailId
+           })
+        }
+    },
     selectExpress(e) {
         console.log(e)
-        const customerDetailId = e.currentTarget.dataset.id
-        const expressInfo = this.data.list.filter(item => item.customerDetailId === customerDetailId)[0]
-        console.log(expressInfo)
+        const id = e.currentTarget.dataset.id
+        const expressInfo = this.data.list.filter(item => item.id === id)[0]
         dd.setStorage({
             key: 'expressInfo',
             data: expressInfo,
@@ -88,6 +97,7 @@ Page({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
         })
         this.getExpressFromStorage()
+        this.getCustomerDetailId()
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
