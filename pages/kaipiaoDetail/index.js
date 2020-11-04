@@ -9,6 +9,7 @@ Page({
         kaipiaoDetail: {},
         kaipiaoArr: [],
         remarks: [],
+        remarkIndex: 0
     },
     onLoad() {
         this.setData({
@@ -42,6 +43,7 @@ Page({
         this.data.remarks.forEach((item, index) => {
             if(item.remark === this.data.kaipiaoDetail.remark) {
                 this.setData({
+                    remarkIndex: index,
                     kaipiaoDetail: {
                         ...this.data.kaipiaoDetail,
                         remarkIndex: index
@@ -93,10 +95,11 @@ Page({
         const index = e.detail.value
         if(this.data.remarks[index].id !== '') {
             this.setData({
+                remarkIndex: index,
                 kaipiaoDetail: {
                     ...this.data.kaipiaoDetail,
                     remark: this.data.remarks[e.detail.value].remark,
-                    remarkIndex: index,
+                    remarkIndex: index
                 }
             })
         }
@@ -383,6 +386,11 @@ Page({
             dd.navigateTo({
                 url: '/pages/subjectPage/index'
             })
+        }else{
+            dd.alert({
+                content: '导入的应收单销售类型不可编辑',
+                buttonText: '好的'
+            })
         }
     },
     goAuxptyPage(e) {
@@ -396,6 +404,11 @@ Page({
                         url: '/pages/auxptyPage/index'
                     })
                 }
+            })
+        }else{
+            dd.alert({
+                content: '导入的应收单辅助核算类型不可编辑',
+                buttonText: '好的'
             })
         }
     },

@@ -101,6 +101,8 @@ Page({
                     'subjectEntity.fullSubjectName': arr[i][0]['subjectEntity.fullSubjectName'],
                     'auxpropertyNames': arr[i][0].auxpropertyNames
                 }
+                // 单据号处理,需要显示一下这个信息, 这里还要加一个判断
+                temp.invoicebillDetailCode = arr[i][0].receivablebillCode,
                 newArr.push(temp)
             }
         }
@@ -110,15 +112,6 @@ Page({
             data: newArr,
             success: res => {
                 console.log('导入应付单列表成功')
-                // dd.removeStorage({
-                //     key: 'tempImportList',
-                //     success: res => {
-                //         console.log('清除tempImportList成功...')
-                //     }
-                // })
-                // dd.navigateBack({
-                //     delta: 1
-                // })
                 dd.navigateTo({
                     url: '/pages/importYingshouInputList/index'
                 })

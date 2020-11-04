@@ -186,6 +186,12 @@ Page({
         })
         this.onAddHide()
     },
+    onShowAddFukuan(e) {
+        dd.navigateTo({
+            url: '../addFukuan/index?type=add'
+        })
+        this.onAddHide()
+    },
     onShowAddBaoxiao(e) {
         dd.navigateTo({
             url: '../addBaoxiao/index?type=add'

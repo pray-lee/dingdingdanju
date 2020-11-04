@@ -1,4 +1,5 @@
 const app = getApp()
+import clone from 'lodash/cloneDeep'
 import {request, validFn} from '../../util/getErrorMessage'
 Page({
     data: {
@@ -34,12 +35,14 @@ Page({
     },
     updateInfo() {
         if(this.valid(this.data.customInfo)) {
+            const tempData = clone(this.data.customInfo)
+            tempData.id = this.data.customInfo.customerId
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
                 url: app.globalData.url + 'customerDetailController.do?doUpdateForPop',
                 method: 'GET',
-                data: this.data.customInfo,
+                data: tempData,
                 success: res => {
                     if(res.data.success) {
                         // 把更新的信息返回去

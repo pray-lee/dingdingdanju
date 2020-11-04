@@ -125,7 +125,6 @@ Page({
     },
     // 把baoxiaoList的数据，重组一下，拼在submitData里提交
     formatSubmitData(array, name) {
-        console.log(array, 'array')
         array.forEach((item, index) => {
             Object.keys(item).forEach(keys => {
                 if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
@@ -203,7 +202,6 @@ Page({
             method: 'GET',
             url: app.globalData.url + 'invoicebillDetailController.do?findRemark&accountbookId=' + accountbookId,
             success: res => {
-                console.log(res, '开票内容')
                 const remarks = res.data.obj.map(item => ({
                     id: item.id,
                     remark: item.remark
@@ -221,7 +219,6 @@ Page({
     },
     // 组成初始详情数据
     generateBaseDetail() {
-        console.log(this.data.subjectList)
         if (this.data.subjectList.length) {
             var subjectList = clone(this.data.subjectList)
             var obj = {
@@ -245,7 +242,6 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                console.log(res)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                 }
@@ -300,7 +296,6 @@ Page({
                 key: 'initKaipiaoDetail',
                 data: obj,
                 success: res => {
-                    console.log('写入开票详情成功...')
                     dd.navigateTo({
                         url: '/pages/kaipiaoDetail/index'
                     })
@@ -442,9 +437,9 @@ Page({
             key: 'newKaipiaoDetailArr',
             success: res => {
                 const kaipiaoDetail = res.data
+                console.log(kaipiaoDetail, 'kaipiaoDetail..........')
                 if (!!kaipiaoDetail) {
                     let kaipiaoList = clone(this.data.kaipiaoList)
-                    console.log(index)
                     if (!!index || index == 0) {
                         kaipiaoList.splice(index, 1)
                         dd.removeStorage({
@@ -486,7 +481,6 @@ Page({
     },
     getImportYingshouList() {
         const importList = dd.getStorageSync({key: 'importList'}).data
-        console.log(this.data.kaipiaoList, 'kaipiaoList')
         console.log(importList, 'importList')
         if (!!importList && importList.length) {
             // 之前导入的单据
@@ -514,20 +508,26 @@ Page({
                     kaipiaoList: this.data.kaipiaoList.concat(importList)
                 })
             }
+            dd.removeStorageSync({
+                key: 'importList',
+                success: () => {
+                    console.log('清除importList成功')
+
+                }
+            })
         }
-        dd.removeStorage({
-            key: 'importList'
-        })
     },
     onShow() {
+        console.log('1111')
         this.getCustomerDetailFromStorage()
         this.getUpdatedCustomerFromStorage()
         this.getExpressInfoFromStorage()
         // 从缓存里获取baoxiaoDetail
         this.getKaipiaoDetailFromStorage()
         // 从缓存里获取导入应收单
-        this.getImportYingshouList()
-
+        setTimeout(() => {
+            this.getImportYingshouList()
+        }, 100)
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearListSubmitData(submitData) {
@@ -537,12 +537,20 @@ Page({
             }
         })
     },
+    // 删除得时候把submitData里面之前存的报销列表数据清空
+    clearFileList(submitData) {
+        Object.keys(submitData).forEach(key => {
+            if (key.indexOf('billFiles') != -1) {
+                delete submitData[key]
+            }
+        })
+    },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
         var fileList = this.data.submitData.billFilesObj.filter(item => {
             return item.name !== file
         })
-        this.clearListSubmitData(this.data.submitData, 'billFiles')
+        this.clearFileList(this.data.submitData)
         this.setData({
             submitData: {
                 ...this.data.submitData,
@@ -646,8 +654,8 @@ Page({
             billId: id
         })
         // ================test======================
-        type='edit'
-        id='2c91e3e9758cdcec01758d15f2a60052'
+        // type='edit'
+        // id='2c91e3e9758ddc42017590ffd81f005f'
         // ================test======================
         // 获取账簿列表
         if (type === 'add') {
@@ -703,7 +711,6 @@ Page({
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
-                console.log(res, '部门')
                 if (res.data && res.data.length) {
                     var arr = res.data.map(item => {
                         return {
@@ -752,7 +759,6 @@ Page({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=5&findAll=false',
             method: 'GET',
             success: res => {
-                console.log(res, '科目类型')
                 var arr = []
                 if (res.data.length) {
                     res.data.forEach(item => {
@@ -781,8 +787,9 @@ Page({
                             var subjectId = item.subjectId
                             obj.accountbookId = accountbookId
                             obj.billId = item.billId
+                            obj.invoicebillDetailCode = item.invoicebillDetailCode
                             obj.subjectId = item.subjectId
-                            obj.subjectName = item.subjectEntity.fullSubjectName,
+                            obj.subjectName = item.subjectEntity.fullSubjectName
                             obj.trueSubjectId = item.trueSubjectId
                             obj.trueSubjectName = item.subjectEntity.trueSubjectName
                             obj.applicationAmount = item.applicationAmount
@@ -876,7 +883,6 @@ Page({
                     customerDetailId: customerDetail.id
                 }
             })
-            console.log(customerDetail, '....custoerDetail.....')
             dd.removeStorage({
                 key: 'customerDetail',
                 success: () => {
@@ -924,7 +930,6 @@ Page({
     },
     // 获取某个账簿的税率
     getTaxRateFromAccountbookId(accountbookId) {
-        console.log(accountbookId, 'accountbookId')
         this.addLoading()
         request({
             hideLoading: this.hideLoading(),
@@ -987,6 +992,8 @@ Page({
             }
         })
         this.data.kaipiaoList[index].allAuxptyList = {}
+        this.data.kaipiaoList[index].remarkIndex = 0
+        console.log(this.data.kaipiaoList[index], '[index]')
         if(!!this.data.kaipiaoList[index].billId && !this.data.kaipiaoList[index].selectedAuxpty) {
             this.addLoading()
             request({
@@ -995,8 +1002,7 @@ Page({
                 method: 'GET',
                 dataType: 'json',
                 success: res => {
-                    console.log(res)
-                    console.log('==================')
+                    console.log(res, '..........res')
                     if (res.data.obj) {
                         const renderObj = res.data.obj
                         const selectedAuxptyList = this.setImportSelectedAuxptyList(renderObj.billApEntityList)
@@ -1010,8 +1016,6 @@ Page({
                             key: 'kaipiaoDetail',
                             data: this.data.kaipiaoList[index],
                             success: res => {
-                                console.log(this.data.kaipiaoList[index])
-                                console.log('写入报销详情成功！！')
                                 dd.setStorage({
                                     key: 'initKaipiaoDetail',
                                     data: obj,
@@ -1032,8 +1036,6 @@ Page({
                 key: 'kaipiaoDetail',
                 data: this.data.kaipiaoList[index],
                 success: res => {
-                    console.log(this.data.kaipiaoList[index])
-                    console.log('写入报销详情成功！！')
                     dd.setStorage({
                         key: 'initKaipiaoDetail',
                         data: obj,
