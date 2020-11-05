@@ -36,7 +36,8 @@
                             <view class="form-row" style="display:flex;align-items: center">
                                 <view>
                                     <view class="import-borrow-item-left">
-                                        <view class="import-borrow-remark">{{item['subjectEntity.fullSubjectName']}}</view>
+                                        <view class="import-borrow-remark" a:if="{{item['subjectEntity.fullSubjectName']}}">{{item['subjectEntity.fullSubjectName']}}</view>
+                                        <view class="import-borrow-remark" a:if="{{item['subject.fullSubjectName']}}">{{item['subject.fullSubjectName']}}</view>
                                         <view class="import-borrow-info">
                                             <view class="import-borrow-time">业务日期：{{item.businessDateTime.split(' ')[0]}}</view>
                                         </view>
@@ -55,7 +56,7 @@
             </block>
         </scroll-view>
         <view class="btn-area">
-            <button formType="submit" class="import-borrow-list-btn">导入应付单</button>
+            <button formType="submit" class="import-borrow-list-btn">导入单据</button>
         </view>
     </form>
 </view>

@@ -98,15 +98,19 @@ Page({
                     readOnlyAmount: arr[i][0].unverifyAmount,
                     amount: arr[i][0].amount,
                     remark: arr[i][0].remark,
-                    'subjectEntity.fullSubjectName': arr[i][0]['subjectEntity.fullSubjectName'],
+                    'subjectEntity.fullSubjectName': arr[i][0]['subjectEntity.fullSubjectName'] || arr[i][0]['subject.fullSubjectName'],
                     'auxpropertyNames': arr[i][0].auxpropertyNames
                 }
                 // 单据号处理,需要显示一下这个信息, 这里还要加一个判断
-                temp.invoicebillDetailCode = arr[i][0].receivablebillCode,
+                if(!!arr[i][0].receivablebillCode)
+                    // 应收单单号
+                    temp.receivablebillCode = arr[i][0].receivablebillCode
+                else
+                    // 应付单单号
+                    temp.billCode = arr[i][0].billCode
                 newArr.push(temp)
             }
         }
-        console.log(newArr, 'newArr')
         dd.setStorage({
             key: 'importList',
             data: newArr,

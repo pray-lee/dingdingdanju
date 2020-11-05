@@ -92,7 +92,7 @@ Page({
             item.subjectName = item['subjectEntity.fullSubjectName']
         })
         dd.setStorage({
-            key: 'importList',
+            key: 'importCommonList',
             data: this.data.importList,
             success: () => {
                 dd.navigateBack({

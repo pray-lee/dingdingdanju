@@ -274,7 +274,6 @@ Page({
         // 设置数据
         this.setData({
             ...this.data,
-            // importList,
             customerDetail,
             status: data.status,
             submitData: {
@@ -480,7 +479,7 @@ Page({
         })
     },
     getImportYingshouList() {
-        const importList = dd.getStorageSync({key: 'importList'}).data
+        const importList = dd.getStorageSync({key: 'importCommonList'}).data
         console.log(importList, 'importList')
         if (!!importList && importList.length) {
             // 之前导入的单据
@@ -509,9 +508,9 @@ Page({
                 })
             }
             dd.removeStorageSync({
-                key: 'importList',
+                key: 'importCommonList',
                 success: () => {
-                    console.log('清除importList成功')
+                    console.log('清除importCommonList成功')
 
                 }
             })
@@ -654,8 +653,8 @@ Page({
             billId: id
         })
         // ================test======================
-        // type='edit'
-        // id='2c91e3e9758ddc42017590ffd81f005f'
+        type='edit'
+        id='2c91e3e9758ddc42017590ffd81f005f'
         // ================test======================
         // 获取账簿列表
         if (type === 'add') {
@@ -787,7 +786,7 @@ Page({
                             var subjectId = item.subjectId
                             obj.accountbookId = accountbookId
                             obj.billId = item.billId
-                            obj.invoicebillDetailCode = item.invoicebillDetailCode
+                            obj.receivablebillCode = item.invoicebillDetailCode
                             obj.subjectId = item.subjectId
                             obj.subjectName = item.subjectEntity.fullSubjectName
                             obj.trueSubjectId = item.trueSubjectId

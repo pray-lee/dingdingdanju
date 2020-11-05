@@ -216,7 +216,7 @@ Page({
             })
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
-            this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
+            this.getBorrowBillList(this.data[listName][value].id, 20, null, null, true)
         }
         if (name === 'submitterDepartmentId') {
             // 重新获取科目以后，就要置空报销列表
@@ -230,7 +230,7 @@ Page({
                 },
             })
             this.setTotalAmount()
-            this.getBorrowBillList(this.data.submitData.accountbookId, 10, null, null, true)
+            this.getBorrowBillList(this.data.submitData.accountbookId, 20, null, null, true)
         }
         if (name === 'incomeBankName') {
             this.setIncomeBankAccount(this.data[listName][value].bankAccount)
@@ -282,6 +282,19 @@ Page({
             this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
         }
     },
+    // 获取导入的应付单
+    getImportFukuanListFromStorage() {
+        const fukuanList = dd.getStorageSync({key: 'importCommonList'}).data
+        console.log(fukuanList, 'fukuanList')
+        if(!!fukuanList) {
+            this.setData({
+                fukuanList
+            })
+            dd.removeStorageSync({
+                key: 'importCommonList'
+            })
+        }
+    },
     getSelectedBorrowListFromStorage() {
         dd.getStorage({
             key: 'importList',
@@ -329,6 +342,8 @@ Page({
         return newImportList
     },
     onShow() {
+        // 从缓存获取付款列表
+        this.getImportFukuanListFromStorage()
         // 从缓存里获取借款列表
         this.getSelectedBorrowListFromStorage()
         // 从缓存里获取借款人id
@@ -746,7 +761,7 @@ Page({
         })
     },
     // 获取应付单列表并且跳转
-    showYingfuList() {
+    getYingfuList() {
         this.addLoading()
         request({
             hideLoading: this.hideLoading(),
@@ -758,7 +773,7 @@ Page({
                 console.log('导入应付单的数据')
                 if(res.data.rows.length) {
                     dd.setStorage({
-                        key: 'importYingfuList',
+                        key: 'tempImportList',
                         data: res.data.rows,
                         success: res => {
                            dd.navigateTo({

@@ -1,5 +1,5 @@
 <view class="form-wrapper" onTap="onClick">
-    <view class="title" a:if="{{!!kaipiaoDetail.billId && kaipiaoDetail.invoicebillDetailCode}}">{{kaipiaoDetail.invoicebillDetailCode}}</view>
+    <view class="title" a:if="{{!!kaipiaoDetail.billId && kaipiaoDetail.receivablebillCode}}">{{kaipiaoDetail.receivablebillCode}}</view>
     <scroll-view scroll-y class="form-scroll-wrapper">
         <view class="block-wrapper">
              <view class="form-row" onTap="goSubjectPage">
