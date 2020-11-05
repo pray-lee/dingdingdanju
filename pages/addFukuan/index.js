@@ -285,11 +285,31 @@ Page({
     // 获取导入的应付单
     getImportFukuanListFromStorage() {
         const fukuanList = dd.getStorageSync({key: 'importCommonList'}).data
-        console.log(fukuanList, 'fukuanList')
         if(!!fukuanList) {
-            this.setData({
-                fukuanList
-            })
+            let oldList = this.data.fukuanList.concat()
+            console.log(oldList, 'oldList')
+            if(oldList.length) {
+                for(let i = 0; i < fukuanList.length; i++) {
+                    if(oldList.every(item => item.billId !== fukuanList[i].billId)) {
+                        oldList.push(fukuanList[i])
+                    }else{
+                        oldList = oldList.map(item => {
+                            if(item.billId === fukuanList[i].billId) {
+                                return Object.assign({}, fukuanList[i])
+                            }else{
+                                return item
+                            }
+                        })
+                    }
+                    this.setData({
+                        fukuanList: oldList
+                    })
+                }
+            }else{
+                this.setData({
+                    fukuanList: oldList.concat(fukuanList)
+                })
+            }
             dd.removeStorageSync({
                 key: 'importCommonList'
             })
@@ -768,9 +788,6 @@ Page({
             url: app.globalData.url + 'payableBillController.do?datagrid&supplierId='+this.data.submitData.applicantId+'&query=import&field=id,billCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,supplierId,supplierDetail.supplier.supplierName,invoiceType,subjectId,trueSubjectId,subject.fullSubjectName,trueSubject.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
             method: 'GET',
             success: res => {
-                console.log('==================')
-                console.log(res)
-                console.log('导入应付单的数据')
                 if(res.data.rows.length) {
                     dd.setStorage({
                         key: 'tempImportList',

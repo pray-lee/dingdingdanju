@@ -504,15 +504,11 @@ Page({
                 }
             }else{
                 this.setData({
-                    kaipiaoList: this.data.kaipiaoList.concat(importList)
+                    kaipiaoList: oldList.concat(importList)
                 })
             }
             dd.removeStorageSync({
-                key: 'importCommonList',
-                success: () => {
-                    console.log('清除importCommonList成功')
-
-                }
+                key: 'importCommonList'
             })
         }
     },
