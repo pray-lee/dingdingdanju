@@ -112,6 +112,13 @@ Page({
             }
         })
     },
+    deleteImportInputList(e) {
+        const id = e.currentTarget.dataset.id
+        const importList = this.data.importList.filter(item => item.id !== id)
+        this.setData({
+            importList
+        })
+    },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
             dd.showLoading({
