@@ -25,7 +25,8 @@
     "pages/importYingshouList/index",
     "pages/customerList/index",
     "pages/importYingshouInputList/index",
-    "pages/addFukuan/index"
+    "pages/addFukuan/index",
+    "pages/fukuanDetail/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

@@ -27,3 +27,4 @@ require('../../pages/importYingshouList/index?hash=32d7d2807ed4e666ef03b4b3fe8c3
 require('../../pages/customerList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/importYingshouInputList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/addFukuan/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/fukuanDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');

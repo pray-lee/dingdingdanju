@@ -53,15 +53,13 @@ Page({
         importList: [],
         tempImportList: [],
     },
-    // 把baoxiaoList的数据，重组一下，拼在submitData里提交
+    // 把fukuanList的数据，重组一下，拼在submitData里提交
     formatSubmitData(array, name) {
-        console.log(array, 'array')
         array.forEach((item, index) => {
             Object.keys(item).forEach(keys => {
-                if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1 && keys.indexOf('extraMessage') < 0 && keys.indexOf('subjectExtraConf') < 0) {
+                if (item[keys] instanceof Array && keys.indexOf('billDetail') !== -1) {
                     item[keys].forEach((arrItem, arrIndex) => {
                         Object.keys(arrItem).forEach(arrKeys => {
-                            console.log(arrKeys, 'arrKeys')
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -71,31 +69,12 @@ Page({
                         })
                     })
                 } else {
-                    // 如果是附加信息，转换成字符串
-                    if (keys == 'extraMessage') {
-                        this.setData({
-                            submitData: {
-                                ...this.data.submitData,
-                                [`${name}[${index}].${keys}`]: JSON.stringify(item[keys]),
-                            }
-                        })
-                    } else {
-                        if(keys === 'subjectExtraConf' && typeof item[keys] === 'object') {
-                            this.setData({
-                                submitData: {
-                                    ...this.data.submitData,
-                                    [`${name}[${index}].${keys}`]: JSON.stringify(item[keys])
-                                }
-                            })
-                        }else{
-                            this.setData({
-                                submitData: {
-                                    ...this.data.submitData,
-                                    [`${name}[${index}].${keys}`]: item[keys]
-                                }
-                            })
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            [`${name}[${index}].${keys}`]: item[keys]
                         }
-                    }
+                    })
                 }
             })
         })
@@ -144,9 +123,9 @@ Page({
         this.addLoading()
         var url = ''
         if (this.data.type === 'add') {
-            url = app.globalData.url + 'reimbursementBillController.do?doAdd'
+            url = app.globalData.url + 'paymentBillController.do?doAdd'
         } else {
-            url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
+            url = app.globalData.url + 'paymentBillController.do?doUpdate&id=' + this.data.billId
         }
         request({
             hideLoading: this.hideLoading,
@@ -261,6 +240,27 @@ Page({
             },
         })
     },
+    // 获取修改后的付款详情
+    getFukuanDetailFromStorage() {
+        const fukuanDetail = dd.getStorageSync({key: 'fukuanDetail'}).data
+        const index = dd.getStorageSync({key: 'index'}).data
+        console.log(fukuanDetail, '获取缓存后的付款详情')
+        if(!!fukuanDetail) {
+            const tempData = clone(this.data.fukuanList)
+            tempData[index] = fukuanDetail
+            this.setData({
+                fukuanList: tempData
+            })
+            dd.removeStorage({
+                key: 'fukuanDetail'
+            })
+            dd.removeStorage({
+                key: index
+            })
+            this.setApplicationAmount(this.data.fukuanList)
+            this.setTotalAmount()
+        }
+    },
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
@@ -310,6 +310,8 @@ Page({
                     fukuanList: oldList.concat(fukuanList)
                 })
             }
+            this.setApplicationAmount(this.data.fukuanList)
+            this.setTotalAmount()
             dd.removeStorageSync({
                 key: 'importCommonList'
             })
@@ -362,6 +364,8 @@ Page({
         return newImportList
     },
     onShow() {
+        // 从缓存获取修改的付款详情
+        this.getFukuanDetailFromStorage()
         // 从缓存获取付款列表
         this.getImportFukuanListFromStorage()
         // 从缓存里获取借款列表
@@ -532,6 +536,10 @@ Page({
         this.setData({
             billId: id
         })
+        // ======================================
+        id = '2c91e3e9759c635f01759cec38b900c0'
+        type = 'edit'
+        // ======================================
         // 获取账簿列表
         if (type === 'add') {
             this.getAccountbookList()
@@ -698,7 +706,7 @@ Page({
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
                 var applicantId = ''
-                applicantId = arr[0].id
+                applicantId = this.data.submitData.applicantId || arr[0].id
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {
@@ -809,15 +817,37 @@ Page({
             }
         })
     },
+    // 编辑付款详情
+    showFukuanDetail(e) {
+        const index = e.currentTarget.dataset.index
+        dd.setStorage({
+            key: 'index',
+            data: index,
+            success: res => {
+                console.log('index设置成功...')
+            }
+        })
+        const fukuanDetail = clone(this.data.fukuanList[index])
+        dd.setStorage({
+            key: 'fukuanDetail',
+            data: fukuanDetail,
+            success() {
+                dd.navigateTo({
+                    url: '/pages/fukuanDetail/index'
+                })
+            }
+        })
+    },
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'reimbursementBillController.do?getDetail&id=' + id,
+            url: app.globalData.url + 'paymentBillController.do?getDetail&id=' + id,
             method: 'GET',
             dataType: 'json',
             success: res => {
+                console.log(res, '付款单编辑的数据')
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                     this.getProcessInstance(id, res.data.obj.accountbookId)
@@ -835,6 +865,7 @@ Page({
                 billDetailId: item.billDetailId,
                 remark: item.remark,
                 applicationAmount: item.applicationAmount,
+                unverifyAmount: item.unapplicationAmount,
                 formatApplicationAmount: formatNumber(Number(item.applicationAmount)),
             }
         })
@@ -845,17 +876,35 @@ Page({
             })
         }
 
+        // billDetailList
+        if(data.billDetailList.length) {
+            var fukuanList = data.billDetailList.map(item => ({
+                applicationAmount: item.applicationAmount,
+                formatApplicationAmount: formatNumber(Number(item.applicationAmount).toFixed(2)),
+                auxpropertyNames: item.auxpropertyNames,
+                id: item.id,
+                billCode: item.relationbillCode,
+                billDetailId: item.billDetailId,
+                subjectName: item.subject.fullSubjectName,
+                'subject.fullSubjectName': item.subject.fullSubjectName,
+                subjectId: item.subjectId,
+                remark: item.remark,
+                taxRate: item.taxRate,
+                invoiceType: item.invoiceType
+            }))
+        }
+
         // 设置数据
         this.setData({
             ...this.data,
-            // fukuanList,
+            fukuanList,
             importList,
             status: data.status,
             submitData: {
                 ...this.data.submitData,
                 billFilesObj: billFilesObj || [],
                 submitDate: moment().format('YYYY-MM-DD'),
-                applicantType: data.applicantType,
+                applicantId: data.applicantId,
                 invoice: data.invoice,
                 businessDateTime: data.businessDateTime,
                 applicationAmount: data.applicationAmount,
@@ -882,13 +931,11 @@ Page({
                 url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
                 method: 'GET',
                 success: res => {
-                    console.log(res, '借款单列表...')
                     if(res.data.rows.length) {
                         dd.setStorage({
                             key: 'tempImportList',
                             data: res.data.rows,
                             success: res => {
-                                console.log('写入成功，借款列表')
                                 dd.navigateTo({
                                     url: '/pages/importBorrowList/index'
                                 })

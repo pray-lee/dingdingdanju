@@ -94,6 +94,7 @@ Page({
                 var temp = {
                     ...arr[i][0],
                     id: arr[i][0].id,
+                    billDetailId: arr[i][0].id,
                     unverifyAmount: arr[i][0].unverifyAmount,
                     readOnlyAmount: arr[i][0].unverifyAmount,
                     amount: arr[i][0].amount,
