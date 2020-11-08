@@ -183,7 +183,8 @@ Page({
     },
     onShowAddKaipiao(e) {
         dd.navigateTo({
-            url: '../addKaipiao/index?type=add'
+            // url: '../addKaipiao/index?type=add'
+            url: '../viewKaipiao/index?id=2c91e3e9758ddc42017590ffd81f005f'
         })
         this.onAddHide()
     },
