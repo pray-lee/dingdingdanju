@@ -128,7 +128,7 @@ Page({
                 request({
                     hideLoading: this.hideLoading,
                     // url: app.globalData.url + "loginController.do?loginDingTalk&tenantCode=" + app.globalData.tenantCode + "&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
-                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
+                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId + '&tenantCode=zszh',
                     method: 'GET',
                     success: res => {
                         if (res.data.success) {
@@ -183,8 +183,7 @@ Page({
     },
     onShowAddKaipiao(e) {
         dd.navigateTo({
-            // url: '../addKaipiao/index?type=add'
-            url: '../viewKaipiao/index?id=2c91e3e9758ddc42017590ffd81f005f'
+            url: '../addKaipiao/index?type=add'
         })
         this.onAddHide()
     },

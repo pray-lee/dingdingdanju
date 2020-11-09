@@ -295,7 +295,7 @@ Page({
                     }else{
                         oldList = oldList.map(item => {
                             if(item.billId === fukuanList[i].billId) {
-                                return Object.assign({}, fukuanList[i])
+                                return Object.assign({}, item, fukuanList[i])
                             }else{
                                 return item
                             }
@@ -533,13 +533,13 @@ Page({
             type
         })
         var id = query.id
-        this.setData({
-            billId: id
-        })
         // ======================================
         id = '2c91e3e9759c635f01759cec38b900c0'
         type = 'edit'
         // ======================================
+        this.setData({
+            billId: id
+        })
         // 获取账簿列表
         if (type === 'add') {
             this.getAccountbookList()
@@ -1094,7 +1094,7 @@ Page({
                     this.addLoading()
                     request({
                         hideLoading: this.hideLoading,
-                        url: app.globalData.url + 'reimbursementBillController.do?doBatchDel&ids=' + this.data.billId,
+                        url: app.globalData.url + 'paymentBillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
                         success: res => {
                             console.log(res)

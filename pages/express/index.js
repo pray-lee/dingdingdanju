@@ -11,7 +11,6 @@ Page({
         isPhoneXSeries: false,
         scrollTop: 0,
         list: [],
-        customerDetailId: ''
     },
     //手指触摸动作开始 记录起点X坐标
     touchstart: function (e) {
@@ -63,20 +62,19 @@ Page({
         //返回角度 /Math.atan()返回数字的反正切值
         return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
     },
-    getExpressFromStorage() {
-        const expressList = dd.getStorageSync({key: 'expressList'}).data
-        this.setData({
-            list: expressList
-        })
-    },
-    getCustomerDetailId() {
+    getExpressList() {
         const customerDetailId = dd.getStorageSync({key: 'customerDetailId'}).data
-        console.log(customerDetailId,'customerDetailId')
-        if(!!customerDetailId) {
-           this.setData({
-              customerDetailId
-           })
-        }
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            url: app.globalData.url + 'customerSpecialDeliveryController.do?listInfo&customerDetailId=' + customerDetailId,
+            method: 'GET',
+            success: res => {
+                this.setData({
+                    list: res.data.obj
+                })
+            }
+        })
     },
     selectExpress(e) {
         console.log(e)
@@ -96,8 +94,7 @@ Page({
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
         })
-        this.getExpressFromStorage()
-        this.getCustomerDetailId()
+        this.getExpressList()
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -117,16 +114,31 @@ Page({
     },
     onShow() {
     },
-    addExpressInfo() {
+    addExpressInfo(e) {
         dd.navigateTo({
             url: '/pages/addExpressInfo/index'
         })
     },
-    update() {
-        console.log('update..')
+    update(e) {
+        const id = e.currentTarget.dataset.id
+        this.data.list.forEach(item => {
+            if(item.id === id) {
+                dd.setStorage({
+                    key: 'expressInfo',
+                    data: item,
+                    success: res => {
+                        dd.navigateTo({
+                            url: '/pages/addExpressInfo/index?type=edit'
+                        })
+                    }
+                })
+            }
+        })
+        console.log()
     },
-    deleteBill(e) {
-        const url = ''
+    delete(e) {
+        const id = e.currentTarget.dataset.id
+        const url = app.globalData.url + 'customerSpecialDeliveryController.do?doBatchDel&ids=' + id
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该物流信息吗?',
@@ -146,9 +158,10 @@ Page({
                             console.log(res)
                             if (res.data.success) {
                                 // 删除成功
+                                this.onLoad()
                             } else {
                                 dd.alert({
-                                    content: '单据删除失败',
+                                    content: '删除失败',
                                     buttonText: '好的'
                                 })
                             }

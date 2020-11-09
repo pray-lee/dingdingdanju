@@ -33,10 +33,36 @@ Page({
     },
     getImportListFromStorage() {
         const importList = dd.getStorageSync({key: 'importList'}).data
-        const savedImportList = dd.getStorageSync({key: 'savedImportList'}).data
-        if(!!importList) {
+        const savedImportList = dd.getStorageSync({key: 'savedImportList'}).data || []
+        console.log(importList, savedImportList)
+        if(importList.length) {
+            let oldList = savedImportList.concat()
+            if(oldList.length) {
+                for(let i = 0; i < importList.length; i++) {
+                    if(oldList.every(item => item.id !== importList[i].id)) {
+                        oldList.push(importList[i])
+                    }else{
+                        oldList = oldList.map(item => {
+                            if(item.id === importList[i].id) {
+                                return Object.assign({}, item, importList[i])
+                            }else{
+                                return item
+                            }
+                        })
+                    }
+                    // 数据组合
+                    this.setData({
+                        importList: oldList
+                    })
+                }
+            }else{
+                this.setData({
+                    importList: oldList.concat(importList)
+                })
+            }
+        }else{
             this.setData({
-                importList: Object.assign([], importList, savedImportList)
+                importList: savedImportList
             })
         }
         this.data.importList.forEach(item => {

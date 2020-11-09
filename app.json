@@ -28,7 +28,9 @@
     "pages/addFukuan/index",
     "pages/fukuanDetail/index",
     "pages/viewKaipiao/index",
-    "pages/viewKaipiaoDetail/index"
+    "pages/viewKaipiaoDetail/index",
+    "pages/viewFukuan/index",
+    "pages/viewFukuanDetail/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

@@ -2,21 +2,21 @@
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>收件人</view>
         <view class="form-row-content">
-            <input class="input" placeholder="请输入收件人" onInput="bindKeyInput" data-type="contacts" value="{{contacts}}"/>
+            <input class="input" value="{{expressInfo.contacts}}" placeholder="请输入收件人" onInput="bindKeyInput" data-type="contacts" value="{{contacts}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>联系方式</view>
         <view class="form-row-content">
-            <input class="input" type="digit" placeholder="联系方式" onInput="bindKeyInput" data-type="telephone" value="{{telephone}}"/>
+            <input class="input" value="{{expressInfo.telephone}}" type="digit" placeholder="联系方式" onInput="bindKeyInput" data-type="telephone" value="{{telephone}}"/>
         </view>
     </view>
     <view class="form-line"/>
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>收货地址</view>
         <view class="form-row-content">
-            <input class="input" placeholder="请输入收货地址" onInput="bindKeyInput" data-type="address" value="{{address}}"/>
+            <input class="input" value="{{expressInfo.address}}" placeholder="请输入收货地址" onInput="bindKeyInput" data-type="address" value="{{address}}"/>
         </view>
     </view>
     <view class="form-line"/>

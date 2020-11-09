@@ -29,8 +29,8 @@
 <!--        </view>-->
         <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>
             <block a:if="{{filterList.length}}">
-                <checkbox-group onChange="onCheckboxChange" name="{{item.id}}" a:for="{{filterList}}">
-                    <label class="checkbox-label">
+                <checkbox-group onChange="onCheckboxChange" name="checkList">
+                    <label class="checkbox-label" name="{{item.id}}" a:for="{{filterList}}">
                         <checkbox value="{{item}}" class="checkbox"></checkbox>
                         <view class="import-borrow-item">
                             <view class="form-row" style="display:flex;align-items: center">

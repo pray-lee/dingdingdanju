@@ -19,6 +19,12 @@ Page({
             filterList: clone(tempImportList)
         })
     },
+    onHide() {
+        this.setData({
+            tempImportList: [],
+            filterList: []
+        })
+    },
     onInput(e) {
         // 过滤
         this.searchResultUseInput(e.detail.value)
@@ -87,36 +93,33 @@ Page({
         })
     },
     onCheckboxSubmit(e) {
-        var arr = e.detail.value
+        var arr = e.detail.value.checkList
         var newArr = []
-        for (var i in arr) {
-            if (arr[i].length) {
-                var temp = {
-                    ...arr[i][0],
-                    id: arr[i][0].id,
-                    billDetailId: arr[i][0].id,
-                    unverifyAmount: arr[i][0].unverifyAmount,
-                    readOnlyAmount: arr[i][0].unverifyAmount,
-                    amount: arr[i][0].amount,
-                    remark: arr[i][0].remark,
-                    'subjectEntity.fullSubjectName': arr[i][0]['subjectEntity.fullSubjectName'] || arr[i][0]['subject.fullSubjectName'],
-                    'auxpropertyNames': arr[i][0].auxpropertyNames
-                }
-                // 单据号处理,需要显示一下这个信息, 这里还要加一个判断
-                if(!!arr[i][0].receivablebillCode)
-                    // 应收单单号
-                    temp.receivablebillCode = arr[i][0].receivablebillCode
-                else
-                    // 应付单单号
-                    temp.billCode = arr[i][0].billCode
-                newArr.push(temp)
+        for (var i = 0; i < arr.length; i++) {
+            var temp = {
+                ...arr[i],
+                id: arr[i].id,
+                billDetailId: arr[i].id,
+                unverifyAmount: arr[i].unverifyAmount,
+                readOnlyAmount: arr[i].unverifyAmount,
+                amount: arr[i].amount,
+                remark: arr[i].remark,
+                'subjectEntity.fullSubjectName': arr[i]['subjectEntity.fullSubjectName'] || arr[i]['subject.fullSubjectName'],
+                'auxpropertyNames': arr[i].auxpropertyNames
             }
+            // 单据号处理,需要显示一下这个信息, 这里还要加一个判断
+            if(!!arr[i].receivablebillCode)
+                // 应收单单号
+                temp.receivablebillCode = arr[i].receivablebillCode
+            else
+                // 应付单单号
+                temp.billCode = arr[i].billCode
+            newArr.push(temp)
         }
         dd.setStorage({
             key: 'importList',
             data: newArr,
             success: res => {
-                console.log('导入应付单列表成功')
                 dd.navigateTo({
                     url: '/pages/importYingshouInputList/index'
                 })

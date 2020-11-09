@@ -2,10 +2,17 @@ const app = getApp()
 import {request} from '../../util/getErrorMessage'
 Page({
     data: {
-        expressInfo: {}
+        expressInfo: {},
+        type: 'add'
     },
-    onLoad() {
-       console.log('onload')
+    onLoad(query) {
+        if(!!query.type && query.type === 'edit') {
+            const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
+            this.setData({
+                expressInfo,
+                type: query.type
+            })
+        }
     },
     updateInfo() {
         console.log('修改客户信息')
@@ -44,13 +51,16 @@ Page({
             }
         })
         this.addLoading()
+        const url = app.globalData.url + (this.data.type === 'edit' ?
+            'customerSpecialDeliveryController.do?doUpdate' :
+            'customerSpecialDeliveryController.do?doAdd' )
+        console.log(url, 'url')
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'customerSpecialDeliveryController.do?doAdd',
+            url: url,
             method: 'POST',
             data: this.data.expressInfo,
             success: res => {
-                console.log(res)
                 this.once()
             }
         })

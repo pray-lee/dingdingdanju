@@ -359,26 +359,12 @@ Page({
         }
     },
     getExpressList() {
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading(),
-            url: app.globalData.url + 'customerSpecialDeliveryController.do?listInfo&customerDetailId=' + this.data.customerDetail.id,
-            method: 'GET',
-            success: res => {
-                dd.setStorageSync({
-                    key: 'customerDetailId',
-                    data: this.data.customerDetail.id
-                })
-                dd.setStorage({
-                    key: 'expressList',
-                    data: res.data.obj,
-                    success: res => {
-                        dd.navigateTo({
-                            url: '/pages/express/index'
-                        })
-                    }
-                })
-            }
+        dd.setStorageSync({
+            key: 'customerDetailId',
+            data: this.data.customerDetail.id
+        })
+        dd.navigateTo({
+            url: '/pages/express/index'
         })
     },
     goUpdateCustomer() {
@@ -491,7 +477,7 @@ Page({
                     }else{
                         oldList = oldList.map(item => {
                             if(item.billId === importList[i].billId) {
-                                return Object.assign({}, importList[i])
+                                return Object.assign({}, item, importList[i])
                             }else{
                                 return item
                             }
@@ -648,10 +634,6 @@ Page({
         this.setData({
             billId: id
         })
-        // ================test======================
-        type='edit'
-        id='2c91e3e9758ddc42017590ffd81f005f'
-        // ================test======================
         // 获取账簿列表
         if (type === 'add') {
             this.getAccountbookList()

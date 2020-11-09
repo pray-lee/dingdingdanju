@@ -31,7 +31,7 @@
 .content {
   width: 100%;
   padding: 30rpx 50rpx;
-  line-height: 22px;
+  line-height: 18px;
   margin-right:0;
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
@@ -63,4 +63,7 @@
 .touch-move-active .move-wrapper {
   -webkit-transform: translateX(0);
   transform: translateX(0);
+}
+.contacts{
+  margin-right: 20rpx
 }
