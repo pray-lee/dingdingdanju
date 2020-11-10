@@ -534,8 +534,8 @@ Page({
         })
         var id = query.id
         // ======================================
-        id = '2c91e3e9759c635f01759cec38b900c0'
-        type = 'edit'
+        // id = '2c91e3e9759c635f01759cec38b900c0'
+        // type = 'edit'
         // ======================================
         this.setData({
             billId: id
