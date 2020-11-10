@@ -55,7 +55,7 @@
                         <view class="form-row">
                             <view class="form-row-label"><text class="require">*</text>开票金额（含税）（可申请余额: {{item.readOnlyAmount}}）</view>
                             <view class="form-row-content">
-                                <input class="input" data-id="{{item.id}}" onInput="onInput" value="{{item.unverifyAmount}}" placeholder="开票金额"/>
+                                <input class="input" data-id="{{item.id}}" onInput="onInput" value="{{item.applicationAmount}}" placeholder="开票金额"/>
                             </view>
                         </view>
                     </view>

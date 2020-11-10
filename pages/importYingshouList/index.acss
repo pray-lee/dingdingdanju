@@ -95,8 +95,10 @@
 .selectAll-wrapper{
     display:flex;
     justify-content: space-between;
+    align-items:center;
     color:#3276c3a;
     font-size: 26rpx;
+    padding: 20rpx 14rpx
 }
 .selectAll{
     padding: 15rpx;
@@ -104,8 +106,6 @@
 }
 .total-wrapper{
     padding-right: 15rpx;
-    padding-top: 25rpx;
-    padding-bottom: 15rpx
 }
 .del-date{
     color:#999;

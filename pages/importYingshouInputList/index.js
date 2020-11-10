@@ -8,7 +8,6 @@ Page({
         isPhoneXSeries: false,
         btnHidden: false,
         importList: [],
-        remarkIndex: 0,
         remarks: []
     },
     onLoad() {
@@ -34,7 +33,7 @@ Page({
     getImportListFromStorage() {
         const importList = dd.getStorageSync({key: 'importList'}).data
         const savedImportList = dd.getStorageSync({key: 'savedImportList'}).data || []
-        console.log(importList, savedImportList)
+        importList.forEach(item => item.applicationAmount = item.unverifyAmount)
         if(importList.length) {
             let oldList = savedImportList.concat()
             if(oldList.length) {
@@ -50,11 +49,11 @@ Page({
                             }
                         })
                     }
-                    // 数据组合
-                    this.setData({
-                        importList: oldList
-                    })
                 }
+                // 数据组合
+                this.setData({
+                    importList: oldList
+                })
             }else{
                 this.setData({
                     importList: oldList.concat(importList)
@@ -65,15 +64,19 @@ Page({
                 importList: savedImportList
             })
         }
-        this.data.importList.forEach(item => {
-            item.applicationAmount = item.unverifyAmount
-            this.data.remarks.forEach((remark, index) => {
-                if(item.remark === remark) {
-                    item.remarkIndex = index
-                }else{
-                    item.remarkIndex = 0
-                }
-            })
+        const tempData = this.data.importList
+        for(let i = 0; i < tempData.length; i++) {
+           for(let j = 0; j < this.data.remarks.length; j++) {
+               if(this.data.remarks[j].remark === tempData[i].remark) {
+                   tempData[i].remarkIndex = j
+                   break
+               }else{
+                   tempData[i].remarkIndex = 0
+               }
+           }
+        }
+        this.setData({
+            importList: tempData
         })
         dd.removeStorageSync({
             key: 'savedImportList'

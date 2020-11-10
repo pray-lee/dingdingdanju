@@ -7,23 +7,25 @@ Page({
         filterList: [],
         startTime: '',
         endTime: '',
+        isAllSelect:false
     },
     onLoad() {
     },
     onShow() {
-        const tempImportList = dd.getStorageSync({
+        let tempImportList = dd.getStorageSync({
             key: 'tempImportList'
         }).data
+        // 每一项加一个checked属性
+        tempImportList.forEach(item => {
+            item.checked = false
+        })
         this.setData({
             tempImportList,
-            filterList: clone(tempImportList)
+            filterList: clone(tempImportList),
+            isAllSelect: false
         })
     },
     onHide() {
-        this.setData({
-            tempImportList: [],
-            filterList: []
-        })
     },
     onInput(e) {
         // 过滤
@@ -66,7 +68,48 @@ Page({
         this.searchResultUseTime(this.data.startTime, '')
     },
     onCheckboxChange(e) {
-        console.log(e.detail.value)
+        // 设置checked属性
+        const checked = e.detail.value
+        const idx = e.currentTarget.dataset.index
+        const tempData = clone(this.data.filterList)
+        tempData.forEach((item,index) => {
+            if(index === idx) {
+                item.checked = !!checked ? true : false
+            }
+        })
+        // 全选联动
+        let isAllSelect = false
+        console.log(tempData.every(item => !!item.checked))
+        if(tempData.every(item => item.checked)){
+            isAllSelect = true
+        }else{
+            isAllSelect = false
+        }
+        this.setData({
+            filterList: tempData,
+            isAllSelect
+        })
+
+    },
+    // 全选
+    onAllSelect(e) {
+        const checked = e.detail.value
+        let filterList = []
+        if(!!checked) {
+            filterList = this.data.filterList.map(item => ({
+                ...item,
+                checked: true
+            }))
+        }else{
+            filterList = this.data.filterList.map(item => ({
+                ...item,
+                checked: false
+            }))
+        }
+        this.setData({
+            filterList,
+            isAllSelect: checked ? true : false
+        })
     },
     searchResultUseTime(startTime, endTime) {
         console.log(startTime, endTime)
@@ -83,17 +126,19 @@ Page({
             }
         })
         this.setData({
-            filterList
+            filterList,
+            isAllSelect: false
         })
     },
     searchResultUseInput(text) {
         const filterList = this.data.tempImportList.filter(item => (item['subjectEntity.fullSubjectName'] + item.remark).indexOf(text) !== -1)
         this.setData({
-            filterList
+            filterList,
+            isAllSelect: false
         })
     },
-    onCheckboxSubmit(e) {
-        var arr = e.detail.value.checkList
+    onCheckboxSubmit() {
+        const arr = this.data.filterList.filter(item => !!item.checked)
         var newArr = []
         for (var i = 0; i < arr.length; i++) {
             var temp = {
@@ -120,6 +165,11 @@ Page({
             key: 'importList',
             data: newArr,
             success: res => {
+                this.setData({
+                    tempImportList: [],
+                    filterList: [],
+                    isAllSelect: false
+                })
                 dd.navigateTo({
                     url: '/pages/importYingshouInputList/index'
                 })
