@@ -170,19 +170,17 @@ page {
 .add-page{
   z-index: 1000;
   box-sizing:border-box;
-  display:flex;
-  justify-content: space-around;
-  align-items: center;
   height: 405rpx;
+  padding: 20rpx
 }
 .add-item{
-  width: 248rpx;
-  height: 248rpx;
-  border: 1px solid #ddd;
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display:inline-block;
+  width: 50%;
+  height: 70rpx;
+  line-height: 70rpx;
+  padding-left: 60rpx;
+  box-sizing:border-box;
+  font-size: .3rem
 }
 .add-img{
   margin-bottom: 18rpx

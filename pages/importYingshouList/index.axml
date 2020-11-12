@@ -22,7 +22,7 @@
                 <text class="checkbox-text">全选</text>
             </label>
             <view class="total-wrapper">
-                已选2张，共计200000元
+                已选{{num}}张，{{totalAmount}}元
             </view>
         </view>
         <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>

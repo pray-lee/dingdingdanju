@@ -7,8 +7,7 @@ Page({
         isPhoneXSeries: false,
         animationInfo: {},
         maskHidden: true,
-        jiekuan: null,
-        baoxiao: null,
+        list: [],
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -22,12 +21,6 @@ Page({
             20: "供应商",
             30: "客户"
         },
-    },
-    seeAll(e) {
-        // 查看全部
-        dd.navigateTo({
-            url: '../list/index?type=' + e.currentTarget.dataset.type + '&flag=' + e.currentTarget.dataset.flag
-        })
     },
     onAddShow() {
         var animation = dd.createAnimation({
@@ -77,45 +70,71 @@ Page({
     onReady() {
     },
     getJiekuanList() {
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading,
-            url: app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=1&sort=updateDate&order=desc&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,',
-            method: 'GET',
-            success: res => {
-                if(res.data.rows.length) {
-                    const obj = res.data.rows[0]
-                    obj.amount = formatNumber(obj.amount)
-                    this.setData({
-                        jiekuan: obj,
-                    })
-                }else{
-                    this.setData({
-                        jiekuan: null
+        return new Promise((resolve, reject) => {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'borrowBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=3&sort=updateDate&order=desc&status_end=79&field=id,,accountbookId,billCode,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankName_begin,incomeBankName_end,incomeBankAccount,incomeBankAccount_begin,incomeBankAccount_end,subject.fullSubjectName,auxpropertyNames,capitalTypeDetailEntity.detailName,amount,unpaidAmount,paidAmount,unverifyAmount,submitter.id,submitter.realName,invoice,contractNumber,submitDate,submitDate_begin,submitDate_end,status,businessDateTime,businessDateTime_begin,businessDateTime_end,remark,createDate,createDate_begin,createDate_end,updateDate,updateDate_begin,updateDate_end,accountbook.oaModule,',
+                method: 'GET',
+                success: res => {
+                    resolve({
+                        name: '借款单',
+                        type: 'J',
+                        list:res.data.rows
                     })
                 }
-            }
+            })
         })
     },
     getBaoxiaoList() {
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading,
-            url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=1&sort=updateDate&order=desc&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
-            method: 'GET',
-            success: res => {
-                if(res.data.rows.length) {
-                    const obj = res.data.rows[0]
-                    obj.totalAmount = formatNumber(obj.totalAmount)
-                    this.setData({
-                        baoxiao: obj,
-                    })
-                }else{
-                    this.setData({
-                        baoxiao: null
+        return new Promise((resolve, reject) => {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=3&sort=createDate&order=desc&status_end=79&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
+                method: 'GET',
+                success: res => {
+                    resolve({
+                        name: '报销单',
+                        type: 'B',
+                        list: res.data.rows
                     })
                 }
-            }
+            })
+        })
+    },
+    getKaipiaoList() {
+        return new Promise((resolve, reject) => {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'invoicebillController.do?datagrid&page=1&rows=3&sort=createDate&order=desc&status_end=29&field=id,invoicebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,taxRate,amount,unverifyAmount,unverifyReceivableAmount,submitDateTime,contacts,telephone,address,status,businessDateTime,remark,billCode',
+                method: 'GET',
+                success: res => {
+                    resolve({
+                        name: '开票申请单',
+                        type: 'K',
+                        list: res.data.rows
+                    })
+                }
+            })
+        })
+    },
+    getFukuanList() {
+        return new Promise((resolve, reject) => {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'paymentBillController.do?datagrid&reverseVerifyStatus=0&page=1&rows=3&sort=createDate&order=desc&status_end=79&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,supplierId,supplierDetail.supplier.supplierName,applicantType,applicantId,applicantName,submitterId,submitter.realName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,childrenCount,status,accountbook.oaModule,oaModule,',
+                method: 'GET',
+                success: res => {
+                    resolve({
+                        name: '付款申请单',
+                        type: 'F',
+                        list: res.data.rows
+                    })
+                }
+            })
         })
     },
     onShow() {
@@ -124,21 +143,41 @@ Page({
             success: (res) => {
                 this.hideLoading()
                 this.addLoading()
-                console.log(res.authCode, '授权码')
                 request({
                     hideLoading: this.hideLoading,
-                    // url: app.globalData.url + "loginController.do?loginDingTalk&tenantCode=" + app.globalData.tenantCode + "&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
-                    url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId + '&tenantCode=zszh',
+                    url: app.globalData.url + "loginController.do?loginDingTalk&tenantCode=" + app.globalData.tenantCode + "&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
                     method: 'GET',
                     success: res => {
                         if (res.data.success) {
                             if(res.data.obj) {
                                 app.globalData.realName = res.data.obj.realName
                                 app.globalData.applicantId = res.data.obj.id
-                                // 请求借款列表
-                                this.getJiekuanList()
-                                // 请求报销列表
-                                this.getBaoxiaoList()
+                                Promise.all([
+                                    this.getJiekuanList(),
+                                    this.getBaoxiaoList(),
+                                    this.getKaipiaoList(),
+                                    this.getFukuanList()
+                                ]).then(res => {
+                                    // 添加单据类型标志 k j b f
+                                    const promiseList = res.map(item => ({
+                                        ...item,
+                                        list: item.list.map(list => ({
+                                            ...list,
+                                            billType: item.type,
+                                            billName: item.name
+                                        }))
+                                    }))
+                                    // 合并4种单子
+                                    const sortList = []
+                                    promiseList.forEach(item => {
+                                        sortList.push(...item.list)
+                                    })
+                                    // 合并之后排序, 并且取前三个
+                                    const sortableList = sortList.sort((a, b) => a.createDate < b.createDate ? 1 : -1 ).slice(0, 3)
+                                    this.setData({
+                                        list: sortableList
+                                    })
+                                })
                             }else{
                                 loginFiled(res.data.msg)
                             }
@@ -173,6 +212,56 @@ Page({
         this.animation = animation
         this.setData({
             animationInfo: animation.export()
+        })
+    },
+    goToEdit(e) {
+        const type = e.currentTarget.dataset.type
+        const id = e.currentTarget.dataset.id
+        const status = e.currentTarget.dataset.status
+        console.log(type, id)
+        switch(type) {
+            case 'J':
+                //借款
+                if(status == 10 || status == 25) {
+                    this.setPage(`../addJiekuan/index?type=edit&id=${id}`)
+                }else{
+                    this.setPage(`../viewJiekuan/index?id=${id}`)
+                }
+                break;
+            case 'B':
+                // 报销单
+                if(status == 10 || status == 25) {
+                    this.setPage(`../addBaoxiao/index?type=edit&id=${id}`)
+                }else{
+                    this.setPage(`../viewBaoxiao/index?id=${id}`)
+                }
+                break;
+            case 'K':
+                if(status == 10 || status == 25) {
+                    this.setPage(`../addKaipiao/index?type=edit&id=${id}`)
+                }else{
+                    this.setPage(`../viewKaipiao/index?id=${id}`)
+                }
+                // 开票单
+                break;
+            case 'F':
+                if(status == 10 || status == 25) {
+                    this.setPage(`../addFukuan/index?type=edit&id=${id}`)
+                }else{
+                    this.setPage(`../viewFukuan/index?id=${id}`)
+                }
+                // 付款单
+                break;
+        }
+    },
+    setPage(url, id) {
+        dd.navigateTo({
+            url
+        })
+    },
+    goList(e) {
+        dd.navigateTo({
+            url: '../list/index?type=' + e.currentTarget.dataset.type
         })
     },
     onShowAddJiekuan(e) {
@@ -215,31 +304,5 @@ Page({
     },
     onReachBottom() {
         // 页面被拉到底部
-    },
-    goToEdit(e) {
-        var id = e.currentTarget.dataset.id
-        var flag = e.currentTarget.dataset.flag
-        var status = e.currentTarget.dataset.status
-        if (flag === 'B') {
-            if (status == 10 || status == 25) {
-                dd.navigateTo({
-                    url: '../addBaoxiao/index?type=edit&id=' + id
-                })
-            } else {
-                dd.navigateTo({
-                    url: '../viewBaoxiao/index?id=' + id
-                })
-            }
-        } else {
-            if (status == 10 || status == 25) {
-                dd.navigateTo({
-                    url: '../addJiekuan/index?type=edit&id=' + id
-                })
-            } else {
-                dd.navigateTo({
-                    url: '../viewJiekuan/index?id=' + id
-                })
-            }
-        }
     },
 });

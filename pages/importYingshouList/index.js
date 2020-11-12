@@ -1,5 +1,7 @@
 import moment from 'moment'
 import clone from 'lodash/cloneDeep'
+import {formatNumber} from "../../util/getErrorMessage";
+
 const app = getApp()
 Page({
     data: {
@@ -7,7 +9,9 @@ Page({
         filterList: [],
         startTime: '',
         endTime: '',
-        isAllSelect:false
+        isAllSelect:false,
+        totalAmount: '0.00',
+        num: 0
     },
     onLoad() {
     },
@@ -89,7 +93,7 @@ Page({
             filterList: tempData,
             isAllSelect
         })
-
+        this.caculateAmount()
     },
     // 全选
     onAllSelect(e) {
@@ -110,9 +114,20 @@ Page({
             filterList,
             isAllSelect: checked ? true : false
         })
+        this.caculateAmount()
+    },
+    caculateAmount() {
+        let totalAmount = 0
+        const checkList = this.data.filterList.filter(item => !!item.checked)
+        checkList.forEach(item => {
+            totalAmount += Number(item.unverifyAmount)
+        })
+        this.setData({
+            totalAmount: formatNumber(Number(totalAmount).toFixed(2)),
+            num: checkList.length
+        })
     },
     searchResultUseTime(startTime, endTime) {
-        console.log(startTime, endTime)
         const filterList = this.data.tempImportList.filter(item => {
             if(!startTime && !!endTime) {
                return new Date(endTime) > new Date(item.businessDateTime)
@@ -168,7 +183,9 @@ Page({
                 this.setData({
                     tempImportList: [],
                     filterList: [],
-                    isAllSelect: false
+                    isAllSelect: false,
+                    num: 0,
+                    totalAmount: '0.00'
                 })
                 dd.navigateTo({
                     url: '/pages/importYingshouInputList/index'

@@ -635,7 +635,7 @@ Page({
                 console.log(data)
                 if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
-                    var taxpayerType = null;
+                    var taxpayerType = !!data ? data.accountbook.taxpayerType : null
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
                     // edit的时候设置值
                     if (accountbookId) {
@@ -1318,6 +1318,7 @@ Page({
         const index = e.currentTarget.dataset.index
         this.data.baoxiaoList[index].applicantType = this.data.submitData.applicantType
         this.data.baoxiaoList[index].applicantId = this.data.submitData.applicantId
+        this.data.baoxiaoList[index].taxpayerType = this.data.submitData.taxpayerType
         var obj = this.generateBaseDetail()
         dd.setStorage({
             key: 'index',
@@ -1362,14 +1363,6 @@ Page({
     },
     // 删除单据
     deleteBill() {
-        // 写入缓存，回列表页的时候刷新列表
-        dd.setStorage({
-            key: 'query',
-            data: {
-                type: this.data.status,
-                flag: 'B'
-            }
-        })
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该单据吗?',

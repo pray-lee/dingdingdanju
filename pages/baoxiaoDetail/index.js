@@ -7,6 +7,7 @@ Page({
     data: {
         isPhoneXSeries: false,
         btnHidden: false,
+        noticeHidden: true,
         baoxiaoDetail: {},
         baoxiaoArr: [],
     },
@@ -34,9 +35,12 @@ Page({
             this.setData({
                 baoxiaoDetail: baoxiaoDetail
             })
-            console.log(baoxiaoDetail, '..................')
         }
-        console.log('onLoad')
+        const taxpayerType = this.data.baoxiaoDetail.taxpayerType
+        // 显示提示信息，如果有账簿有税率的话
+        this.setData({
+            noticeHidden: taxpayerType == 2 ? false : true
+        })
     },
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
@@ -106,6 +110,7 @@ Page({
                 baoxiaoDetail
             })
         }
+        console.log(baoxiaoDetail, 'onShow')
         dd.removeStorage({
             key: 'baoxiaoDetail',
             success: res => {

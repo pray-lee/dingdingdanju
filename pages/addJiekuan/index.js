@@ -1275,14 +1275,6 @@ Page({
     },
     // 删除单据
     deleteBill() {
-        // 写入缓存，回列表页的时候刷新列表
-        dd.setStorage({
-            key: 'query',
-            data: {
-                type: this.data.status,
-                flag: 'J'
-            }
-        })
         dd.confirm({
             title: '温馨提示',
             content: '确认删除该单据吗?',

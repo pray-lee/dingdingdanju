@@ -42,10 +42,12 @@ App({
         // "url": "https://www.caika.net/TestJxc/",
         // 测试环境test
         "url": "https://www.caika.net/Test/",
-        // "url": "http://192.168.1.104:8080/jeecg/",
+        // saas
+        // "url": "https://www.caika.net/saas/",
+        // "url": "http://192.168.1.121:8080/jeecg/",
         // 于龙测试
         "agentId": "835144677",
-        // "tenantCode": "zszh",
+        "tenantCode": "zszh",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

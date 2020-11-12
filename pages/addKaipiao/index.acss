@@ -316,7 +316,7 @@ input::-webkit-input-placeholder{
 }
 .info-content view:first-child{
     float:left;
-    width: 7em
+    width: 8em
 }
 .info-content view:last-child{
     overflow:hidden
