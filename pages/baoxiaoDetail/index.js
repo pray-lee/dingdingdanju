@@ -138,14 +138,16 @@ Page({
             baoxiaoItem.taxRageIndex = 0
             baoxiaoItem.taxRate = baoxiaoItem.taxRageObject.taxRageArr[0].id
             this.setData({
-                baoxiaoDetail: baoxiaoItem
+                baoxiaoDetail: baoxiaoItem,
+                noticeHidden: false
             })
         } else {
             baoxiaoItem.taxRageArr = []
             baoxiaoItem.taxRageIndex = 0
             baoxiaoItem.taxRate = ''
             this.setData({
-                baoxiaoDetail: baoxiaoItem
+                baoxiaoDetail: baoxiaoItem,
+                noticeHidden: true
             })
         }
     },
