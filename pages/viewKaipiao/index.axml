@@ -124,17 +124,17 @@
                         <view class="form-row-content">
                             <radio-group class="radio-group" onChange="radioChange">
                                 <label class="radio">
-                                    <radio value="1" checked="{{isExpress == 1}}"/>
+                                    <radio value="0" checked="{{delivery == 0}}"/>
                                     自取
                                 </label>
                                 <label class="radio">
-                                    <radio value="2" checked="{{isExpress == 2}}"/>
+                                    <radio value="1" checked="{{delivery == 1}}"/>
                                     快递
                                 </label>
                             </radio-group>
                         </view>
                     </view>
-                    <block a:if="{{!!submitData.contacts && isExpress == 2}}">
+                    <block a:if="{{!!submitData.contacts}}">
                         <view class="form-line"/>
                         <view class="form-row" onTap="getExpressList">
                             <view class="form-row-label">
@@ -169,5 +169,10 @@
                 </view>
             </block>
         </scroll-view>
+        <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}" a:if="{{result.status == '20'}}">
+            <view class="add-btn" onTap="rollBack">
+                撤回
+            </view>
+        </view>
     </form>
 </view>

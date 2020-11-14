@@ -19,15 +19,17 @@ Page({
         customerDetail: {},
         taxRateIndex: 0,
         taxRateArr: [],
-        isExpress: 1,
+        deliveryMode: 0,
         subjectList: [],
         submitData: {
+            id: '',
             invoiceType: 1,
             billFilesObj: [],
             businessDateTime: moment().format('YYYY-MM-DD'),
             amount: 0,
             status: 20,
-            remark: ''
+            remark: '',
+            deliveryMode: 0
         },
         kaipiaoList: [],
         importList: []
@@ -309,17 +311,20 @@ Page({
             ...this.data,
             customerDetail,
             status: data.status,
+            deliveryMode: data.deliveryMode,
             submitData: {
                 ...this.data.submitData,
+                id: this.data.billId,
                 formatAmount: formatNumber(Number(data.amount).toFixed(2)),
                 billFilesObj: billFilesObj || [],
-                customerDetailId: data.customerDetailEntity.id,
+                customerDetailId: (data.customerDetailEntity ? data.customerDetailEntity.id : ''),
                 submitDate: moment().format('YYYY-MM-DD'),
                 businessDateTime: data.businessDateTime,
                 status: data.status,
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
-                remark: data.remark
+                remark: data.remark,
+                deliveryMode: data.deliveryMode
             },
         })
     },
@@ -379,18 +384,29 @@ Page({
         })
     },
     radioChange(e) {
-        if (e.detail.value == 2) {
+        if (e.detail.value == 1) {
             // 去快递页面选择
             this.setData({
-                isExpress: 2
+                deliveryMode: 1,
+                submitData: {
+                    ...this.data.submitData,
+                    deliveryMode: 1
+                }
             })
             // 获取快递信息
             this.getExpressList()
         } else {
             // 自取
             this.setData({
-                isExpress: 1
+                deliveryMode: 0,
+                submitData: {
+                    ...this.data.submitData,
+                    deliveryMode: 0
+                }
             })
+            // delete this.data.submitData.contacts
+            // delete this.data.submitData.address
+            // delete this.data.submitData.telephone
         }
     },
     getExpressList() {
@@ -717,7 +733,8 @@ Page({
                     var billDetailList = data ? data.billDetailList : []
                     this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList)
                     this.getCustomerList(accountbookId)
-                    this.getTaxRateFromAccountbookId(accountbookId)
+                    const taxRate = data ? data.taxRate : null
+                    this.getTaxRateFromAccountbookId(accountbookId, taxRate)
                     this.getRemarks(accountbookId)
                 }
             }
@@ -929,11 +946,13 @@ Page({
     // 获取用户选择或者修改后的快递信息用于页面渲染
     getExpressInfoFromStorage() {
         const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
+        console.log(this.data.submitData)
         if (expressInfo) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
-                    ...expressInfo
+                    ...expressInfo,
+                    deliveryMode: 1
                 }
             })
             dd.removeStorage({
@@ -942,14 +961,10 @@ Page({
                     console.log('清除快递信息成功...')
                 }
             })
-        } else {
-            this.setData({
-                isExpress: 1
-            })
         }
     },
     // 获取某个账簿的税率
-    getTaxRateFromAccountbookId(accountbookId) {
+    getTaxRateFromAccountbookId(accountbookId, taxRate) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading(),
@@ -967,6 +982,16 @@ Page({
                                 submitData: {
                                     ...this.data.submitData,
                                     taxRate: arr[1]
+                                }
+                            })
+                        }
+                        // 如果是编辑，就不能默认选择
+                        if(taxRate) {
+                            arr.forEach((item, index) => {
+                                if(item == taxRate) {
+                                    this.setData({
+                                        taxRateIndex: index
+                                    })
                                 }
                             })
                         }

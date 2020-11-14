@@ -65,5 +65,26 @@ Page({
                 })
             }
         })
+    },
+    rollBack() {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            url: app.globalData.url + 'invoicebillController.do?doBatchTemporaryStorage&ids=' + this.data.result.id,
+            method: 'GET',
+            success: res => {
+                if(res.data.success) {
+                    dd.alert({
+                        content: '撤回成功',
+                        buttonText: '好的',
+                        success: () => {
+                            dd.redirectTo({
+                                url: '/pages/index/index'
+                            })
+                        }
+                    })
+                }
+            }
+        })
     }
 })
