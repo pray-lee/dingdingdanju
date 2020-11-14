@@ -49,7 +49,7 @@
                         <text class="require">*</text>
                         事由
                     </view>
-                    <view class="form-row-content">
+                    <view class="form-row-content" style="min-height: 44rpx;height: auto">
                         <view class="mock-input" a:if="{{result.remark}}">{{result.remark}}</view>
                         <view class="mock-input nodata">暂无事由</view>
                     </view>

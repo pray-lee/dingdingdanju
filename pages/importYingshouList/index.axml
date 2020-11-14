@@ -6,12 +6,12 @@
     <view class="date-wrapper">
         <view class="start">
             <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
-            <view onTap="startTimeChange">{{startTime ? startTime : '开始时间'}}</view>
+            <view onTap="startTimeChange" class="select-date">{{startTime ? startTime : '起始'}}</view>
             <view class="del-date" onTap="clearStartTime">清空</view>
         </view>
         <view class="end">
             <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
-            <view onTap="endTimeChange">{{endTime ? endTime : '结束时间'}}</view>
+            <view onTap="endTimeChange" class="select-date">{{endTime ? endTime : '结束'}}</view>
             <view class="del-date" onTap="clearEndTime">清空</view>
         </view>
     </view>
@@ -22,7 +22,7 @@
                 <text class="checkbox-text">全选</text>
             </label>
             <view class="total-wrapper">
-                已选{{num}}张，{{totalAmount}}元
+                已选{{num}}笔，{{totalAmount}}元
             </view>
         </view>
         <scroll-view class="jiekuandan {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-y>

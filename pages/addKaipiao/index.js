@@ -26,10 +26,33 @@ Page({
             billFilesObj: [],
             businessDateTime: moment().format('YYYY-MM-DD'),
             amount: 0,
-            status: 20
+            status: 20,
+            remark: ''
         },
         kaipiaoList: [],
         importList: []
+    },
+    onRemarkBlur(e) {
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                remark: e.detail.value
+            }
+        })
+    },
+    setTotalAmount() {
+        // 计算一下总价
+        let amount = 0
+        this.data.kaipiaoList.forEach(item => {
+            amount += Number(item.applicationAmount)
+        })
+        console.log(amount, 'amount总价')
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                formatAmount: formatNumber(amount.toFixed(2))
+            }
+        })
     },
     onBusinessFocus() {
         dd.datePicker({
@@ -162,6 +185,14 @@ Page({
                 [name]: this.data[listName][value].id
             }
         })
+        if(name === 'taxRate') {
+           this.setData({
+               submitData:{
+                   ...this.data.submitData,
+                   taxRate: this.data[listName][value]
+               }
+           })
+        }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
             this.setData({
@@ -179,6 +210,7 @@ Page({
             this.getCustomerList(this.data[listName][value].id)
             this.getTaxRateFromAccountbookId(this.data[listName][value].id)
             this.getRemarks(this.data[listName][value].id)
+            this.setTotalAmount()
         }
         if (name === 'submitterDepartmentId') {
             // 重新获取科目以后，就要置空开票列表
@@ -192,6 +224,7 @@ Page({
                 },
             })
             this.getSubjectList(this.data.submitData.accountbookId, this.data[listName][value].id)
+            this.setTotalAmount()
         }
     },
     // 获取开票内容
@@ -278,6 +311,7 @@ Page({
             status: data.status,
             submitData: {
                 ...this.data.submitData,
+                formatAmount: formatNumber(Number(data.amount).toFixed(2)),
                 billFilesObj: billFilesObj || [],
                 customerDetailId: data.customerDetailEntity.id,
                 submitDate: moment().format('YYYY-MM-DD'),
@@ -285,6 +319,7 @@ Page({
                 status: data.status,
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
+                remark: data.remark
             },
         })
     },
@@ -382,6 +417,20 @@ Page({
         })
     },
     goYingshouList() {
+        if(!this.data.customerDetail.id) {
+            dd.alert({
+                content: '请选择客户',
+                buttonText: '好的'
+            })
+            return
+        }
+        if(this.data.taxRateIndex == 0) {
+            dd.alert({
+                content: '请选择税率',
+                buttonText: '好的'
+            })
+            return
+        }
         this.addLoading()
         request({
             hideLoading: this.hideLoading(),
@@ -406,6 +455,10 @@ Page({
                         }
                     })
                 }
+            },
+            fail: err => {
+                console.log(app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,')
+                console.log('failed', err)
             }
         })
     },
@@ -443,17 +496,7 @@ Page({
                             kaipiaoList: kaipiaoList.concat(kaipiaoDetail)
                         })
                     }
-                    // 计算一下总价
-                    let amount = 0
-                    this.data.kaipiaoList.forEach(item => {
-                        amount += Number(item.applicationAmount)
-                    })
-                    this.setData({
-                        submitData: {
-                            ...this.data.submitData,
-                            amount: amount.toFixed(2).toString()
-                        }
-                    })
+                    this.setTotalAmount()
                     dd.removeStorage({
                         key: 'newKaipiaoDetailArr',
                         success: res => {
@@ -493,13 +536,13 @@ Page({
                     kaipiaoList: oldList.concat(importList)
                 })
             }
+            this.setTotalAmount()
             dd.removeStorageSync({
                 key: 'importCommonList'
             })
         }
     },
     onShow() {
-        console.log('1111')
         this.getCustomerDetailFromStorage()
         this.getUpdatedCustomerFromStorage()
         this.getExpressInfoFromStorage()
@@ -1036,6 +1079,7 @@ Page({
         this.setData({
             kaipiaoList
         })
+        this.setTotalAmount()
     },
     onKeyboardShow() {
         this.setData({

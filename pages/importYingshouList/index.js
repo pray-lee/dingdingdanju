@@ -128,16 +128,18 @@ Page({
         })
     },
     searchResultUseTime(startTime, endTime) {
+        startTime = startTime.replace(/\-/g, "\/")
+        endTime = endTime.replace(/\-/g, "\/")
         const filterList = this.data.tempImportList.filter(item => {
             if(!startTime && !!endTime) {
-               return new Date(endTime) > new Date(item.businessDateTime)
+               return new Date(endTime) >= new Date(item.businessDateTime)
             }else if(!endTime && !!startTime) {
-                return new Date(startTime) < new Date(item.businessDateTime)
+                return new Date(startTime) <= new Date(item.businessDateTime)
             }else if(!startTime && !endTime) {
                 return true
             }else{
-                return (new Date(startTime) < new Date(item.businessDateTime)) &&
-                    (new Date(item.businessDateTime) < new Date(endTime))
+                return (new Date(startTime) <= new Date(item.businessDateTime)) &&
+                    (new Date(item.businessDateTime) <= new Date(endTime))
             }
         })
         this.setData({
@@ -146,7 +148,11 @@ Page({
         })
     },
     searchResultUseInput(text) {
-        const filterList = this.data.tempImportList.filter(item => (item['subjectEntity.fullSubjectName'] + item.remark).indexOf(text) !== -1)
+        const filterList = this.data.tempImportList.filter(item => {
+            const str = (item['subjectEntity.fullSubjectName'] || item['subject.fullSubjectName']) + (item.remark || '无')
+            return str.indexOf(text) != -1
+        })
+        console.log(filterList)
         this.setData({
             filterList,
             isAllSelect: false
@@ -161,7 +167,7 @@ Page({
                 id: arr[i].id,
                 billDetailId: arr[i].id,
                 unverifyAmount: arr[i].unverifyAmount,
-                readOnlyAmount: arr[i].unverifyAmount,
+                readOnlyAmount: formatNumber(Number(arr[i].unverifyAmount).toFixed(2)),
                 amount: arr[i].amount,
                 remark: arr[i].remark,
                 'subjectEntity.fullSubjectName': arr[i]['subjectEntity.fullSubjectName'] || arr[i]['subject.fullSubjectName'],

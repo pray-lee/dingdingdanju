@@ -16,7 +16,7 @@
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开票电话</view>
         <view class="form-row-content">
-            <input class="input" type="digit" placeholder="开票电话" onInput="bindKeyInput" data-type="invoicePhone" value="{{customInfo.invoicePhone}}"/>
+            <input class="input" type="text" placeholder="开票电话" onInput="bindKeyInput" data-type="invoicePhone" value="{{customInfo.invoicePhone}}"/>
         </view>
     </view>
     <view class="form-line"/>

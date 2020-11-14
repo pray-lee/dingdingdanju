@@ -1,6 +1,7 @@
 var app = getApp()
 app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
+
 Page({
     data: {
         startX: 0, //开始坐标
@@ -14,7 +15,10 @@ Page({
         animationInfo: {},
         animationInfoImg: {},
         animationInfoTopList: {},
+        selectedType: '',
+        isComplete: false,
         list: [],
+        filterList: [],
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -23,59 +27,61 @@ Page({
             60: "已提交付款",
             80: "已付款"
         },
-            applicantType: {
-                10: "职员",
-                20: "供应商",
-                30: "客户"
-            },
+        applicantType: {
+            10: "职员",
+            20: "供应商",
+            30: "客户"
         },
-        //手指触摸动作开始 记录起点X坐标
-        touchstart: function (e) {
-            //开始触摸时 重置所有删除
-            this.data.list.forEach(function (v, i) {
+    },
+    //手指触摸动作开始 记录起点X坐标
+    touchstart: function (e) {
+        //开始触摸时 重置所有删除
+        this.data.list.forEach(function (v, i) {
             if (v.isTouchMove)//只操作为true的
                 v.isTouchMove = false;
-            })
-            this.setData({
+        })
+        this.setData({
             startX: e.changedTouches[0].clientX,
             startY: e.changedTouches[0].clientY,
-            list: this.data.list
-            })
-        },
-        //滑动事件处理
-        touchmove: function (e) {
-            var that = this,
+            list: this.data.list,
+            filterList: this.data.list
+        })
+    },
+    //滑动事件处理
+    touchmove: function (e) {
+        var that = this,
             index = e.currentTarget.dataset.index,//当前索引
             startX = that.data.startX,//开始X坐标
             startY = that.data.startY,//开始Y坐标
             touchMoveX = e.changedTouches[0].clientX,//滑动变化坐标
             touchMoveY = e.changedTouches[0].clientY,//滑动变化坐标
             //获取滑动角度
-            angle = that.angle({ X: startX, Y: startY }, { X: touchMoveX, Y: touchMoveY });
-            that.data.list.forEach(function (v, i) {
+            angle = that.angle({X: startX, Y: startY}, {X: touchMoveX, Y: touchMoveY});
+        that.data.filterList.forEach(function (v, i) {
             v.isTouchMove = false
             //滑动超过30度角 return
             if (Math.abs(angle) > 30) return;
             if (i == index) {
                 if (touchMoveX > startX) //右滑
-                v.isTouchMove = false
+                    v.isTouchMove = false
                 else //左滑
-                v.isTouchMove = true
+                    v.isTouchMove = true
             }
-            })
-            //更新数据
-            that.setData({
-            list: that.data.list
-            })
-        },
-        /**
-         * 计算滑动角度
-         * @param {Object} start 起点坐标
-         * @param {Object} end 终点坐标
+        })
+        //更新数据
+        that.setData({
+            list: that.data.list,
+            filterList: this.data.list
+        })
+    },
+    /**
+     * 计算滑动角度
+     * @param {Object} start 起点坐标
+     * @param {Object} end 终点坐标
      */
     angle: function (start, end) {
         var _X = end.X - start.X,
-        _Y = end.Y - start.Y
+            _Y = end.Y - start.Y
         //返回角度 /Math.atan()返回数字的反正切值
         return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
     },
@@ -83,7 +89,7 @@ Page({
         this.setData({
             hidden: !this.data.hidden
         })
-        if(this.data.hidden) {
+        if (this.data.hidden) {
             this.animationImg.rotate(0).step()
             this.animationTopList.translateY('-200%').step()
             const t = setTimeout(() => {
@@ -92,7 +98,7 @@ Page({
                 })
                 clearTimeout(t)
             })
-        }else{
+        } else {
             this.setData({
                 topHidden: false
             })
@@ -105,28 +111,68 @@ Page({
         })
     },
     onLoad(query) {
-        const { type } = query
-        if(type === 'all') {
-            this.getAll()
-        }else{
-            this.getComplete()
+        const {type} = query
+        if (type === 'all') {
+            this.getAll(this.data.selectedType)
+            this.setData({
+                isComplete: true,
+            })
+        } else {
+            this.getComplete(this.data.selectedType)
+            this.setData({
+                isComplete: false,
+            })
         }
     },
-    getComplete() {
-        this.requestAllList({
-            J: 'status_begin=80',
-            B: 'status_begin=80',
-            F: 'status_begin=80',
-            K: 'status_begin=30'
-        })
+    getListByListStatus() {
+        // 已完成，未完成的单据
+        const isComplete = this.data.isComplete
+        const selectedType = this.data.selectedType
+        if (isComplete) {
+            // 已完成
+            this.getComplete(selectedType)
+            this.setData({
+                isComplete: false
+            })
+        } else {
+            // 未完成
+            this.getAll(selectedType)
+            this.setData({
+                isComplete: true
+            })
+        }
     },
-    getAll() {
-        this.requestAllList({
-            J: 'status_end=79',
-            B: 'status_end=79',
-            F: 'status_end=79',
-            K: 'status_end=29'
-        })
+    getComplete(selectedType) {
+        if (!selectedType) {
+            this.requestAllList({
+                J: 'status_begin=80',
+                B: 'status_begin=80',
+                F: 'status_begin=80',
+                K: 'status_begin=30'
+            })
+        } else {
+            if (selectedType !== 'K') {
+                this.singleListLogic(selectedType, 'status_begin=80')
+            } else {
+                this.singleListLogic(selectedType, 'status_begin=30')
+            }
+        }
+    },
+    getAll(selectedType) {
+        if (!selectedType) {
+            this.requestAllList({
+                J: 'status_end=79',
+                B: 'status_end=79',
+                F: 'status_end=79',
+                K: 'status_end=29'
+            })
+        } else {
+            if (selectedType !== 'K') {
+                this.singleListLogic(selectedType, 'status_end=79')
+            } else {
+                this.singleListLogic(selectedType, 'status_end=29')
+            }
+        }
     },
     /*
     * J: 借款单状态
@@ -142,47 +188,82 @@ Page({
             this.getKaipiaoList(K),
             this.getFukuanList(F)
         ]).then(res => {
-            const allList = []
+            let allList = []
             res.forEach(item => {
                 allList.push(...item.list)
             })
             allList.sort((a, b) => a.createDate < b.createDate ? 1 : -1)
+            allList = allList.map(item => {
+                if (item.totalAmount) {
+                    item.formatTotalAmount = formatNumber(Number(item.totalAmount).toFixed(2))
+                } else {
+                    item.formatAmount = formatNumber(Number(item.amount).toFixed(2))
+                }
+                return item
+            })
             this.setData({
-                list: allList
+                list: allList,
+                filterList: allList
             })
         })
     },
     // 获取单个列表
     getSingleList(e) {
         const type = e.currentTarget.dataset.type
-        switch(type) {
+        const isComplete = !this.data.isComplete
+        if (isComplete) {
+            if (type !== 'K') {
+                this.singleListLogic(type, 'status_begin=80')
+            } else {
+                this.singleListLogic(type, 'status_begin=30')
+            }
+        } else {
+            if (type !== 'K') {
+                this.singleListLogic(type, 'status_end=79')
+            } else {
+                this.singleListLogic(type, 'status_end=29')
+            }
+        }
+    },
+    singleListLogic(type, status) {
+        switch (type) {
             case 'J':
-                this.handleSingleResult(this.getJiekuanList.bind(this), 'status_end=79')
+                this.handleSingleResult(this.getJiekuanList.bind(this), status, 'J')
                 break
             case 'B':
-                this.handleSingleResult(this.getBaoxiaoList.bind(this), 'status_end=79')
+                this.handleSingleResult(this.getBaoxiaoList.bind(this), status, 'B')
                 break
             case 'K':
-                this.handleSingleResult(this.getKaipiaoList.bind(this), 'status_end=29')
+                this.handleSingleResult(this.getKaipiaoList.bind(this), status, 'K')
                 break
             case 'F':
-                this.handleSingleResult(this.getFukuanList.bind(this), 'status_end=79')
+                this.handleSingleResult(this.getFukuanList.bind(this), status, 'F')
                 break
 
         }
     },
-    handleSingleResult(fn, status) {
+    handleSingleResult(fn, status, selectedType) {
         this.animationImg.rotate(0).step()
         this.animationTopList.translateY('-200%').step()
         this.setData({
             hidden: true,
             animationInfoImg: this.animationImg.export(),
             animationInfoTopList: this.animationTopList.export(),
+            selectedType
         })
         fn(status).then(res => {
             res.list.sort((a, b) => a.createDate < b.createDate ? 1 : -1)
+            res.list = res.list.map(item => {
+                if (item.totalAmount) {
+                    item.formatTotalAmount = formatNumber(Number(item.totalAmount).toFixed(2))
+                } else {
+                    item.formatAmount = formatNumber(Number(item.amount).toFixed(2))
+                }
+                return item
+            })
             this.setData({
                 list: res.list,
+                filterList: res.list,
             })
         })
     },
@@ -195,7 +276,7 @@ Page({
                 method: 'GET',
                 success: res => {
                     resolve({
-                        list:res.data.rows.map(item => ({
+                        list: res.data.rows.map(item => ({
                             ...item,
                             billType: 'J',
                             billName: '借款单'
@@ -210,7 +291,7 @@ Page({
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
-                url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&sort=updateDate&order=desc&'+status+'&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
+                url: app.globalData.url + 'reimbursementBillController.do?datagrid&reverseVerifyStatus=0&sort=updateDate&order=desc&' + status + '&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,applicantType,applicantId,applicantName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,submitterId,submitter.realName,childrenCount,accountbook.oaModule,status',
                 method: 'GET',
                 success: res => {
                     resolve({
@@ -231,7 +312,7 @@ Page({
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
-                url: app.globalData.url + 'invoicebillController.do?datagrid&sort=createDate&order=desc&'+status+'&field=id,invoicebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,taxRate,amount,unverifyAmount,unverifyReceivableAmount,submitDateTime,contacts,telephone,address,status,businessDateTime,remark,billCode',
+                url: app.globalData.url + 'invoicebillController.do?datagrid&sort=createDate&order=desc&' + status + '&field=id,createDate,invoicebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,taxRate,amount,unverifyAmount,unverifyReceivableAmount,submitDateTime,contacts,telephone,address,status,businessDateTime,remark,billCode',
                 method: 'GET',
                 success: res => {
                     resolve({
@@ -252,7 +333,7 @@ Page({
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
-                url: app.globalData.url + 'paymentBillController.do?datagrid&reverseVerifyStatus=0&sort=createDate&order=desc&'+status+'&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,supplierId,supplierDetail.supplier.supplierName,applicantType,applicantId,applicantName,submitterId,submitter.realName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,childrenCount,status,accountbook.oaModule,oaModule,',
+                url: app.globalData.url + 'paymentBillController.do?datagrid&reverseVerifyStatus=0&sort=createDate&order=desc&' + status + '&field=id,billCode,accountbookId,accountbook.accountbookName,submitterDepartmentId,departDetail.depart.departName,supplierId,supplierDetail.supplier.supplierName,applicantType,applicantId,applicantName,submitterId,submitter.realName,incomeBankName,incomeBankAccount,invoice,applicationAmount,verificationAmount,totalAmount,unpaidAmount,paidAmount,unverifyAmount,businessDateTime,createDate,updateDate,remark,childrenCount,status,accountbook.oaModule,oaModule,',
                 method: 'GET',
                 success: res => {
                     resolve({
@@ -267,19 +348,19 @@ Page({
         })
     },
     addLoading() {
-        if(app.globalData.loadingCount < 1) {
+        if (app.globalData.loadingCount < 1) {
             dd.showLoading({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount +=1
+        app.globalData.loadingCount += 1
     },
     hideLoading() {
-        if(app.globalData.loadingCount <= 1) {
+        if (app.globalData.loadingCount <= 1) {
             dd.hideLoading()
             app.globalData.loadingCount = 0
-        }else{
-            app.globalData.loadingCount-=1
+        } else {
+            app.globalData.loadingCount -= 1
         }
     },
     onAddShow() {
@@ -353,35 +434,35 @@ Page({
         const id = e.currentTarget.dataset.id
         const status = e.currentTarget.dataset.status
         const type = e.currentTarget.dataset.type
-        switch(type) {
+        switch (type) {
             case 'J':
                 //借款
-                if(status == 10 || status == 25) {
+                if (status == 10 || status == 25) {
                     this.setPage(`../addJiekuan/index?type=edit&id=${id}`)
-                }else{
+                } else {
                     this.setPage(`../viewJiekuan/index?id=${id}`)
                 }
                 break;
             case 'B':
                 // 报销单
-                if(status == 10 || status == 25) {
+                if (status == 10 || status == 25) {
                     this.setPage(`../addBaoxiao/index?type=edit&id=${id}`)
-                }else{
+                } else {
                     this.setPage(`../viewBaoxiao/index?id=${id}`)
                 }
                 break;
             case 'K':
-                if(status == 10 || status == 25) {
+                if (status == 10 || status == 25) {
                     this.setPage(`../addKaipiao/index?type=edit&id=${id}`)
-                }else{
+                } else {
                     this.setPage(`../viewKaipiao/index?id=${id}`)
                 }
                 // 开票单
                 break;
             case 'F':
-                if(status == 10 || status == 25) {
+                if (status == 10 || status == 25) {
                     this.setPage(`../addFukuan/index?type=edit&id=${id}`)
-                }else{
+                } else {
                     this.setPage(`../viewFukuan/index?id=${id}`)
                 }
                 // 付款单
@@ -397,7 +478,7 @@ Page({
         const {id, type, status} = e.currentTarget.dataset
         console.log(status, 'deleteBill')
         let url = ''
-        switch(type) {
+        switch (type) {
             case 'J':
                 url = app.globalData.url + 'borrowBillController.do?doBatchDel&ids=' + id
                 break
@@ -420,7 +501,7 @@ Page({
                 this.setData({
                     x: 0
                 })
-                if(res.confirm) {
+                if (res.confirm) {
                     this.addLoading()
                     request({
                         hideLoading: this.hideLoading,
@@ -428,11 +509,9 @@ Page({
                         method: 'GET',
                         success: res => {
                             console.log(res)
-                            if(res.data.success) {
-                                this.onLoad({
-                                    type: 'all'
-                                })
-                            }else{
+                            if (res.data.success) {
+                                this.getListByListStatus()
+                            } else {
                                 dd.alert({
                                     content: '单据删除失败',
                                     buttonText: '好的'
@@ -452,5 +531,17 @@ Page({
     },
     onChange(e) {
         console.log(e)
+    },
+    onInput(e) {
+        console.log(this.data.list)
+        const text = e.detail.value
+        const filterList = this.data.list.filter(item => {
+            if (str.indexOf(text) != -1) {
+                return item
+            }
+        })
+        this.setData({
+            filterList
+        })
     }
 })

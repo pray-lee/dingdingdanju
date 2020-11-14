@@ -23,16 +23,18 @@
                 </view>
             </view>
             <view class="form-line"/>
-            <view class="form-row" onTap="disabled">
-                <view class="form-row-label"><text class="require">*</text>税率（%）</view>
-                <view class="form-row-content">
-                    <view class="mock-input">{{fukuanDetail['taxRate']}}</view>
+            <block a:if="{{fukuanDetail['invoiceType'] == '2'}}">
+                <view class="form-row" onTap="disabled">
+                    <view class="form-row-label"><text class="require">*</text>税率（%）</view>
+                    <view class="form-row-content">
+                        <view class="mock-input">{{fukuanDetail['taxRate']}}</view>
+                    </view>
                 </view>
-            </view>
-            <view class="form-line"/>
+                <view class="form-line"/>
+            </block>
             <view class="form-row">
-                <view class="form-row-label"><text class="require">*</text>开票金额（含税）(可申请余额：{{fukuanDetail.unverifyAmount}})</view>
-                <input class="input" type="digit" placeholder="开票内容" value="{{fukuanDetail.applicationAmount}}" onBlur="onKaipiaoBlur"
+                <view class="form-row-label"><text class="require">*</text>开票金额（含税）<view a:if="{{!!fukuanDetail.billId && fukuanDetail.billCode}}">（可申请余额：{{fukuanDetail.formatUnverifyAmount}}）</view></view>
+                <input class="input" type="digit" placeholder="开票金额" value="{{fukuanDetail.applicationAmount}}" onBlur="onKaipiaoBlur"
                        data-name="applicationAmount"/>
             </view>
         </view>

@@ -10,8 +10,8 @@
                     </view>
                     <view class="content">
                         <text class="left">{{item.remark || '事由'}}</text>
-                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.totalAmount || '0.00'}}</text>
-                        <text class="right" a:else>￥{{item.amount || '0.00'}}</text>
+                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.formatTotalAmount || '0.00'}}</text>
+                        <text class="right" a:else>￥{{item.formatAmount || '0.00'}}</text>
                     </view>
                     <view class="content content-bottom">
                         <text class="left">{{item.billName}}</text>

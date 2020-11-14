@@ -10,7 +10,7 @@ Page({
         startY: 0,
         isPhoneXSeries: false,
         scrollTop: 0,
-        list: [],
+        list: [1],
     },
     //手指触摸动作开始 记录起点X坐标
     touchstart: function (e) {
@@ -63,8 +63,8 @@ Page({
         return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
     },
     getExpressList() {
-        const customerDetailId = dd.getStorageSync({key: 'customerDetailId'}).data
         this.addLoading()
+        const customerDetailId = dd.getStorageSync({key: 'customerDetailId'}).data
         request({
             hideLoading: this.hideLoading(),
             url: app.globalData.url + 'customerSpecialDeliveryController.do?listInfo&customerDetailId=' + customerDetailId,

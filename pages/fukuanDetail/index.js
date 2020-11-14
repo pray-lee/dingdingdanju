@@ -14,7 +14,8 @@ Page({
         })
     },
     onShow() {
-        const fukuanDetail = dd.getStorageSync({key: 'fukuanDetail'}).data
+        let fukuanDetail = dd.getStorageSync({key: 'fukuanDetail'}).data
+        fukuanDetail.formatUnverifyAmount = formatNumber(Number(fukuanDetail.unverifyAmount).toFixed(2))
         if(!!fukuanDetail) {
             this.setData({
                 fukuanDetail
@@ -47,6 +48,13 @@ Page({
         }
     },
     submitFukuanDetail() {
+        if(Number(this.data.fukuanDetail.applicationAmount) > Number(this.data.fukuanDetail.unverifyAmount)) {
+            dd.alert({
+                content: '开票金额不能大于可申请余额',
+                buttonText: '好的'
+            })
+            return
+        }
         dd.setStorage({
             key: 'fukuanDetail',
             data: this.data.fukuanDetail,
@@ -59,7 +67,7 @@ Page({
     },
     disabled(e) {
         dd.alert({
-            content: '导入的应付单辅助核算类型不可编辑',
+            content: '导入的单据此处不可编辑',
             buttonText: '好的'
         })
     },

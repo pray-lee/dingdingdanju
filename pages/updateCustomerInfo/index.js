@@ -10,6 +10,7 @@ Page({
         this.setData({
             customInfo: updateCustomerDetailData
         })
+        console.log(updateCustomerDetailData)
     },
     bindKeyInput(e) {
         this.setData({

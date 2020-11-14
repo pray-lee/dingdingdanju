@@ -8,7 +8,8 @@ Page({
         isPhoneXSeries: false,
         btnHidden: false,
         importList: [],
-        remarks: []
+        remarks: [],
+        saveFlag: false
     },
     onLoad() {
         this.setData({
@@ -28,6 +29,12 @@ Page({
         })
         this.setData({
            importList
+        })
+    },
+    showContent() {
+        dd.alert({
+            content: '导入的单据此处不可编辑',
+            buttonText: '好的'
         })
     },
     getImportListFromStorage() {
@@ -104,7 +111,21 @@ Page({
         const tempData = clone(this.data.importList)
         tempData.forEach(item => {
             if(item.id === id) {
+                console.log(item)
                 item.applicationAmount = value
+                if(Number(value) > Number(item.unverifyAmount)) {
+                    dd.alert({
+                        content: '开票金额不能大于可申请余额',
+                        buttonText: '好的'
+                    })
+                    this.setData({
+                        saveFlag: false
+                    })
+                }else{
+                    this.setData({
+                        saveFlag: true
+                    })
+                }
             }
         })
         this.setData({
@@ -112,6 +133,15 @@ Page({
         })
     },
     saveImportList() {
+        console.log(this.data.importList)
+        const saveFlag = this.data.importList.every(item => Number(item.applicationAmount) <= Number(item.unverifyAmount))
+        if(!saveFlag) {
+            dd.alert({
+                content: '开票金额不能大于可申请余额',
+                buttonText: '好的'
+            })
+            return
+        }
         dd.removeStorageSync({
             key: 'tempImportList'
         })

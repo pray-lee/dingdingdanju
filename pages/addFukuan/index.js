@@ -285,16 +285,18 @@ Page({
     // 获取导入的应付单
     getImportFukuanListFromStorage() {
         const fukuanList = dd.getStorageSync({key: 'importCommonList'}).data
+        console.log(this.data.fukuanList, 'this.data.fukuanList')
         if(!!fukuanList) {
             let oldList = this.data.fukuanList.concat()
             console.log(oldList, 'oldList')
+            console.log(fukuanList)
             if(oldList.length) {
                 for(let i = 0; i < fukuanList.length; i++) {
-                    if(oldList.every(item => item.billId !== fukuanList[i].billId)) {
+                    if(oldList.every(item => item.billDetailId !== fukuanList[i].billDetailId)) {
                         oldList.push(fukuanList[i])
                     }else{
                         oldList = oldList.map(item => {
-                            if(item.billId === fukuanList[i].billId) {
+                            if(item.billDetailId === fukuanList[i].billDetailId) {
                                 return Object.assign({}, item, fukuanList[i])
                             }else{
                                 return item
@@ -696,6 +698,10 @@ Page({
                         name: item.borrowObject
                     }
                 })
+                arr.unshift({
+                    id: '',
+                    name: '请选择'
+                })
                 // 写入缓存
                 dd.setStorage({
                     key: 'borrowList',
@@ -892,6 +898,8 @@ Page({
                 taxRate: item.taxRate,
                 invoiceType: item.invoiceType
             }))
+        }else{
+            var fukuanList = []
         }
 
         // 设置数据

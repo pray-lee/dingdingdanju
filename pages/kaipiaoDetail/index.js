@@ -109,10 +109,11 @@ Page({
             this.getAuxptyIdFromStorage()
             this.getSubjectIdFromStorage()
         }, 300)
-        const kaipiaoDetail = dd.getStorageSync({
+        let kaipiaoDetail = dd.getStorageSync({
             key: 'kaipiaoDetail',
         }).data
         if (!!kaipiaoDetail) {
+            kaipiaoDetail.formatUnverifyAmount = formatNumber(Number(this.data.kaipiaoDetail.unverifyAmount).toFixed(2))
             this.setData({
                 kaipiaoDetail
             })
@@ -337,6 +338,13 @@ Page({
         }
     },
     submitKaipiaoDetail() {
+        if(Number(this.data.kaipiaoDetail.applicationAmount) > Number(this.data.kaipiaoDetail.unverifyAmount)) {
+            dd.alert({
+                content: '开票金额不能大于可申请余额',
+                buttonText: '好的'
+            })
+            return
+        }
         const validSuccess = this.valid(this.data.kaipiaoDetail)
         if(validSuccess) {
             this.setData({
@@ -377,7 +385,8 @@ Page({
                 kaipiaoArr: this.data.kaipiaoArr.concat(this.data.kaipiaoDetail)
             })
             this.setData({
-                kaipiaoDetail: dd.getStorageSync({key: 'initKaipiaoDetail'}).data
+                kaipiaoDetail: dd.getStorageSync({key: 'initKaipiaoDetail'}).data,
+                remarkIndex: 0
             })
         }
     },
@@ -388,7 +397,7 @@ Page({
             })
         }else{
             dd.alert({
-                content: '导入的应收单销售类型不可编辑',
+                content: '导入的单据此处不可编辑',
                 buttonText: '好的'
             })
         }
@@ -407,7 +416,7 @@ Page({
             })
         }else{
             dd.alert({
-                content: '导入的应收单辅助核算类型不可编辑',
+                content: '导入的单据此处不可编辑',
                 buttonText: '好的'
             })
         }

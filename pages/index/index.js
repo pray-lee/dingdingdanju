@@ -108,7 +108,7 @@ Page({
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
-                url: app.globalData.url + 'invoicebillController.do?datagrid&page=1&rows=3&sort=createDate&order=desc&status_end=29&field=id,invoicebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,taxRate,amount,unverifyAmount,unverifyReceivableAmount,submitDateTime,contacts,telephone,address,status,businessDateTime,remark,billCode',
+                url: app.globalData.url + 'invoicebillController.do?datagrid&page=1&rows=3&sort=createDate&order=desc&status_end=29&field=id,invoicebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,createDate,taxRate,amount,unverifyAmount,unverifyReceivableAmount,submitDateTime,contacts,telephone,address,status,businessDateTime,remark,billCode',
                 method: 'GET',
                 success: res => {
                     resolve({
@@ -173,7 +173,15 @@ Page({
                                         sortList.push(...item.list)
                                     })
                                     // 合并之后排序, 并且取前三个
-                                    const sortableList = sortList.sort((a, b) => a.createDate < b.createDate ? 1 : -1 ).slice(0, 3)
+                                    let sortableList = sortList.sort((a, b) => a.createDate < b.createDate ? 1 : -1 ).slice(0, 3)
+                                    sortableList = sortableList.map(item => {
+                                        if(item.totalAmount) {
+                                            item.formatTotalAmount = formatNumber(Number(item.totalAmount).toFixed(2))
+                                        }else{
+                                            item.formatAmount = formatNumber(Number(item.amount).toFixed(2))
+                                        }
+                                        return item
+                                    })
                                     this.setData({
                                         list: sortableList
                                     })

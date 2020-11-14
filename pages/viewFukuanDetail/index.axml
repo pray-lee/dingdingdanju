@@ -32,7 +32,7 @@
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label"><text class="require">*</text>开票金额（含税）</view>
-                <input class="input" type="digit" placeholder="开票内容" value="{{fukuanDetail.formatApplicationAmount}}" onBlur="onKaipiaoBlur"
+                <input class="input" type="digit" placeholder="开票金额" value="{{fukuanDetail.formatApplicationAmount}}" onBlur="onKaipiaoBlur"
                        data-name="applicationAmount"/>
             </view>
         </view>

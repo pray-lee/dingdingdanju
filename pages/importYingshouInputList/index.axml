@@ -8,14 +8,14 @@
                     <view class="title">{{item.billCode || item.receivablebillCode}}</view>
                 </view>
                 <view class="block-wrapper">
-                    <view class="form-row">
+                    <view class="form-row" onTap="showContent">
                         <view class="form-row-label"><text class="require">*</text>销售类型</view>
                         <view class="form-row-content">
                             <view class="mock-input">{{item['subjectEntity.fullSubjectName']}}</view>
                         </view>
                     </view>
                     <view class="form-line"/>
-                    <view class="form-row">
+                    <view class="form-row" onTap="showContent">
                         <view class="form-row-label"><text class="require">*</text>核算维度</view>
                         <view class="form-row-content">
                             <view class="mock-input">{{item['auxpropertyNames']}}</view>
@@ -39,23 +39,25 @@
                         <view class="form-row">
                             <view class="form-row-label"><text class="require">*</text>发票类型</view>
                             <view class="form-row-content">
-                                <view class="mock-input">{{item.invoiceType === '1' ? '普票' : '专票'}}</view>
+                                <view class="mock-input">{{item.invoiceType == '1' ? '普票' : '专票'}}</view>
                             </view>
                         </view>
                         <view class="form-line"/>
-                        <view class="form-row">
-                            <view class="form-row-label"><text class="require">*</text>税率（%）</view>
-                            <view class="form-row-content">
-                                <view class="mock-input">{{item.taxRate}}</view>
+                        <block a:if="{{item.invoiceType == '2'}}">
+                            <view class="form-row">
+                                <view class="form-row-label"><text class="require">*</text>税率（%）</view>
+                                <view class="form-row-content">
+                                    <view class="mock-input">{{item.taxRate}}</view>
+                                </view>
                             </view>
-                        </view>
-                        <view class="form-line"/>
+                            <view class="form-line"/>
+                        </block>
                     </block>
                     <view class="form-row-wrapper">
                         <view class="form-row">
                             <view class="form-row-label"><text class="require">*</text>开票金额（含税）（可申请余额: {{item.readOnlyAmount}}）</view>
                             <view class="form-row-content">
-                                <input class="input" data-id="{{item.id}}" onInput="onInput" value="{{item.applicationAmount}}" placeholder="开票金额"/>
+                                <input class="input" data-index="{{index}}" data-id="{{item.id}}" onInput="onInput" onBlur="onBlur" value="{{item.applicationAmount}}" placeholder="开票金额"/>
                             </view>
                         </view>
                     </view>
