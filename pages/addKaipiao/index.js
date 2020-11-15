@@ -29,7 +29,8 @@ Page({
             amount: 0,
             status: 20,
             remark: '',
-            deliveryMode: 0
+            deliveryMode: 0,
+            formatAmount: '0.00'
         },
         kaipiaoList: [],
         importList: []
@@ -52,7 +53,8 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                formatAmount: formatNumber(amount.toFixed(2))
+                formatAmount: formatNumber(amount.toFixed(2)),
+                amount: amount
             }
         })
     },
@@ -316,6 +318,7 @@ Page({
                 ...this.data.submitData,
                 id: this.data.billId,
                 formatAmount: formatNumber(Number(data.amount).toFixed(2)),
+                amount: data.amount,
                 billFilesObj: billFilesObj || [],
                 customerDetailId: (data.customerDetailEntity ? data.customerDetailEntity.id : ''),
                 submitDate: moment().format('YYYY-MM-DD'),
@@ -324,7 +327,10 @@ Page({
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
                 remark: data.remark,
-                deliveryMode: data.deliveryMode
+                deliveryMode: data.deliveryMode,
+                contacts: (data.contacts ? data.contacts : null),
+                telephone: (data.telephone ? data.telephone : null),
+                address: (data.address ? data.address : null),
             },
         })
     },
@@ -373,6 +379,13 @@ Page({
                     this.setData({
                         kaipiaoList: newList
                     })
+                }else{
+                   this.setData({
+                       submitData: {
+                           ...this.data.submitData,
+                           invoiceType: this.data.submitData.invoiceType == 1 ? 2: 1
+                       }
+                   })
                 }
             },
         });
@@ -404,9 +417,14 @@ Page({
                     deliveryMode: 0
                 }
             })
-            // delete this.data.submitData.contacts
-            // delete this.data.submitData.address
-            // delete this.data.submitData.telephone
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    contacts: null,
+                    telephone: null,
+                    address: null
+                }
+            })
         }
     },
     getExpressList() {

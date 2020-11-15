@@ -113,28 +113,9 @@
                     </view>
                 </view>
             </view>
-            <block a:if="{{customerDetail.id}}">
                 <view class="title">其他信息</view>
                 <view class="block-wrapper">
-                    <view class="form-row">
-                        <view class="form-row-label">
-                            <text class="require">*</text>
-                            发票移交方式
-                        </view>
-                        <view class="form-row-content">
-                            <radio-group class="radio-group" onChange="radioChange">
-                                <label class="radio">
-                                    <radio value="0" checked="{{delivery == 0}}"/>
-                                    自取
-                                </label>
-                                <label class="radio">
-                                    <radio value="1" checked="{{delivery == 1}}"/>
-                                    快递
-                                </label>
-                            </radio-group>
-                        </view>
-                    </view>
-                    <block a:if="{{!!submitData.contacts}}">
+                    <block a:if="{{!!result.contacts}}">
                         <view class="form-line"/>
                         <view class="form-row" onTap="getExpressList">
                             <view class="form-row-label">
@@ -143,15 +124,14 @@
                             </view>
                             <view class="form-row-content express">
                                 <view>
-                                    <text>{{submitData.contacts}}</text>
-                                    <text style="margin-left: 15rpx">{{submitData.telephone}}</text>
+                                    <text>{{result.contacts}}</text>
+                                    <text style="margin-left: 15rpx">{{result.telephone}}</text>
                                 </view>
-                                <view>{{submitData.address}}</view>
+                                <view>{{result.address}}</view>
                             </view>
                         </view>
                     </block>
                 </view>
-            </block>
             <block a:if="{{result.billFiles.length}}">
                 <view class="title"></view>
                 <view class="block-wrapper">

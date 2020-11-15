@@ -54,10 +54,10 @@
     margin-bottom: 20rpx;
 }
 .scroll-view{
-    height: calc(100vh - 260rpx);
+    height: calc(100vh - 400rpx);
 }
 .scroll-view.iphoneX{
-    height: calc(100vh - 328rpx)
+    height: calc(100vh - 468rpx)
 }
 .list-item {
     margin:0px auto;
