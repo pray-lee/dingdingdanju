@@ -126,6 +126,18 @@ page {
   background:#19D7FB;
   border-radius: 50%
 }
+.status.error.j::before{
+  background:#00c458;
+}
+.status.error.b::before{
+  background:#0089ff;
+}
+.status.error.k::before{
+  background:#ff9f00;
+}
+.status.error.f::before{
+  background:#fb602d;
+}
 .status .billCode{
   color:#BBBBBB;
   font-weight:200
@@ -139,7 +151,7 @@ page {
   font-weight:600
 }
 .content .left{
-  max-width:15em;
+  max-width:100%;
   text-overflow:ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -180,7 +192,23 @@ page {
   line-height: 70rpx;
   padding-left: 60rpx;
   box-sizing:border-box;
-  font-size: .3rem
+  font-size: .3rem;
+}
+.J{
+  background:url(../images/J.png) left center no-repeat;
+  background-size: 35rpx 40rpx
+}
+.B{
+  background:url(../images/B.png) left center no-repeat;
+  background-size: 29rpx 40rpx
+}
+.K{
+  background:url(../images/K.png) left center no-repeat;
+  background-size: 38rpx 30rpx
+}
+.F{
+  background:url(../images/F.png) left center no-repeat;
+  background-size: 42rpx 30rpx
 }
 .add-img{
   margin-bottom: 18rpx

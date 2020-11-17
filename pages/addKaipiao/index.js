@@ -11,6 +11,7 @@ Page({
         process: null,
         type: '',
         btnHidden: false,
+
         accountbookIndex: 0,
         accountbookList: [],
         departmentIndex: 0,
@@ -59,6 +60,7 @@ Page({
         })
     },
     onBusinessFocus() {
+        console.log(this.data.submitData, 'onBusinessFocus')
         dd.datePicker({
             format: 'yyyy-MM-dd',
             currentDate: moment().format('YYYY-MM-DD'),
@@ -126,7 +128,7 @@ Page({
         if (this.data.type === 'add') {
             url = app.globalData.url + 'invoicebillController.do?doAdd'
         } else {
-            url = app.globalData.url + 'invoicebillController.do?doUpdate&id=' + this.data.billId
+            url = app.globalData.url + 'invoicebillController.do?doUpdate'
         }
         request({
             hideLoading: this.hideLoading,
@@ -466,34 +468,36 @@ Page({
             return
         }
         this.addLoading()
-        request({
-            hideLoading: this.hideLoading(),
-            url: app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
-            method: 'GET',
-            success: res => {
-                if (res.data.rows.length) {
-                    dd.setStorage({
-                        key: 'tempImportList',
-                        data: res.data.rows,
-                        success: () => {
-                            dd.navigateTo({
-                                url: '/pages/importYingshouList/index'
-                            })
-                        }
-                    })
-                } else {
-                    dd.alert({
-                        content: '暂无应收单',
-                        buttonText: '好的',
-                        success: () => {
-                        }
-                    })
+        setTimeout(() => {
+            request({
+                hideLoading: this.hideLoading(),
+                url: app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
+                method: 'GET',
+                success: res => {
+                    if (res.data.rows.length) {
+                        dd.setStorage({
+                            key: 'tempImportList',
+                            data: res.data.rows,
+                            success: () => {
+                                dd.navigateTo({
+                                    url: '/pages/importYingshouList/index'
+                                })
+                            }
+                        })
+                    } else {
+                        dd.alert({
+                            content: '暂无应收单',
+                            buttonText: '好的',
+                            success: () => {
+                            }
+                        })
+                    }
+                },
+                fail: err => {
+                    console.log(app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,')
+                    console.log('failed', err)
                 }
-            },
-            fail: err => {
-                console.log(app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,')
-                console.log('failed', err)
-            }
+            })
         })
     },
     onHide() {
@@ -963,9 +967,10 @@ Page({
     },
     // 获取用户选择或者修改后的快递信息用于页面渲染
     getExpressInfoFromStorage() {
-        const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
-        console.log(this.data.submitData)
+        let expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
         if (expressInfo) {
+            delete expressInfo['createDate']
+            delete expressInfo['id']
             this.setData({
                 submitData: {
                     ...this.data.submitData,

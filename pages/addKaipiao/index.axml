@@ -31,6 +31,23 @@
                     </view>
                 </view>
             </view>
+            <view class="title">单据信息</view>
+            <view class="block-wrapper">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>事由</view>
+                    <view class="form-row-content">
+                        <input onBlur="onRemarkBlur" type="text" class="input" placeholder="请输入事由" value="{{submitData.remark}}">
+                    </view>
+                </view>
+                <view class="form-line"></view>
+                <view class="form-row" onTap="onBusinessFocus">
+                    <view class="form-row-label"><text class="require">*</text>业务日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.businessDateTime}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+            </view>
             <view class="title">客户开票信息</view>
             <view class="block-wrapper">
                 <view class="form-row" onTap="goCustomerList">
@@ -104,20 +121,6 @@
                         </view>
                     </view>
                     <view class="form-line"></view>
-                    <view class="form-row" onTap="onBusinessFocus">
-                        <view class="form-row-label"><text class="require">*</text>业务日期</view>
-                        <view class="form-row-content">
-                            <view data-name="businessDateTime">{{submitData.businessDateTime}}</view>
-                        </view>
-                        <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
-                    </view>
-                    <view class="form-line"></view>
-                    <view class="form-row">
-                        <view class="form-row-label"><text class="require">*</text>备注</view>
-                        <view class="form-row-content">
-                            <input onBlur="onRemarkBlur" type="text" class="input" placeholder="请输入备注" value="{{submitData.remark}}">
-                        </view>
-                    </view>
             </view>
             </block>
             <!-- 增加借款详情-->

@@ -15,7 +15,8 @@ Page({
         animationInfo: {},
         animationInfoImg: {},
         animationInfoTopList: {},
-        selectedType: '',
+        selectedType: 'ALL',
+        selectedText: '全部',
         isComplete: false,
         list: [],
         filterList: [],
@@ -25,7 +26,8 @@ Page({
             25: "审批驳回",
             30: "已审批",
             60: "已提交付款",
-            80: "已付款"
+            80: "已付款",
+            100: "已完成"
         },
         applicantType: {
             10: "职员",
@@ -143,34 +145,46 @@ Page({
         }
     },
     getComplete(selectedType) {
-        if (!selectedType) {
+        if (selectedType == "ALL") {
             this.requestAllList({
                 J: 'status_begin=80',
                 B: 'status_begin=80',
                 F: 'status_begin=80',
-                K: 'status_begin=30'
+                K: 'status_begin=100'
             })
         } else {
             if (selectedType !== 'K') {
                 this.singleListLogic(selectedType, 'status_begin=80')
             } else {
-                this.singleListLogic(selectedType, 'status_begin=30')
+                this.singleListLogic(selectedType, 'status_begin=100')
             }
         }
     },
+    getAllList() {
+        this.animationImg.rotate(0).step()
+        this.animationTopList.translateY('-200%').step()
+        this.setData({
+            hidden: true,
+            animationInfoImg: this.animationImg.export(),
+            animationInfoTopList: this.animationTopList.export(),
+            selectedType: 'ALL',
+            selectedText: '全部'
+        })
+        this.getAll('ALL')
+    },
     getAll(selectedType) {
-        if (!selectedType) {
+        if (selectedType == 'ALL') {
             this.requestAllList({
                 J: 'status_end=79',
                 B: 'status_end=79',
                 F: 'status_end=79',
-                K: 'status_end=29'
+                K: 'status_end=99'
             })
         } else {
             if (selectedType !== 'K') {
                 this.singleListLogic(selectedType, 'status_end=79')
             } else {
-                this.singleListLogic(selectedType, 'status_end=29')
+                this.singleListLogic(selectedType, 'status_end=99')
             }
         }
     },
@@ -243,6 +257,28 @@ Page({
         }
     },
     handleSingleResult(fn, status, selectedType) {
+        switch (selectedType) {
+            case 'J':
+                this.setData({
+                    selectedText: '借款单'
+                })
+                break;
+            case 'B':
+                this.setData({
+                    selectedText: '报销单'
+                })
+                break;
+            case 'K':
+                this.setData({
+                    selectedText: '开票申请单'
+                })
+                break;
+            case 'F':
+                this.setData({
+                    selectedText: '付款申请单'
+                })
+                break;
+        }
         this.animationImg.rotate(0).step()
         this.animationTopList.translateY('-200%').step()
         this.setData({
@@ -536,6 +572,7 @@ Page({
         console.log(this.data.list)
         const text = e.detail.value
         const filterList = this.data.list.filter(item => {
+            const str = item.remark + (item.billCode || item.invoicebillCode)
             if (str.indexOf(text) != -1) {
                 return item
             }

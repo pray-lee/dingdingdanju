@@ -39,7 +39,6 @@
                                         <view class="import-borrow-info">
                                             <view class="import-borrow-time">业务日期：{{item.businessDateTime.split(' ')[0]}}</view>
                                         </view>
-                                        <view class="ellipsis import-borrow-info" style="width:12em;text-align:right">备注：{{item.remark || '无'}}</view>
                                     </view>
                                 </view>
                                 <view class="import-borrow-item-right">
@@ -47,6 +46,7 @@
                                     <text>{{item.unverifyAmount}}</text>
                                 </view>
                             </view>
+                            <view class="ellipsis" style="max-width:85vw;color:#b8b9bb;font-size: 22rpx;">备注：{{item.remark || '无'}}</view>
                             <view class="form-line"/>
                         </view>
                     </label>

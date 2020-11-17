@@ -5,13 +5,15 @@
             <view class="completed-bill" onTap="goList" data-type="complete">查看已完成单据</view>
             <view class="main" a:if="{{list.length}}">
                 <view class="main-item" a:for="{{list}}" onTap="goToEdit" data-type="{{item.billType}}" data-id="{{item.id}}" data-status="{{item.status}}">
-                    <view class="status error">
-                        <text>{{statusObj[item.status] || '审批状态'}}</text>
+                    <view class="content">
+                        <view class="left status error {{item.billType.toLowerCase()}}">
+                            <text>{{statusObj[item.status] || '审批状态'}}</text>
+                        </view>
+                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.formatTotalAmount || '0.00'}}</text>
+                        <text class="right" a:else>￥{{item.formatAmount || '0.00'}}</text>
                     </view>
                     <view class="content">
                         <text class="left">{{item.remark || '事由'}}</text>
-                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.formatTotalAmount || '0.00'}}</text>
-                        <text class="right" a:else>￥{{item.formatAmount || '0.00'}}</text>
                     </view>
                     <view class="content content-bottom">
                         <text class="left">{{item.billName}}</text>
@@ -39,19 +41,19 @@
     </view>
     <!-- 新增单据弹框 -->
     <view class="add-page" animation="{{animationInfo}}">
-        <view class="add-item" onTap="onShowAddJiekuan">
+        <view class="add-item J" onTap="onShowAddJiekuan">
 <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
             <view>借款单</view>
         </view>
-        <view class="add-item" onTap="onShowAddBaoxiao">
+        <view class="add-item B" onTap="onShowAddBaoxiao">
 <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
             <view>报销单</view>
         </view>
-        <view class="add-item" onTap="onShowAddKaipiao">
+        <view class="add-item K" onTap="onShowAddKaipiao">
 <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
             <view>开票申请单</view>
         </view>
-        <view class="add-item" onTap="onShowAddFukuan">
+        <view class="add-item F" onTap="onShowAddFukuan">
 <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
             <view>付款申请单</view>
         </view>

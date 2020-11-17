@@ -29,20 +29,22 @@
     padding: 20rpx;
     display:flex;
     flex-wrap:wrap;
-    justify-content: space-around;
     transform: translateY(-200%);
     border-bottom: 2px solid #ccc
 }
 .bill-btn{
     display:inline-block;
     width:45%;
-    height:0.7rem;
-    line-height:0.7rem;
-    padding-left:0.6rem;
+    height:70rpx;
+    line-height:70rpx;
+    padding-left:70rpx;
     box-sizing:border-box;
-    font-size:0.3rem;
+    font-size:25rpx;
     margin-bottom: 10rpx;
     font-weight:normal;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-right: 5%;
 }
 .see-complete-bill{
     font-size: 26rpx;
@@ -145,4 +147,10 @@
     display:block;
     width: 20rpx;
     height: 20rpx;
+}
+.J, .B, .K, .F{
+    background-position-x: 15rpx
+}
+.F{
+    background-position-x: 10rpx
 }

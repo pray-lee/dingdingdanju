@@ -169,7 +169,7 @@ Page({
                 unverifyAmount: arr[i].unverifyAmount,
                 readOnlyAmount: formatNumber(Number(arr[i].unverifyAmount).toFixed(2)),
                 amount: arr[i].amount,
-                remark: arr[i].remark,
+                remark: '',
                 'subjectEntity.fullSubjectName': arr[i]['subjectEntity.fullSubjectName'] || arr[i]['subject.fullSubjectName'],
                 'auxpropertyNames': arr[i].auxpropertyNames
             }

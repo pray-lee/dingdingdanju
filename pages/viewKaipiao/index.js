@@ -79,7 +79,7 @@ Page({
                         buttonText: '好的',
                         success: () => {
                             dd.redirectTo({
-                                url: '/pages/index/index'
+                                url: `/pages/addKaipiao/index?type=edit&id=${this.data.result.id}`
                             })
                         }
                     })
