@@ -36,7 +36,7 @@
                         <view class="form-line"/>
                     </block>
                     <block a:if="{{item.billCode}}">
-                        <view class="form-row">
+                        <view class="form-row" onTap="showContent">
                             <view class="form-row-label"><text class="require">*</text>发票类型</view>
                             <view class="form-row-content">
                                 <view class="mock-input">{{item.invoiceType == '1' ? '普票' : '专票'}}</view>

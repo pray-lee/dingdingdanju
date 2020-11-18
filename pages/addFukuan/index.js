@@ -698,16 +698,17 @@ Page({
                         name: item.borrowObject
                     }
                 })
-                arr.unshift({
-                    id: '',
-                    name: '请选择'
-                })
                 // 写入缓存
                 dd.setStorage({
                     key: 'borrowList',
                     data: arr,
                     success: res => {
                     }
+                })
+                // 默认不选中
+                arr.unshift({
+                    id: '',
+                    name: '请选择'
                 })
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
@@ -720,7 +721,6 @@ Page({
                         }
                     })
                 }
-
                 this.setData({
                     borrowList: arr,
                     borrowIndex: borrowIndex,
@@ -796,6 +796,13 @@ Page({
     },
     // 获取应付单列表并且跳转
     getYingfuList() {
+        if(!this.data.submitData.applicantId) {
+            dd.alert({
+                content: '请选择供应商',
+                buttonText: '好的'
+            })
+           return
+        }
         this.addLoading()
         request({
             hideLoading: this.hideLoading(),
@@ -930,12 +937,21 @@ Page({
         })
     },
     getImportBorrowList() {
+        if(!this.data.submitData.applicantId) {
+            dd.alert({
+                content: '请选择供应商',
+                buttonText: '好的'
+            })
+            return
+        }
         const invoice = this.data.submitData.invoice == 0 ? 1 : 0
         if(this.data.clickFlag) {
             this.setData({
                 clickFlag: false
             })
+            this.addLoading()
             request({
+                hideLoading: this.hideLoading,
                 url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
                 method: 'GET',
                 success: res => {

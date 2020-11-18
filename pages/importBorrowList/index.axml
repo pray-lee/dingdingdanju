@@ -8,19 +8,18 @@
                         <checkbox value="{{item}}" class="checkbox"></checkbox>
                         <view class="import-borrow-item">
                             <view class="form-row" style="display:flex;align-items: center">
-                                <view>
+                                <view style="max-width: 65vw">
                                     <view class="import-borrow-item-left">
                                         <view class="import-borrow-remark">{{item.auxpropertyNames}}</view>
                                         <view class="import-borrow-info">
                                             <view class="import-borrow-time">{{item.businessDateTime}}</view>
                                         </view>
                                     </view>
-                                    <view class="import-borrow-item-right">
-                                        ￥
-                                        <text>{{item.unverifyAmount}}</text>
+                                    <view class="import-borrow-item-right ellipsis" style="max-width:58vw">
+                                        事由：{{item.remark || '无'}}
                                     </view>
                                 </view>
-                                <view class="ellipsis" style="width:12em;text-align:right">{{item.remark}}</view>
+                                <view class="ellipsis" style="max-width:20em;text-align:right">￥{{item.unverifyAmount}}</view>
                             </view>
                             <view class="form-line"/>
                         </view>
