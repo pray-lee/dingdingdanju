@@ -183,11 +183,27 @@ page {
   z-index: 1000;
   box-sizing:border-box;
   height: 405rpx;
-  padding: 20rpx
+  padding: 20rpx;
+  display:flex;
+  flex-direction: column;
+  padding-top: 20rpx
+}
+.add-page-wrapper{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: center;
+}
+.add-page .title{
+  font-size: 30rpx;
+  line-height: 48rpx;
+  font-weight:600;
+  padding: 20rpx 0;
+  margin-bottom:20rpx !important;
+  border-bottom: 1px solid #f1f1f1
 }
 .add-item{
   display:inline-block;
-  width: 50%;
+  width: 40%;
   height: 70rpx;
   line-height: 70rpx;
   padding-left: 60rpx;

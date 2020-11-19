@@ -41,21 +41,24 @@
     </view>
     <!-- 新增单据弹框 -->
     <view class="add-page" animation="{{animationInfo}}">
-        <view class="add-item J" onTap="onShowAddJiekuan">
-<!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
-            <view>借款单</view>
-        </view>
-        <view class="add-item B" onTap="onShowAddBaoxiao">
-<!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
-            <view>报销单</view>
-        </view>
-        <view class="add-item K" onTap="onShowAddKaipiao">
-<!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
-            <view>开票申请单</view>
-        </view>
-        <view class="add-item F" onTap="onShowAddFukuan">
-<!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
-            <view>付款申请单</view>
+        <view class="title">单据类别</view>
+        <view class="add-page-wrapper">
+            <view class="add-item J" onTap="onShowAddJiekuan">
+                <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
+                <view>借款单</view>
+            </view>
+            <view class="add-item B" onTap="onShowAddBaoxiao">
+                <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
+                <view>报销单</view>
+            </view>
+            <view class="add-item K" onTap="onShowAddKaipiao">
+                <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
+                <view>开票申请单</view>
+            </view>
+            <view class="add-item F" onTap="onShowAddFukuan">
+                <!--            <image class="add-img" mode="scaleToFill" src="../../images/jiekuan-icon.png"></image>-->
+                <view>付款申请单</view>
+            </view>
         </view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>

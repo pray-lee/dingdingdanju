@@ -89,7 +89,7 @@
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-    max-width: 60vw
+    max-width: 85vw
 }
 
 .movable-area{
