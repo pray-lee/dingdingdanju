@@ -944,6 +944,13 @@ Page({
             })
             return
         }
+        if(!this.data.fukuanList.length) {
+            dd.alert({
+                content: '请先导入应付单',
+                buttonText: '好的'
+            })
+            return
+        }
         const invoice = this.data.submitData.invoice == 0 ? 1 : 0
         if(this.data.clickFlag) {
             this.setData({
