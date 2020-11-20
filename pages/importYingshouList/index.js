@@ -128,8 +128,12 @@ Page({
         })
     },
     searchResultUseTime(startTime, endTime) {
+        console.log(111)
+        console.log(startTime, endTime)
         startTime = startTime.replace(/\-/g, "\/")
+        console.log(new Date(startTime).getTime())
         endTime = endTime.replace(/\-/g, "\/")
+        console.log(new Date(endTime).getTime())
         const filterList = this.data.tempImportList.filter(item => {
             if(!startTime && !!endTime) {
                return new Date(endTime) >= new Date(item.businessDateTime)
