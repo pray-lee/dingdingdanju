@@ -145,6 +145,7 @@ page {
 .content{
   display:flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 26rpx;
   padding: 5px 0;
   padding-bottom: 20rpx;

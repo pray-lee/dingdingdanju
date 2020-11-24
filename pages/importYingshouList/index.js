@@ -128,22 +128,20 @@ Page({
         })
     },
     searchResultUseTime(startTime, endTime) {
-        console.log(111)
-        console.log(startTime, endTime)
         startTime = startTime.replace(/\-/g, "\/")
-        console.log(new Date(startTime).getTime())
+        startTime = new Date(startTime).getTime()
         endTime = endTime.replace(/\-/g, "\/")
-        console.log(new Date(endTime).getTime())
+        endTime = new Date(endTime).getTime()
         const filterList = this.data.tempImportList.filter(item => {
             if(!startTime && !!endTime) {
-               return new Date(endTime) >= new Date(item.businessDateTime)
+               return endTime >= new Date(item.businessDateTime).getTime()
             }else if(!endTime && !!startTime) {
-                return new Date(startTime) <= new Date(item.businessDateTime)
+                return startTime <= new Date(item.businessDateTime).getTime()
             }else if(!startTime && !endTime) {
                 return true
             }else{
-                return (new Date(startTime) <= new Date(item.businessDateTime)) &&
-                    (new Date(item.businessDateTime) <= new Date(endTime))
+                return (startTime <= new Date(item.businessDateTime).getTime()) &&
+                    (new Date(item.businessDateTime).getTime() <= endTime)
             }
         })
         this.setData({
