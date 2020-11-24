@@ -7,10 +7,10 @@
     overflow:hidden
 }
 .form-scroll-wrapper{
-    height: calc(100vh - 100rpx)
+    height: calc(100vh)
 }
 .form-scroll-wrapper.iphoneX{
-    height: calc(100vh - 168rpx)
+    height: calc(100vh - 68rpx)
 }
 .block-wrapper{
     background:#fff;
@@ -337,4 +337,7 @@ input::-webkit-input-placeholder{
     line-height: 87rpx;
     color:#1f65d8;
     font-size: 28rpx;
+}
+.btn-area-wrapper{
+    position:static
 }

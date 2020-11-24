@@ -14,6 +14,14 @@
   padding:20rpx 0;
   font-weight: 600
 }
+.add-page .title{
+  font-size: 30rpx;
+  line-height: 48rpx;
+  font-weight:600;
+  padding-top:0;
+  margin-bottom:20rpx !important;
+  border-bottom: 1px solid #f1f1f1
+}
 .completed-bill{
   font-size: 26rpx;
   padding: 20rpx;

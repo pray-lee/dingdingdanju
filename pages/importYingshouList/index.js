@@ -128,20 +128,22 @@ Page({
         })
     },
     searchResultUseTime(startTime, endTime) {
-        startTime = startTime.replace(/\-/g, "\/")
+        startTime = startTime.replace(/\-/g, "/")
+        console.log(startTime, 'startTime')
         startTime = new Date(startTime).getTime()
-        endTime = endTime.replace(/\-/g, "\/")
+        endTime = endTime.replace(/\-/g, "/")
         endTime = new Date(endTime).getTime()
         const filterList = this.data.tempImportList.filter(item => {
+            const businessDateTime = item.businessDateTime.split(' ')[0].replace(/\-/g, "/")
             if(!startTime && !!endTime) {
-               return endTime >= new Date(item.businessDateTime).getTime()
+               return endTime >= new Date(businessDateTime).getTime()
             }else if(!endTime && !!startTime) {
-                return startTime <= new Date(item.businessDateTime).getTime()
+                return startTime <= new Date(businessDateTime).getTime()
             }else if(!startTime && !endTime) {
                 return true
             }else{
-                return (startTime <= new Date(item.businessDateTime).getTime()) &&
-                    (new Date(item.businessDateTime).getTime() <= endTime)
+                return (startTime <= new Date(businessDateTime).getTime()) &&
+                    (new Date(businessDateTime).getTime() <= endTime)
             }
         })
         this.setData({
@@ -184,21 +186,28 @@ Page({
                 temp.billCode = arr[i].billCode
             newArr.push(temp)
         }
-        dd.setStorage({
-            key: 'importList',
-            data: newArr,
-            success: res => {
-                this.setData({
-                    tempImportList: [],
-                    filterList: [],
-                    isAllSelect: false,
-                    num: 0,
-                    totalAmount: '0.00'
-                })
-                dd.navigateTo({
-                    url: '/pages/importYingshouInputList/index'
-                })
-            }
-        })
+        if(newArr.length) {
+            dd.setStorage({
+                key: 'importList',
+                data: newArr,
+                success: res => {
+                    this.setData({
+                        tempImportList: [],
+                        filterList: [],
+                        isAllSelect: false,
+                        num: 0,
+                        totalAmount: '0.00'
+                    })
+                    dd.navigateTo({
+                        url: '/pages/importYingshouInputList/index'
+                    })
+                }
+            })
+        }else{
+            dd.alert({
+                content: '请选择单据再导入',
+                buttonText: '好的'
+            })
+        }
     },
 })

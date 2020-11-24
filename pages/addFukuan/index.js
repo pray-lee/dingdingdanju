@@ -279,7 +279,20 @@ Page({
                     applicantId: borrowId
                 }
             })
+            // 清空之前导入的应付单
+            this.setData({
+                fukuanList: []
+            })
+            this.setApplicationAmount(this.data.fukuanList)
+            this.setTotalAmount()
             this.getIncomeBankList(this.data.submitData.applicantType, borrowId)
+            // 清理借款人缓存
+            dd.removeStorage({
+                key: 'borrowId',
+                success: function () {
+                    console.log('借款人缓存删除成功')
+                }
+            });
         }
     },
     // 获取导入的应付单
@@ -510,14 +523,6 @@ Page({
         })
     },
     onHide() {
-        console.log('onHide...............')
-        // 清理借款人缓存
-        dd.removeStorage({
-            key: 'borrowId',
-            success: function () {
-                console.log('借款人缓存删除成功')
-            }
-        });
     },
     onLoad(query) {
         app.globalData.loadingCount = 0
@@ -805,7 +810,6 @@ Page({
         }
         this.addLoading()
         request({
-            hideLoading: this.hideLoading(),
             url: app.globalData.url + 'payableBillController.do?datagrid&supplierId='+this.data.submitData.applicantId+'&query=import&field=id,billCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,supplierId,supplierDetail.supplier.supplierName,invoiceType,subjectId,trueSubjectId,subject.fullSubjectName,trueSubject.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
             method: 'GET',
             success: res => {
@@ -814,12 +818,14 @@ Page({
                         key: 'tempImportList',
                         data: res.data.rows,
                         success: res => {
+                           this.hideLoading()
                            dd.navigateTo({
                                url: '/pages/importYingshouList/index'
                            })
                         }
                     })
                 }else{
+                    this.hideLoading()
                     dd.alert({
                         content: '暂无应付单',
                         buttonText: '好的',

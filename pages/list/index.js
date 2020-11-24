@@ -125,6 +125,7 @@ Page({
                 isComplete: false,
             })
         }
+        console.log(this.data, '/////////')
     },
     getListByListStatus() {
         // 已完成，未完成的单据
@@ -511,6 +512,7 @@ Page({
         })
     },
     deleteBill(e) {
+        console.log(this.data, 'before')
         const {id, type, status} = e.currentTarget.dataset
         console.log(status, 'deleteBill')
         let url = ''
@@ -544,8 +546,10 @@ Page({
                         url,
                         method: 'GET',
                         success: res => {
-                            console.log(res)
                             if (res.data.success) {
+                                this.setData({
+                                    isComplete: !this.data.isComplete
+                                })
                                 this.getListByListStatus()
                             } else {
                                 dd.alert({

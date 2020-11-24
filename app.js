@@ -22,13 +22,20 @@ App({
         // "agentId": "886493470"
         // 票房宝
         // "url": "https://www.caika.net/WH/",
-        // "agentId": "874431275"
+        // "agentId": "874431275",
+        // "tenantCode": "db_ck_wenhua",
+        // 看场影业
+        // "url": "https://www.caika.net/WH/",
+        "agentId": "972063429",
+        "tenantCode": "db_ck_wenhua",
         // 医疗
         // "url": "https://www.caika.net/MedicalService/",
-        // "agentId": "878913385"
+        // "agentId": "878913385",
+        // "tenantCode": "db_ck_medicine",
         // 智取科技
         // "url": "https://www.caika.net/MedicalService/",
-        // "agentId": "893637276"
+        // "agentId": "893637276",
+        // "tenantCode": "db_ck_medicine",
         // CaiKa
         // "url": "https://www.caika.net/CaiKa/",
         // "agentId": '827902921'
@@ -40,14 +47,14 @@ App({
         // "agentId": "831342992"
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
-        // 测试环境test
-        "url": "https://www.caika.net/Test/",
         // saas
-        // "url": "https://www.caika.net/saas/",
+        "url": "https://www.caika.net/saas/",
         // "url": "http://192.168.1.121:8080/jeecg/",
+        // 测试环境test
         // 于龙测试
-        "agentId": "835144677",
-        "tenantCode": "zszh",
+        // "url": "https://www.caika.net/Test/",
+        // "agentId": "835144677",
+        // "tenantCode": "zszh",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

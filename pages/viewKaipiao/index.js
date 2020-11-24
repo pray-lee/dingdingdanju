@@ -74,14 +74,13 @@ Page({
             method: 'GET',
             success: res => {
                 if(res.data.success) {
+                    dd.redirectTo({
+                        url: `/pages/addKaipiao/index?type=edit&id=${this.data.result.id}`
+                    })
+                }else{
                     dd.alert({
-                        content: '撤回成功',
-                        buttonText: '好的',
-                        success: () => {
-                            dd.redirectTo({
-                                url: `/pages/addKaipiao/index?type=edit&id=${this.data.result.id}`
-                            })
-                        }
+                        content: '删除失败',
+                        buttonText: '好的'
                     })
                 }
             }

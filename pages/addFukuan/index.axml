@@ -34,28 +34,38 @@
             <view class="title">供应商信息</view>
             <view class="block-wrapper">
                 <view class="form-row" onTap="goInfoList">
-                    <view class="form-row-content borrowList-wrapper">
-                        <view a:if="{{borrowIndex >= 0}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}
+                    <view class="borrowList-wrapper">
+<!--                        <view a:if="{{borrowIndex > 0}}" class="mock-input ellipsis">{{borrowList[borrowIndex].name}}-->
+<!--                        </view>-->
+<!--                        <view a:else class="mock-input"><text class="require">*</text>供应商名称</view>-->
+                        <view class="form-row-label">
+                            <text class="require">*</text>
+                            供应商名称
                         </view>
-                        <view a:else class="mock-input nodata">请选择供应商</view>
+                        <view class="form-row-content" style="height:auto">
+                            <view a:if="{{borrowIndex > 0}}" class="mock-input">
+                                {{borrowList[borrowIndex].name}}
+                            </view>
+                            <view a:else class="mock-input nodata">请选择客户</view>
+                            <block a:if="{{submitData.incomeBankAccount}}">
+                                <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">
+                                    {{submitData.incomeBankAccount}}
+                                </view>
+                                <view a:else class="mock-input nodata">暂无银行账号</view>
+                            </block>
+                            <block a:if="{{incomeBankList.length}}">
+                                <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">
+                                    {{incomeBankList[0].bankName}}
+                                </view>
+                                <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
+                            </block>
+                        </view>
                     </view>
                     <block a:if="{{submitData.incomeBankAccount}}">
-                        <view class="form-row-content incomeBankAccount">
-                            <view a:if="{{submitData.incomeBankAccount}}" class="mock-input ellipsis">
-                                {{submitData.incomeBankAccount}}
-                            </view>
-                            <view a:else class="mock-input nodata">暂无银行账号</view>
-                        </view>
-                        <view class="form-row-content incomeBankName">
-                            <view a:if="{{incomeBankList.length}}" class="mock-input ellipsis">
-                                {{incomeBankList[0].bankName}}
-                            </view>
-                            <view a:else class="mock-input nodata">银行信息暂无.请联系财务部</view>
-                        </view>
                     </block>
-                    <view a:else class="form-row-content incomeBankName">
-                        <view class="mock-input nodata">未匹配收款账户信息</view>
-                    </view>
+<!--                    <view a:else class="form-row-content incomeBankName">-->
+<!--                        <view class="mock-input nodata">未匹配收款账户信息</view>-->
+<!--                    </view>-->
                 </view>
             </view>
             <view class="tips">如果没有收款账户信息，请联系系统相关人员添加。</view>

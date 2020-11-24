@@ -198,7 +198,7 @@ page {
   font-size: 30rpx;
   line-height: 48rpx;
   font-weight:600;
-  padding: 20rpx 0;
+  padding-top:0;
   margin-bottom:20rpx !important;
   border-bottom: 1px solid #f1f1f1
 }
@@ -210,6 +210,7 @@ page {
   padding-left: 60rpx;
   box-sizing:border-box;
   font-size: .3rem;
+  margin-bottom: 20rpx;
 }
 .J{
   background:url(../images/J.png) left center no-repeat;

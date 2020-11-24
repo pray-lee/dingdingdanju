@@ -92,11 +92,11 @@ Page({
     },
     formatExpress() {
         const expressInfo = dd.getStorageSync({key: 'expressInfo'}).data
-        if(!!expressInfo) {
+        if (!!expressInfo) {
             this.setData({
                 submitData: {
-                   ...this.data.submitData,
-                   ...expressInfo
+                    ...this.data.submitData,
+                    ...expressInfo
                 }
             })
         }
@@ -191,13 +191,13 @@ Page({
                 [name]: this.data[listName][value].id
             }
         })
-        if(name === 'taxRate') {
-           this.setData({
-               submitData:{
-                   ...this.data.submitData,
-                   taxRate: this.data[listName][value]
-               }
-           })
+        if (name === 'taxRate') {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    taxRate: this.data[listName][value]
+                }
+            })
         }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
@@ -298,7 +298,7 @@ Page({
             })
         }
         // customerDetail
-        if(data.customerDetailEntity && data.customerDetailEntity.customer) {
+        if (data.customerDetailEntity && data.customerDetailEntity.customer) {
             var customerDetail = {
                 id: data.customerDetailEntity.id,
                 bankAccount: data.customerDetailEntity.customer.bankAccount,
@@ -375,19 +375,19 @@ Page({
             confirmButtonText: '是',
             cancelButtonText: '否',
             success: (result) => {
-                if(result.confirm) {
+                if (result.confirm) {
                     // 清除导入单据
                     const newList = this.data.kaipiaoList.filter(item => !item.billId)
                     this.setData({
                         kaipiaoList: newList
                     })
-                }else{
-                   this.setData({
-                       submitData: {
-                           ...this.data.submitData,
-                           invoiceType: this.data.submitData.invoiceType == 1 ? 2: 1
-                       }
-                   })
+                } else {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            invoiceType: this.data.submitData.invoiceType == 1 ? 2 : 1
+                        }
+                    })
                 }
             },
         });
@@ -453,14 +453,14 @@ Page({
         })
     },
     goYingshouList() {
-        if(!this.data.customerDetail.id) {
+        if (!this.data.customerDetail.id) {
             dd.alert({
                 content: '请选择客户',
                 buttonText: '好的'
             })
             return
         }
-        if(this.data.taxRateIndex == 0) {
+        if (this.data.taxRateIndex == 0) {
             dd.alert({
                 content: '请选择税率',
                 buttonText: '好的'
@@ -468,36 +468,35 @@ Page({
             return
         }
         this.addLoading()
-        setTimeout(() => {
-            request({
-                hideLoading: this.hideLoading(),
-                url: app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
-                method: 'GET',
-                success: res => {
-                    if (res.data.rows.length) {
-                        dd.setStorage({
-                            key: 'tempImportList',
-                            data: res.data.rows,
-                            success: () => {
-                                dd.navigateTo({
-                                    url: '/pages/importYingshouList/index'
-                                })
-                            }
-                        })
-                    } else {
-                        dd.alert({
-                            content: '暂无应收单',
-                            buttonText: '好的',
-                            success: () => {
-                            }
-                        })
-                    }
-                },
-                fail: err => {
-                    console.log(app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,')
-                    console.log('failed', err)
+        request({
+            url: app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,',
+            method: 'GET',
+            success: res => {
+                if (res.data.rows.length) {
+                    dd.setStorage({
+                        key: 'tempImportList',
+                        data: res.data.rows,
+                        success: () => {
+                            this.hideLoading()
+                            dd.navigateTo({
+                                url: '/pages/importYingshouList/index'
+                            })
+                        }
+                    })
+                } else {
+                    this.hideLoading()
+                    dd.alert({
+                        content: '暂无应收单',
+                        buttonText: '好的',
+                        success: () => {
+                        }
+                    })
                 }
-            })
+            },
+            fail: err => {
+                console.log(app.globalData.url + 'receivableBillController.do?datagrid&customerDetailId=' + this.data.customerDetail.id + '&taxRate=' + this.data.taxRateArr[this.data.taxRateIndex] + '&invoiceType=' + this.data.submitData.invoiceType + '&query=import&field=id,receivablebillCode,accountbookId,accountbookEntity.accountbookName,submitterId,user.realName,submitterDepartmentId,departDetailEntity.depart.departName,customerDetailId,customerDetailEntity.customer.customerName,invoiceType,subjectId,trueSubjectId,subjectEntity.fullSubjectName,trueSubjectEntity.fullSubjectName,auxpropertyNames,taxRate,amount,unverifyAmount,submitDateTime,businessDateTime,remark,')
+                console.log('failed', err)
+            }
         })
     },
     onHide() {
@@ -551,15 +550,15 @@ Page({
         if (!!importList && importList.length) {
             // 之前导入的单据
             let oldList = this.data.kaipiaoList.concat()
-            if(oldList.length) {
-                for(let i = 0; i < importList.length; i++) {
-                    if(oldList.every(item => item.billId !== importList[i].billId)) {
+            if (oldList.length) {
+                for (let i = 0; i < importList.length; i++) {
+                    if (oldList.every(item => item.billId !== importList[i].billId)) {
                         oldList.push(importList[i])
-                    }else{
+                    } else {
                         oldList = oldList.map(item => {
-                            if(item.billId === importList[i].billId) {
+                            if (item.billId === importList[i].billId) {
                                 return Object.assign({}, item, importList[i])
-                            }else{
+                            } else {
                                 return item
                             }
                         })
@@ -569,7 +568,7 @@ Page({
                         kaipiaoList: oldList
                     })
                 }
-            }else{
+            } else {
                 this.setData({
                     kaipiaoList: oldList.concat(importList)
                 })
@@ -1009,9 +1008,9 @@ Page({
                             })
                         }
                         // 如果是编辑，就不能默认选择
-                        if(taxRate) {
+                        if (taxRate) {
                             arr.forEach((item, index) => {
-                                if(item == taxRate) {
+                                if (item == taxRate) {
                                     this.setData({
                                         taxRateIndex: index
                                     })
@@ -1037,7 +1036,7 @@ Page({
                 auxptyId: item.auxptyId
             }
         })
-         return obj
+        return obj
     },
     showKaipiaoDetail(e) {
         // 加一个编辑标志
@@ -1062,7 +1061,7 @@ Page({
         this.data.kaipiaoList[index].allAuxptyList = {}
         this.data.kaipiaoList[index].remarkIndex = 0
         console.log(this.data.kaipiaoList[index], '[index]')
-        if(!!this.data.kaipiaoList[index].billId && !this.data.kaipiaoList[index].selectedAuxpty) {
+        if (!!this.data.kaipiaoList[index].billId && !this.data.kaipiaoList[index].selectedAuxpty) {
             this.addLoading()
             request({
                 hideLoading: this.hideLoading,
@@ -1099,7 +1098,7 @@ Page({
                     }
                 }
             })
-        }else{
+        } else {
             dd.setStorage({
                 key: 'kaipiaoDetail',
                 data: this.data.kaipiaoList[index],
@@ -1147,18 +1146,18 @@ Page({
             confirmButtonText: '是',
             cancelButtonText: '否',
             success: res => {
-                if(res.confirm) {
+                if (res.confirm) {
                     this.addLoading()
                     request({
                         hideLoading: this.hideLoading,
                         url: app.globalData.url + 'invoicebillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
                         success: res => {
-                            if(res.data.success) {
+                            if (res.data.success) {
                                 dd.navigateBack({
                                     delta: 1
                                 })
-                            }else{
+                            } else {
                                 dd.alert({
                                     content: '报销单删除失败',
                                     buttonText: '好的'

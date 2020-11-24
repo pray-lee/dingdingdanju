@@ -113,9 +113,9 @@
                     </view>
                 </view>
             </view>
+            <block a:if="{{!!result.contacts}}">
                 <view class="title">其他信息</view>
                 <view class="block-wrapper">
-                    <block a:if="{{!!result.contacts}}">
                         <view class="form-line"/>
                         <view class="form-row" onTap="getExpressList">
                             <view class="form-row-label">
@@ -130,8 +130,8 @@
                                 <view>{{result.address}}</view>
                             </view>
                         </view>
-                    </block>
                 </view>
+            </block>
             <block a:if="{{result.billFiles.length}}">
                 <view class="title"></view>
                 <view class="block-wrapper">
@@ -148,11 +148,11 @@
                     </view>
                 </view>
             </block>
-        </scroll-view>
-        <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}" a:if="{{result.status == '20'}}">
-            <view class="add-btn" onTap="rollBack">
-                撤回
+            <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}" a:if="{{result.status == '20'}}">
+                <view class="add-btn" onTap="rollBack">
+                    撤回
+                </view>
             </view>
-        </view>
+        </scroll-view>
     </form>
 </view>
