@@ -61,7 +61,7 @@
                         业务日期
                     </view>
                     <view class="form-row-content">
-                        <view data-name="businessDateTime">{{result.businessDateTime}}</view>
+                        <view data-name="businessDateTime">{{result.businessDateTime.split(' ')[0]}}</view>
                     </view>
                     <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
                 </view>

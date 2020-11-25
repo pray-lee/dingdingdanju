@@ -1216,7 +1216,7 @@ Page({
                 invoice: data.invoice,
                 subjectId: data.subjectId,
                 subjectName: data.subject ? data.subject.fullSubjectName : '',
-                businessDateTime: data.businessDateTime,
+                businessDateTime: data.businessDateTime.split(' ')[0],
                 amount: data.amount.toFixed(2),
                 formatAmount: formatNumber(data.amount),
                 remark: data.remark,

@@ -324,7 +324,7 @@ Page({
                 billFilesObj: billFilesObj || [],
                 customerDetailId: (data.customerDetailEntity ? data.customerDetailEntity.id : ''),
                 submitDate: moment().format('YYYY-MM-DD'),
-                businessDateTime: data.businessDateTime,
+                businessDateTime: data.businessDateTime.split(' ')[0],
                 status: data.status,
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
