@@ -330,6 +330,7 @@ Page({
                 billCode: data.billCode,
                 remark: data.remark,
                 deliveryMode: data.deliveryMode,
+		invoiceType: customerDetail.invoiceType || 1,
                 contacts: (data.contacts ? data.contacts : null),
                 telephone: (data.telephone ? data.telephone : null),
                 address: (data.address ? data.address : null),
