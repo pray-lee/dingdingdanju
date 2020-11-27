@@ -22,6 +22,11 @@ Page({
             this.setData({
                 baoxiaoDetail: initBaoxiaoDetail
             })
+            const taxpayerType = this.data.baoxiaoDetail.taxpayerType
+            // 显示提示信息，如果有账簿有税率的话
+            this.setData({
+                noticeHidden: taxpayerType == 2 ? false : true
+            })
         } else {
             if (isEdit) {
                 this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId, false)
@@ -33,14 +38,10 @@ Page({
                 })
             }
             this.setData({
-                baoxiaoDetail: baoxiaoDetail
+                baoxiaoDetail: baoxiaoDetail,
+                noticeHidden: baoxiaoDetail.noticeHidden
             })
         }
-        const taxpayerType = this.data.baoxiaoDetail.taxpayerType
-        // 显示提示信息，如果有账簿有税率的话
-        this.setData({
-            noticeHidden: taxpayerType == 2 ? false : true
-        })
     },
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
@@ -137,6 +138,7 @@ Page({
             baoxiaoItem.taxRageArr = baoxiaoItem.taxRageObject.taxRageArr
             baoxiaoItem.taxRageIndex = 0
             baoxiaoItem.taxRate = baoxiaoItem.taxRageObject.taxRageArr[0].id
+            baoxiaoItem.noticeHidden = false
             this.setData({
                 baoxiaoDetail: baoxiaoItem,
                 noticeHidden: false
@@ -145,6 +147,7 @@ Page({
             baoxiaoItem.taxRageArr = []
             baoxiaoItem.taxRageIndex = 0
             baoxiaoItem.taxRate = ''
+            baoxiaoItem.noticeHidden = true
             this.setData({
                 baoxiaoDetail: baoxiaoItem,
                 noticeHidden: true

@@ -19,7 +19,8 @@ App({
         // ----------------------config-----------------------------
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/DS/",
-        // "agentId": "886493470"
+        // "agentId": "886493470",
+        // "tenantCode": "db_ck_ds",
         // 票房宝
         // "url": "https://www.caika.net/WH/",
         // "agentId": "874431275",
