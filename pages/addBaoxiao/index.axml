@@ -67,7 +67,7 @@
                     <view class="form-row-label"><text class="require">*</text>事由</view>
                     <view class="form-row-content">
                         <input class="input" value="{{submitData.remark}}" placeholder="请输入事由" data-name="remark"
-                               onBlur="onBlur"/>
+                               onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -118,7 +118,7 @@
                             <view class="delete-borrow" onTap="deleteBorrowDetail"
                                   data-id="{{item.billDetailId}}"></view>
 <!--                             <view class="form-row-content special-content"> -->
-<!--                                 <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" onBlur="borrowBlur" data-index="{{index}}"/> -->
+<!--                                 <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/> -->
 <!--                                 <image src="../../images/edit.png" mode="aspectFill" class="edit"></image> -->
 <!--                             </view> -->
 <!--                             <view class="borrow-line"></view> -->
@@ -132,7 +132,7 @@
                             <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
                                 <view class="tip">本次核销金额</view>
                                 <view class="edit-wrapper">
-                                    <input value="{{item.applicationAmount}}" onInput="borrowInput" onBlur="borrowBlur" data-index="{{index}}"/>
+                                    <input value="{{item.applicationAmount}}" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/>
                                     <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
                                 </view>
                             </view>

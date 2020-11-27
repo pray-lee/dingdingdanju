@@ -36,7 +36,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>事由</view>
                     <view class="form-row-content">
-                        <input onBlur="onRemarkBlur" type="text" class="input" placeholder="请输入事由" value="{{submitData.remark}}">
+                        <input onInput="onRemarkBlur" type="text" class="input" placeholder="请输入事由" value="{{submitData.remark}}">
                     </view>
                 </view>
                 <view class="form-line"></view>

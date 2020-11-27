@@ -23,12 +23,12 @@
             <view class="form-line" a:if="{{baoxiaoDetail.subjectAuxptyList.length}}"/>
             <view class="form-row" a:if="{{!baoxiaoDetail.subjectExtraId}}">
                 <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
-                <input class="input" type="digit" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"
+                <input class="input" type="digit" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onInput="onBaoxiaoBlur"
                        data-name="applicationAmount"/>
             </view>
             <view class="form-row" a:else onTap="openExtraInfo" data-extraId="{{baoxiaoDetail.subjectExtraId}}">
                 <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
-<!--                <input disabled class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onBlur="onBaoxiaoBlur"-->
+<!--                <input disabled class="input" placeholder="申请报销金额" value="{{baoxiaoDetail.applicationAmount}}" onInput="onBaoxiaoBlur"-->
 <!--                       data-name="applicationAmount"/>-->
                 <view class="mock-input" a:if="{{baoxiaoDetail.applicationAmount}}">{{baoxiaoDetail.formatApplicationAmount}}</view>
                 <view class="mock-input nodata" a:else>请输入报销金额</view>
@@ -53,7 +53,7 @@
             <view class="form-line" a:if="{{baoxiaoDetail.invoiceType == 2}}"/>
             <view class="form-row">
                 <view class="form-row-label">备注</view>
-                <input class="input" placeholder="备注" onBlur="onBaoxiaoBlur" data-name="remark"
+                <input class="input" placeholder="备注" onInput="onBaoxiaoBlur" data-name="remark"
                        value="{{baoxiaoDetail.remark}}"/>
             </view>
         </view>

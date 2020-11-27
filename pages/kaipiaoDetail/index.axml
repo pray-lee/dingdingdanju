@@ -41,7 +41,7 @@
             <view class="form-line"/>
             <view class="form-row">
                 <view class="form-row-label"><text class="require">*</text>开票金额（含税）<view a:if="{{!!kaipiaoDetail.billId && kaipiaoDetail.receivablebillCode}}">（可申请开票余额：{{kaipiaoDetail.formatUnverifyAmount}}）</view></view>
-                <input class="input" type="digit" placeholder="开票金额" value="{{kaipiaoDetail.applicationAmount}}" onBlur="onKaipiaoBlur"
+                <input class="input" type="digit" placeholder="开票金额" value="{{kaipiaoDetail.applicationAmount}}" onInput="onKaipiaoBlur"
                        data-name="applicationAmount"/>
             </view>
         </view>

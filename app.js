@@ -39,8 +39,8 @@ App({
         // "tenantCode": "db_ck_medicine",
         // 智取科技
         // "url": "https://www.caika.net/MedicalService/",
-        // "agentId": "893637276",
-        // "tenantCode": "db_ck_medicine",
+        "agentId": "893637276",
+        "tenantCode": "db_ck_medicine",
         // CaiKa
         // "url": "https://www.caika.net/CaiKa/",
         // "agentId": '827902921'
@@ -58,8 +58,8 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/Test/",
-        "agentId": "835144677",
-        "tenantCode": "zszh",
+        // "agentId": "835144677",
+        // "tenantCode": "zszh",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
