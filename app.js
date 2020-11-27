@@ -29,8 +29,8 @@ App({
         // "agentId": "972063429",
         // "tenantCode": "db_ck_wenhua",
         // 贵州旭丰升企业管理有限公司
-        "url": "https://www.caika.net/fxcx/",
-        "agentId": "1020654372",
+        // "url": "https://www.caika.net/fxcx/",
+        // "agentId": "1020654372",
         // "tenantCode": "db_ck_wenhua",
         // 医疗
         // "url": "https://www.caika.net/MedicalService/",
@@ -52,13 +52,13 @@ App({
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
         // saas
-        // "url": "https://www.caika.net/saas/",
+        "url": "https://www.caika.net/saas/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/Test/",
-        // "agentId": "835144677",
-        // "tenantCode": "zszh",
+        "agentId": "835144677",
+        "tenantCode": "zszh",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
