@@ -1147,7 +1147,7 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
+            url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=3&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
                 if(res.data && res.data.length) {
