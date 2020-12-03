@@ -40,6 +40,7 @@ Page({
     getImportListFromStorage() {
         const importList = dd.getStorageSync({key: 'importList'}).data
         const savedImportList = dd.getStorageSync({key: 'savedImportList'}).data || []
+        console.log(importList, 'importList')
         importList.forEach(item => item.applicationAmount = item.unverifyAmount)
         if(importList.length) {
             let oldList = savedImportList.concat()

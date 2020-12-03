@@ -22,11 +22,6 @@ Page({
             this.setData({
                 baoxiaoDetail: initBaoxiaoDetail
             })
-            const taxpayerType = this.data.baoxiaoDetail.taxpayerType
-            // 显示提示信息，如果有账簿有税率的话
-            this.setData({
-                noticeHidden: taxpayerType == 2 ? false : true
-            })
         } else {
             if (isEdit) {
                 this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId, false)
@@ -39,7 +34,6 @@ Page({
             }
             this.setData({
                 baoxiaoDetail: baoxiaoDetail,
-                noticeHidden: baoxiaoDetail.noticeHidden
             })
         }
     },
@@ -108,7 +102,13 @@ Page({
         }).data
         if (!!baoxiaoDetail) {
             this.setData({
-                baoxiaoDetail
+                baoxiaoDetail,
+                noticeHidden: baoxiaoDetail.invoiceType == 2 ? false : true
+            })
+
+        }else{
+            this.setData({
+                noticeHidden: this.data.baoxiaoDetail.invoiceType == 2 ? false: true
             })
         }
         console.log(baoxiaoDetail, 'onShow')

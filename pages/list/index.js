@@ -19,6 +19,7 @@ Page({
         selectedText: '全部',
         isComplete: false,
         list: [],
+        inputValue: '',
         filterList: [],
         statusObj: {
             10: "待提交",
@@ -171,7 +172,11 @@ Page({
             selectedType: 'ALL',
             selectedText: '全部'
         })
-        this.getAll('ALL')
+        if(!this.data.isComplete) {
+            this.getComplete('ALL')
+        }else{
+            this.getAll('ALL')
+        }
     },
     getAll(selectedType) {
         if (selectedType == 'ALL') {
@@ -220,6 +225,9 @@ Page({
                 list: allList,
                 filterList: allList
             })
+            if(!!this.data.inputValue) {
+                this.handleFilter(this.data.inputValue)
+            }
         })
     },
     // 获取单个列表
@@ -302,6 +310,9 @@ Page({
                 list: res.list,
                 filterList: res.list,
             })
+            if(!!this.data.inputValue) {
+                this.handleFilter(this.data.inputValue)
+            }
         })
     },
     getJiekuanList(status) {
@@ -573,8 +584,19 @@ Page({
         console.log(e)
     },
     onInput(e) {
-        console.log(this.data.list)
         const text = e.detail.value
+        this.setData({
+            inputValue: text
+        })
+        this.handleFilter(text)
+    },
+    clearWord() {
+        this.setData({
+            inputValue: ''
+        })
+        this.handleFilter('')
+    },
+    handleFilter(text) {
         const filterList = this.data.list.filter(item => {
             const str = item.remark + (item.billCode || item.invoicebillCode)
             if (str.indexOf(text) != -1) {

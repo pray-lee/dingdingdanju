@@ -98,3 +98,9 @@
     margin-left: 20rpx;
     text-align:right
 }
+.notice-content{
+    font-size:25rpx;
+    padding:40rpx;
+    line-height:38rpx;
+    color:rgb(153, 153, 153);
+}

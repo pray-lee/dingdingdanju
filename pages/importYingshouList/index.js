@@ -11,7 +11,8 @@ Page({
         endTime: '',
         isAllSelect:false,
         totalAmount: '0.00',
-        num: 0
+        num: 0,
+        inputValue: ''
     },
     onLoad() {
     },
@@ -22,6 +23,7 @@ Page({
         // 每一项加一个checked属性
         tempImportList.forEach(item => {
             item.checked = false
+            item.formatUnverifyAmount = formatNumber(Number(item.unverifyAmount).toFixed(2))
         })
         this.setData({
             tempImportList,
@@ -33,7 +35,16 @@ Page({
     },
     onInput(e) {
         // 过滤
+        this.setData({
+            inputValue: e.detail.value
+        })
         this.searchResultUseInput(e.detail.value)
+    },
+    clearWord() {
+        this.setData({
+            inputValue: ''
+        })
+        this.searchResultUseInput('')
     },
     startTimeChange() {
         dd.datePicker({
@@ -173,7 +184,7 @@ Page({
                 unverifyAmount: arr[i].unverifyAmount,
                 readOnlyAmount: formatNumber(Number(arr[i].unverifyAmount).toFixed(2)),
                 amount: arr[i].amount,
-                remark: '',
+                remark: arr[i].remark,
                 'subjectEntity.fullSubjectName': arr[i]['subjectEntity.fullSubjectName'] || arr[i]['subject.fullSubjectName'],
                 'auxpropertyNames': arr[i].auxpropertyNames
             }

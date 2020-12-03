@@ -51,7 +51,7 @@
                     </view>
                     <view class="form-row-content" style="min-height: 44rpx;height: auto">
                         <view class="mock-input" a:if="{{result.remark}}">{{result.remark}}</view>
-                        <view class="mock-input nodata">暂无事由</view>
+                        <view class="mock-input nodata" a:else>暂无事由</view>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -72,9 +72,8 @@
                 </view>
             </view>
             <!-- 增加报销详情-->
-            <view class="title"></view>
+            <view class="title">付款申请详情</view>
             <view class="block-wrapper">
-                <view class="title special-title">付款申请详情</view>
                 <view class="baoxiao-list">
                     <view class="baoxiao-item" a:for="{{result.billDetailList}}"
                           a:if="{{result.billDetailList.length}}">
@@ -96,12 +95,10 @@
                     </view>
                 </view>
             </view>
-
             <!--核销借款-->
             <block a:if="{{result.borrowBillList.length}}">
-                <view class="title"></view>
+                <view class="title">核销借款</view>
                 <view class="block-wrapper">
-                    <view class="title special-title">核销借款</view>
                     <view class="borrow-list">
                         <view class="borrow-item" a:for="{{result.borrowBillList}}">
                             <view class="form-row">
@@ -123,10 +120,9 @@
                 </view>
             </block>
             <block a:if="{{result.billFiles.length}}">
-                <view class="title"></view>
+                <view class="title">附件上传</view>
                 <!--上传附件-->
                 <view class="block-wrapper">
-                    <view class="title special-title">附件上传</view>
                     <view class="file-list">
                         <view class="file-item" a:if="{{result.billFiles.length}}"
                               a:for="{{result.billFiles}}">

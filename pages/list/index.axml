@@ -15,7 +15,10 @@
         </view>
     </view>
     <view class="search-wrapper">
-        <input type="text" placeholder="搜索事由或者单号" onInput="onInput">
+        <view class="search-content">
+            <input type="text" placeholder="搜索事由或者单号" onInput="onInput" value="{{inputValue}}" />
+            <image src="../../images/delete.png" mode="scaleToFill" class="input-delete-icon" onTap="clearWord"></image>
+        </view>
     </view>
     <view class="see-complete-bill" onTap="getListByListStatus">{{isComplete ? '查看已完成单据':'查看未完成单据'}}</view>
     <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
