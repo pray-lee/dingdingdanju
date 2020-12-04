@@ -1,5 +1,4 @@
 import {login} from "./util/getErrorMessage";
-
 App({
     onLaunch(options) {
         console.log('running....')
