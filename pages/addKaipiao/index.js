@@ -192,12 +192,15 @@ Page({
             }
         })
         if (name === 'taxRate') {
-            this.setData({
-                submitData: {
-                    ...this.data.submitData,
-                    taxRate: this.data[listName][value]
-                }
-            })
+            console.log(this.data[listName][value])
+            if(this.data[listName][value] != '请选择') {
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        taxRate: this.data[listName][value]
+                    }
+                })
+            }
         }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
@@ -984,6 +987,12 @@ Page({
                     console.log('清除快递信息成功...')
                 }
             })
+        }else{
+            if(!this.data.submitData.contacts) {
+                this.setData({
+                    deliveryMode: 0
+                })
+            }
         }
     },
     // 获取某个账簿的税率
