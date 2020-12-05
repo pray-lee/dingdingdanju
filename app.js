@@ -17,8 +17,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 中海外
-        // "agentId": "1030661487",
-        // "tenantCode": "db_ck_zhwjr",
+        "agentId": "1030661487",
+        "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/DS/",
         // "agentId": "886493470",
@@ -66,8 +66,8 @@ App({
         // "agentId": '782995014'
         // 测试集团
         // "url": "https://www.caika.net/CaiKaDemo/",
-        "agentId": '830995107',
-        "tenantCode": "db_ck_demo",
+        // "agentId": '830995107',
+        // "tenantCode": "db_ck_demo",
         // 测试环境钉钉
         // "agentId": '659831320'
         // 王佩云
