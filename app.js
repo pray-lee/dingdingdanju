@@ -17,8 +17,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 中海外
-        "agentId": "1030661487",
-        "tenantCode": "db_ck_zhwjr",
+        // "agentId": "1030661487",
+        // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/DS/",
         // "agentId": "886493470",
@@ -29,8 +29,8 @@ App({
         // "tenantCode": "db_ck_wenhua",
         // 看场影业
         // "url": "https://www.caika.net/WH/",
-        // "agentId": "972063429",
-        // "tenantCode": "db_ck_wenhua",
+        "agentId": "972063429",
+        "tenantCode": "db_ck_wenhua",
         // 贵州旭丰升企业管理有限公司
         // "url": "https://www.caika.net/fxcx/",
         // "agentId": "1020654372",
