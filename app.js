@@ -8,7 +8,7 @@ App({
     },
     onShow(options) {
         // 从后台被 scheme 重新打开
-        // options.query == {number:1}
+// options.query == {number:1}
         // login(this)
     },
     globalData: {
@@ -29,16 +29,16 @@ App({
         // "tenantCode": "db_ck_wenhua",
         // 看场影业
         // "url": "https://www.caika.net/WH/",
-        "agentId": "972063429",
-        "tenantCode": "db_ck_wenhua",
+        // "agentId": "972063429",
+        // "tenantCode": "db_ck_wenhua",
         // 贵州旭丰升企业管理有限公司
         // "url": "https://www.caika.net/fxcx/",
         // "agentId": "1020654372",
         // "tenantCode": "db_ck_wenhua",
         // 医疗
         // "url": "https://www.caika.net/MedicalService/",
-        // "agentId": "878913385",
-        // "tenantCode": "db_ck_medicine",
+        "agentId": "878913385",
+        "tenantCode": "db_ck_medicine",
         // 智取科技
         // "url": "https://www.caika.net/MedicalService/",
         // "agentId": "893637276",
