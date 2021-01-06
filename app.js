@@ -16,6 +16,9 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 思无邪
+        "agentId": "1049398475",
+        "tenantCode": "db_ck_wenhua",
         // 中海外
         // "agentId": "1030661487",
         // "tenantCode": "db_ck_zhwjr",
@@ -37,8 +40,8 @@ App({
         // "tenantCode": "db_ck_wenhua",
         // 医疗
         // "url": "https://www.caika.net/MedicalService/",
-        "agentId": "878913385",
-        "tenantCode": "db_ck_medicine",
+        // "agentId": "878913385",
+        // "tenantCode": "db_ck_medicine",
         // 智取科技
         // "url": "https://www.caika.net/MedicalService/",
         // "agentId": "893637276",

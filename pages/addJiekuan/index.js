@@ -889,7 +889,7 @@ Page({
                 } else {
                     this.setData({
                         subjectAuxptyList: [],
-                        allAuxptyList: []
+                        allAuxptyList: {}
                     })
                 }
             },
@@ -960,8 +960,6 @@ Page({
                 })
                 const tempData = clone(this.data.allAuxptyList)
                 tempData[auxptyid] = newObj
-                console.log(newObj, auxptyid)
-                console.log(tempData)
                 this.setData({
                     allAuxptyList: tempData
                 })
