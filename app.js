@@ -16,9 +16,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 栖梧教育
+        "agentId": "1056327836",
+        "tenantCode": "db_ck_customer",
         // 思无邪
-        "agentId": "1049398475",
-        "tenantCode": "db_ck_wenhua",
+        // "agentId": "1049398475",
+        // "tenantCode": "db_ck_wenhua",
         // 中海外
         // "agentId": "1030661487",
         // "tenantCode": "db_ck_zhwjr",
