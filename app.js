@@ -16,9 +16,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 天港物业
+        // "agentId": "1086314896",
+        // "tenantCode": "db_ck_tgwy",
         // 栖梧教育
-        "agentId": "1056327836",
-        "tenantCode": "db_ck_customer",
+        // "agentId": "1056327836",
+        // "tenantCode": "db_ck_customer",
         // 思无邪
         // "agentId": "1049398475",
         // "tenantCode": "db_ck_wenhua",
@@ -61,7 +64,7 @@ App({
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
         // saas
-        "url": "https://www.caika.net/saas/",
+        // "url": "https://www.caika.net/saas/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
@@ -84,5 +87,10 @@ App({
         // "agentId": "833070768"
         // 唱红丽
         // "agentId": "833091620"
+        // 第三方
+        // "url": "http://app66665.eapps.dingtalkcloud.com/forward/",
+        "url": "http://39.103.202.9/forward/",
+        "agentId": '66665',
+        "tenantCode": "zszh",
     }
 });
