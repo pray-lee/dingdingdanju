@@ -101,14 +101,12 @@ Page({
                 status
             }
         })
-        console.log(this.data.submitData)
         // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
         Object.keys(this.data.submitData).forEach(item => {
             if(item.indexOf('billDetailList') != -1) {
                 delete this.data.submitData[item]
             }
         })
-        console.log(this.data.fukuanList, '------')
         // 处理一下提交格式
         this.formatSubmitData(this.data.fukuanList, 'billDetailList')
         // 提交的时候删除借款科目
@@ -117,9 +115,6 @@ Page({
         })
         this.formatSubmitData(this.data.importList, 'borrowBillList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        console.log(this.data)
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         this.addLoading()
         var url = ''
         if (this.data.type === 'add') {
@@ -216,7 +211,6 @@ Page({
         }
     },
     onBlur(e) {
-        console.log(e, 'blur')
         this.setData({
             submitData: {
                 ...this.data.submitData,

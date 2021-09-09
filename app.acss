@@ -329,8 +329,42 @@ page {
   color:#c7c7cd;
   font-weight:200
 }
+.add-progress-right{
+  display:flex;
+}
+.operate:last-of-type{
+  display:none;
+}
+.user-box{
+  width: 80rpx;
+}
+.user-avatar{
+  margin:0 auto;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 4rpx;
+  background:#2679ff;
+  margin-bottom: 10rpx;
+}
+.user-word{
+  text-align:center;
+  font-size: 18rpx;
+  color:#333;
+}
+.operate{
+  font-size: 25rpx;
+  color:#999;
+  font-weight:bold;
+  margin-top: 12.5rpx;
+
+}
+
+
 .status-content{
   margin-left: 25rpx;
+}
+.add-status-content{
+  max-width: 7em;
 }
 .progress-status{
   font-size: 28rpx;
@@ -341,6 +375,11 @@ page {
   font-size: 22rpx;
   color:#999999;
   padding-bottom: 8rpx
+}
+.add-status-content .progress-user{
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  overflow:hidden;
 }
 .avatar-wrapper{
   display:flex;
@@ -384,12 +423,21 @@ page {
   font-size: 15rpx;
   color:#fff
 }
+.add-avatar{
+  width: 20rpx;
+  height: 20rpx;
+  background:#666
+}
 .status-line{
   width:6rpx;
   height: calc(100% - 70rpx);
   background:#d9d9d9;
   border-radius: 4rpx;
   margin-top: 8rpx
+}
+.add-status-line{
+  width: 2rpx;
+  height: calc(100%)
 }
 .progress-box:last-child .status-line{
   display:none
@@ -424,5 +472,9 @@ page {
   padding-right: 60rpx;
   border-radius: 9rpx
 }
+
+
+
+
 
 

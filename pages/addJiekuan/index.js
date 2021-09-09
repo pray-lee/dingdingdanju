@@ -6,6 +6,11 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        // =============审批流相关============
+        oaModule: null,
+        showOaUserNodeList: false,
+        // =================================
+        validT: null,
         isPhoneXSeries: false,
         process: null,
         type: '',
@@ -28,6 +33,7 @@ Page({
         borrowList: [],
         incomeBankIndex: 0,
         incomeBankList: [],
+        numberPattern: /^(\+)?\d+(\.\d+)?$/,
         // 资金计划列表
         capitalTypeIndex: 0,
         applicantIndex: 0,
@@ -71,7 +77,6 @@ Page({
         if (!!array && array.length) {
             array.forEach((item, index) => {
                 Object.keys(item).forEach(keys => {
-                    console.log(keys)
                     this.setData({
                         submitData: {
                             ...this.data.submitData,
@@ -91,7 +96,6 @@ Page({
         app.globalData.loadingCount++
     },
     hideLoading() {
-        console.log(app.globalData.loadingCount, 'loadingCount')
         app.globalData.loadingCount--
         if (app.globalData.loadingCount === 0) {
             dd.hideLoading()
@@ -106,9 +110,7 @@ Page({
             }
         })
         // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
-        console.log(this.data.submitData)
         Object.keys(this.data.submitData).forEach(item => {
-            console.log(item)
             if(item.indexOf('billApEntityList[') != -1) {
                 delete this.data.submitData[item]
             }
@@ -117,9 +119,6 @@ Page({
         this.formatSubmitData(this.data.submitData.billDetailListObj, 'billDetailList')
         this.formatSubmitData(this.data.submitData.billApEntityListObj, 'billApEntityList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        console.log(this.data)
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         this.addLoading()
         var url = ''
         if (this.data.type === 'add') {
@@ -190,6 +189,12 @@ Page({
                     applicantType: 10
                 }
             })
+            // ============ 审批流 =========
+            this.setData({
+                oaModule: this.findAccountbookOaModule(this.data[listName][value], this.data.accountbookList)
+            })
+            this.showOaProcessByBillType(this.data[listName][value], 4)
+            // ============ 审批流 =========
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
             this.isCapitalTypeStart(this.data[listName][value].id)
@@ -316,9 +321,7 @@ Page({
     getBorrowIdFromStorage() {
         // 从缓存里获取借款人id
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
-        console.log(borrowId, '---------------')
         if (!!borrowId) {
-            console.log('借款人id已经获取', borrowId)
             var borrowIndex = null
             this.data.borrowList.forEach((item, index) => {
                 if (item.id === borrowId) {
@@ -368,7 +371,6 @@ Page({
     getCapitalDetailIdFromStorage() {
         // 从缓存里获取科目id
         const capital = dd.getStorageSync({key: 'capital'}).data
-        console.log(capital, 'apital')
         if (!!capital && capital !== null) {
             this.setData({
                 submitData: {
@@ -387,7 +389,6 @@ Page({
         dd.removeStorage({
             key: 'borrowId',
             success: function () {
-                console.log('借款人缓存删除成功')
             }
         });
     },
@@ -408,6 +409,18 @@ Page({
         })
     },
     bindKeyInput(e) {
+        if(!!this.data.validT) {
+            clearTimeout(this.data.validT)
+        }
+        this.data.validT = setTimeout(() => {
+            if(!this.data.numberPattern.test(e.detail.value)) {
+                dd.alert({
+                    content: '请输入正确的数字',
+                    buttonText: '确定',
+                });
+                return
+            }
+        }, 300)
         // 借款详情
         if (e.currentTarget.dataset.type === 'borrowAmount') {
             this.setData({
@@ -454,6 +467,7 @@ Page({
                 formatAmount: formatNumber(Number(this.data.submitData.amount) - Number(borrowAmount))
             }
         })
+        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
     },
     deleteFile(e) {
         var file = e.currentTarget.dataset.file
@@ -469,7 +483,6 @@ Page({
         })
     },
     handleAddBorrow() {
-        console.log(this.data.submitData)
         const borrowAmountIndex = dd.getStorageSync({key: 'borrowAmountIndex'}).data
         if (this.data.borrowAmount === '') {
             dd.alert({
@@ -508,6 +521,7 @@ Page({
                 formatAmount: formatNumber(Number(amount).toFixed(2))
             }
         })
+        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
         this.onAddHide()
     },
     handleUpload() {
@@ -542,7 +556,6 @@ Page({
                         },
                         success: res => {
                             const result = JSON.parse(res.data)
-                            console.log(result)
                             if (result.obj && result.obj.length) {
                                 const file = result.obj[0]
                                 resolve(file)
@@ -572,7 +585,6 @@ Page({
                     }
                 })
             }).catch(error => {
-                console.log(error, 'catch')
                 dd.alert({
                     content: '上传失败',
                     buttonText: '好的',
@@ -616,6 +628,41 @@ Page({
             this.getEditData(id)
         }
     },
+    findAccountbookOaModule(accountbookId, accountbookList) {
+        return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+    },
+    // 通过单据判断
+    showOaProcessByBillType(accountbookId, billType) {
+        this.addLoading()
+       request({
+          hideLoading: this.hideLoading,
+          url: app.globalData.url + 'oaBillConfigController.do?getEnableStatus&accountbookId=' + accountbookId + '&billType=' + billType,
+          method: 'GET',
+          success: res => {
+              this.setData({
+                  showOaUserNodeList: res
+              })
+          }
+       })
+    },
+    showOaUserNodeListUseField(fields){
+        let result = false
+        for(let i = 0; i < fields.length; i++) {
+            const field = fields[i]
+            if(this.data.submitData[field]) {
+                result = true
+            }
+            if(field === 'billDetailListObj'){
+                result = !!this.data.submitData[field].length
+            }
+        }
+        if(this.oaModule && this.showOaUserNodeList && result) {
+            this.getProcess(fields)
+        }
+    },
+    getProcess(fields) {
+
+    },
     // 获取申请组织
     getAccountbookList(data) {
         this.addLoading()
@@ -624,10 +671,15 @@ Page({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
-                console.log(res)
                 if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
+                    // ============ 审批流 =========
+                    this.setData({
+                        oaModule: this.findAccountbookOaModule(accountbookId, res.data.obj)
+                    })
+                    this.showOaProcessByBillType(accountbookId, 4)
+                    // ============ 审批流 =========
                     // edit的时候设置值
                     if (accountbookId) {
                         res.data.obj.forEach((item, index) => {
@@ -679,13 +731,11 @@ Page({
     // 获取申请部门
     getDepartmentList(accountbookId, departmentId, subjectId) {
         this.addLoading()
-        console.log(app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId + '-')
         request({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'newDepartController.do?departsJson&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
-                console.log(res, '部门')
                 if(res.data && res.data.length) {
                     var arr = res.data.map(item => {
                         return {
@@ -755,8 +805,6 @@ Page({
                 }else{
                     applicantId = arr[0].id
                 }
-                console.log(applicantId, '.........')
-                console.log(app.globalData.applicantId)
                 if (applicantId) {
                     arr.forEach((item, index) => {
                         if (item.id === applicantId) {
@@ -833,7 +881,6 @@ Page({
             url: app.globalData.url + 'subjectController.do?combotree&accountbookId=' + accountbookId + '&departId=' + departId + '&billTypeId=4&findAll=false',
             method: 'GET',
             success: res => {
-                console.log(res, '借款类型')
                 var arr = []
                 if (res.data.length) {
                     res.data.forEach(item => {
@@ -1120,13 +1167,11 @@ Page({
     // 请求编辑回显数据
     getEditData(id) {
         this.addLoading()
-        console.log('===============================================')
         request({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'borrowBillController.do?getDetail&id=' + id,
             method: 'GET',
             success: res => {
-                console.log(res.data.obj)
                 if (res.data.obj) {
                     this.setRenderData(res.data.obj)
                     this.getProcessInstance(id, res.data.obj.accountbookId)
@@ -1224,6 +1269,11 @@ Page({
                 billCode: data.billCode
             }
         })
+        let t = null
+        t = setTimeout(() => {
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
+            t = null
+        })
     },
     goInfoList() {
         dd.navigateTo({
@@ -1232,7 +1282,6 @@ Page({
     },
     goSubjectPage() {
         const subjectList = dd.getStorageSync({key: 'subjectList'}).data
-        console.log(subjectList)
         if(subjectList.length) {
             dd.navigateTo({
                 url: '/pages/subjectPage/index'
@@ -1261,16 +1310,6 @@ Page({
             }
         })
     },
-    onKeyboardShow() {
-        this.setData({
-            btnHidden: true
-        })
-    },
-    onKeyboardHide() {
-        this.setData({
-            btnHidden: false
-        })
-    },
     // 删除单据
     deleteBill() {
         dd.confirm({
@@ -1286,7 +1325,6 @@ Page({
                         url: app.globalData.url + 'borrowBillController.do?doBatchDel&ids=' + this.data.billId,
                         method: 'GET',
                         success: res => {
-                            console.log(res)
                             if(res.data.success) {
                                 dd.navigateBack({
                                     delta: 1
@@ -1378,11 +1416,9 @@ Page({
             },
         })
     },
-    // onShareAppMessage() {
-    //     return {
-    //         title: '财咖借款单',
-    //         desc: '财咖借款单测试',
-    //         path: 'page/addJiekuan/index'
-    //     };
-    // },
+    goUserDetail() {
+        dd.navigateTo({
+            url: '/pages/progressUser/index'
+        })
+    },
 })

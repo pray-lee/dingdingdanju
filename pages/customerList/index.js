@@ -23,7 +23,6 @@ Page({
     goBack(e) {
         const id = e.currentTarget.dataset.customerId
         const obj = this.data.customerList.filter(item => item.customerId === id)[0]
-        console.log(obj, '..........aobj')
         const newObj = {
             id: obj.id,
             customerId: obj.customerId,

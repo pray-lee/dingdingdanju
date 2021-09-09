@@ -1,0 +1,7 @@
+.user-wrapper{
+    display:flex;
+    flex-wrap:wrap;
+}
+.user-box{
+    margin-bottom: 20rpx;
+}

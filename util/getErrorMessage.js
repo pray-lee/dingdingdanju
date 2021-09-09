@@ -83,7 +83,7 @@ const request = option => {
         data: option.data,
         method: option.method,
         success: res => {
-            if (typeof res.data !== 'string' || res.data.indexOf('主框架') === -1) {
+            if (typeof res.data !== 'string' || res.data.indexOf('主框架') === -1 || res.data.success) {
                 option.success(res)
             }else{
                 dd.reLaunch({

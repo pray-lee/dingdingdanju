@@ -146,7 +146,8 @@ Page({
                 request({
                     hideLoading: this.hideLoading,
                     url: app.globalData.url + "loginController.do?loginDingTalk&tenantCode=" + app.globalData.tenantCode + "&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
-                    // url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
+                    // url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&agentId=' + app.globalData.agentId + '&corpId=' + app.globalData.corpId,
+                    // url: app.globalData.url + "loginController.do?loginDingTalk&code=" + res.authCode + '&corpId=' + app.globalData.corpId,
                     method: 'GET',
                     success: res => {
                         if (res.data.success) {

@@ -30,7 +30,8 @@
     "pages/viewKaipiao/index",
     "pages/viewKaipiaoDetail/index",
     "pages/viewFukuan/index",
-    "pages/viewFukuanDetail/index"
+    "pages/viewFukuanDetail/index",
+    "pages/progressUser/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

@@ -148,6 +148,75 @@
                     <view class="add-file-btn">添加附件</view>
                 </view>
             </view>
+            <block a:if="{{showOa}}">
+                <view class="title">审批流信息</view>
+                <view class="block-wrapper">
+                    <view class="progress">
+                        <view class="progress-box">
+                            <view class="progress-left">
+                                <view class="avatar-wrapper">
+                                    <view class="avatar-block add-avatar-block">
+                                        <view class="avatar add-avatar"></view>
+                                    </view>
+                                    <view class="status-line add-status-line"></view>
+                                </view>
+                                <view class="status-content add-status-content">
+                                    <view class="progress-status">审批人</view>
+                                    <view class="progress-user">7人依次审批</view>
+                                </view>
+                            </view>
+                            <view class="progress-right add-progress-right">
+                                <view class="user-box" onTap="goUserDetail">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">查看全部</view>
+                                </view>
+                                <view class="operate">></view>
+                                <view class="user-box">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">super</view>
+                                </view>
+                                <view class="operate">></view>
+                                <view class="user-box">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">李晓勇</view>
+                                </view>
+                                <view class="operate">></view>
+                            </view>
+                        </view>
+                        <view class="progress-box">
+                            <view class="progress-left">
+                                <view class="avatar-wrapper">
+                                    <view class="avatar-block add-avatar-block">
+                                        <view class="avatar add-avatar"></view>
+                                    </view>
+                                    <view class="status-line add-status-line"></view>
+                                </view>
+                                <view class="status-content add-status-content">
+                                    <view class="progress-status">审批人</view>
+                                    <view class="progress-user">7人依次审批</view>
+                                </view>
+                            </view>
+                            <view class="progress-right add-progress-right">
+                                <view class="user-box" onTap="goUserDetail">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">查看全部</view>
+                                </view>
+                                <view class="operate">></view>
+                                <view class="user-box">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">super</view>
+                                </view>
+                                <view class="operate">></view>
+                                <view class="user-box">
+                                    <view class="user-avatar"></view>
+                                    <view class="user-word">李晓勇</view>
+                                </view>
+                                <view class="operate">></view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
@@ -239,7 +308,7 @@
         <view class="form-row">
             <view class="form-row-label"><text class="require">*</text>借款金额</view>
             <view class="form-row-content">
-                <input class="input" type="digit" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
+                <input class="input" type="text" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
             </view>
         </view>
         <view class="form-line"/>

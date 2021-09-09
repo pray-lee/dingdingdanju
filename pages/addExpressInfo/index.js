@@ -54,7 +54,6 @@ Page({
         const url = app.globalData.url + (this.data.type === 'edit' ?
             'customerSpecialDeliveryController.do?doUpdate' :
             'customerSpecialDeliveryController.do?doAdd' )
-        console.log(url, 'url')
         request({
             hideLoading: this.hideLoading,
             url: url,

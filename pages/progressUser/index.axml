@@ -1,0 +1,59 @@
+<view class="form-wrapper">
+    <view class="user-wrapper">
+        <view class="user-box" onTap="goUserDetail">
+            <view class="user-avatar"></view>
+            <view class="user-word">000</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+        <view class="user-box">
+            <view class="user-avatar"></view>
+            <view class="user-word">查看全部</view>
+        </view>
+        <view class="operate">></view>
+    </view>
+</view>
