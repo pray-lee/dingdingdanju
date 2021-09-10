@@ -19,9 +19,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 石狮文旅研学旅行
+        agentId: '1298473947',
+        tenantCode: 'db_ck_education',
         // 寿司
-        agentId: '1297763523',
-        tenantCode: 'db_ck_zh2021',
+        // agentId: '1297763523',
+        // tenantCode: 'db_ck_zh2021',
         // 学齐智
         // agentId: '1222705047',
         // tenantCode: 'db_ck_education',
