@@ -7,7 +7,6 @@ Page({
         const tempImportList = dd.getStorageSync({
             key: 'tempImportList'
         }).data
-        console.log(tempImportList)
         this.setData({
             tempImportList
         })

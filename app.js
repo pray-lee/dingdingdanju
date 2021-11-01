@@ -20,8 +20,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 石狮文旅研学旅行
-        agentId: '1298473947',
-        tenantCode: 'db_ck_education',
+        // agentId: '1298473947',
+        // tenantCode: 'db_ck_education',
         // 寿司
         // agentId: '1297763523',
         // tenantCode: 'db_ck_zh2021',
@@ -113,8 +113,8 @@ App({
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
         // "url": "https://www.caika.net/test/",
-        // "agentId": "1249138757",
-        // "tenantCode": "db_ck_oa",
+        "agentId": "1249138757",
+        "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
