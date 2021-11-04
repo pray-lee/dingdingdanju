@@ -19,6 +19,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 石狮文旅研学旅行
+        // agentId: '1298473947',
+        // tenantCode: 'db_ck_education',
+        // 寿司
+        // agentId: '1297763523',
+        // tenantCode: 'db_ck_zh2021',
         // 学齐智
         // agentId: '1222705047',
         // tenantCode: 'db_ck_education',
@@ -105,8 +111,8 @@ App({
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
-        "url": "https://www.caika.net/jeecg/",
-        // "url": "https://www.caika.net/test/",
+        // "url": "https://www.caika.net/jeecg/",
+        "url": "https://www.caika.net/test/",
         "agentId": "1249138757",
         "tenantCode": "db_ck_oa",
         // 企业服务商的app

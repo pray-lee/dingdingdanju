@@ -340,11 +340,24 @@ page {
 }
 .user-avatar{
   margin:0 auto;
-  width: 50rpx;
-  height: 50rpx;
-  border-radius: 4rpx;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 8rpx;
   background:#2679ff;
   margin-bottom: 10rpx;
+  color:#fff;
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 60rpx
+}
+.user-avatar.editable{
+  border: 2rpx dotted #2679ff;
+  text-align:center;
+  line-height: 56rpx;
+  background:#fff;
+  color: #2679ff;
+  border-radius: 8rpx;
+  font-size: 40rpx;
 }
 .user-word{
   text-align:center;

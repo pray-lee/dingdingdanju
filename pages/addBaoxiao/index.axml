@@ -108,39 +108,41 @@
             </view>
 
             <!--核销借款-->
-            <view class="title">核销借款</view>
-            <view class="block-wrapper">
-                <view class="borrow-list">
-                    <view class="borrow-item" a:for="{{importList}}">
-                        <view class="form-row">
-                            <view class="delete-borrow" onTap="deleteBorrowDetail"
-                                  data-id="{{item.billDetailId}}"></view>
-<!--                             <view class="form-row-content special-content"> -->
-<!--                                 <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/> -->
-<!--                                 <image src="../../images/edit.png" mode="aspectFill" class="edit"></image> -->
-<!--                             </view> -->
-<!--                             <view class="borrow-line"></view> -->
-                            <view class="form-row-content baoxiaoDetail-left">
-                                <view class="subject-title">{{item["subject.fullSubjectName"]}}</view>
-                                <view class="remark-title">未核销金额：{{item.formatUnverifyAmount}}</view>
-                                <view class="remark-title">事由：</view>
-                                <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
-                                <view class="remark-content" a:else>无</view>
-                            </view>
-                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
-                                <view class="tip">本次核销金额</view>
-                                <view class="edit-wrapper">
-                                    <input value="{{item.applicationAmount}}" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/>
-                                    <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
+            <block a:if="{{showBorrowList}}">
+                <view class="title">核销借款</view>
+                <view class="block-wrapper">
+                    <view class="borrow-list">
+                        <view class="borrow-item" a:for="{{importList}}">
+                            <view class="form-row">
+                                <view class="delete-borrow" onTap="deleteBorrowDetail"
+                                      data-id="{{item.billDetailId}}"></view>
+                                <!--                             <view class="form-row-content special-content"> -->
+                                <!--                                 <input value="{{item.applicationAmount}}" class="input" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/> -->
+                                <!--                                 <image src="../../images/edit.png" mode="aspectFill" class="edit"></image> -->
+                                <!--                             </view> -->
+                                <!--                             <view class="borrow-line"></view> -->
+                                <view class="form-row-content baoxiaoDetail-left">
+                                    <view class="subject-title">{{item["subject.fullSubjectName"]}}</view>
+                                    <view class="remark-title">未核销金额：{{item.formatUnverifyAmount}}</view>
+                                    <view class="remark-title">事由：</view>
+                                    <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
+                                    <view class="remark-content" a:else>无</view>
+                                </view>
+                                <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
+                                    <view class="tip">本次核销金额</view>
+                                    <view class="edit-wrapper">
+                                        <input value="{{item.applicationAmount}}" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/>
+                                        <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
+                                    </view>
                                 </view>
                             </view>
                         </view>
                     </view>
+                    <view class="add-borrow">
+                        <view class="add-borrow-btn" onTap="getImportBorrowList">添加核销借款</view>
+                    </view>
                 </view>
-                <view class="add-borrow">
-                    <view class="add-borrow-btn" onTap="getImportBorrowList">添加核销借款</view>
-                </view>
-            </view>
+            </block>
             <view class="title">附件上传</view>
             <!--上传附件-->
             <view class="block-wrapper">

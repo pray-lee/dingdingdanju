@@ -9,6 +9,9 @@ Page({
         // =============审批流相关============
         oaModule: null,
         showOaUserNodeList: false,
+        showOa: false,
+        nodeList: [],
+        deptList: [],
         // =================================
         validT: null,
         isPhoneXSeries: false,
@@ -628,12 +631,13 @@ Page({
             this.getEditData(id)
         }
     },
+    // =============================================================================
     findAccountbookOaModule(accountbookId, accountbookList) {
         return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
     },
     // 通过单据判断
     showOaProcessByBillType(accountbookId, billType) {
-        this.addLoading()
+       this.addLoading()
        request({
           hideLoading: this.hideLoading,
           url: app.globalData.url + 'oaBillConfigController.do?getEnableStatus&accountbookId=' + accountbookId + '&billType=' + billType,
@@ -656,13 +660,123 @@ Page({
                 result = !!this.data.submitData[field].length
             }
         }
-        if(this.oaModule && this.showOaUserNodeList && result) {
-            this.getProcess(fields)
+        if(this.data.oaModule && this.data.showOaUserNodeList && result) {
+            this.setData({
+                showOa: true
+            })
+            this.getProcess(fields, 4)
         }
     },
-    getProcess(fields) {
-
+    getOaParams(fields, billType) {
+        let params = ''
+        fields.forEach(item => {
+            if(Array.isArray(this.data.submitData[item])) {
+                let amount = 0
+                this.data.submitData[item].forEach(obj => {
+                    amount += Number(obj.borrowAmount)
+                })
+                params += '&amount=' + amount
+            }else{
+                params += '&' + item + '=' + this.data.submitData[item]
+            }
+        })
+        params = '&billType=' + billType + params
+        return params
     },
+    getProcess(fields) {
+        const params = this.getOaParams(fields, 4)
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaBillConfigController.do?getOAUserList' + params,
+            method: 'GET',
+            success: res => {
+                if(res.data && res.data.length) {
+                    const nodeList = res.data.map(node => {
+                        return {
+                            userList:node.oaBillUserList || [],
+                            editable:node.editable,
+                            allowMulti:node.allowMulti,
+                            nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                            operate:node.signType === 'and' ? '+' : '/',
+                            nodeName: node.nodeName
+                        }
+                    })
+                    this.setData({nodeList})
+                }
+            },
+        })
+    },
+    getDept(e) {
+        const allowMulti = e.currentTarget.dataset.allowMulti
+        // 存一下是单选还是多选
+        dd.setStorage({
+            key: 'allowMulti',
+            data: allowMulti
+        })
+        const accountbookId = this.data.submitData.accountbookId
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'newDepartDetailController.do?treeListWithUser&accountbookId=' + accountbookId,
+            method: 'GET',
+            success: res => {
+                if(res && res.data) {
+                    const users = this.setSearchArr(res.data)
+                    const searchUserList = this.handleUsers(users)
+                    dd.setStorageSync({
+                        key: 'searchUserList',
+                        data: searchUserList
+                    })
+                    dd.setStorage({
+                        key: 'deptList',
+                        data: res.data,
+                        success: () => {
+                            dd.navigateTo({
+                                url: '/pages/deptList/index'
+                            })
+                        }
+                    })
+                }
+            }
+        })
+    },
+    setSearchArr(deptList) {
+        let users = []
+        for(let i = 0; i < deptList.length; i++) {
+            const dept = deptList[i]
+            users.concat(this.generateUsername(dept, users))
+        }
+        return users
+    },
+    generateUsername(dept, users) {
+        const userList = dept.userList || []
+        const subDepartList = dept.subDepartList || []
+        if(userList.length) {
+           userList.forEach(item => {
+               users.push(item)
+           })
+        }
+        if(subDepartList.length) {
+            subDepartList.forEach(subDepart => {
+                users.concat(this.generateUsername(subDepart, users))
+            })
+        }
+        return users
+    },
+    handleUsers(users) {
+        const newUsers = []
+        if(users.length) {
+            const obj = {}
+            users.reduce((prev, cur) => {
+                obj[cur.id] ? '':obj[cur.id] = true && prev.push(cur)
+                return prev
+            }, newUsers)
+        }
+        return newUsers
+    },
+
+    // ===============================================================================
     // 获取申请组织
     getAccountbookList(data) {
         this.addLoading()

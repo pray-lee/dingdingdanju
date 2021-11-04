@@ -1,0 +1,72 @@
+<view class="info-wrapper">
+    <view class="search-wrapper">
+        <view class="search-content">
+            <input onBlur="onBlur" type="text" placeholder="搜索" onInput="onInput" value="{{inputValue}}" />
+            <image src="../../images/delete.png" mode="scaleToFill" class="input-delete-icon" onTap="clearWord"></image>
+        </view>
+    </view>
+    <scroll-view a:if="{{isFocus}}" scroll-y class="scroll-info-list {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <block a:if="{{searchResult && searchResult.length}}">
+            <!--      单选多选      -->
+            <block a:if="{{allowMulti}}">
+                <checkbox-group onChange="checkboxChange">
+                    <label class="checkbox info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
+                        <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
+                        <text class="dept-name user-name">{{item.name}}</text>
+                    </label>
+                </checkbox-group>
+            </block>
+            <block a:else>
+                <radio-group class="radio-group" onChange="radioChange">
+                    <label class="radio info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
+                        <radio value="{{item.id}}" checked="{{item.checked}}"/>
+                        <text class="dept-name user-name">{{item.name}}</text>
+                    </label>
+                </radio-group>
+            </block>
+        </block>
+    </scroll-view>
+    <scroll-view a:else scroll-y class="scroll-info-list {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view>
+            <view class="depart-wrapper">
+                <block a:if="{{subDepartList && subDepartList.length}}">
+                    <block a:for="{{subDepartList}}">
+                        <view class="info-item">
+                            <view class="dept-name">{{item.name}}</view>
+                            <view class="line">|</view>
+                            <view class="next" onTap="getNext" data-userList="{{item.userList}}" data-subDepartList="{{item.subDepartList}}">下级</view>
+                        </view>
+                    </block>
+                </block>
+            </view>
+            <view class="user-wrapper">
+<!--                <block a:if="{{userList && userList.length}}">-->
+<!--                    <view data-path="/pages/addJiekuan/index" class="info-item user-item" a:for="{{userList}}" a:for-item="user">-->
+<!--                        <view class="dept-name user-name" >{{user.name}}</view>-->
+<!--                    </view>-->
+<!--                </block>-->
+                <block a:if="{{userList && userList.length}}">
+                    <block a:if="{{allowMulti}}">
+                        <checkbox-group onChange="checkboxChange">
+                            <label class="checkbox info-item user-item" a:for="{{userList}}" key="label-{{index}}">
+                                <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
+                                <text class="dept-name user-name">{{item.name}}</text>
+                            </label>
+                        </checkbox-group>
+                    </block>
+                    <block a:else>
+                        <radio-group class="radio-group" onChange="radioChange">
+                            <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
+                                <radio value="{{item.id}}" checked="{{item.checked}}"/>
+                                <text class="dept-name user-name">{{item.name}}</text>
+                            </label>
+                        </radio-group>
+                    </block>
+                </block>
+            </view>
+        </view>
+    </scroll-view>
+    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <button onTap="submitUsers" class="submit-btn">确定</button>
+    </view>
+</view>

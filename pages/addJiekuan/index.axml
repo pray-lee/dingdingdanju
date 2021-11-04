@@ -152,7 +152,7 @@
                 <view class="title">审批流信息</view>
                 <view class="block-wrapper">
                     <view class="progress">
-                        <view class="progress-box">
+                        <view class="progress-box" a:for="{{nodeList}}">
                             <view class="progress-left">
                                 <view class="avatar-wrapper">
                                     <view class="avatar-block add-avatar-block">
@@ -161,57 +161,23 @@
                                     <view class="status-line add-status-line"></view>
                                 </view>
                                 <view class="status-content add-status-content">
-                                    <view class="progress-status">审批人</view>
-                                    <view class="progress-user">7人依次审批</view>
+                                    <view class="progress-status">{{item.nodeName}}</view>
+                                    <view class="progress-user">{{item.userList.length}}人审批</view>
                                 </view>
                             </view>
                             <view class="progress-right add-progress-right">
-                                <view class="user-box" onTap="goUserDetail">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">查看全部</view>
-                                </view>
-                                <view class="operate">></view>
-                                <view class="user-box">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">super</view>
-                                </view>
-                                <view class="operate">></view>
-                                <view class="user-box">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">李晓勇</view>
-                                </view>
-                                <view class="operate">></view>
-                            </view>
-                        </view>
-                        <view class="progress-box">
-                            <view class="progress-left">
-                                <view class="avatar-wrapper">
-                                    <view class="avatar-block add-avatar-block">
-                                        <view class="avatar add-avatar"></view>
+                                <block a:for="{{item.userList}}" a:for-item="user">
+                                    <view class="user-box">
+                                        <view class="user-avatar">{{user.userName.slice(-2)}}</view>
+                                        <view class="user-word">{{user.userName}}</view>
                                     </view>
-                                    <view class="status-line add-status-line"></view>
-                                </view>
-                                <view class="status-content add-status-content">
-                                    <view class="progress-status">审批人</view>
-                                    <view class="progress-user">7人依次审批</view>
-                                </view>
-                            </view>
-                            <view class="progress-right add-progress-right">
-                                <view class="user-box" onTap="goUserDetail">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">查看全部</view>
-                                </view>
-                                <view class="operate">></view>
-                                <view class="user-box">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">super</view>
-                                </view>
-                                <view class="operate">></view>
-                                <view class="user-box">
-                                    <view class="user-avatar"></view>
-                                    <view class="user-word">李晓勇</view>
-                                </view>
-                                <view class="operate">></view>
+                                    <view class="operate">{{item.operate}}</view>
+                                </block>
+                                <block a:if="{{item.editable}}">
+                                    <view class="user-box" onTap="getDept" data-allowMulti="{{item.allowMulti}}">
+                                        <view class="user-avatar editable">+</view>
+                                    </view>
+                                </block>
                             </view>
                         </view>
                     </view>
