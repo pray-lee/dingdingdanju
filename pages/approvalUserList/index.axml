@@ -11,7 +11,7 @@
             <block a:if="{{allowMulti}}">
                 <checkbox-group onChange="checkboxChange">
                     <label class="checkbox info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
-                        <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
+                        <checkbox value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
                         <text class="dept-name user-name">{{item.name}}</text>
                     </label>
                 </checkbox-group>
@@ -19,7 +19,7 @@
             <block a:else>
                 <radio-group class="radio-group" onChange="radioChange">
                     <label class="radio info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
-                        <radio value="{{item.id}}" checked="{{item.checked}}"/>
+                        <radio value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
                         <text class="dept-name user-name">{{item.name}}</text>
                     </label>
                 </radio-group>
@@ -49,7 +49,7 @@
                     <block a:if="{{allowMulti}}">
                         <checkbox-group onChange="checkboxChange">
                             <label class="checkbox info-item user-item" a:for="{{userList}}" key="label-{{index}}">
-                                <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
+                                <checkbox value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
                                 <text class="dept-name user-name">{{item.name}}</text>
                             </label>
                         </checkbox-group>
@@ -57,7 +57,7 @@
                     <block a:else>
                         <radio-group class="radio-group" onChange="radioChange">
                             <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
-                                <radio value="{{item.id}}" checked="{{item.checked}}"/>
+                                <radio value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
                                 <text class="dept-name user-name">{{item.name}}</text>
                             </label>
                         </radio-group>

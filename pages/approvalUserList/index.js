@@ -9,7 +9,8 @@ Page({
         inputValue: '',
         isFocus: false,
         allowMulti: false,
-        selectValue: []
+        selectValue: [],
+        storageCheckedValues: [],
     },
     onLoad() {
         this.setData({
@@ -21,7 +22,7 @@ Page({
         this.getSubDepartList()
     },
     onShow() {
-        this.getStorageCheckedValue()
+        this.getStorageUsers()
     },
     getSearchUserList() {
         dd.getStorage({
@@ -34,13 +35,9 @@ Page({
         })
     },
     getUserList() {
-        dd.getStorage({
-            key: 'userList',
-            success: res => {
-                this.setData({
-                    userList: res.data,
-                })
-            }
+        const userList = dd.getStorageSync({key: 'userList'}).data
+        this.setData({
+            userList
         })
     },
     radioChange(e) {
@@ -49,38 +46,41 @@ Page({
         })
     },
     checkboxChange(e) {
-        console.log(this.data.selectValue)
-        // 多选处理
-        const checkedValue = e.detail.value
-        const checkedUsers = this.handleUsers(checkedValue.concat(this.data.selectValue))
-        console.log(checkedUsers)
-        dd.setStorageSync({
-            key: 'checkedValue',
-            data: checkedUsers
+        const checkedValues = e.detail.value
+        const checkedUsers = checkedValues.map(item => ({
+            id: item.split('_')[0],
+            name: item.split('_')[1],
+            checked: true
+        }))
+        dd.setStorage({
+            key: 'checkedUsers',
+            data:checkedUsers
         })
     },
-    getStorageCheckedValue() {
-        const checkedValue = dd.getStorageSync({key: 'checkedValue'}).data || []
-        console.log(checkedValue)
-        dd.removeStorage({
-            key: 'checkedValue',
-            success: res => {
-                this.setData({
-                    selectValue: checkedValue
-                })
+    getStorageUsers() {
+        const checkedUsers = dd.getStorageSync({key: 'checkedUsers'}).data || []
+        const userList = this.setChecked(checkedUsers)
+        this.setData({
+            userList
+        })
+    },
+    setChecked(checkedUsers) {
+        const userList = this.data.userList
+        const newUserList = []
+        for(let i = 0; i < userList.length; i++) {
+            const user = userList[i]
+            if(checkedUsers.length) {
+                for(let k = 0; k < checkedUsers.length; k++) {
+                    const checkedUser = checkedUsers[k]
+                    if(user.id === checkedUser.id) {
+                        newUserList.push(checkedUser)
+                    }
+                }
+            }else{
+                newUserList.push(user)
             }
-        })
-    },
-    handleUsers(users) {
-        const newUsers = []
-        if(users.length) {
-            const obj = {}
-            users.reduce((prev, cur) => {
-                obj[cur] ? '':obj[cur] = true && prev.push(cur)
-                return prev
-            }, newUsers)
         }
-        return newUsers
+        return newUserList
     },
     getSubDepartList() {
         dd.getStorage({
@@ -98,10 +98,10 @@ Page({
         })
     },
     submitUsers() {
-        console.log(dd.getStorageSync({key: 'checkedValue'}).data, 'checkedData.........')
-        dd.removeStorage({
-            key: 'checkedValue'
-        })
+        // console.log(dd.getStorageSync({key: 'checkedValue'}).data, 'checkedData.........')
+        // dd.removeStorage({
+        //     key: 'checkedValue'
+        // })
     },
     getNext(e) {
         const userList = e.currentTarget.dataset.userList
