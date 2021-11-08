@@ -35,7 +35,4 @@
             </view>
         </block>
     </scroll-view>
-    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
-        <button onTap="submitSelect" class="submit-btn">确定</button>
-    </view>
 </view>

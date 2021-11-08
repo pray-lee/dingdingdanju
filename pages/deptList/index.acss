@@ -1,8 +1,8 @@
 .scroll-info-list{
-    height: calc(100vh - 228rpx)
+    height: calc(100vh - 128rpx)
 }
 .scroll-info-list.iphoneX{
-    height: calc(100vh - 296rpx)
+    height: calc(100vh - 196rpx)
 }
 .info-item{
     display:flex;

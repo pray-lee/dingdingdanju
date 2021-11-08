@@ -9,8 +9,7 @@ Page({
         inputValue: '',
         isFocus: false,
         allowMulti: false,
-        selectValue: [],
-        storageCheckedValues: [],
+        animationInfo: {},
     },
     onLoad() {
         this.setData({
@@ -21,8 +20,51 @@ Page({
         this.getUserList()
         this.getSubDepartList()
     },
+    showSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            animationInfo: animation.export(),
+        })
+    },
+    hideSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'linear'
+        })
+        this.animation = animation
+        animation.translateY('100%').step()
+        this.setData({
+            animationInfo: animation.export(),
+        })
+    },
     onShow() {
-        this.getStorageUsers()
+        // 先看看当前页面的用户列表有没有已经选中的重复的用户,
+        const selectedUserList = this.getStorageUserList()
+        const checkedUsers = this.data.userList.filter(item => selectedUserList.some(selected => selected.id === item.id))
+        let newUserList = []
+        if(checkedUsers.length) {
+            for(let i = 0 ; i < this.data.userList.length; i++) {
+                const user = this.data.userList[i]
+                let item = Object.assign({}, user)
+                for(let j = 0; j < checkedUsers.length; j++) {
+                    const checked = checkedUsers[j]
+                    if(user.id === checked.id) {
+                       item = Object.assign({}, user, {checked: true})
+                    }
+                }
+                newUserList.push(item)
+            }
+        }else{
+            newUserList = this.data.userList.slice()
+        }
+        this.setData({
+            userList:newUserList
+        })
     },
     getSearchUserList() {
         dd.getStorage({
@@ -45,45 +87,61 @@ Page({
             selectValue: [e.detail.value]
         })
     },
+    getStorageUserList() {
+        return dd.getStorageSync({key: 'selectedUsers'}).data || []
+    },
     checkboxChange(e) {
-        const checkedValues = e.detail.value
-        const checkedUsers = checkedValues.map(item => ({
+        const checkedValues = e.detail.value.map(item => ({
+            checked: true,
             id: item.split('_')[0],
-            name: item.split('_')[1],
-            checked: true
+            name: item.split('_')[1]
         }))
-        dd.setStorage({
-            key: 'checkedUsers',
-            data:checkedUsers
+        const selectedUserList = this.getStorageUserList()
+        this.handleUserList(selectedUserList, checkedValues)
+    },
+    handleUserList(selectedUserList, checkedValues) {
+        // 如果没有选中，就新增
+        // 如果有，没有勾选，就删除，
+        // 如果没有勾选，不操作
+
+        // 用户列表和已选择列表取差集   当前页面没有选中的
+        const storageUnCheckedUsers = this.data.userList.filter(item => selectedUserList.every(selected => selected.id !== item.id))
+
+        // 用户列表和已选择列表取交集  当前页面被选中的
+        const checkedUsers = this.data.userList.filter(item => selectedUserList.some(selected => selected.id === item.id))
+
+        // 需要添加的
+        const addChecked = checkedValues.filter(item => storageUnCheckedUsers.some(unChecked => unChecked.id === item.id))
+        this.addChecked(selectedUserList, addChecked)
+
+        // 需要删除的
+        const removeChecked = checkedUsers.filter(item => checkedValues.every(checked => checked.id !== item.id))
+        this.removeChecked(selectedUserList, removeChecked)
+
+    },
+    addChecked(selected, arr) {
+        const newArr = selected.concat(arr)
+        dd.setStorageSync({
+            key: 'selectedUsers',
+            data: newArr
         })
     },
-    getStorageUsers() {
-        const checkedUsers = dd.getStorageSync({key: 'checkedUsers'}).data || []
-        const userList = this.setChecked(checkedUsers)
-        this.setData({
-            userList
-        })
-    },
-    setChecked(checkedUsers) {
-        const userList = this.data.userList
-        console.log(userList)
-        const newUserList = []
-        for(let i = 0; i < userList.length; i++) {
-            const user = userList[i]
-            if(checkedUsers.length) {
-                for(let k = 0; k < checkedUsers.length; k++) {
-                    const checkedUser = checkedUsers[k]
-                    if(user.id === checkedUser.id) {
-                        newUserList.push(checkedUser)
-                    }else{
-                        newUserList.push(user)
+    removeChecked(selected,arr) {
+        let newArr = []
+        if(arr.length) {
+            arr.forEach(item => {
+                selected.forEach(select => {
+                    if(item.id !== select.id) {
+                        newArr.push(select)
                     }
-                }
-            }else{
-                newUserList.push(user)
-            }
+                })
+            })
+            console.log(newArr, 'newArr...........')
+            dd.setStorageSync({
+                key: 'selectedUsers',
+                data: newArr
+            })
         }
-        return newUserList
     },
     getSubDepartList() {
         dd.getStorage({
@@ -99,12 +157,6 @@ Page({
         this.setData({
             allowMulti: dd.getStorageSync({key: 'allowMulti'}).data
         })
-    },
-    submitUsers() {
-        // console.log(dd.getStorageSync({key: 'checkedValue'}).data, 'checkedData.........')
-        // dd.removeStorage({
-        //     key: 'checkedValue'
-        // })
     },
     getNext(e) {
         const userList = e.currentTarget.dataset.userList
