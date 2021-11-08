@@ -43,9 +43,14 @@ Page({
         })
     },
     onShow() {
+        // 先清空选择
+        this.clearChecked()
         // 先看看当前页面的用户列表有没有已经选中的重复的用户,
         const selectedUserList = this.getStorageUserList()
         const checkedUsers = this.data.userList.filter(item => selectedUserList.some(selected => selected.id === item.id))
+        console.log(this.data.userList)
+        console.log(selectedUserList)
+        console.log(checkedUsers, 'checkedUsers')
         let newUserList = []
         if(checkedUsers.length) {
             for(let i = 0 ; i < this.data.userList.length; i++) {
@@ -57,7 +62,7 @@ Page({
                        item = Object.assign({}, user, {checked: true})
                     }
                 }
-                newUserList.push(item)
+                newUserList.push(Object.assign({}, item))
             }
         }else{
             newUserList = this.data.userList.slice()
@@ -90,9 +95,19 @@ Page({
     getStorageUserList() {
         return dd.getStorageSync({key: 'selectedUsers'}).data || []
     },
+    clearChecked() {
+        const userList = this.data.userList.map(item => ({
+            id: item.id,
+            name: item.name,
+            checked: false,
+        }))
+        this.setData({
+            userList
+        })
+    },
     checkboxChange(e) {
         const checkedValues = e.detail.value.map(item => ({
-            checked: true,
+            // checked: true,
             id: item.split('_')[0],
             name: item.split('_')[1]
         }))

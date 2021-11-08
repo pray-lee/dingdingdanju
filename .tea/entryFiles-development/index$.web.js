@@ -1,3 +1,4 @@
+/**! __CODEPLACEHOLDER_START__ */ /*[PositionForClientEntryCodeBegin]*/ /**! __CODEPLACEHOLDER_END__ */
 require('@alipay/appx-compiler/lib/sjsEnvInit');
 require('./config$');
 
@@ -32,3 +33,6 @@ require('../../pages/viewKaipiao/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e3
 require('../../pages/viewKaipiaoDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/viewFukuan/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
 require('../../pages/viewFukuanDetail/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/progressUser/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/deptList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
+require('../../pages/approvalUserList/index?hash=32d7d2807ed4e666ef03b4b3fe8c38ecf2e34e68');
