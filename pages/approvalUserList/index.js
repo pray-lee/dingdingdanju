@@ -66,8 +66,23 @@ Page({
     },
     setChecked(checkedUsers) {
         const userList = this.data.userList
-        console.log(userList, 'setchecked..........')
+        console.log(userList)
         const newUserList = []
+        for(let i = 0; i < userList.length; i++) {
+            const user = userList[i]
+            if(checkedUsers.length) {
+                for(let k = 0; k < checkedUsers.length; k++) {
+                    const checkedUser = checkedUsers[k]
+                    if(user.id === checkedUser.id) {
+                        newUserList.push(checkedUser)
+                    }else{
+                        newUserList.push(user)
+                    }
+                }
+            }else{
+                newUserList.push(user)
+            }
+        }
         return newUserList
     },
     getSubDepartList() {
