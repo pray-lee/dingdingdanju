@@ -32,6 +32,7 @@
 }
 .info-item{
     display:flex;
+    align-items: center;
     background:#fff;
     position:relative;
     font-size: 28rpx;
