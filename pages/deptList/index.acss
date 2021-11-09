@@ -1,11 +1,12 @@
 .scroll-info-list{
-    height: calc(100vh - 128rpx)
+    height: calc(100vh - 228rpx)
 }
 .scroll-info-list.iphoneX{
-    height: calc(100vh - 196rpx)
+    height: calc(100vh - 296rpx)
 }
 .info-item{
     display:flex;
+    align-items: center;
     background:#fff;
     position:relative;
     font-size: 28rpx;
@@ -74,4 +75,62 @@
     font-size: 28rpx;
     border-radius: 4px;
     padding: 24rpx;
+}
+.search-wrapper{
+    position:relative;
+    margin-bottom: 20rpx
+}
+.search-wrapper input{
+    box-sizing:border-box;
+    width: 100%;
+    height: 100%;
+    font-size: 28rpx;
+    border-radius: 4px;
+    padding: 24rpx;
+}
+.select-user-wrapper{
+    display:flex;
+    border: 0 !important;
+    background:#fff !important;
+}
+.select-user{
+    flex: 1;
+    display:flex;
+    align-items:center;
+}
+.sure-btn{
+    width: 200rpx !important;
+}
+.select-user-list{
+    position:absolute;
+    z-index:1000;
+    bottom:0;
+    left:0;
+    right:0;
+    top:0;
+    background:#f2f2f2;
+    transform: translateY(100%);
+    font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+    box-sizing: border-box;
+    overflow:hidden;
+}
+.select-user{
+    padding: 0 15rpx;
+}
+.bottom-user-wrapper{
+    width: 4rem;
+    overflow:hidden;
+    white-space: nowrap;
+}
+.bottom-user-wrapper .user-name{
+    display:inline-block;
+    width: 60rpx;
+    height: 60rpx;
+    font-size: 20rpx;
+    text-align:center;
+    line-height: 60rpx;
+    background:#2679ff;
+    color:#fff;
+    border-radius: 8rpx;
+    margin-right: 10rpx;
 }

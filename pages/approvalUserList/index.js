@@ -120,7 +120,6 @@ Page({
         this.setData({
             searchResult: this.data.searchResult
         })
-
         const checkedValues = this.data.searchResult.filter(item => !!item.checked)
         const selectedUserList = this.getStorageUserList()
         this.handleSearchUserList(selectedUserList, checkedValues)

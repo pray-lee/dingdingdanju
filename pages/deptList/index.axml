@@ -9,12 +9,10 @@
         <block a:if="{{searchResult && searchResult.length}}">
             <!--      单选多选      -->
             <block a:if="{{allowMulti}}">
-                <checkbox-group onChange="checkboxChange">
-                    <label class="checkbox info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
-                        <checkbox value="{{item.id}}" checked="{{item.checked}}"/>
-                        <text class="dept-name user-name">{{item.name}}</text>
-                    </label>
-                </checkbox-group>
+                <label class="checkbox info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
+                    <checkbox onChange="searchCheckboxChange" data-index="{{index}}" data-value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
+                    <text class="dept-name user-name">{{item.name}}</text>
+                </label>
             </block>
             <block a:else>
                 <radio-group class="radio-group" onChange="radioChange">
@@ -35,4 +33,27 @@
             </view>
         </block>
     </scroll-view>
+    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="select-user-wrapper">
+            <view class="select-user" onTap="showSelectedUserList">
+                <view style="width: 4.5em">已选择：</view>
+                <view class="bottom-user-wrapper">
+                    <view class="user-name" a:for="{{bottomUserList}}">{{item.name.slice(-2)}}</view>
+                </view>
+            </view>
+            <button class="sure-btn">确定</button>
+        </view>
+    </view>
+    <view class="select-user-list" animation="{{animationInfo}}">
+        <scroll-view scroll-y class="scroll-user-list {{isPhoneXSeries ? 'iphoneX' : ''}}">
+            <view class="info-item" a:for="{{bottomUserList}}">
+                <view class="dept-name">{{item.name}}</view>
+                <view class="line">|</view>
+                <view class="next" onTap="removeUser" data-id="{{item.id}}">移除</view>
+            </view>
+        </scroll-view>
+        <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+            <button onTap="hideSelectedUserList" class="submit-btn">返回</button>
+        </view>
+    </view>
 </view>
