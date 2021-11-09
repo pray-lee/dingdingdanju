@@ -10,6 +10,7 @@ Page({
         isFocus: false,
         allowMulti: false,
         animationInfo: {},
+        bottomUserList: [],
     },
     onLoad() {
         this.setData({
@@ -42,44 +43,35 @@ Page({
             animationInfo: animation.export(),
         })
     },
+    getSearchUserList() {
+        this.setData({
+            searchUserList: dd.getStorageSync({key: 'searchUserList'}).data
+        })
+    },
     onShow() {
-        // 先清空选择
-        this.clearChecked()
+        const newUserList = this.data.userList.map(item => ({...item, checked: false}))
+        this.setData({
+            userList: newUserList
+        })
         // 先看看当前页面的用户列表有没有已经选中的重复的用户,
         const selectedUserList = this.getStorageUserList()
-        const checkedUsers = this.data.userList.filter(item => selectedUserList.some(selected => selected.id === item.id))
-        console.log(this.data.userList)
-        console.log(selectedUserList)
-        console.log(checkedUsers, 'checkedUsers')
-        let newUserList = []
+        const checkedUsers = selectedUserList.filter(selected => this.data.userList.some(item => selected.id === item.id))
         if(checkedUsers.length) {
             for(let i = 0 ; i < this.data.userList.length; i++) {
                 const user = this.data.userList[i]
-                let item = Object.assign({}, user)
                 for(let j = 0; j < checkedUsers.length; j++) {
                     const checked = checkedUsers[j]
                     if(user.id === checked.id) {
-                       item = Object.assign({}, user, {checked: true})
+                       this.data.userList[i] = Object.assign({}, checked)
                     }
                 }
-                newUserList.push(Object.assign({}, item))
             }
-        }else{
-            newUserList = this.data.userList.slice()
         }
         this.setData({
-            userList:newUserList
+            userList:this.data.userList
         })
-    },
-    getSearchUserList() {
-        dd.getStorage({
-            key: 'searchUserList',
-            success: res => {
-                this.setData({
-                    searchUserList: res.data,
-                })
-            }
-        })
+        // 渲染底部列表
+        this.renderBottomUserList()
     },
     getUserList() {
         const userList = dd.getStorageSync({key: 'userList'}).data
@@ -95,30 +87,46 @@ Page({
     getStorageUserList() {
         return dd.getStorageSync({key: 'selectedUsers'}).data || []
     },
-    clearChecked() {
-        const userList = this.data.userList.map(item => ({
-            id: item.id,
-            name: item.name,
-            checked: false,
-        }))
+    renderBottomUserList() {
         this.setData({
-            userList
+            bottomUserList: dd.getStorageSync({key: 'selectedUsers'}).data
         })
     },
+    removeUser(e) {
+        const id = e.currentTarget.dataset.id
+        const selectedUsers = this.data.bottomUserList.filter(item => item.id !== id)
+        dd.setStorageSync({
+            key: 'selectedUsers',
+            data: selectedUsers
+        })
+        this.onShow()
+    },
     checkboxChange(e) {
-        const checkedValues = e.detail.value.map(item => ({
-            // checked: true,
-            id: item.split('_')[0],
-            name: item.split('_')[1]
-        }))
+        const index = e.currentTarget.dataset.index
+
+        this.data.userList[index].checked = e.detail.value
+        this.setData({
+            userList: this.data.userList
+        })
+        const checkedValues = this.data.userList.filter(item => !!item.checked)
         const selectedUserList = this.getStorageUserList()
         this.handleUserList(selectedUserList, checkedValues)
+        this.renderBottomUserList()
+
+    },
+    searchCheckboxChange(e) {
+        const index = e.currentTarget.dataset.index
+        this.data.searchResult[index].checked = e.detail.value
+        this.setData({
+            searchResult: this.data.searchResult
+        })
+
+        const checkedValues = this.data.searchResult.filter(item => !!item.checked)
+        const selectedUserList = this.getStorageUserList()
+        this.handleSearchUserList(selectedUserList, checkedValues)
+        this.renderBottomUserList()
     },
     handleUserList(selectedUserList, checkedValues) {
-        // 如果没有选中，就新增
-        // 如果有，没有勾选，就删除，
-        // 如果没有勾选，不操作
-
         // 用户列表和已选择列表取差集   当前页面没有选中的
         const storageUnCheckedUsers = this.data.userList.filter(item => selectedUserList.every(selected => selected.id !== item.id))
 
@@ -133,6 +141,21 @@ Page({
         const removeChecked = checkedUsers.filter(item => checkedValues.every(checked => checked.id !== item.id))
         this.removeChecked(selectedUserList, removeChecked)
 
+    },
+    handleSearchUserList(selectedUserList, checkedValues) {
+        // 用户列表和已选择列表取差集   当前页面没有选中的
+        const storageUnCheckedUsers = this.data.searchResult.filter(item => selectedUserList.every(selected => selected.id !== item.id))
+
+        // 用户列表和已选择列表取交集  当前页面被选中的
+        const checkedUsers = this.data.searchResult.filter(item => selectedUserList.some(selected => selected.id === item.id))
+
+        // 需要添加的
+        const addChecked = checkedValues.filter(item => storageUnCheckedUsers.some(unChecked => unChecked.id === item.id))
+        this.addChecked(selectedUserList, addChecked)
+
+        // 需要删除的
+        const removeChecked = checkedUsers.filter(item => checkedValues.every(checked => checked.id !== item.id))
+        this.removeChecked(selectedUserList, removeChecked)
     },
     addChecked(selected, arr) {
         const newArr = selected.concat(arr)
@@ -177,6 +200,10 @@ Page({
         const userList = e.currentTarget.dataset.userList
         const subDepartList = e.currentTarget.dataset.subDepartList
         dd.setStorageSync({
+            key: 'prevUserList',
+            data: this.data.userList
+        })
+        dd.setStorageSync({
             key: 'userList',
             data: userList
         })
@@ -216,6 +243,7 @@ Page({
             searchResult: []
         })
         this.searchFn(value)
+        this.onShow()
     },
     clearWord() {
         this.setData({
@@ -224,12 +252,31 @@ Page({
             isFocus: false,
         })
         this.searchFn('')
+        this.onShow()
     },
     searchFn(value) {
         app.globalData.timeOutInstance = setTimeout(() => {
             var searchResult = this.data.searchUserList.filter(item => value && item.name.indexOf(value) !== -1)
+            const newSearchResult = searchResult.map(item => ({...item, checked: false}))
             this.setData({
-                searchResult: searchResult
+                searchResult: newSearchResult
+            })
+            // 先看看当前页面的用户列表有没有已经选中的重复的用户,
+            const selectedUserList = this.getStorageUserList()
+            const checkedUsers = selectedUserList.filter(selected => this.data.searchResult.some(item => selected.id === item.id))
+            if(checkedUsers.length) {
+                for(let i = 0 ; i < this.data.searchResult.length; i++) {
+                    const user = this.data.searchResult[i]
+                    for(let j = 0; j < checkedUsers.length; j++) {
+                        const checked = checkedUsers[j]
+                        if(user.id === checked.id) {
+                            this.data.searchResult[i] = Object.assign({}, checked)
+                        }
+                    }
+                }
+            }
+            this.setData({
+                searchResult:this.data.searchResult
             })
         }, 300)
     }

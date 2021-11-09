@@ -131,3 +131,20 @@
 .select-user{
     padding: 0 15rpx;
 }
+.bottom-user-wrapper{
+    width: 4rem;
+    overflow:hidden;
+    white-space: nowrap;
+}
+.bottom-user-wrapper .user-name{
+    display:inline-block;
+    width: 60rpx;
+    height: 60rpx;
+    font-size: 20rpx;
+    text-align:center;
+    line-height: 60rpx;
+    background:#2679ff;
+    color:#fff;
+    border-radius: 8rpx;
+    margin-right: 10rpx;
+}
