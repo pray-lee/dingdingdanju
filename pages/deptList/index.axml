@@ -41,7 +41,7 @@
                     <view class="user-name" a:for="{{bottomUserList}}">{{item.name.slice(-2)}}</view>
                 </view>
             </view>
-            <button class="sure-btn">确定</button>
+            <button class="sure-btn" onTap="goBack">确定</button>
         </view>
     </view>
     <view class="select-user-list" animation="{{animationInfo}}">

@@ -131,6 +131,40 @@
                     </view>
                 </view>
             </block>
+            <!--     财咖审批流程图       -->
+            <block a:if="{{caikaProcess && caikaProcess.length}}">
+                <view class="title">审批流程</view>
+                <view class="block-wrapper">
+                    <view class="progress">
+                        <view class="view-progress-box">
+                            <view class="view-progress-left">
+                                <view class="view-avatar-wrapper">
+                                    <view class="view-avatar-block">
+                                        <view class="view-avatar">
+                                            <image src="../../images/approval.png" class="view-avatar view-avatar-icon"></image>
+                                        </view>
+                                    </view>
+                                    <view class="view-status-dotted-line"></view>
+                                </view>
+                                <view class="view-status-content">
+                                    <view class="view-progress-status">审批人</view>
+                                    <view class="view-progress-user">2人会签</view>
+                                    <view class="show-user-list" a:if="{{showUserList}}">
+                                        <view class="user-block">
+                                            <view class="user-bg">er</view>
+                                            <view class="user-name">super</view>
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                            <view class="progress-right">
+                                <view onTap="toggleUserList" a:if="{{showUserList}}" class="toggle-user-list down"></view>
+                                <view onTap="toggleUserList" a:else class="toggle-user-list up"></view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">

@@ -84,12 +84,26 @@ Page({
             selectValue: [e.detail.value]
         })
     },
+    getSelectedIndex() {
+        return dd.getStorageSync({key: 'nodeIndex'}).data
+    },
     getStorageUserList() {
-        return dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data
+        if(selectedUsers) {
+            return selectedUsers[this.getSelectedIndex()]
+        }
+        return []
     },
     renderBottomUserList() {
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        let bottomUserList = []
+        if(selectedUsers.length) {
+            bottomUserList = selectedUsers[this.getSelectedIndex()]
+        }else{
+            bottomUserList = []
+        }
         this.setData({
-            bottomUserList: dd.getStorageSync({key: 'selectedUsers'}).data
+            bottomUserList
         })
     },
     removeUser(e) {
@@ -158,9 +172,12 @@ Page({
     },
     addChecked(selected, arr) {
         const newArr = selected.concat(arr)
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = newArr
         dd.setStorageSync({
             key: 'selectedUsers',
-            data: newArr
+            data: selectedUsers
         })
     },
     removeChecked(selected,arr) {
@@ -173,10 +190,12 @@ Page({
                     }
                 })
             })
-            console.log(newArr, 'newArr...........')
+            const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+            const nodeIndex = this.getSelectedIndex()
+            selectedUsers[nodeIndex] = newArr
             dd.setStorageSync({
                 key: 'selectedUsers',
-                data: newArr
+                data: selectedUsers
             })
         }
     },
@@ -198,10 +217,6 @@ Page({
     getNext(e) {
         const userList = e.currentTarget.dataset.userList
         const subDepartList = e.currentTarget.dataset.subDepartList
-        dd.setStorageSync({
-            key: 'prevUserList',
-            data: this.data.userList
-        })
         dd.setStorageSync({
             key: 'userList',
             data: userList

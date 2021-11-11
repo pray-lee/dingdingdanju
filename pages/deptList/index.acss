@@ -1,8 +1,31 @@
+.info-wrapper{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow:hidden;
+}
+.search-wrapper, .scroll-info-list{
+    padding: 0 15rpx;
+}
+.scroll-user-list{
+    padding: 15rpx;
+}
+.search-wrapper{
+    padding-top: 15rpx;
+}
 .scroll-info-list{
     height: calc(100vh - 228rpx)
 }
 .scroll-info-list.iphoneX{
     height: calc(100vh - 296rpx)
+}
+.scroll-user-list{
+    height: calc(100vh - 158rpx)
+}
+.scroll-user-list.iphoneX{
+    height: calc(100vh - 226rpx)
 }
 .info-item{
     display:flex;

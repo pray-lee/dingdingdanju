@@ -57,24 +57,40 @@ Page({
         })
     },
     getStorageUserList() {
-        return dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data
+        if(selectedUsers) {
+            return selectedUsers[this.getSelectedIndex()]
+        }
+        return []
+    },
+    getSelectedIndex() {
+        return dd.getStorageSync({key: 'nodeIndex'}).data
     },
     onShow() {
         this.renderBottomUserList()
     },
     renderBottomUserList() {
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        let bottomUserList = []
+        if(selectedUsers.length) {
+             bottomUserList = selectedUsers[this.getSelectedIndex()]
+        }else{
+            bottomUserList = []
+        }
         this.setData({
-            bottomUserList: dd.getStorageSync({key: 'selectedUsers'}).data
+            bottomUserList
         })
     },
     removeUser(e) {
         const id = e.currentTarget.dataset.id
-        const selectedUsers = this.data.bottomUserList.filter(item => item.id !== id)
+        const newArr = this.data.bottomUserList.filter(item => item.id !== id)
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = newArr
         dd.setStorageSync({
             key: 'selectedUsers',
             data: selectedUsers
         })
-
         this.onShow()
     },
     searchCheckboxChange(e) {
@@ -106,9 +122,12 @@ Page({
     },
     addChecked(selected, arr) {
         const newArr = selected.concat(arr)
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = newArr
         dd.setStorageSync({
             key: 'selectedUsers',
-            data: newArr
+            data: selectedUsers
         })
     },
     removeChecked(selected,arr) {
@@ -121,10 +140,12 @@ Page({
                     }
                 })
             })
-            console.log(newArr, 'newArr...........')
+            const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+            const nodeIndex = this.getSelectedIndex()
+            selectedUsers[nodeIndex] = newArr
             dd.setStorageSync({
                 key: 'selectedUsers',
-                data: newArr
+                data: selectedUsers
             })
         }
     },
@@ -190,6 +211,13 @@ Page({
         })
         this.searchFn('')
         this.onShow()
+    },
+    goBack() {
+        let currentDelta = getCurrentPages().length
+        const prevDelta = dd.getStorageSync({key: 'delta'}).data
+        dd.navigateBack({
+            delta: currentDelta - prevDelta
+        })
     },
     searchFn(value) {
         app.globalData.timeOutInstance = setTimeout(() => {

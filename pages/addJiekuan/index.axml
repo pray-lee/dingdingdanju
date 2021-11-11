@@ -162,19 +162,30 @@
                                 </view>
                                 <view class="status-content add-status-content">
                                     <view class="progress-status">{{item.nodeName}}</view>
-                                    <view class="progress-user">{{item.userList.length}}人审批</view>
+                                    <view class="progress-user">{{item.oaBillUserList.length}}人{{item.nodeTypeName}}</view>
                                 </view>
                             </view>
                             <view class="progress-right add-progress-right">
-                                <block a:for="{{item.userList}}" a:for-item="user">
+                                <block a:for="{{item.oaBillUserList}}" a:for-item="user" a:for-index="idx">
                                     <view class="user-box">
-                                        <view class="user-avatar">{{user.userName.slice(-2)}}</view>
-                                        <view class="user-word">{{user.userName}}</view>
+                                        <view a:if="{{user.removable}}" onTap="removeUser" data-index="{{index}}" data-id="{{user.id}}">
+                                            <view class="user-avatar">
+                                                {{user.name.slice(-2)}}
+                                                <view class="remove-node"></view>
+                                            </view>
+                                            <view class="user-word">{{user.name}}</view>
+                                        </view>
+                                        <view a:else>
+                                            <view class="user-avatar">
+                                                {{user.name.slice(-2)}}
+                                            </view>
+                                            <view class="user-word">{{user.name}}</view>
+                                        </view>
                                     </view>
-                                    <view class="operate">{{item.operate}}</view>
+                                    <view class="operate" a:if="{{item.editable}}">{{item.operate}}</view>
                                 </block>
                                 <block a:if="{{item.editable}}">
-                                    <view class="user-box" onTap="getDept" data-allowMulti="{{item.allowMulti}}">
+                                    <view class="user-box" onTap="getDept" data-index="{{index}}" data-allowMulti="{{item.allowMulti}}">
                                         <view class="user-avatar editable">+</view>
                                     </view>
                                 </block>

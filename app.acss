@@ -331,6 +331,7 @@ page {
 }
 .add-progress-right{
   display:flex;
+    padding-top: 10rpx;
 }
 .operate:last-of-type{
   display:none;
@@ -339,21 +340,33 @@ page {
   width: 80rpx;
 }
 .user-avatar{
+  position:relative;
   margin:0 auto;
-  width: 60rpx;
-  height: 60rpx;
+  width: 70rpx;
+  height: 70rpx;
   border-radius: 8rpx;
   background:#2679ff;
   margin-bottom: 10rpx;
   color:#fff;
   font-size: 20rpx;
   text-align: center;
-  line-height: 60rpx
+  line-height: 70rpx;
 }
-.user-avatar.editable{
+.remove-node {
+  position:absolute;
+  top:-0.1rem;
+  right:-0.1rem;
+  width: 30rpx;
+  height: 30rpx;
+  background:url(../../images/node_delete.png) center center no-repeat;
+  background-size: 30rpx 30rpx;
+  background-color:#fff;
+  border-radius: 50%;
+}
+.user-avatar.editable {
   border: 2rpx dotted #2679ff;
   text-align:center;
-  line-height: 56rpx;
+  line-height: 66rpx;
   background:#fff;
   color: #2679ff;
   border-radius: 8rpx;
@@ -368,8 +381,8 @@ page {
   font-size: 25rpx;
   color:#999;
   font-weight:bold;
-  margin-top: 12.5rpx;
-
+  margin-top: 17.5rpx;
+  padding: 0 10rpx;
 }
 
 
@@ -485,7 +498,104 @@ page {
   padding-right: 60rpx;
   border-radius: 9rpx
 }
-
+.add-progress-right{
+  width: 500rpx;
+  overflow:hidden;
+  justify-content: flex-end;
+}
+/*****************************查看审批流*******************************/
+.view-progress-box{
+  display:flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+.view-progress-left{
+  display:flex
+}
+.view-avatar-wrapper{
+  min-height: 100rpx;
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+}
+.view-avatar-block{
+  position:relative;
+}
+.view-avatar{
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 8rpx;
+  background:#2679ff;
+  line-height: 60rpx;
+  text-align:center;
+  font-size: 20rpx;
+  color:#fff;
+  box-sizing:border-box;
+  padding-top: 10rpx;
+}
+.view-avatar-icon{
+  width: 40rpx;
+  height: 40rpx;
+}
+.view-status-dotted-line{
+  width:0rpx;
+  height:calc(100% - 100rpx);
+  border: 2rpx dashed #d9d9d9;
+  margin-top: 8rpx;
+}
+.view-status-content{
+  margin-left: 20rpx;
+}
+.view-progress-status{
+  font-size: 25rpx;
+  color:#333;
+  margin-bottom: 10rpx;
+}
+.view-progress-user{
+  font-size: 20rpx;
+  color:#999;
+  padding-bottom: 10rpx;
+}
+.show-user-list{
+  padding: 10rpx;
+  height: auto
+}
+.user-block{
+  margin-right: 30rpx;
+  text-align:center;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+.user-bg{
+    width: 60rpx;
+    height: 60rpx;
+    background: #2679ff;
+    border-radius: 8rpx;
+    text-align:center;
+  line-height: 60rpx;
+  color:#fff
+}
+.user-name{
+  margin:0 0 20rpx;
+  font-size: 20rpx;
+}
+.view-progress-right{
+  color:#c7c7cd;
+  font-weight:200;
+}
+.toggle-user-list{
+  width: 30rpx;
+  height: 30rpx;
+}
+.toggle-user-list.down{
+    background:url(../images/up.png) center center no-repeat;
+    background-size: 30rpx 30rpx
+}
+.toggle-user-list.up{
+  background:url(../images/down.png) center center no-repeat;
+  background-size: 30rpx 30rpx
+}
 
 
 

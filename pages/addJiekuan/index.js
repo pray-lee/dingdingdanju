@@ -12,6 +12,7 @@ Page({
         showOa: false,
         nodeList: [],
         deptList: [],
+        selectedUserList: [],
         // =================================
         validT: null,
         isPhoneXSeries: false,
@@ -105,6 +106,16 @@ Page({
         }
     },
     formSubmit(e) {
+        // ==================处理审批流数据==================
+        if(this.data.nodeList.length) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    oaBillUserNodeListJson: JSON.stringify(this.data.nodeList)
+                }
+            })
+        }
+        // ==================处理审批流数据==================
         const status = e.currentTarget.dataset.status
         this.setData({
             submitData: {
@@ -396,6 +407,7 @@ Page({
         });
     },
     onShow() {
+        this.getSelectedUserListFromStorage()
         this.getAuxptyIdFromStorage()
         this.getBorrowIdFromStorage()
         this.getSubjectIdFromStorage()
@@ -694,7 +706,8 @@ Page({
                 if(res.data && res.data.length) {
                     const nodeList = res.data.map(node => {
                         return {
-                            userList:node.oaBillUserList || [],
+                            ...node,
+                            oaBillUserList:node.oaBillUserList || [],
                             editable:node.editable,
                             allowMulti:node.allowMulti,
                             nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
@@ -709,10 +722,16 @@ Page({
     },
     getDept(e) {
         const allowMulti = e.currentTarget.dataset.allowMulti
+        const nodeIndex = e.currentTarget.dataset.index
         // 存一下是单选还是多选
         dd.setStorage({
             key: 'allowMulti',
             data: allowMulti
+        })
+        // 存一下是点的第几个node
+        dd.setStorage({
+            key: 'nodeIndex',
+            data: nodeIndex
         })
         const accountbookId = this.data.submitData.accountbookId
         this.addLoading()
@@ -775,7 +794,37 @@ Page({
         }
         return newUsers
     },
-
+    removeUser(e) {
+        const id = e.currentTarget.dataset.id
+        const nodeIndex = e.currentTarget.dataset.index
+        this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.filter(item => item.id !== id)
+        this.setData({
+            nodeList: this.data.nodeList
+        })
+    },
+    getSelectedUserListFromStorage() {
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = dd.getStorageSync({key: 'nodeIndex'}).data
+        let currentNodeList = []
+        if(selectedUsers.length) {
+            currentNodeList = selectedUsers[nodeIndex].map(item => ({...item, removable: true}))
+        }
+        if(!!currentNodeList && nodeIndex !== null) {
+            if(this.data.nodeList[nodeIndex]) {
+                // 把用户刚选择的和之前已经选择的混合在一起
+                this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.concat(currentNodeList)
+                // 然后去重
+                this.data.nodeList[nodeIndex].oaBillUserList = this.handleUsers(this.data.nodeList[nodeIndex].oaBillUserList)
+                this.setData({
+                    nodeList: this.data.nodeList
+                })
+            }
+        }
+        this.clearSelectedUserList()
+    },
+    clearSelectedUserList() {
+        dd.removeStorage({key: 'selectedUsers'})
+    },
     // ===============================================================================
     // 获取申请组织
     getAccountbookList(data) {
@@ -1528,11 +1577,6 @@ Page({
                     })
                 }
             },
-        })
-    },
-    goUserDetail() {
-        dd.navigateTo({
-            url: '/pages/progressUser/index'
         })
     },
 })
