@@ -348,7 +348,7 @@ page {
   background:#2679ff;
   margin-bottom: 10rpx;
   color:#fff;
-  font-size: 20rpx;
+  font-size: 22rpx;
   text-align: center;
   line-height: 70rpx;
 }
@@ -513,7 +513,7 @@ page {
   display:flex
 }
 .view-avatar-wrapper{
-  min-height: 100rpx;
+  min-height: 140rpx;
   display:flex;
   flex-direction: column;
   align-items:center;
@@ -531,17 +531,31 @@ page {
   font-size: 20rpx;
   color:#fff;
   box-sizing:border-box;
-  padding-top: 10rpx;
+}
+.view-avatar-bg{
+  margin: 5rpx;
+  width: 50rpx;
+  height: 50rpx;
+  box-sizing:content-box;
 }
 .view-avatar-icon{
-  width: 40rpx;
-  height: 40rpx;
+    position:absolute;
+    width: 20rpx;
+    height: 20rpx;
+    right: -8rpx;
+    bottom: -8rpx;
 }
 .view-status-dotted-line{
   width:0rpx;
-  height:calc(100% - 100rpx);
+  height:calc(100% - 80rpx);
   border: 2rpx dashed #d9d9d9;
-  margin-top: 8rpx;
+  margin-top: 12rpx;
+}
+.view-status-line{
+  width: 0rpx;
+  height: calc(100% - 80rpx);
+  border: 2rpx solid #d9d9d9;
+  margin-top: 12rpx;
 }
 .view-status-content{
   margin-left: 20rpx;
@@ -552,11 +566,19 @@ page {
   margin-bottom: 10rpx;
 }
 .view-progress-user{
-  font-size: 20rpx;
+  font-size: 21rpx;
   color:#999;
   padding-bottom: 10rpx;
 }
+.view-progress-content{
+  padding: 15rpx;
+  background:#f1f1f1;
+  border-radius: 8rpx;
+}
 .show-user-list{
+  display:flex;
+  flex-wrap:wrap;
+  overflow:hidden;
   padding: 10rpx;
   height: auto
 }
@@ -574,9 +596,10 @@ page {
     border-radius: 8rpx;
     text-align:center;
   line-height: 60rpx;
-  color:#fff
+    font-size: 23rpx;
+  color:#fff;
 }
-.user-name{
+.view-progress-box .user-name{
   margin:0 0 20rpx;
   font-size: 20rpx;
 }

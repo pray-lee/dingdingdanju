@@ -56,6 +56,7 @@ Page({
         // 先看看当前页面的用户列表有没有已经选中的重复的用户,
         const selectedUserList = this.getStorageUserList()
         const checkedUsers = selectedUserList.filter(selected => this.data.userList.some(item => selected.id === item.id))
+        console.log(checkedUsers)
         if(checkedUsers.length) {
             for(let i = 0 ; i < this.data.userList.length; i++) {
                 const user = this.data.userList[i]
@@ -77,11 +78,6 @@ Page({
         const userList = dd.getStorageSync({key: 'userList'}).data
         this.setData({
             userList
-        })
-    },
-    radioChange(e) {
-        this.setData({
-            selectValue: [e.detail.value]
         })
     },
     getSelectedIndex() {
@@ -117,7 +113,6 @@ Page({
     },
     checkboxChange(e) {
         const index = e.currentTarget.dataset.index
-
         this.data.userList[index].checked = e.detail.value
         this.setData({
             userList: this.data.userList
@@ -126,7 +121,6 @@ Page({
         const selectedUserList = this.getStorageUserList()
         this.handleUserList(selectedUserList, checkedValues)
         this.renderBottomUserList()
-
     },
     searchCheckboxChange(e) {
         const index = e.currentTarget.dataset.index
@@ -137,6 +131,38 @@ Page({
         const checkedValues = this.data.searchResult.filter(item => !!item.checked)
         const selectedUserList = this.getStorageUserList()
         this.handleSearchUserList(selectedUserList, checkedValues)
+        this.renderBottomUserList()
+    },
+    searchRadioChange(e) {
+        const index = e.currentTarget.dataset.index
+        const searchResult = this.data.searchResult.map(item =>({...item, checked: false}))
+        searchResult[index].checked = e.detail.value
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = [searchResult[index]]
+        dd.setStorageSync({
+            key: 'selectedUsers',
+            data: selectedUsers
+        })
+        this.setData({
+            searchResult
+        })
+        this.renderBottomUserList()
+    },
+    radioChange(e) {
+        const index = e.currentTarget.dataset.index
+        const userList = this.data.userList.map(item => ({...item, checked: false}))
+        userList[index].checked = e.detail.value
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = [userList[index]]
+        dd.setStorageSync({
+            key: 'selectedUsers',
+            data: selectedUsers
+        })
+        this.setData({
+            userList
+        })
         this.renderBottomUserList()
     },
     handleUserList(selectedUserList, checkedValues) {
@@ -153,7 +179,6 @@ Page({
         // 需要删除的
         const removeChecked = checkedUsers.filter(item => checkedValues.every(checked => checked.id !== item.id))
         this.removeChecked(selectedUserList, removeChecked)
-
     },
     handleSearchUserList(selectedUserList, checkedValues) {
         // 用户列表和已选择列表取差集   当前页面没有选中的

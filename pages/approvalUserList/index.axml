@@ -16,12 +16,10 @@
                     </label>
                 </block>
                 <block a:else>
-                    <radio-group class="radio-group" onChange="radioChange">
-                        <label class="radio info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
-                            <radio value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
-                            <text class="dept-name user-name">{{item.name}}</text>
-                        </label>
-                    </radio-group>
+                    <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
+                        <radio onChange="radioChange" data-index="{{index}}" checked="{{item.checked}}"/>
+                        <text class="dept-name user-name">{{item.name}}</text>
+                    </label>
                 </block>
             </block>
         </scroll-view>
@@ -48,12 +46,10 @@
 
                         </block>
                         <block a:else>
-                            <radio-group class="radio-group" onChange="radioChange">
-                                <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
-                                    <radio value="{{item.id + '_' + item.name}}" checked="{{item.checked}}"/>
-                                    <text class="dept-name user-name">{{item.name}}</text>
-                                </label>
-                            </radio-group>
+                            <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
+                                <radio onChange="radioChange" data-index="{{index}}" checked="{{item.checked}}"/>
+                                <text class="dept-name user-name">{{item.name}}</text>
+                            </label>
                         </block>
                     </block>
                 </view>

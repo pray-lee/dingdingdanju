@@ -93,6 +93,23 @@ Page({
         })
         this.onShow()
     },
+    searchRadioChange(e) {
+        const index = e.currentTarget.dataset.index
+        const searchResult = this.data.searchResult.map(item =>({...item, checked: false}))
+        searchResult[index].checked = e.detail.value
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = [searchResult[index]]
+        dd.setStorageSync({
+            key: 'selectedUsers',
+            data: selectedUsers
+        })
+        this.setData({
+            searchResult
+        })
+        this.renderBottomUserList()
+    },
+
     searchCheckboxChange(e) {
         const index = e.currentTarget.dataset.index
         this.data.searchResult[index].checked = e.detail.value
@@ -160,7 +177,7 @@ Page({
         })
     },
     getNext(e) {
-        const userList = e.currentTarget.dataset.userList
+        const userList = e.currentTarget.dataset.userList.map(item => ({...item, userName: item.name}))
         const subDepartList = e.currentTarget.dataset.subDepartList
         const delta = getCurrentPages().length
         dd.setStorageSync({
@@ -213,16 +230,14 @@ Page({
         this.onShow()
     },
     goBack() {
-        let currentDelta = getCurrentPages().length
-        const prevDelta = dd.getStorageSync({key: 'delta'}).data
         dd.navigateBack({
-            delta: currentDelta - prevDelta
+            delta: 1
         })
     },
     searchFn(value) {
         app.globalData.timeOutInstance = setTimeout(() => {
             var searchResult = this.data.searchUserList.filter(item => value && item.name.indexOf(value) !== -1)
-            const newSearchResult = searchResult.map(item => ({...item, checked: false}))
+            const newSearchResult = searchResult.map(item => ({...item, userName: item.name, checked: false}))
             this.setData({
                 searchResult: newSearchResult
             })

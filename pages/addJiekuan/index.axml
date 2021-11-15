@@ -170,16 +170,16 @@
                                     <view class="user-box">
                                         <view a:if="{{user.removable}}" onTap="removeUser" data-index="{{index}}" data-id="{{user.id}}">
                                             <view class="user-avatar">
-                                                {{user.name.slice(-2)}}
+                                                {{user.userName.slice(-2)}}
                                                 <view class="remove-node"></view>
                                             </view>
-                                            <view class="user-word">{{user.name}}</view>
+                                            <view class="user-word">{{user.Name}}</view>
                                         </view>
                                         <view a:else>
                                             <view class="user-avatar">
-                                                {{user.name.slice(-2)}}
+                                                {{user.userName.slice(-2)}}
                                             </view>
-                                            <view class="user-word">{{user.name}}</view>
+                                            <view class="user-word">{{user.userName}}</view>
                                         </view>
                                     </view>
                                     <view class="operate" a:if="{{item.editable}}">{{item.operate}}</view>

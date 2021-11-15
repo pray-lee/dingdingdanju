@@ -8,7 +8,13 @@ Page({
         result: null,
         process: null,
         caikaProcess: null,
-        showUserList: false,
+        statusObj: {
+            1: '审批中',
+            2: '已同意',
+            0: '',
+            '-1': '已撤回',
+            '-2': '已驳回'
+        }
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -69,9 +75,11 @@ Page({
         // 获取审批信息
         this.getCaikaProcessInstance(query)
     },
-    toggleUserList() {
+    toggleUserList(e) {
+        const index = e.currentTarget.dataset.index
+        this.data.caikaProcess[index].showUserList = !this.data.caikaProcess[index].showUserList
         this.setData({
-            showUserList: !this.data.showUserList
+            caikaProcess: this.data.caikaProcess
         })
     },
     getCaikaProcessInstance(query) {
@@ -84,8 +92,9 @@ Page({
                 if(res.data) {
                     const caikaProcess = this.handleData(res.data)
                     this.setData({
-                        caikaProcess: res.data
+                        caikaProcess: caikaProcess.map(item => ({...item, showUserList: false}))
                     })
+                    console.log(this.data.caikaProcess)
                 }
             }
         })
