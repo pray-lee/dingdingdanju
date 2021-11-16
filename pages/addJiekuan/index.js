@@ -663,20 +663,23 @@ Page({
     },
     showOaUserNodeListUseField(fields){
         let result = false
-        for(let i = 0; i < fields.length; i++) {
-            const field = fields[i]
-            if(this.data.submitData[field]) {
-                result = true
+        result = fields.every(field => {
+            const fieldValue = this.data.submitData[field]
+            if(Array.isArray(fieldValue)) {
+                return fieldValue.length
+            }else{
+                return !!fieldValue
             }
-            if(field === 'billDetailListObj'){
-                result = !!this.data.submitData[field].length
-            }
-        }
+        })
         if(this.data.oaModule && this.data.showOaUserNodeList && result) {
             this.setData({
                 showOa: true
             })
             this.getProcess(fields, 4)
+        }else{
+            this.setData({
+                showOa: false
+            })
         }
     },
     getOaParams(fields, billType) {
@@ -719,6 +722,14 @@ Page({
                 }
             },
         })
+    },
+    setRenderProgress(nodeList) {
+        if(!!nodeList) {
+            this.setData({
+                nodeList,
+                showOa: true
+            })
+        }
     },
     getDept(e) {
         const allowMulti = e.currentTarget.dataset.allowMulti
@@ -1400,7 +1411,7 @@ Page({
             })
         }
         // fileList
-        if (data.billFiles.length) {
+        if (data.billFiles && data.billFiles.length) {
             var billFilesObj = data.billFiles.map(item => {
                 return item
             })
@@ -1435,6 +1446,7 @@ Page({
         let t = null
         t = setTimeout(() => {
             this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
+            this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
             t = null
         })
     },
