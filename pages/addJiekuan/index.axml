@@ -166,14 +166,41 @@
                                 </view>
                             </view>
                             <view class="progress-right add-progress-right">
-                                <block a:for="{{item.oaBillUserList}}" a:for-item="user" a:for-index="idx">
+                                <block a:if="{{item.oaBillUserList.length > 3}}">
+                                    <view class="user-box" onTap="showSelectedUserList" data-allowMulti="{{item.allowMulti}}">
+                                        <view class="user-avatar">
+                                            <image src="../../images/approval.png" class="view-avatar view-avatar-bg"></image>
+                                        </view>
+                                        <view class="user-word">查看更多</view>
+                                    </view>
+                                    <view class="operate">{{item.operate}}</view>
+                                </block>
+                                <block a:elif="{{item.oaBillUserList.length > 0}}">
+                                    <view class="user-box">
+                                        <view a:if="{{item.oaBillUserList[0].removable}}" onTap="removeUser" data-index="{{index}}" data-id="{{item.oaBillUserList[0].id}}">
+                                            <view class="user-avatar">
+                                                {{item.oaBillUserList[0].userName.slice(-2)}}
+                                                <view class="remove-node"></view>
+                                            </view>
+                                            <view class="user-word">{{item.oaBillUserList[0].userName}}</view>
+                                        </view>
+                                        <view a:else>
+                                            <view class="user-avatar">
+                                                {{item.oaBillUserList[0].userName.slice(-2)}}
+                                            </view>
+                                            <view class="user-word">{{item.oaBillUserList[0].userName}}</view>
+                                        </view>
+                                    </view>
+                                    <view class="operate">{{item.operate}}</view>
+                                </block>
+                                <block a:for="{{item.oaBillUserList.slice(1, 4)}}" a:for-item="user" a:for-index="idx">
                                     <view class="user-box">
                                         <view a:if="{{user.removable}}" onTap="removeUser" data-index="{{index}}" data-id="{{user.id}}">
                                             <view class="user-avatar">
                                                 {{user.userName.slice(-2)}}
                                                 <view class="remove-node"></view>
                                             </view>
-                                            <view class="user-word">{{user.Name}}</view>
+                                            <view class="user-word">{{user.userName}}</view>
                                         </view>
                                         <view a:else>
                                             <view class="user-avatar">
@@ -301,4 +328,29 @@
         </view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+    <view class="select-user-list" animation="{{animationInfo1}}">
+        <scroll-view scroll-y class="scroll-user-list {{isPhoneXSeries ? 'iphoneX' : ''}}">
+            <view class="select-user-common">
+                <block a:for="{{selectedUserList.oaBillUserList}}">
+                    <view a:if="{{!item.removable}}" class="user-box">
+                        <view class="user-avatar">
+                            {{item.userName.slice(-2)}}
+                        </view>
+                        <view class="user-word">{{item.userName}}</view>
+                    </view>
+                    <view a:else class="user-box" onTap="removeUser" data-index="{{nodeIndex}}" data-id="{{item.id}}">
+                        <view class="user-avatar">
+                            {{item.userName.slice(-2)}}
+                            <view class="remove-node"></view>
+                        </view>
+                        <view class="user-word">{{item.userName}}</view>
+                    </view>
+                    <view class="operate">/</view>
+                </block>
+            </view>
+        </scroll-view>
+        <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+            <button onTap="hideSelectedUserList" class="submit-btn">返回</button>
+        </view>
+    </view>
 </view>

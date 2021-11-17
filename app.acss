@@ -16,7 +16,7 @@ page {
   background: transparent;
   overflow:hidden;
 }
-.bottom-nav {
+.bottom-nav{
   position: fixed;
   bottom: 0;
   left: 0;
@@ -28,13 +28,13 @@ page {
   background: #ff5252;
 }
 
-.form-row {
+.form-row{
   position:relative;
   padding: 20rpx 40rpx;
   min-height: 88rpx;
 }
 
-.form-row-label {
+.form-row-label{
   min-width: 6em;
   font-size: 24rpx;
   margin-right: 10rpx;
@@ -46,7 +46,7 @@ page {
   align-items: center;
 }
 
-.form-row-content {
+.form-row-content{
   height:44rpx;
   line-height: 44rpx;
   flex: 1;
@@ -333,11 +333,16 @@ page {
   display:flex;
     padding-top: 10rpx;
 }
+.select-user-common{
+  display:flex;
+  flex-wrap:wrap;
+}
 .operate:last-of-type{
   display:none;
 }
 .user-box{
-  width: 80rpx;
+  width: 75rpx;
+  flex: 0 0 auto;
 }
 .user-avatar{
   position:relative;
@@ -349,8 +354,9 @@ page {
   margin-bottom: 10rpx;
   color:#fff;
   font-size: 22rpx;
-  text-align: center;
-  line-height: 70rpx;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 .remove-node {
   position:absolute;
@@ -382,7 +388,7 @@ page {
   color:#999;
   font-weight:bold;
   margin-top: 17.5rpx;
-  padding: 0 10rpx;
+  padding: 0 8rpx;
 }
 
 
@@ -462,8 +468,11 @@ page {
   margin-top: 8rpx
 }
 .add-status-line{
-  width: 2rpx;
-  height: calc(100%)
+  width: 0rpx;
+  border: 2rpx dashed #d9d9d9;
+  background:transparent;
+  height: calc(100%);
+  border-radius: 0;
 }
 .progress-box:last-child .status-line{
   display:none
@@ -557,6 +566,12 @@ page {
   border: 2rpx solid #d9d9d9;
   margin-top: 12rpx;
 }
+.view-progress-box:last-child .view-status-dotted-line{
+  display:none
+}
+.view-progress-box:last-child .view-status-line{
+  display:none
+}
 .view-status-content{
   margin-left: 20rpx;
 }
@@ -618,6 +633,36 @@ page {
 .toggle-user-list.up{
   background:url(../images/down.png) center center no-repeat;
   background-size: 30rpx 30rpx
+}
+
+.select-user-list{
+  position:absolute;
+  z-index:1000;
+  bottom:0;
+  left:0;
+  right:0;
+  top:0;
+  background:#fff;
+  transform: translateY(100%);
+  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+  box-sizing: border-box;
+  overflow:hidden;
+}
+.select-user-common{
+  padding: 20rpx;
+}
+.btn-area.iphoneX{
+  padding-bottom: 68rpx
+}
+.btn-area button{
+  width: 100%;
+  border:0;
+  background:#3276c3;
+  border-radius: 0;
+  color:#fff;
+  font-size: 32rpx;
+  height: 100rpx;
+  line-height: 100rpx
 }
 
 

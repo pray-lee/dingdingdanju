@@ -95,7 +95,7 @@ Page({
     },
     searchRadioChange(e) {
         const index = e.currentTarget.dataset.index
-        const searchResult = this.data.searchResult.map(item =>({...item, checked: false}))
+        const searchResult = this.data.searchResult.map(item =>({...item, userName: item.name, checked: false}))
         searchResult[index].checked = e.detail.value
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
         const nodeIndex = this.getSelectedIndex()
@@ -177,7 +177,7 @@ Page({
         })
     },
     getNext(e) {
-        const userList = e.currentTarget.dataset.userList.map(item => ({...item, userName: item.name}))
+        const userList = e.currentTarget.dataset.userList ? e.currentTarget.dataset.userList.map(item => ({...item, userName: item.name})) : []
         const subDepartList = e.currentTarget.dataset.subDepartList
         const delta = getCurrentPages().length
         dd.setStorageSync({

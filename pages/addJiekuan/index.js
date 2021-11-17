@@ -11,8 +11,11 @@ Page({
         showOaUserNodeList: false,
         showOa: false,
         nodeList: [],
+        nodeIndex: null,
         deptList: [],
+        // 这个是"查看更多"点进去显示的当前审批节点的用户
         selectedUserList: [],
+        animationInfo1: {},
         // =================================
         validT: null,
         isPhoneXSeries: false,
@@ -724,9 +727,20 @@ Page({
         })
     },
     setRenderProgress(nodeList) {
+        const newNodeList = nodeList.map(node => {
+            return {
+                ...node,
+                oaBillUserList:node.oaBillUserList || [],
+                editable:node.editable,
+                allowMulti:node.allowMulti,
+                nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                operate:node.signType === 'and' ? '+' : '/',
+                nodeName: node.nodeName
+            }
+        })
         if(!!nodeList) {
             this.setData({
-                nodeList,
+                nodeList: newNodeList,
                 showOa: true
             })
         }
@@ -810,14 +824,16 @@ Page({
         const nodeIndex = e.currentTarget.dataset.index
         this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.filter(item => item.id !== id)
         this.setData({
-            nodeList: this.data.nodeList
+            nodeList: this.data.nodeList,
+            nodeIndex,
+            selectedUserList:this.data.nodeList[nodeIndex]
         })
     },
     getSelectedUserListFromStorage() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
         const nodeIndex = dd.getStorageSync({key: 'nodeIndex'}).data
         let currentNodeList = []
-        if(selectedUsers.length) {
+        if(selectedUsers.length && nodeIndex !== null) {
             currentNodeList = selectedUsers[nodeIndex].map(item => ({...item, removable: true}))
         }
         if(!!currentNodeList && nodeIndex !== null) {
@@ -827,7 +843,9 @@ Page({
                 // 然后去重
                 this.data.nodeList[nodeIndex].oaBillUserList = this.handleUsers(this.data.nodeList[nodeIndex].oaBillUserList)
                 this.setData({
-                    nodeList: this.data.nodeList
+                    nodeList: this.data.nodeList,
+                    nodeIndex: nodeIndex,
+                    selectedUserList: this.data.nodeList[nodeIndex],
                 })
             }
         }
@@ -835,6 +853,29 @@ Page({
     },
     clearSelectedUserList() {
         dd.removeStorage({key: 'selectedUsers'})
+        dd.removeStorage({key: 'nodeIndex'})
+    },
+    showSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            animationInfo1: animation.export(),
+        })
+    },
+    hideSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'linear'
+        })
+        this.animation = animation
+        animation.translateY('100%').step()
+        this.setData({
+            animationInfo1: animation.export(),
+        })
     },
     // ===============================================================================
     // 获取申请组织

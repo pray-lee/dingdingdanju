@@ -49,7 +49,7 @@ Page({
         })
     },
     onShow() {
-        const newUserList = this.data.userList.map(item => ({...item, checked: false}))
+        const newUserList = this.data.userList.map(item => ({...item, userName: item.name, checked: false}))
         this.setData({
             userList: newUserList
         })
@@ -92,6 +92,7 @@ Page({
     },
     renderBottomUserList() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        console.log(selectedUsers)
         let bottomUserList = []
         if(selectedUsers.length) {
             bottomUserList = selectedUsers[this.getSelectedIndex()]
@@ -104,7 +105,10 @@ Page({
     },
     removeUser(e) {
         const id = e.currentTarget.dataset.id
-        const selectedUsers = this.data.bottomUserList.filter(item => item.id !== id)
+        const newArr = this.data.bottomUserList.filter(item => item.id !== id)
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data
+        const nodeIndex = this.getSelectedIndex()
+        selectedUsers[nodeIndex] = newArr
         dd.setStorageSync({
             key: 'selectedUsers',
             data: selectedUsers
@@ -135,7 +139,7 @@ Page({
     },
     searchRadioChange(e) {
         const index = e.currentTarget.dataset.index
-        const searchResult = this.data.searchResult.map(item =>({...item, checked: false}))
+        const searchResult = this.data.searchResult.map(item =>({...item, userName: item.name, checked: false}))
         searchResult[index].checked = e.detail.value
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
         const nodeIndex = this.getSelectedIndex()
@@ -151,7 +155,7 @@ Page({
     },
     radioChange(e) {
         const index = e.currentTarget.dataset.index
-        const userList = this.data.userList.map(item => ({...item, checked: false}))
+        const userList = this.data.userList.map(item => ({...item, userName: item.name, checked: false}))
         userList[index].checked = e.detail.value
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
         const nodeIndex = this.getSelectedIndex()
@@ -296,7 +300,7 @@ Page({
     searchFn(value) {
         app.globalData.timeOutInstance = setTimeout(() => {
             var searchResult = this.data.searchUserList.filter(item => value && item.name.indexOf(value) !== -1)
-            const newSearchResult = searchResult.map(item => ({...item, checked: false}))
+            const newSearchResult = searchResult.map(item => ({...item, userName: item.name, checked: false}))
             this.setData({
                 searchResult: newSearchResult
             })
