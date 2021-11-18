@@ -328,6 +328,7 @@
         </view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+<!--  已选择的用户  -->
     <view class="select-user-list" animation="{{animationInfo1}}">
         <scroll-view scroll-y class="scroll-user-list {{isPhoneXSeries ? 'iphoneX' : ''}}">
             <view class="select-user-common">
@@ -346,6 +347,11 @@
                         <view class="user-word">{{item.userName}}</view>
                     </view>
                     <view class="operate">/</view>
+                </block>
+                <block a:if="{{selectedUserList.editable}}">
+                    <view class="user-box" onTap="getDept" data-index="{{nodeIndex}}" data-allowMulti="{{selectedUserList.allowMulti}}" data-selectedUserList="{{true}}">
+                        <view class="user-avatar editable">+</view>
+                    </view>
                 </block>
             </view>
         </scroll-view>

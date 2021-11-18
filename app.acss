@@ -343,6 +343,7 @@ page {
 .user-box{
   width: 75rpx;
   flex: 0 0 auto;
+  margin-bottom: 30rpx;
 }
 .user-avatar{
   position:relative;

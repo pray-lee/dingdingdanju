@@ -123,6 +123,7 @@ Page({
         })
         const checkedValues = this.data.userList.filter(item => !!item.checked)
         const selectedUserList = this.getStorageUserList()
+        console.log(selectedUserList)
         this.handleUserList(selectedUserList, checkedValues)
         this.renderBottomUserList()
     },
