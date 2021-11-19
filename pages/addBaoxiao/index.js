@@ -6,6 +6,17 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        // =============审批流相关============
+        oaModule: null,
+        showOaUserNodeList: false,
+        showOa: false,
+        nodeList: [],
+        nodeIndex: null,
+        deptList: [],
+        // 这个是"查看更多"点进去显示的当前审批节点的用户
+        selectedUserList: [],
+        animationInfo1: {},
+        // =================================
         isPhoneXSeries: false,
         process: null,
         btnHidden: false,
@@ -137,7 +148,16 @@ Page({
         }
     },
     formSubmit(e) {
-        console.log(this.data.importList, 'this.data.importList........')
+        // ==================处理审批流数据==================
+        if(this.data.nodeList.length) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    oaBillUserNodeListJson: JSON.stringify(this.data.nodeList)
+                }
+            })
+        }
+        // ==================处理审批流数据==================
         const status = e.currentTarget.dataset.status
         this.setData({
             submitData: {
@@ -166,6 +186,7 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
+        console.log(this.data.submitData,'submitData........')
         request({
             hideLoading: this.hideLoading,
             url,
@@ -233,6 +254,12 @@ Page({
                     verificationAmount: ''
                 },
             })
+            // ============ 审批流 =========
+            this.setData({
+                oaModule: this.findAccountbookOaModule(this.data[listName][value], this.data.accountbookList)
+            })
+            this.showOaProcessByBillType(this.data[listName][value], 9)
+            // ============ 审批流 =========
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
@@ -395,6 +422,7 @@ Page({
                     })
                     this.setApplicationAmount(baoxiaoList)
                     this.setTotalAmount()
+                    this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
                 }
             }
         })
@@ -406,6 +434,8 @@ Page({
         })
     },
     onShow() {
+        // 从缓存获取用户已经选择的审批人
+        this.getSelectedUserListFromStorage()
         // 从缓存里获取借款列表
         this.getSelectedBorrowListFromStorage()
         // 从缓存里获取借款人id
@@ -438,6 +468,7 @@ Page({
         }
         this.setApplicationAmount(baoxiaoList)
         this.setTotalAmount()
+        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearFileList(submitData) {
@@ -592,6 +623,237 @@ Page({
             this.getEditData(id)
         }
     },
+    // =============================================================================
+    findAccountbookOaModule(accountbookId, accountbookList) {
+        return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+    },
+    // 通过单据判断
+    showOaProcessByBillType(accountbookId, billType) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaBillConfigController.do?getEnableStatus&accountbookId=' + accountbookId + '&billType=' + billType,
+            method: 'GET',
+            success: res => {
+                this.setData({
+                    showOaUserNodeList: res
+                })
+            }
+        })
+    },
+    showOaUserNodeListUseField(fields){
+        let result = false
+        fields.forEach(field => {
+            if(this.data[field] && this.data[field].length) {
+                result = true
+            }else{
+                if(this.data.submitData[field]) {
+                    result = true
+                }else{
+                    result = false
+                }
+            }
+        })
+        if(this.data.oaModule && this.data.showOaUserNodeList && result) {
+            this.setData({
+                showOa: true
+            })
+            this.getProcess(fields, 9)
+        }else{
+            this.setData({
+                showOa: false
+            })
+        }
+    },
+    getOaParams(fields, billType) {
+        let params = ''
+        fields.forEach(item => {
+            if(this.data.submitData[item]) {
+                params += '&' + item + '=' + this.data.submitData[item]
+            }else{
+                params += '&applicationAmount=' + this.data.submitData.applicationAmount
+            }
+        })
+        params = '&billType=' + billType + params
+        return params
+    },
+    getProcess(fields) {
+        const params = this.getOaParams(fields, 9)
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaBillConfigController.do?getOAUserList' + params,
+            method: 'GET',
+            success: res => {
+                if(res.data && res.data.length) {
+                    const nodeList = res.data.map(node => {
+                        return {
+                            ...node,
+                            oaBillUserList:node.oaBillUserList || [],
+                            editable:node.editable,
+                            allowMulti:node.allowMulti,
+                            nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                            operate:node.signType === 'and' ? '+' : '/',
+                            nodeName: node.nodeName
+                        }
+                    })
+                    this.setData({nodeList})
+                }
+            },
+        })
+    },
+    setRenderProgress(nodeList) {
+        const newNodeList = nodeList.map(node => {
+            return {
+                ...node,
+                oaBillUserList:node.oaBillUserList || [],
+                editable:node.editable,
+                allowMulti:node.allowMulti,
+                nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                operate:node.signType === 'and' ? '+' : '/',
+                nodeName: node.nodeName
+            }
+        })
+        if(!!nodeList) {
+            this.setData({
+                nodeList: newNodeList,
+                showOa: true
+            })
+        }
+    },
+    getDept(e) {
+        const allowMulti = e.currentTarget.dataset.allowMulti
+        const nodeIndex = e.currentTarget.dataset.index
+        // 存一下是单选还是多选
+        dd.setStorage({
+            key: 'allowMulti',
+            data: allowMulti
+        })
+        // 存一下是点的第几个node
+        dd.setStorage({
+            key: 'nodeIndex',
+            data: nodeIndex
+        })
+        const accountbookId = this.data.submitData.accountbookId
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'newDepartDetailController.do?treeListWithUser&accountbookId=' + accountbookId,
+            method: 'GET',
+            success: res => {
+                if(res && res.data) {
+                    const users = this.setSearchArr(res.data)
+                    const searchUserList = this.handleUsers(users)
+                    dd.setStorageSync({
+                        key: 'searchUserList',
+                        data: searchUserList
+                    })
+                    dd.setStorage({
+                        key: 'deptList',
+                        data: res.data,
+                        success: () => {
+                            dd.navigateTo({
+                                url: '/pages/deptList/index'
+                            })
+                        }
+                    })
+                }
+            }
+        })
+    },
+    setSearchArr(deptList) {
+        let users = []
+        for(let i = 0; i < deptList.length; i++) {
+            const dept = deptList[i]
+            users.concat(this.generateUsername(dept, users))
+        }
+        return users
+    },
+    generateUsername(dept, users) {
+        const userList = dept.userList || []
+        const subDepartList = dept.subDepartList || []
+        if(userList.length) {
+            userList.forEach(item => {
+                users.push(item)
+            })
+        }
+        if(subDepartList.length) {
+            subDepartList.forEach(subDepart => {
+                users.concat(this.generateUsername(subDepart, users))
+            })
+        }
+        return users
+    },
+    handleUsers(users) {
+        const newUsers = []
+        if(users.length) {
+            const obj = {}
+            users.reduce((prev, cur) => {
+                obj[cur.id] ? '':obj[cur.id] = true && prev.push(cur)
+                return prev
+            }, newUsers)
+        }
+        return newUsers
+    },
+    removeUser(e) {
+        const id = e.currentTarget.dataset.id
+        const nodeIndex = e.currentTarget.dataset.index
+        this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.filter(item => item.id !== id)
+        this.setData({
+            nodeList: this.data.nodeList,
+            nodeIndex,
+            selectedUserList:this.data.nodeList[nodeIndex]
+        })
+    },
+    getSelectedUserListFromStorage() {
+        const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
+        const nodeIndex = dd.getStorageSync({key: 'nodeIndex'}).data
+        let currentNodeList = []
+        if(selectedUsers.length && nodeIndex !== null) {
+            currentNodeList = selectedUsers[nodeIndex].map(item => ({...item, removable: true}))
+        }
+        if(!!currentNodeList && nodeIndex !== null) {
+            if(this.data.nodeList[nodeIndex]) {
+                // 把用户刚选择的和之前已经选择的混合在一起
+                this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.concat(currentNodeList)
+                // 然后去重
+                this.data.nodeList[nodeIndex].oaBillUserList = this.handleUsers(this.data.nodeList[nodeIndex].oaBillUserList)
+                this.setData({
+                    nodeList: this.data.nodeList,
+                    nodeIndex: nodeIndex,
+                    selectedUserList: this.data.nodeList[nodeIndex],
+                })
+            }
+        }
+        this.clearSelectedUserList()
+    },
+    clearSelectedUserList() {
+        dd.removeStorage({key: 'selectedUsers'})
+        dd.removeStorage({key: 'nodeIndex'})
+    },
+    showSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            animationInfo1: animation.export(),
+        })
+    },
+    hideSelectedUserList() {
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'linear'
+        })
+        this.animation = animation
+        animation.translateY('100%').step()
+        this.setData({
+            animationInfo1: animation.export(),
+        })
+    },
+    // ===============================================================================
     // 获取税率
     getTaxRageArr() {
         request({
@@ -637,6 +899,12 @@ Page({
                     var accountbookIndex = 0
                     var taxpayerType = !!data ? data.accountbook.taxpayerType : null
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
+                    // ============ 审批流 =========
+                    this.setData({
+                        oaModule: this.findAccountbookOaModule(accountbookId, res.data.obj)
+                    })
+                    this.showOaProcessByBillType(accountbookId, 9)
+                    // ============ 审批流 =========
                     // edit的时候设置值
                     if (accountbookId) {
                         res.data.obj.forEach((item, index) => {
@@ -959,6 +1227,12 @@ Page({
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
             },
+        })
+        let t = null
+        t = setTimeout(() => {
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
+            this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
+            t = null
         })
     },
     // 辅助核算请求url分类

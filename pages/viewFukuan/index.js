@@ -8,7 +8,15 @@ Page({
     data: {
         isPhoneXSeries: false,
         process: null,
-        result: null
+        result: null,
+        caikaProcess: null,
+        statusObj: {
+            1: '审批中',
+            2: '已同意',
+            0: '',
+            '-1': '已撤回',
+            '-2': '已驳回'
+        }
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -23,6 +31,12 @@ Page({
         if (app.globalData.loadingCount === 0) {
             dd.hideLoading()
         }
+    },
+    previewFile(e) {
+        var url = e.currentTarget.dataset.url
+        dd.previewImage({
+            urls: [url],
+        })
     },
     onLoad(query) {
         this.setData({
@@ -51,12 +65,116 @@ Page({
                 }
             }
         })
+        // 获取审批信息
+        this.getCaikaProcessInstance(query)
     },
-    previewFile(e) {
-        var url = e.currentTarget.dataset.url
-        dd.previewImage({
-            urls: [url],
+    toggleUserList(e) {
+        const index = e.currentTarget.dataset.index
+        this.data.caikaProcess[index].showUserList = !this.data.caikaProcess[index].showUserList
+        this.setData({
+            caikaProcess: this.data.caikaProcess
         })
+    },
+    getCaikaProcessInstance(query) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaController.do?activityNodeList&billId=' + query.id,
+            method: 'GET',
+            success: res => {
+                if(res.data) {
+                    const caikaProcess = this.handleData(res.data)
+                    this.setData({
+                        caikaProcess: caikaProcess.map(item => ({...item, showUserList: false}))
+                    })
+                    console.log(this.data.caikaProcess)
+                }
+            }
+        })
+    },
+    handleData(sourceArr) {
+        var arr = [];
+        if (sourceArr.length == 0 || sourceArr == undefined) {
+            return arr;
+        }
+        //给数组添加排序编号
+        for (var i = 0; i < sourceArr.length; i++) {
+            sourceArr[i].no = i;
+        }
+        //根据下标排序
+        var compare = function (property) {
+            return function (a, b) {
+                var value1 = a[property];
+                var value2 = b[property];
+                return value1 - value2;
+            }
+        }
+        //获取对应数据
+        var getSourceArr = function (sourceArr, removeArr) {
+            if (removeArr.length == 0) {
+                return;
+            }
+            var index = 0;
+            //循环删除数据
+            for (var i = 0; i < removeArr.length; i++) {
+                var deindex = removeArr[i] - index;
+                sourceArr.splice(deindex, 1);
+                index++;
+            }
+        }
+        //获取status=2的数据
+        var status2 = [];
+        var removeArr = [];
+        for (var i = 0; i < sourceArr.length; i++) {
+            var json = sourceArr[i];
+            if (json.status == 2 && json.activityType == 'userTask') {
+                status2.push(json);
+                removeArr.push(i);
+            }
+        }
+        //删除statues=2
+        getSourceArr(sourceArr, removeArr);
+        //构建剩余数据构建有相同的activityId
+        var otherStatus = [];
+        var tempArr = [];
+        for (var i = 0; i < sourceArr.length; i++) {
+            var json = sourceArr[i];
+            if (tempArr.indexOf(json.activityId) == -1) {
+                //先做成简单的对象，可以扩展对象属性
+                otherStatus.push({
+                    activityId: json.activityId,
+                    activityName: json.activityName,
+                    activityType: json.activityType,
+                    signType: json.signType,
+                    children: [json],
+                    no: json.no,
+                    status: json.status
+                });
+                tempArr.push(json.activityId);
+            } else {
+                for (var j = 0; j < otherStatus.length; j++) {
+                    var other = otherStatus[j];
+                    if (json.activityId == other.activityId) {
+                        otherStatus[j].children.push(json);
+                    }
+                }
+            }
+        }
+        var sameArr = [];
+        var onlyArr = [];
+        //拆开有children的和无children的
+        for (var i = 0; i < otherStatus.length; i++) {
+            let json = otherStatus[i];
+            if (json.children.length == 1) {
+                onlyArr.push(json.children[0]);
+            } else {
+                sameArr.push(json);
+            }
+        }
+        //拼接数组
+        arr = status2.concat(sameArr).concat(onlyArr);
+        arr.sort(compare('no'));
+        return arr;
     },
     onHide() {
     },

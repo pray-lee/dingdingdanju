@@ -21,10 +21,12 @@ Page({
             key: 'tempImportList'
         }).data
         // 每一项加一个checked属性
-        tempImportList.forEach(item => {
-            item.checked = false
-            item.formatUnverifyAmount = formatNumber(Number(item.unverifyAmount).toFixed(2))
-        })
+        if(tempImportList && tempImportList.length) {
+            tempImportList.forEach(item => {
+                item.checked = false
+                item.formatUnverifyAmount = formatNumber(Number(item.unverifyAmount).toFixed(2))
+            })
+        }
         this.setData({
             tempImportList,
             filterList: clone(tempImportList),

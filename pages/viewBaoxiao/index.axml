@@ -129,6 +129,52 @@
                     </view>
                 </view>
             </block>
+            <!--     财咖审批流程图       -->
+            <block a:if="{{caikaProcess && caikaProcess.length}}">
+                <view class="title">审批流程</view>
+                <view class="block-wrapper">
+                    <view class="progress">
+                        <view class="view-progress-box" a:for="{{caikaProcess}}">
+                            <view class="view-progress-left">
+                                <view class="view-avatar-wrapper">
+                                    <view class="view-avatar-block">
+                                        <view class="view-avatar">
+                                            <image a:if="{{item.children.length && item.activityType == 'userTask'}}" src="../../images/approval.png" class="view-avatar view-avatar-bg"></image>
+                                            <image a:if="{{item.children.length && item.activityType == 'serviceTask'}}" src="../../images/copy1.png" class="view-avatar view-avatar-bg"></image>
+                                            <view a:if="{{!item.children.length}}" class="view-avatar view-avatar-bg">{{item.assigneeName.slice(-2)}}</view>
+                                        </view>
+                                        <image a:if="{{item.status == 2}}" src="../../images/success.png" class="view-avatar-icon"></image>
+                                        <image a:if="{{item.status == 1}}" src="../../images/3.png" class="view-avatar-icon"></image>
+                                        <image a:if="{{item.status == -1 || item.status == -2}}" src="../../images/reject.png" class="view-avatar-icon"></image>
+                                    </view>
+                                    <view a:if="{{item.status == 0 || item.status == 1}}" class="view-status-dotted-line"></view>
+                                    <view a:else class="view-status-line"></view>
+                                </view>
+                                <view class="view-status-content">
+                                    <view class="view-progress-status">{{item.activityName}}</view>
+                                    <view a:if="{{item.children.length && item.activityType == 'userTask'}}" class="view-progress-user">{{item.children.length}}人{{item.signType == 'and' ? '会签' : '或签'}}{{statusObj[item.status] ? '（' + statusObj[item.status] + '）' : ''}}</view>
+                                    <view a:if="{{item.children.length && item.activityType == 'serviceTask'}}" class="view-progress-user">抄送{{item.children.length}}人</view>
+                                    <view a:if="{{!item.children.length}}" class="view-progress-user">{{item.assigneeName}}{{statusObj[item.status] ? '（' + statusObj[item.status] + '）' : ''}}</view>
+                                    <view a:if="{{item.comment}}" class="view-progress-user view-progress-content">{{item.comment}}</view>
+                                    <view class="show-user-list" a:if="{{item.showUserList}}">
+                                        <block a:if="{{item.children.length}}">
+                                            <view class="user-block" a:for="{{item.children}}" a:for-item="user">
+                                                <view class="user-bg">{{user.assigneeName.slice(-2)}}</view>
+                                                <view class="user-name">{{user.assigneeName}}</view>
+                                            </view>
+                                        </block>
+                                    </view>
+                                </view>
+                            </view>
+                            <view class="progress-right" a:if="{{item.children.length}}">
+                                <view onTap="toggleUserList" data-index="{{index}}" a:if="{{item.showUserList}}" class="toggle-user-list down"></view>
+                                <view onTap="toggleUserList" data-index="{{index}}" a:else class="toggle-user-list up"></view>
+                                <view a:if="{{item.endTime}}">{{item.endTime}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
                 <view class="total">
