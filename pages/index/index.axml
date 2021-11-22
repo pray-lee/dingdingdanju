@@ -34,6 +34,7 @@
             </view>
         </view>
     </view>
+    <view onTap="gotoOaList">待办一办</view>
     <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
         <view class="add-btn" onTap="onAddShow">
             新增单据

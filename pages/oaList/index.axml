@@ -1,0 +1,28 @@
+<view class="app">
+    <view class="see-complete-bill" onTap="toggleUndo">
+        <view class="div {{undo ? 'active' : ''}}">待办事项</view>
+        <view class="div {{undo ? '' : 'active'}}">已办事项</view>
+    </view>
+    <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}">
+        <view class="list-wrapper">
+            <view class="list-item">
+                <view class="main-item" a:for="{{list}}" onTap="goToEdit" data-type="{{item.billType}}" data-id="{{item.id}}" data-status="{{item.status}}">
+                    <view class="content">
+                        <view class="left status error {{item.billType.toLowerCase()}}">
+                            <text>{{statusObj[item.status] || '审批状态'}}</text>
+                        </view>
+                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.formatTotalAmount || '0.00'}}</text>
+                        <text class="right" a:else>￥{{item.formatAmount || '0.00'}}</text>
+                    </view>
+                    <view class="content">
+                        <text class="left">{{item.remark || '无事由'}}</text>
+                    </view>
+                    <view class="content content-bottom">
+                        <text class="left">{{item.billName}}</text>
+                        <text class="right">{{item.billCode || item.invoicebillCode}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+</view>

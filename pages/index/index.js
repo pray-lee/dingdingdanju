@@ -22,6 +22,11 @@ Page({
             30: "客户"
         },
     },
+    gotoOaList() {
+        dd.navigateTo({
+            url: '/pages/oaList/index'
+        })
+    },
     onAddShow() {
         var animation = dd.createAnimation({
             duration: 250,

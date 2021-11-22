@@ -33,7 +33,8 @@
     "pages/viewFukuanDetail/index",
     "pages/progressUser/index",
     "pages/deptList/index",
-    "pages/approvalUserList/index"
+    "pages/approvalUserList/index",
+    "pages/oaList/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

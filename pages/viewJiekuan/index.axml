@@ -257,5 +257,23 @@
                 </view>
             </block>
         </scroll-view>
+        <block a:if="{{showOaOperate}}">
+            <view class="title"></view>
+            <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+                <button class="reject" onTap="onCommentShow" data-type="reject">驳回</button>
+                <button class="approval" onTap="onCommentShow" data-type="approval">同意</button>
+            </view>
+        </block>
     </form>
+    <!--增加审批弹框-->
+    <view class="add-comment-page" animation="{{animationInfo}}" hidden="{{dialogHidden}}">
+        <view class="title">批复意见</view>
+        <view class="comment-wrapper">
+            <textarea onInput="commentInput" class="comment-input" placeholder="请输入内容"></textarea>
+        </view>
+        <view class="oa-submit-btn-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+            <view class="oa-submit {{approvalType === 'reject' ? 'reject' : 'approval'}}" onTap="submitOa">{{ approvalType === 'reject' ? '驳回' : '同意'}}</view>
+        </view>
+    </view>
+    <view class="oa-mask" hidden="{{maskHidden}}" onTap="onCommentHide"></view>
 </view>

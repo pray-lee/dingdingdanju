@@ -14,7 +14,24 @@ Page({
             0: '',
             '-1': '已撤回',
             '-2': '已驳回'
+        },
+        // oa===============================
+        showOaOperate: true,
+        dialogHidden: true,
+        maskHidden: true,
+        animationInfo: {},
+        approvalType: '',
+        submitOaData: {
+            id: '',
+            processInstanceId: '',
+            comment: '',
+            approvalResult: null
+        },
+        submitOaType: {
+            approval: 1,
+            reject: 0
         }
+        // oa===============================
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -39,6 +56,11 @@ Page({
         })
     },
     onLoad(query) {
+        // oa===============================
+        if(query.processInstanceId) {
+            this.setOaQuery(query)
+        }
+        // oa===============================
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
@@ -183,6 +205,84 @@ Page({
         arr.sort(compare('no'));
         return arr;
     },
+    // oa===============================
+    onCommentShow(e) {
+        const type = e.currentTarget.dataset.type
+        this.setData({
+            approvalType: type,
+            submitOaData: {
+                ...this.data.submitOaData,
+                approvalResult: type === 'reject' ? 0 : 1
+            }
+        })
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            animationInfo: animation.export(),
+            maskHidden: false,
+            dialogHidden: false
+        })
+    },
+    onCommentHide() {
+        this.setData({
+            id: '',
+            approvalResult: '',
+            comment: '',
+            processInstanceId: ''
+        })
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY('100%').step()
+        this.setData({
+            animationInfo: animation.export(),
+            maskHidden: true
+        })
+        const t = setTimeout(() => {
+            this.setData({
+                dialogHidden: true
+            })
+            clearTimeout(t)
+        }, 250)
+    },
+    commentInput(e) {
+        this.setData({
+            submitOaData: {
+                ...this.data.submitOaData,
+                comment: e.detail.value
+            }
+        })
+    },
+    setOaQuery(query) {
+        this.setData({
+            submitOaData: {
+                ...submitOaData,
+                id: query.id,
+                processInstanceId: query.processInstanceId
+            }
+        })
+    },
+    submitOa() {
+        console.log(this.data.submitOaData)
+        return
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: `${app.globalData.url}oaTaskController.do?doProcess`,
+            method: 'POST',
+            data: submitOaData,
+            success: res => {
+                console.log(res, '审批流程')
+            }
+        })
+    },
+    // oa===============================
     getProcessInstance(billId, accountbookId) {
         this.addLoading()
         request({
