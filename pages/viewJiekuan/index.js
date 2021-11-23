@@ -16,7 +16,7 @@ Page({
             '-2': '已驳回'
         },
         // oa===============================
-        showOaOperate: true,
+        showOaOperate: false,
         dialogHidden: true,
         maskHidden: true,
         animationInfo: {},
@@ -25,7 +25,7 @@ Page({
             id: '',
             processInstanceId: '',
             comment: '',
-            approvalResult: null
+            approveResult: null
         },
         submitOaType: {
             approval: 1,
@@ -212,7 +212,7 @@ Page({
             approvalType: type,
             submitOaData: {
                 ...this.data.submitOaData,
-                approvalResult: type === 'reject' ? 0 : 1
+                approveResult: type === 'reject' ? 0 : 1
             }
         })
         var animation = dd.createAnimation({
@@ -230,7 +230,7 @@ Page({
     onCommentHide() {
         this.setData({
             id: '',
-            approvalResult: '',
+            approveResult: '',
             comment: '',
             processInstanceId: ''
         })
@@ -261,24 +261,30 @@ Page({
     },
     setOaQuery(query) {
         this.setData({
+            showOaOperate: query.showOaOperate,
             submitOaData: {
-                ...submitOaData,
-                id: query.id,
+                ...this.data.submitOaData,
+                id: query.oaId,
                 processInstanceId: query.processInstanceId
             }
         })
     },
     submitOa() {
-        console.log(this.data.submitOaData)
-        return
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
             url: `${app.globalData.url}oaTaskController.do?doProcess`,
             method: 'POST',
-            data: submitOaData,
+            data: this.data.submitOaData,
             success: res => {
-                console.log(res, '审批流程')
+                // 关闭弹框
+                this.onCommentHide()
+                this.onLoad({
+                    id: this.data.result.id,
+                    oaId: this.data.submitOaData.id,
+                    processInstanceId: this.data.submitOaData.processInstanceId,
+                    showOaOperate: this.data.showOperate
+                })
             }
         })
     },

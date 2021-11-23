@@ -5,7 +5,7 @@
   margin:0px auto;
   border-radius: 10rpx;
   box-shadow: 0 2px 20px 0 rgba(0,0,0,0.20);
-  margin: 40rpx
+  margin: 40rpx 40rpx 0 40rpx;
 }
 .title{
   line-height: 48rpx;
@@ -88,5 +88,16 @@
 }
 .error-index{
   padding-top:15rpx
+}
+.undo-entry {
+  margin: 40rpx 40rpx 0 40rpx;
+  padding: 20rpx 70rpx;
+  border-radius: 10rpx;
+  box-shadow: 0 2px 20px 0 rgba(0,0,0,0.20);
+  background:url('../../images/undo-btn.png') 20rpx center no-repeat;
+  background-size: 30rpx 40rpx;
+  background-color:#fff;
+  font-size: 30rpx;
+  font-weight:bold;
 }
 

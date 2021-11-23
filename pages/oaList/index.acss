@@ -70,10 +70,10 @@
     color: #fff;
 }
 .scroll-view{
-    height: calc(100vh - 400rpx);
+    height: calc(100vh - 100rpx);
 }
 .scroll-view.iphoneX{
-    height: calc(100vh - 468rpx)
+    height: calc(100vh - 168rpx)
 }
 .list-item {
     margin:0px auto;
@@ -96,4 +96,12 @@
 }
 .content-bottom .right{
     margin-left: 30rpx;
+}
+.content .approval-time{
+    font-size: 24rpx;
+    font-weight:normal;
+    color:#ccc;
+}
+.list-wrapper{
+    padding: 0 0 20rpx 20rpx;
 }

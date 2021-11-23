@@ -1,5 +1,4 @@
 import {loginFiled, formatNumber, request} from "../../util/getErrorMessage";
-
 var app = getApp()
 app.globalData.loadingCount = 0
 Page({
@@ -8,6 +7,7 @@ Page({
         animationInfo: {},
         maskHidden: true,
         list: [],
+        oaList: [],
         statusObj: {
             10: "待提交",
             20: "待审批",
@@ -25,6 +25,23 @@ Page({
     gotoOaList() {
         dd.navigateTo({
             url: '/pages/oaList/index'
+        })
+    },
+    getOaList() {
+        const url = `${app.globalData.url}oaTaskController.do?todoDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status`
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url,
+            method: 'POST',
+            success: res => {
+                if(res.status === 200) {
+                    const billTypes = ['4', '9', '3']
+                    this.setData({
+                        oaList: res.data.rows.filter(item => billTypes.includes(item.billType))
+                    })
+                }
+            }
         })
     },
     onAddShow() {
@@ -157,6 +174,9 @@ Page({
                     success: res => {
                         if (res.data.success) {
                             if(res.data.obj) {
+                                // ============= 获取待办事项================
+                                this.getOaList()
+                                // ============= 获取待办事项================
                                 app.globalData.realName = res.data.obj.realName
                                 app.globalData.applicantId = res.data.obj.id
                                 Promise.all([
@@ -180,7 +200,7 @@ Page({
                                         sortList.push(...item.list)
                                     })
                                     // 合并之后排序, 并且取前三个
-                                    let sortableList = sortList.sort((a, b) => a.createDate < b.createDate ? 1 : -1 ).slice(0, 3)
+                                    let sortableList = sortList.sort((a, b) => a.createDate < b.createDate ? 1 : -1 ).slice(0, 2)
                                     sortableList = sortableList.map(item => {
                                         if(item.totalAmount) {
                                             item.formatTotalAmount = formatNumber(Number(item.totalAmount).toFixed(2))

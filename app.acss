@@ -182,6 +182,7 @@ page {
 }
 .add-comment-page{
   height: 650rpx;
+  border-radius: 8rpx;
 }
 .add-page{
   z-index: 1000;

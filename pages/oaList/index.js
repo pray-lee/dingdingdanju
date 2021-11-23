@@ -6,24 +6,31 @@ Page({
     data: {
         isPhoneXSeries: false,
         undo: true,
-        list: [
-            {formatTotalAmount: '1.1111', remark: '哈哈哈', billName: '单据名称', billCode: '12987398123'},
-            {formatTotalAmount: '1.1111', remark: '哈哈哈', billName: '单据名称', billCode: '12987398123'},
-            {formatTotalAmount: '1.1111', remark: '哈哈哈', billName: '单据名称', billCode: '12987398123'},
-        ],
+        list: [],
         scrollTop: 0,
-        statusObj: {
-            10: "待提交",
-            20: "待审批",
-            25: "审批驳回",
-            30: "已审批",
-            60: "已提交付款",
-            80: "已付款",
-            100: "已完成"
+        billName: {
+            '4': '借款单',
+            '9': '报销单',
+            '3': '付款申请单'
         },
+        billType: {
+            '4': 'J',
+            '9': 'B',
+            '3': 'F'
+        },
+        billUrl: {
+            'J': '/pages/viewJiekuan/index',
+            'B': '/pages/viewBaoxiao/index',
+            'F': '/pages/viewFukuan/index',
+        }
     },
     onLoad() {
-        console.log(1)
+        this.getOaList()
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
+        })
+    },
+    onShow() {
         this.getOaList()
     },
     addLoading() {
@@ -42,16 +49,28 @@ Page({
     },
     getOaList() {
         const url = this.data.undo ?
-            app.globalData.url + 'oaTaskController.do?todoDatagrid&field=id,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId'
+            app.globalData.url + 'oaTaskController.do?todoDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status'
             :
-            app.globalData.url + 'oaTaskController.do?finishDatagrid&field=id,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId'
+            app.globalData.url + 'oaTaskController.do?finishDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status'
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
             url,
-            method: 'GET',
+            method: 'POST',
             success: res => {
-                console.log(res)
+                if(res.status === 200) {
+                    const billTypes = ['4', '9', '3']
+                    this.setData({
+                        list: res.data.rows.filter(item => billTypes.includes(item.billType)).map(item => {
+                            return {
+                                ...item,
+                                billType: this.data.billType[item.billType],
+                                billName: this.data.billName[item.billType]
+                            }
+                        })
+                    })
+                    console.log(this.data.list)
+                }
             }
         })
     },
@@ -60,5 +79,15 @@ Page({
             undo: !this.data.undo
         })
         this.getOaList()
+    },
+    gotoBillDetail(e) {
+        const id = e.currentTarget.dataset.id
+        const processInstanceId = e.currentTarget.dataset.processInstanceId
+        const billType = e.currentTarget.dataset.type
+        const billId = e.currentTarget.dataset.billId
+        const showOaOperate = e.currentTarget.dataset.showOaOperate
+        dd.navigateTo({
+            url: `${this.data.billUrl[billType]}?id=${billId}&processInstanceId=${processInstanceId}&oaId=${id}&showOaOperate=${showOaOperate}`
+        })
     }
 })

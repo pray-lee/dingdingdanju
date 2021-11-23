@@ -186,7 +186,6 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
-        console.log(this.data.submitData,'submitData........')
         request({
             hideLoading: this.hideLoading,
             url,
@@ -382,7 +381,6 @@ Page({
                 applicationAmount
             }
         })
-        console.log(newImportList, 'newImportList....')
         return newImportList
     },
     getBaoxiaoDetailFromStorage() {
@@ -398,7 +396,6 @@ Page({
                 const baoxiaoDetail = res.data
                 if (!!baoxiaoDetail) {
                     let baoxiaoList = clone(this.data.baoxiaoList)
-                    console.log(index)
                     if (!!index || index == 0) {
                         baoxiaoList.splice(index, 1)
                         dd.removeStorage({

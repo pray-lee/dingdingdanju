@@ -1,6 +1,6 @@
 <view class="form-wrapper">
     <form onSubmit="formSubmit" onReset="formReset">
-        <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <scroll-view scroll-y class="form-scroll-wrapper {{showOaOperate === 'true' ? 'show-oa-operate' : ''}} {{isPhoneXSeries ? 'iphoneX' : ''}}">
             <view class="title">申请方信息</view>
             <view class="block-wrapper">
                 <view class="form-row">
@@ -257,7 +257,7 @@
                 </view>
             </block>
         </scroll-view>
-        <block a:if="{{showOaOperate}}">
+        <block a:if="{{showOaOperate === 'true'}}">
             <view class="title"></view>
             <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
                 <button class="reject" onTap="onCommentShow" data-type="reject">驳回</button>

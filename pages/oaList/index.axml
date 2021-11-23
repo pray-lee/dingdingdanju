@@ -6,16 +6,12 @@
     <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}">
         <view class="list-wrapper">
             <view class="list-item">
-                <view class="main-item" a:for="{{list}}" onTap="goToEdit" data-type="{{item.billType}}" data-id="{{item.id}}" data-status="{{item.status}}">
+                <view class="main-item" a:for="{{list}}" onTap="gotoBillDetail" data-showOaOperate="{{undo ? true : false}}" data-billId="{{item.billId}}" data-type="{{item.billType}}" data-id="{{item.id}}" data-processInstanceId="{{item.processInstanceId}}">
                     <view class="content">
                         <view class="left status error {{item.billType.toLowerCase()}}">
-                            <text>{{statusObj[item.status] || '审批状态'}}</text>
+                            <text>{{item.taskName}}</text>
                         </view>
-                        <text class="right" a:if="{{item.totalAmount}}">￥{{item.formatTotalAmount || '0.00'}}</text>
-                        <text class="right" a:else>￥{{item.formatAmount || '0.00'}}</text>
-                    </view>
-                    <view class="content">
-                        <text class="left">{{item.remark || '无事由'}}</text>
+                        <text class="right approval-time">{{item.createDate}}</text>
                     </view>
                     <view class="content content-bottom">
                         <text class="left">{{item.billName}}</text>
