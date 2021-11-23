@@ -271,12 +271,26 @@ Page({
             success: res => {
                 // 关闭弹框
                 this.onCommentHide()
-                this.onLoad({
-                    id: this.data.result.id,
-                    oaId: this.data.submitOaData.id,
-                    processInstanceId: this.data.submitOaData.processInstanceId,
-                    showOaOperate: this.data.showOperate
-                })
+                if(res.data.success) {
+                    if(this.data.submitOaData.approveResult == 1) {
+                        this.onLoad({
+                            id: this.data.result.id,
+                            oaId: this.data.submitOaData.id,
+                            processInstanceId: this.data.submitOaData.processInstanceId,
+                            showOaOperate: this.data.showOperate
+                        })
+                    }else{
+                        dd.redirectTo({
+                            url: `/pages/addBaoxiao/index?id=${this.data.result.id}&type=edit`
+                        })
+                    }
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的',
+                        success: () => {}
+                    })
+                }
             }
         })
     },

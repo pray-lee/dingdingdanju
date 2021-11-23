@@ -173,6 +173,9 @@
                                 <view onTap="toggleUserList" data-index="{{index}}" a:else class="toggle-user-list up"></view>
                                 <view a:if="{{item.endTime}}">{{item.endTime}}</view>
                             </view>
+                            <view a:else class="progress-right">
+                                <view a:if="{{item.endTime}}">{{item.endTime}}</view>
+                            </view>
                         </view>
                     </view>
                 </view>

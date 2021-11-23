@@ -16,7 +16,24 @@ Page({
             0: '',
             '-1': '已撤回',
             '-2': '已驳回'
+        },
+        // oa===============================
+        showOaOperate: false,
+        dialogHidden: true,
+        maskHidden: true,
+        animationInfo: {},
+        approvalType: '',
+        submitOaData: {
+            id: '',
+            processInstanceId: '',
+            comment: '',
+            approveResult: null
+        },
+        submitOaType: {
+            approval: 1,
+            reject: 0
         }
+        // oa===============================
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -176,8 +193,104 @@ Page({
         arr.sort(compare('no'));
         return arr;
     },
-    onHide() {
+    // oa===============================
+    onCommentShow(e) {
+        const type = e.currentTarget.dataset.type
+        this.setData({
+            approvalType: type,
+            submitOaData: {
+                ...this.data.submitOaData,
+                approveResult: type === 'reject' ? 0 : 1
+            }
+        })
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY(0).step()
+        this.setData({
+            animationInfo: animation.export(),
+            maskHidden: false,
+            dialogHidden: false
+        })
     },
+    onCommentHide() {
+        this.setData({
+            id: '',
+            approveResult: '',
+            comment: '',
+            processInstanceId: ''
+        })
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        animation.translateY('100%').step()
+        this.setData({
+            animationInfo: animation.export(),
+            maskHidden: true
+        })
+        const t = setTimeout(() => {
+            this.setData({
+                dialogHidden: true
+            })
+            clearTimeout(t)
+        }, 250)
+    },
+    commentInput(e) {
+        this.setData({
+            submitOaData: {
+                ...this.data.submitOaData,
+                comment: e.detail.value
+            }
+        })
+    },
+    setOaQuery(query) {
+        this.setData({
+            showOaOperate: query.showOaOperate,
+            submitOaData: {
+                ...this.data.submitOaData,
+                id: query.oaId,
+                processInstanceId: query.processInstanceId
+            }
+        })
+    },
+    submitOa() {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: `${app.globalData.url}oaTaskController.do?doProcess`,
+            method: 'POST',
+            data: this.data.submitOaData,
+            success: res => {
+                // 关闭弹框
+                this.onCommentHide()
+                if(res.data.success) {
+                    if(this.data.submitOaData.approveResult == 1) {
+                        this.onLoad({
+                            id: this.data.result.id,
+                            oaId: this.data.submitOaData.id,
+                            processInstanceId: this.data.submitOaData.processInstanceId,
+                            showOaOperate: this.data.showOperate
+                        })
+                    }else{
+                        dd.redirectTo({
+                            url: `/pages/addFukuan/index?id=${this.data.result.id}&type=edit`
+                        })
+                    }
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的',
+                        success: () => {}
+                    })
+                }
+            }
+        })
+    },
+    // oa===============================
     getProcessInstance(billId, accountbookId) {
         this.addLoading()
         request({

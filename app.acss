@@ -526,6 +526,9 @@ page {
 .view-progress-left{
   display:flex
 }
+.view-progress-box .progress-right{
+  font-size: 23rpx;
+}
 .view-avatar-wrapper{
   min-height: 140rpx;
   display:flex;
@@ -586,7 +589,7 @@ page {
   margin-bottom: 10rpx;
 }
 .view-progress-user{
-  font-size: 21rpx;
+  font-size: 23rpx;
   color:#999;
   padding-bottom: 10rpx;
 }
