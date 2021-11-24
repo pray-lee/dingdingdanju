@@ -16,6 +16,7 @@ Page({
         // 这个是"查看更多"点进去显示的当前审批节点的用户
         selectedUserList: [],
         animationInfo1: {},
+        historyOaList: [],
         // =================================
         validT: null,
         isPhoneXSeries: false,
@@ -644,9 +645,120 @@ Page({
         if (type === 'edit') {
             // 渲染
             this.getEditData(id)
+            // oa=============================
+            this.getHistoryOaList(query)
+            // oa=============================
         }
     },
     // =============================================================================
+    getHistoryOaList(query) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaController.do?lastActivityNodeList&billId=' + query.id,
+            method: 'GET',
+            success: res => {
+                if(res.status === 200) {
+                    const historyOaList = this.handleData(res.data)
+                    this.setData({
+                        historyOaList: historyOaList.map(item => ({...item, showUserList: false}))
+                    })
+                    console.log(this.data.historyOaList)
+                }
+            }
+        })
+    },
+    toggleHistoryList(e) {
+        const index = e.currentTarget.dataset.index
+        this.data.historyOaList[index].showUserList = !this.data.historyOaList[index].showUserList
+        this.setData({
+            historyOaList: this.data.historyOaList
+        })
+    },
+    handleData(sourceArr) {
+        var arr = [];
+        if (sourceArr.length == 0 || sourceArr == undefined) {
+            return arr;
+        }
+        //给数组添加排序编号
+        for (var i = 0; i < sourceArr.length; i++) {
+            sourceArr[i].no = i;
+        }
+        //根据下标排序
+        var compare = function (property) {
+            return function (a, b) {
+                var value1 = a[property];
+                var value2 = b[property];
+                return value1 - value2;
+            }
+        }
+        //获取对应数据
+        var getSourceArr = function (sourceArr, removeArr) {
+            if (removeArr.length == 0) {
+                return;
+            }
+            var index = 0;
+            //循环删除数据
+            for (var i = 0; i < removeArr.length; i++) {
+                var deindex = removeArr[i] - index;
+                sourceArr.splice(deindex, 1);
+                index++;
+            }
+        }
+        //获取status=2的数据
+        var status2 = [];
+        var removeArr = [];
+        for (var i = 0; i < sourceArr.length; i++) {
+            var json = sourceArr[i];
+            if (json.status == 2 && json.activityType == 'userTask') {
+                status2.push(json);
+                removeArr.push(i);
+            }
+        }
+        //删除statues=2
+        getSourceArr(sourceArr, removeArr);
+        //构建剩余数据构建有相同的activityId
+        var otherStatus = [];
+        var tempArr = [];
+        for (var i = 0; i < sourceArr.length; i++) {
+            var json = sourceArr[i];
+            if (tempArr.indexOf(json.activityId) == -1) {
+                //先做成简单的对象，可以扩展对象属性
+                otherStatus.push({
+                    activityId: json.activityId,
+                    activityName: json.activityName,
+                    activityType: json.activityType,
+                    signType: json.signType,
+                    children: [json],
+                    no: json.no,
+                    status: json.status
+                });
+                tempArr.push(json.activityId);
+            } else {
+                for (var j = 0; j < otherStatus.length; j++) {
+                    var other = otherStatus[j];
+                    if (json.activityId == other.activityId) {
+                        otherStatus[j].children.push(json);
+                    }
+                }
+            }
+        }
+        var sameArr = [];
+        var onlyArr = [];
+        //拆开有children的和无children的
+        for (var i = 0; i < otherStatus.length; i++) {
+            let json = otherStatus[i];
+            if (json.children.length == 1) {
+                onlyArr.push(json.children[0]);
+            } else {
+                sameArr.push(json);
+            }
+        }
+        //拼接数组
+        arr = status2.concat(sameArr).concat(onlyArr);
+        arr.sort(compare('no'));
+        return arr;
+    },
     findAccountbookOaModule(accountbookId, accountbookList) {
         return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
     },

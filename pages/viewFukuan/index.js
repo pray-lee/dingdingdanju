@@ -18,6 +18,7 @@ Page({
             '-2': '已驳回'
         },
         // oa===============================
+        historyOaList: [],
         showOaOperate: false,
         dialogHidden: true,
         maskHidden: true,
@@ -56,6 +57,12 @@ Page({
         })
     },
     onLoad(query) {
+        // oa===============================
+        if(query.processInstanceId) {
+            this.setOaQuery(query)
+        }
+        this.getHistoryOaList(query)
+        // oa===============================
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
@@ -85,11 +92,35 @@ Page({
         // 获取审批信息
         this.getCaikaProcessInstance(query)
     },
+    getHistoryOaList(query) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'oaController.do?lastActivityNodeList&billId=' + query.id,
+            method: 'GET',
+            success: res => {
+                if(res.status === 200) {
+                    const historyOaList = this.handleData(res.data)
+                    this.setData({
+                        historyOaList: historyOaList.map(item => ({...item, showUserList: false}))
+                    })
+                    console.log(this.data.historyOaList)
+                }
+            }
+        })
+    },
     toggleUserList(e) {
         const index = e.currentTarget.dataset.index
         this.data.caikaProcess[index].showUserList = !this.data.caikaProcess[index].showUserList
         this.setData({
             caikaProcess: this.data.caikaProcess
+        })
+    },
+    toggleHistoryList(e) {
+        const index = e.currentTarget.dataset.index
+        this.data.historyOaList[index].showUserList = !this.data.historyOaList[index].showUserList
+        this.setData({
+            historyOaList: this.data.historyOaList
         })
     },
     getCaikaProcessInstance(query) {
@@ -268,18 +299,21 @@ Page({
                 // 关闭弹框
                 this.onCommentHide()
                 if(res.data.success) {
-                    if(this.data.submitOaData.approveResult == 1) {
-                        this.onLoad({
-                            id: this.data.result.id,
-                            oaId: this.data.submitOaData.id,
-                            processInstanceId: this.data.submitOaData.processInstanceId,
-                            showOaOperate: this.data.showOperate
-                        })
-                    }else{
-                        dd.redirectTo({
-                            url: `/pages/addFukuan/index?id=${this.data.result.id}&type=edit`
-                        })
-                    }
+                    // if(this.data.submitOaData.approveResult == 1) {
+                    //     this.onLoad({
+                    //         id: this.data.result.id,
+                    //         oaId: this.data.submitOaData.id,
+                    //         processInstanceId: this.data.submitOaData.processInstanceId,
+                    //         showOaOperate: this.data.showOperate
+                    //     })
+                    // }else{
+                    //     dd.redirectTo({
+                    //         url: `/pages/addFukuan/index?id=${this.data.result.id}&type=edit`
+                    //     })
+                    // }
+                    dd.navigateBack({
+                        delta: 1
+                    })
                 }else{
                     dd.alert({
                         content: res.data.msg,
