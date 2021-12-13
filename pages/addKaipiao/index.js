@@ -975,6 +975,7 @@ Page({
             delete expressInfo['createDate']
             delete expressInfo['id']
             this.setData({
+                deliveryMode: 1,
                 submitData: {
                     ...this.data.submitData,
                     ...expressInfo,
@@ -990,7 +991,11 @@ Page({
         }else{
             if(!this.data.submitData.contacts) {
                 this.setData({
-                    deliveryMode: 0
+                    deliveryMode: 0,
+                    submitData: {
+                        ...this.data.submitData,
+                        deliveryMode: 0
+                    }
                 })
             }
         }

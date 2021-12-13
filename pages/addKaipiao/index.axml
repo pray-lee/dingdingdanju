@@ -173,7 +173,7 @@
                             </radio-group>
                         </view>
                     </view>
-                    <block a:if="{{!!submitData.contacts}}">
+                    <block a:if="{{submitData.deliveryMode == 1}}">
                         <view class="form-line"/>
                         <view class="form-row" onTap="getExpressList">
                             <view class="form-row-label">
