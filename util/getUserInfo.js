@@ -1,6 +1,7 @@
 export default {
   // getUserInfo() {
   //   // 页面加载
+console.log(1)
   //   console.info(`Page onLoad with query: ${JSON.stringify(query)}`);
   //   dd.getAuthCode({
   //   success:(res)=>{
