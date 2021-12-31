@@ -19,9 +19,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 一贝
+        // agentId: '1407349837',
+        // tenantCode: 'db_ck_czwy2',
         // 爱绿城
-        agentId: '1369346288',
-        tenantCode: 'db_ck_alchb',
+        // agentId: '1369346288',
+        // tenantCode: 'db_ck_alchb',
         // 石狮文旅研学旅行
         // agentId: '1298473947',
         // tenantCode: 'db_ck_education',
@@ -72,8 +75,8 @@ App({
         // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/DS/",
-        // "agentId": "886493470",
-        // "tenantCode": "db_ck_ds2021",
+        "agentId": "886493470",
+        "tenantCode": "db_ck_ds2021",
         // 票房宝
         // "url": "https://www.caika.net/WH/",
         // "agentId": "874431275",
@@ -111,6 +114,7 @@ App({
         // "url": "https://www.caika.net/TestJxc/",
         // saas
         "url": "https://www.caika.net/saas/",
+        // "url": "https://www.caika.net/caika/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
