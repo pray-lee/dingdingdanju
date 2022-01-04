@@ -19,6 +19,9 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 内蒙古康新食品
+        // agentId: '1423147826',
+        // tenantCode: 'db_ck_kxmc',
         // 一贝
         // agentId: '1407349837',
         // tenantCode: 'db_ck_czwy2',
@@ -75,8 +78,8 @@ App({
         // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/DS/",
-        "agentId": "886493470",
-        "tenantCode": "db_ck_ds2021",
+        // "agentId": "886493470",
+        // "tenantCode": "db_ck_ds2021",
         // 票房宝
         // "url": "https://www.caika.net/WH/",
         // "agentId": "874431275",
@@ -113,15 +116,15 @@ App({
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
         // saas
-        "url": "https://www.caika.net/saas/",
+        // "url": "https://www.caika.net/saas/",
         // "url": "https://www.caika.net/caika/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        // "url": "https://www.caika.net/test/",
-        // "agentId": "1249138757",
-        // "tenantCode": "db_ck_oa",
+        "url": "https://www.caika.net/test/",
+        "agentId": "1249138757",
+        "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
