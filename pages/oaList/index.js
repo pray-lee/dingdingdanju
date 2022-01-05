@@ -43,11 +43,12 @@ Page({
     },
     hideLoading() {
         app.globalData.loadingCount--
-        if (app.globalData.loadingCount === 0) {
+        if (app.globalData.loadingCount <= 0) {
             dd.hideLoading()
         }
     },
     getOaList() {
+        console.log(app.globalData.loadingCount, 'count-loading.....')
         const url = this.data.undo ?
             app.globalData.url + 'oaTaskController.do?todoDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status'
             :

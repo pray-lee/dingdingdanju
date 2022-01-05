@@ -1,5 +1,5 @@
 import clone from "lodash/cloneDeep";
-import {formatNumber, request} from "../../util/getErrorMessage";
+import {formatNumber, loginFiled, request} from "../../util/getErrorMessage";
 
 var app = getApp()
 Page({
@@ -16,8 +16,9 @@ Page({
             '-2': '已驳回'
         },
         // oa===============================
+        query: {},
         historyOaList: [],
-        showOaOperate: false,
+        judgeShowOperate: false,
         dialogHidden: true,
         maskHidden: true,
         animationInfo: {},
@@ -40,14 +41,12 @@ Page({
                 content: '加载中...'
             })
         }
-        app.globalData.loadingCount += 1
+        app.globalData.loadingCount++
     },
     hideLoading() {
-        if (app.globalData.loadingCount <= 1) {
+        app.globalData.loadingCount--
+        if (app.globalData.loadingCount <= 0) {
             dd.hideLoading()
-            app.globalData.loadingCount = 0
-        } else {
-            app.globalData.loadingCount -= 1
         }
     },
     previewFile(e) {
@@ -56,7 +55,54 @@ Page({
             urls: [url],
         })
     },
+    getDetail(query) {
+        dd.getAuthCode({
+            success: (res) => {
+                this.hideLoading()
+                this.addLoading()
+                request({
+                    hideLoading: this.hideLoading,
+                    url: app.globalData.url + "loginController.do?loginDingTalk&tenantCode=" + app.globalData.tenantCode + "&code=" + res.authCode + '&agentId=' + app.globalData.agentId,
+                    method: 'GET',
+                    success: res => {
+                        if (res.data.success) {
+                            if(res.data.obj) {
+                                app.globalData.realName = res.data.obj.realName
+                                this.getDetailById(query)
+                            }else{
+                                loginFiled(res.data.msg)
+                            }
+                        } else {
+                            loginFiled(res.data.msg)
+                        }
+                    },
+                    fail: res => {
+                        console.log(res)
+                    }
+                })
+            },
+            fail: res => {
+                this.hideLoading()
+                console.log(res ,'获取授权码失败')
+                dd.alert({
+                    content: '当前组织没有该小程序',
+                    buttonText: '好的',
+                    success: res => {
+                        dd.reLaunch({
+                            url: '/pages/error/index'
+                        })
+                    }
+                })
+            }
+        })
+    },
     onLoad(query) {
+        this.setData({
+            query: {...query}
+        })
+        this.getDetail(query)
+    },
+    getDetailById(query) {
         // oa===============================
         if(query.processInstanceId) {
             this.setOaQuery(query)
@@ -138,12 +184,21 @@ Page({
             method: 'GET',
             success: res => {
                 if(res.data) {
+                    this.judgeShowOaOperate(res.data)
                     const caikaProcess = this.handleData(res.data)
                     this.setData({
                         caikaProcess: caikaProcess.map(item => ({...item, showUserList: false}))
                     })
                 }
             }
+        })
+    },
+    // 通过审批节点判断当前的人，如果是当前人，现实操作蓝，如果不是就不显示
+    judgeShowOaOperate(oaList) {
+        const result = oaList.some(item => item.status == 1 && item.assigneeName === app.globalData.realName)
+        console.log(result, 'result')
+        this.setData({
+            judgeShowOperate: result
         })
     },
     handleData(sourceArr) {
@@ -286,7 +341,6 @@ Page({
     },
     setOaQuery(query) {
         this.setData({
-            showOaOperate: query.showOaOperate,
             submitOaData: {
                 ...this.data.submitOaData,
                 id: query.oaId,
@@ -305,9 +359,13 @@ Page({
                 // 关闭弹框
                 this.onCommentHide()
                 if(res.data.success) {
-                    dd.navigateBack({
-                        delta: 1
-                    })
+                    if(this.data.query.isNotification) {
+                        this.onLoad(this.data.query)
+                    }else{
+                        dd.navigateBack({
+                            delta: 1
+                        })
+                    }
                 }else{
                     dd.alert({
                         content: res.data.msg,
