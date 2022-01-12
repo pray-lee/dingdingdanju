@@ -193,7 +193,7 @@ Page({
         const result = oaList.some(item => item.status == 1 && item.assigneeName === app.globalData.realName)
         console.log(result, 'result')
         this.setData({
-            judgeShowOperate: result
+            judgeShowOperate: result && this.data.submitOaData.id
         })
     },
     handleData(sourceArr) {
