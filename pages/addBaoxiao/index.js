@@ -940,7 +940,12 @@ Page({
         dd.removeStorage({key: 'selectedUsers'})
         dd.removeStorage({key: 'nodeIndex'})
     },
-    showSelectedUserList() {
+    showSelectedUserList(e) {
+        const nodeIndex = e.currentTarget.dataset.index
+        this.setData({
+            selectedUserList: this.data.nodeList[nodeIndex],
+            nodeIndex
+        })
         var animation = dd.createAnimation({
             duration: 250,
             timeFunction: 'ease-in'

@@ -180,7 +180,7 @@
                             </view>
                             <view class="progress-right add-progress-right">
                                 <block a:if="{{item.oaBillUserList.length > 3}}">
-                                    <view class="user-box" onTap="showSelectedUserList" data-allowMulti="{{item.allowMulti}}">
+                                    <view class="user-box" onTap="showSelectedUserList" data-allowMulti="{{item.allowMulti}}" data-index="{{index}}">
                                         <view class="user-avatar">
                                             <image src="../../images/approval.png" class="view-avatar view-avatar-bg"></image>
                                         </view>
@@ -222,7 +222,7 @@
                                             <view class="user-word">{{user.userName}}</view>
                                         </view>
                                     </view>
-                                    <view class="operate" a:if="{{item.editable}}">{{item.operate}}</view>
+                                    <view class="operate">{{item.operate}}</view>
                                 </block>
                                 <block a:if="{{item.editable}}">
                                     <view class="user-box" onTap="getDept" data-index="{{index}}" data-allowMulti="{{item.allowMulti}}">
