@@ -338,7 +338,6 @@ Page({
     },
     setOaQuery(query) {
         this.setData({
-            showOaOperate: query.showOaOperate,
             submitOaData: {
                 ...this.data.submitOaData,
                 id: query.oaId,
