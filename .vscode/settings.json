@@ -1,6 +1,5 @@
 {
     "editor.highlightActiveIndentGuide": false,
     "editor.renderIndentGuides": false,
-    "editor.lineNumbers": "off",
     "zenMode.hideLineNumbers": false
 }
