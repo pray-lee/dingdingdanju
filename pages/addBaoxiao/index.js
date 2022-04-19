@@ -187,6 +187,7 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
+        console.log(this.data.submitData, 'submitData......')
         request({
             hideLoading: this.hideLoading,
             url,
