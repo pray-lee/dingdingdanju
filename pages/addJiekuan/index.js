@@ -6,6 +6,12 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        // =============外币相关============
+        currencyTypeIndex: 0,
+        currencyTypeList: [],
+        baseCurrencyName: '',
+        baseCurrencyId: '',
+        exchangeRate: '',
         // =============审批流相关============
         oaModule: null,
         showOaUserNodeList: false,
@@ -216,7 +222,19 @@ Page({
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
             this.isCapitalTypeStart(this.data[listName][value].id)
+            // =============外币============
+            this.initCurrency(this.data[listName][value].id)
+            // =============外币============
         }
+        // =============外币============
+        if(name === 'currencyTypeId') {
+            this.getExchangeRate({
+                accountbookId: this.data.submitData.accountbookId,
+                currencyTypeId: this.data[listName][value].id,
+                businessDateTime: this.data.submitData.businessDateTime
+            })
+        }
+        // =============外币============
         if (name === 'submitterDepartmentId') {
             this.clearSubjectData()
             this.setData({
@@ -280,6 +298,13 @@ Page({
                             businessDateTime: res.date
                         },
                     })
+                    // ============外币相关=============
+                    this.getExchangeRate({
+                        accountbookId: this.data.submitData.accountbookId,
+                        businessDateTime: this.data.submitData.businessDateTime,
+                        currencyTypeId: this.data.submitData.currencyTypeId
+                    })
+                    // ============外币相关=============
                 }
                 // 解除focus不触发的解决办法。
                 // this.onClick()
@@ -1013,6 +1038,9 @@ Page({
                     })
                     this.showOaProcessByBillType(accountbookId, 4)
                     // ============ 审批流 =========
+                    // ============ 外币 =========
+                    this.initCurrency(accountbookId)
+                    // ============ 外币 =========
                     // edit的时候设置值
                     if (accountbookId) {
                         res.data.obj.forEach((item, index) => {
@@ -1750,4 +1778,58 @@ Page({
             },
         })
     },
+    getCurrencyTagByAccountbookId(accountbookId) {
+        return new Promise((resolve, reject) => {
+            request({
+                hideLoading: this.hideLoading,
+                url: `${app.globalData.url}accountbookController.do?isMultiCurrency&accountbookId=${accountbookId}`,
+                method: 'GET',
+                success: res => {
+                    if(res.status == 200) {
+                        resolve(res.data.multiCurrency)
+                    }else{
+                        resolve(false)
+                    }
+                },
+            })
+        })
+    },
+    getCurrencyTypeListByAccountbookId(accountbookId) {
+        return new Promise((resolve, reject) => {
+            request({
+                hideLoading: this.hideLoading,
+                url: `${app.globalData.url}currencyController.do?getCurrencyTypeList&accountbookId=${accountbookId}`,
+                method: 'GET',
+                success: res => {
+                    console.log(res, '币别列表。。。。。')
+                    if(res.status == 200) {
+                        resolve(res.data)
+                    }else{
+                        resolve([])
+                    }
+                },
+            })
+        })
+    },
+    getExchangeRate({accountbookId, businessDateTime, currencyTypeId}) {
+        console.log(accountbookId, businessDateTime, currencyTypeId)
+    },
+    async initCurrency(accountbookId) {
+        const multiCurrency = await this.getCurrencyTagByAccountbookId(accountbookId)
+        if(multiCurrency) {
+            const currencyTypeList = await this.getCurrencyTypeListByAccountbookId(accountbookId)
+            this.setData({
+                currencyTypeList,
+                submitData: {
+                    ...this.data.submitData,
+                    currencyTypeId: currencyTypeList[0].id
+                }
+            })
+            this.getExchangeRate({
+                accountbookId,
+                currencyTypeId: currencyTypeList[0].id,
+                businessDateTime: this.data.submitData.businessDateTime
+            })
+        }
+    }
 })

@@ -109,6 +109,19 @@
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
+<!--      外币        -->
+            <view class="title">外币信息</view>
+            <view class="block-wrapper">
+               <view class="form-row">
+                   <view class="form-row-label"><text class="require">*</text>币别</view>
+                       <view class="form-row-content">
+                           <picker class="picker-style" onChange="bindObjPickerChange" value="{{currenctTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
+                               <view class="row-extra">{{currencyTypeList[currencyTypeIndex].currencyName}}</view>
+                           </picker>
+                       </view>
+                   </view>
+               <view class="form-line"/>
+            </view>
 <!-- 增加借款详情-->
             <view class="title">借款详情</view>
             <view class="block-wrapper">
