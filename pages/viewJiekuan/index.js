@@ -4,6 +4,13 @@ import {formatNumber, loginFiled, request} from "../../util/getErrorMessage";
 var app = getApp()
 Page({
     data: {
+        // =============外币相关============
+        multiCurrency: false,
+        baseCurrencyName: '',
+        currencyTypeName: '',
+        baseCurrency: '',
+        exchangeRate: '',
+        // ==============外币相关=============
         isPhoneXSeries: false,
         result: null,
         process: null,
@@ -119,6 +126,21 @@ Page({
             method: 'GET',
             success: res => {
                 const result = clone(res.data.obj)
+                // ============外币=============
+                if(result.currencyTypeId) {
+                    this.setData({
+                        multiCurrency: true
+                    })
+                    this.getCurrencyTypeListByAccountbookId(result.accountbookId, result.currencyTypeId)
+                    this.getBaseCurrencyNameByAccountbookId(result.accountbookId)
+                    this.setData({
+                        exchangeRate: result.exchangeRate
+                    })
+                    result.originAmount = formatNumber(Number(result.originAmount).toFixed(2))
+                    result.billDetailList.forEach(item => {
+                        item.originBorrowAmount = formatNumber(Number(item.originBorrowAmount).toFixed(2))
+                    })
+                }
                 result.amount = formatNumber(Number(result.amount).toFixed(2))
                 result.billDetailList.forEach(item => {
                     item.borrowAmount = formatNumber(Number(item.borrowAmount).toFixed(2))
@@ -447,6 +469,39 @@ Page({
                             tasks: taskArr,
                             cc
                         }
+                    })
+                }
+            },
+        })
+    },
+    // ==========================外币==========================
+    getCurrencyTypeListByAccountbookId(accountbookId, currencyTypeId) {
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: `${app.globalData.url}currencyController.do?getCurrencyTypeList&accountbookId=${accountbookId}`,
+                method: 'GET',
+                success: res => {
+                    console.log(res, '币别列表。。。。。')
+                    if(res.status == 200) {
+                        var currencyTypeName = res.data.filter(item => item.id === currencyTypeId)[0].currencyName
+                        this.setData({
+                            currencyTypeName
+                        })
+                    }
+                },
+            })
+    },
+    getBaseCurrencyNameByAccountbookId(accountbookId) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: `${app.globalData.url}accountbookController.do?getBaseCurrencyInfo&accountbookId=${accountbookId}`,
+            method: 'GET',
+            success: res => {
+                if(res.status == 200) {
+                    this.setData({
+                        baseCurrencyName: res.data.baseCurrencyName
                     })
                 }
             },

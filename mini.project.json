@@ -1,3 +1,4 @@
 {
-  "enableDistFileMinify": true
+  "enableDistFileMinify": true,
+  "enableAppxNg": true
 }

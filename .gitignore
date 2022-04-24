@@ -1,2 +1,4 @@
 .vscode/
 .idea/
+.tea/
+node_modules/

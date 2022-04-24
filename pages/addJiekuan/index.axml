@@ -110,27 +110,43 @@
                 </view>
             </view>
 <!--      外币        -->
-            <view class="title">外币信息</view>
-            <view class="block-wrapper">
-               <view class="form-row">
-                   <view class="form-row-label"><text class="require">*</text>币别</view>
-                       <view class="form-row-content">
-                           <picker class="picker-style" onChange="bindObjPickerChange" value="{{currenctTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
-                               <view class="row-extra">{{currencyTypeList[currencyTypeIndex].currencyName}}</view>
-                           </picker>
+            <block a:if="{{multiCurrency}}">
+                <view class="title">外币信息</view>
+                <view class="block-wrapper">
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>币别</view>
+                           <view class="form-row-content">
+                               <picker class="picker-style" onChange="bindObjPickerChange" value="{{currenctTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
+                                   <view class="row-extra">{{currencyTypeList[currencyTypeIndex].currencyName}}</view>
+                               </picker>
+                           </view>
                        </view>
-                   </view>
-               <view class="form-line"/>
-            </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>本位币</view>
+                           <view class="form-row-content">
+                                <input disabled class="input" value="{{submitData.baseCurrencyName}}" placeholder="请输入本位币"/>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>汇率</view>
+                           <view class="form-row-content">
+                                <input disabled="{{exchangeRateDisabled}}" class="input" value="{{submitData.exchangeRate}}" placeholder="请输入汇率" onBlur="bindExchangeRateInput"/>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                </view>
+            </block>
 <!-- 增加借款详情-->
             <view class="title">借款详情</view>
             <view class="block-wrapper">
                 <view class="borrow-list">
                     <view class="borrow-item" a:for="{{submitData.billDetailListObj}}">
                         <view class="form-row">
-                            <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item.borrowAmount}}"></view>
+                            <view class="delete-borrow" onTap="deleteBorrowDetail" data-detail="{{item[amountField.borrowAmount]}}"></view>
                             <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
-                                <text>{{item.formatBorrowAmount}}</text>
+                                <text>{{item[amountField.formatBorrowAmount]}}</text>
                             </view>
                             <view class="borrow-line"></view>
                             <view class="form-row-content" onTap="editBorrowDetail" data-index="{{index}}">
@@ -285,9 +301,22 @@
             </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
-                <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        借款合计：</text><text class="total-word">{{submitData.formatAmount}}</text></view>
+                <block a:if="{{multiCurrency}}">
+                    <view class="total">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计(原币)：</text><text class="total-word">{{submitData.originFormatAmount}}</text>
+                    </view>
+                    <view class="total" style="margin-top: 20rpx">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计(本位币)：</text><text class="total-word">{{submitData.formatAmount}}</text>
+                    </view>
+                </block>
+                <block a:else>
+                    <view class="total" style="margin-top: 20rpx">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计：<text class="total-word">{{submitData.formatAmount}}</text>
+                    </view>
+                </block>
             </view>
             <!--              流程图-->
             <block a:if="{{process !== null && process.operationRecords.length}}">
@@ -374,7 +403,7 @@
         <view class="form-row">
             <view class="form-row-label"><text class="require">*</text>借款金额</view>
             <view class="form-row-content">
-                <input class="input" type="text" placeholder="借款金额" onInput="bindKeyInput" data-type="borrowAmount" value="{{borrowAmount}}"/>
+                <input class="input" type="text" placeholder="借款金额" onInput="bindKeyInput" data-type="{{amountField.borrowAmount}}" value="{{multiCurrency ? originBorrowAmount : borrowAmount}}"/>
             </view>
         </view>
         <view class="form-line"/>

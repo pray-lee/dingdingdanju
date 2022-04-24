@@ -96,6 +96,33 @@
                     <switch disabled checked="{{!!result.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
+<!--      外币        -->
+            <block a:if="{{multiCurrency}}">
+                <view class="title">外币信息</view>
+                <view class="block-wrapper">
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>币别</view>
+                           <view class="form-row-content">
+                                <view>{{currencyTypeName}}</view>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>本位币</view>
+                           <view class="form-row-content">
+                                <view>{{baseCurrencyName}}</view>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>汇率</view>
+                           <view class="form-row-content">
+                                <view>{{exchangeRate}}</view>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                </view>
+            </block>
 <!-- 增加借款详情-->
             <view class="title">借款详情</view>
             <view class="block-wrapper">
@@ -231,9 +258,22 @@
             </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
-                <view class="total">
-                    <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        借款合计：</text><text class="total-word">{{result.amount}}</text></view>
+                <block a:if="{{multiCurrency}}">
+                    <view class="total">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计(原币)：</text><text class="total-word">{{result.originAmount}}</text>
+                    </view>
+                    <view class="total" style="margin-top: 20rpx">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计(本位币)：</text><text class="total-word">{{result.amount}}</text>
+                    </view>
+                </block>
+                <block a:else>
+                    <view class="total" style="margin-top: 20rpx">
+                        <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            借款合计：<text class="total-word">{{result.amount}}</text>
+                    </view>
+                </block>
             </view>
             <!--              流程图-->
             <block a:if="{{process !== null && process.operationRecords.length}}">

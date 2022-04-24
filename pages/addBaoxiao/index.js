@@ -746,7 +746,7 @@ Page({
             method: 'GET',
             success: res => {
                 this.setData({
-                    showOaUserNodeList: res
+                    showOaUserNodeList: res.data
                 })
             }
         })
