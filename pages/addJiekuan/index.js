@@ -501,7 +501,6 @@ Page({
         })
     },
     bindExchangeRateInput(e) {
-        console.log(this.data.submitData.originAmount, 'lakj')
         this.setData({
             submitData: {
                 ...this.data.submitData,
