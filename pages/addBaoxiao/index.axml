@@ -84,6 +84,49 @@
                     <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
                 </view>
             </view>
+<!--      报销类型        -->
+           <view class="title">报销类型</view>
+           <view class="block-wrapper">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>报销类型</view>
+                    <view class="form-row-content">
+                        <picker onChange="bindObjPickerChange" value="{{reimbursementIndex}}" range="{{reimbursementList}}"
+                                range-key="name" data-name="reimbursementType" data-index="reimbursementIndex"
+                                data-list="reimbursementList">
+                            <view class="row-extra">{{reimbursementList[reimbursementIndex].name}}</view>
+                        </picker>
+                    </view>
+                </view>
+           </view>
+<!--      外币        -->
+            <block a:if="{{multiCurrency}}">
+                <view class="title">外币信息</view>
+                <view class="block-wrapper">
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>币别</view>
+                           <view class="form-row-content">
+                               <picker class="picker-style" onChange="bindObjPickerChange" value="{{currenctTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
+                                   <view class="row-extra">{{currencyTypeList[currencyTypeIndex].currencyName}}</view>
+                               </picker>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>本位币</view>
+                           <view class="form-row-content">
+                                <input disabled class="input" value="{{submitData.baseCurrencyName}}" placeholder="请输入本位币"/>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                   <view class="form-row">
+                       <view class="form-row-label"><text class="require">*</text>汇率</view>
+                           <view class="form-row-content">
+                                <input disabled="{{exchangeRateDisabled}}" class="input" value="{{submitData.exchangeRate}}" placeholder="请输入汇率" onInput="bindExchangeRateInput"/>
+                           </view>
+                       </view>
+                   <view class="form-line"/>
+                </view>
+            </block>
             <!-- 增加报销详情-->
             <view class="title">报销详情</view>
             <view class="block-wrapper">
@@ -98,7 +141,7 @@
                                 <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
                                 <view class="remark-content" a:else>无</view>
                             </view>
-                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item.formatApplicationAmount}}</view>
+                            <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right" onTap="showBaoxiaoDetail" data-index="{{index}}">{{item[amountField.formatApplicationAmount]}}</view>
                         </view>
                     </view>
                 </view>
@@ -285,18 +328,38 @@
             </block>
             <view class="title"></view>
             <view class="block-wrapper submit-info-wrapper">
-                <view class="total">
-                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        报销金额：</text><text class="total-word">{{submitData.formatApplicationAmount}}</text>
-                </view>
-                <view class="total">
-                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        核销借款：</text><text class="total-word">-{{submitData.formatVerificationAmount}}</text>
-                </view>
-                <view class="total">
-                    <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                        支付总额：</text><text class="total-word">{{submitData.formatTotalAmount}}</text>
-                </view>
+                <block a:if="{{multiCurrency}}">
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            报销金额(原币)：</text><text class="total-word">{{submitData.originFormatApplicationAmount}}</text>
+                    </view>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            核销借款(原币)：</text><text class="total-word">-{{submitData.originFormatVerificationAmount}}</text>
+                    </view>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            支付总额(原币)：</text><text class="total-word">{{submitData.originFormatTotalAmount}}</text>
+                    </view>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            支付总额(本位币)：</text><text class="total-word">{{submitData.formatTotalAmount}}</text>
+                    </view>
+                </block>
+                <block a:else>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            报销金额：</text><text class="total-word">{{submitData.formatApplicationAmount}}</text>
+                    </view>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            核销借款：</text><text class="total-word">-{{submitData.formatVerificationAmount}}</text>
+                    </view>
+                    <view class="total">
+                        <text class="title-word"><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
+                            支付总额：</text><text class="total-word">{{submitData.formatTotalAmount}}</text>
+                    </view>
+                </block>
             </view>
             <!--              流程图-->
             <block a:if="{{process !== null && process.operationRecords.length}}">
