@@ -366,7 +366,12 @@ Page({
         if(this.data.baoxiaoList.length) {
             newBaoxiaoList = this.data.baoxiaoList.map(item => {
                 return {
-                    // 空
+                    ...item,
+                    applicationAmount: item.originApplicationAmount,
+                    originApplicationAmount: '',
+                    formatApplicationAmount: item.originApplicationAmount,
+                    originFormatApplicationAmount: '',
+                    remark: ''
                 }
             })
         }
@@ -382,7 +387,7 @@ Page({
                 baseCurrency: '',
                 baseCurrencyName: '',
                 currencyTypeId: '',
-                applicationAmount: this.data.submitData.applicationAmount,
+                applicationAmount: this.data.submitData.originApplicationAmount,
                 formatApplicationAmount: this.data.submitData.originFormatApplicationAmount,
                 originApplicationAmount: '',
                 originFormatApplicationAmount: ''

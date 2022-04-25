@@ -307,6 +307,7 @@ Page({
         if(this.data.submitData.billDetailListObj.length) {
             newBillDetailListObj = this.data.submitData.billDetailListObj.map(item => {
                 return {
+                    ...item,
                     borrowAmount: item.originBorrowAmount,
                     originBorrowAmount: '',
                     formatBorrowAmount: item.originFormatBorrowAmount,
