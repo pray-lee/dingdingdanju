@@ -174,7 +174,7 @@
                                 <view class="form-row-content ellipsis borrow-remark baoxiaoDetail-right">
                                     <view class="tip">本次核销金额</view>
                                     <view class="edit-wrapper">
-                                        <input value="{{item.applicationAmount}}" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/>
+                                        <input value="{{item[amountField.applicationAmount]}}" onInput="borrowInput" onInput="borrowBlur" data-index="{{index}}"/>
                                         <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
                                     </view>
                                 </view>

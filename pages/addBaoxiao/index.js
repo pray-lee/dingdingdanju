@@ -264,6 +264,7 @@ Page({
                     [name]: this.data[listName][value].id
                 }
             })
+            console.log(this.data.submitData, 'submitData')
         } else {
             this.setData({
                 [index]: e.detail.value,
@@ -304,11 +305,6 @@ Page({
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
         }
-        // =============报销类型==========
-        if(name === 'reimbursementId') {
-
-        }
-        // =============报销类型==========
         // =============外币============
         if(name === 'currencyTypeId') {
             this.getExchangeRate({
@@ -443,6 +439,15 @@ Page({
             success: res => {
                 const importList = res.data
                 if (!!importList && importList.length) {
+                    // 外币
+                    if(this.data.multiCurrency) {
+                        importList.forEach(item => {
+                            item.originApplicationAmount = item.applicationAmount
+                            item.originFormatApplicationAmount = item.formatApplicationAmount
+                            item.applicationAmount = ''
+                            item.formatApplicationAmount = ''
+                        })
+                    }
                     const newImportList = this.caculateImportList(importList)
                     this.setData({
                         importList: newImportList
@@ -460,9 +465,9 @@ Page({
         })
     },
     caculateImportList(importList, inputValue, index) {
-        let totalApplicationAmount = Number(this.data.submitData.applicationAmount)
+        let totalApplicationAmount = Number(this.data.submitData[this.data.amountField.applicationAmount])
         const newImportList = importList.map(item => {
-            let applicationAmount = totalApplicationAmount - Number(item.applicationAmount)
+            let applicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
             if(applicationAmount <= 0 && totalApplicationAmount > 0) {
                 applicationAmount = totalApplicationAmount
                 totalApplicationAmount = 0
@@ -470,13 +475,13 @@ Page({
                 applicationAmount = 0
                 totalApplicationAmount = 0
             }else{
-                applicationAmount = item.applicationAmount
-                totalApplicationAmount = totalApplicationAmount - Number(item.applicationAmount)
+                applicationAmount = item[this.data.amountField.applicationAmount]
+                totalApplicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
             }
             return {
                 ...item,
                 formatUnverifyAmount: formatNumber(item.unverifyAmount),
-                applicationAmount
+                [this.data.amountField.applicationAmount]:applicationAmount
             }
         })
         return newImportList
@@ -1412,21 +1417,31 @@ Page({
     // 回显数据设置
     setRenderData(data) {
         // 请求
+        console.log(data, 'data')
         this.getAccountbookList(data)
         var importList = data.borrowBillList.map(item => {
+            // 外币
+            if(data.currencyTypeId) {
+                return {
+                    "subject.fullSubjectName": item.subject.fullSubjectName,
+                    billDetailId: item.billDetailId,
+                    remark: item.remark,
+                    applicationAmount: '',
+                    formatApplicationAmount: '',
+                    // 外币
+                    originApplicationAmount: item.originApplicationAmount,
+                    originFormatApplicationAmount: formatNumber(Number(item.originApplicationAmount))
+                }
+            }
             return {
                 "subject.fullSubjectName": item.subject.fullSubjectName,
                 billDetailId: item.billDetailId,
                 remark: item.remark,
                 applicationAmount: item.applicationAmount,
                 formatApplicationAmount: formatNumber(Number(item.applicationAmount)),
-                // 外币
-                originApplicationAmount: item.originApplicationAmount,
-                originFormatApplicationAmount: formatNumber(Number(item.originApplicationAmount))
-                // formatUnverifyAmount: formatNumber(Number(item.borrowBillUnverifyAmount)),
-                // unverifyAmount: item.borrowBillUnverifyAmount
             }
         })
+        console.log(importList, 'importList')
         //fileList
         if (data.billFiles.length) {
             var billFilesObj = data.billFiles.map(item => {
@@ -1434,6 +1449,8 @@ Page({
             })
         }
 
+        // 报销类型
+        this.getReimbursementList(data.reimbursementType)
 
         // 设置数据
         this.setData({
@@ -1454,6 +1471,8 @@ Page({
                 formatVerificationAmount: formatNumber(Number(data.verificationAmount).toFixed(2)),
                 totalAmount: data.totalAmount,
                 formatTotalAmount: formatNumber(Number(data.totalAmount).toFixed(2)),
+                // 报销类型
+                reimbursementType: data.reimbursementType || '',
                 // ==============外币==============
                 originApplicationAmount: data.originApplicationAmount ? data.originApplicationAmount.toFixed(2) : '',
                 originFormatApplicationAmount: data.originApplicationAmount ? formatNumber(data.originApplicationAmount) : '',
@@ -1578,10 +1597,16 @@ Page({
                             obj.subjectExtraId = subjectExtraId
                             obj.trueSubjectId = item.trueSubjectId
                             obj.trueSubjectName = item.subject.trueSubjectName
-                            obj.applicationAmount = item.applicationAmount
-                            obj.originApplicationAmount = item.originApplicationAmount
-                            obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
-                            obj.originFormatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                            // 外币
+                            if(this.data.multiCurrency) {
+                                obj.originApplicationAmount = item.originApplicationAmount
+                                obj.originFormatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                                obj.applicationAmount = ''
+                                obj.formatApplicationAmount = ''
+                            }else{
+                                obj.applicationAmount = item.applicationAmount
+                                obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                            }
                             // 附加信息
                             if (!!item.extraMessage) {
                                 obj.extraMessage = JSON.parse(item.extraMessage)
@@ -1725,14 +1750,14 @@ Page({
         var index = e.currentTarget.dataset.index
         var tempData = clone(this.data.importList)
         // 本次核销金额
-        tempData[index].applicationAmount = value
-        tempData[index].formatApplicationAmount = formatNumber(Number(value).toFixed(2))
+        tempData[index][this.data.amountField.applicationAmount] = value
+        tempData[index][this.data.amountField.formatApplicationAmount] = formatNumber(Number(value).toFixed(2))
         const newImportList = this.caculateImportList(tempData, value, index)
         this.setData({
             importList: newImportList,
         })
         // 验证输入
-        if(Number(value) - Number(newImportList[index].applicationAmount) > 0) {
+        if(Number(value) - Number(newImportList[index][this.data.amountField.applicationAmount]) > 0) {
             validFn('输入金额不能大于申请核销金额')
             // return
         }
@@ -1751,16 +1776,26 @@ Page({
         var borrowTotalAmount = 0
         if (array.length) {
             array.forEach(item => {
-                borrowTotalAmount += Number(item.applicationAmount)
+                borrowTotalAmount += Number(item[this.data.amountField.applicationAmount])
             })
         }
-        this.setData({
-            submitData: {
-                ...this.data.submitData,
-                verificationAmount: borrowTotalAmount,
-                formatVerificationAmount: formatNumber(Number(borrowTotalAmount).toFixed(2))
-            }
-        })
+        if(this.data.multiCurrency) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    originVerificationAmount: borrowTotalAmount,
+                    originFormatVerificationAmount: formatNumber(Number(borrowTotalAmount).toFixed(2))
+                }
+            })
+        }else{
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    verificationAmount: borrowTotalAmount,
+                    formatVerificationAmount: formatNumber(Number(borrowTotalAmount).toFixed(2))
+                }
+            })
+        }
         return borrowTotalAmount
     },
     setApplicationAmount(array) {
@@ -1792,7 +1827,7 @@ Page({
                 submitData: {
                     ...this.data.submitData,
                     originTotalAmount: totalAmount,
-                    originFormatTotalAmount: formatNumber(Number(totalAmount).toFixed(2))
+                    originFormatTotalAmount: formatNumber(Number(totalAmount).toFixed(2)),
                 }
             })
             this.calculateExchangeRate(totalAmount)
@@ -1860,6 +1895,9 @@ Page({
         this.data.baoxiaoList[index].applicantType = this.data.submitData.applicantType
         this.data.baoxiaoList[index].applicantId = this.data.submitData.applicantId
         this.data.baoxiaoList[index].taxpayerType = this.data.submitData.taxpayerType
+        if(this.data.multiCurrency) {
+            this.data.baoxiaoList[index].applicationAmount = this.data.baoxiaoList[index].originApplicationAmount
+        }
         var obj = this.generateBaseDetail()
         dd.setStorage({
             key: 'index',
@@ -2015,6 +2053,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
+                applicationAmount: value,
                 totalAmount: value,
                 formatTotalAmount: formatNumber(Number(value).toFixed(2))
             }
@@ -2148,6 +2187,16 @@ Page({
                     businessDateTime: this.data.submitData.businessDateTime,
                 })
             }else{
+                if(currencyType === this.data.submitData.baseCurrency) {
+                    this.setData({
+                        exchangeRateDisabled:  true,
+                        submitData: {
+                            ...this.data.submitData,
+                            exchangeRate: 1
+                        }
+                    })
+                    return
+                }
                 this.setData({
                     submitData: {
                         ...this.data.submitData,
@@ -2171,7 +2220,7 @@ Page({
         }
     },
     // 报销类型
-    getReimbursementList() {
+    getReimbursementList(reimbursementId) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -2179,10 +2228,21 @@ Page({
             method: 'GET',
             success: res => {
                 if(res.status == 200) {
-                    console.log(res.data, '报销类型列表')
+                    let reimbursementIndex = 0
+                    if(reimbursementId) {
+                        res.data.forEach((item, index) => {
+                            if(item.id == reimbursementId) {
+                                reimbursementIndex = index
+                            }
+                        })
+                    }
                     this.setData({
                         reimbursementList: res.data,
-                        reimbursementIndex: 0,
+                        reimbursementIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            reimbursementType: res.data[reimbursementIndex].id
+                        }
                     })
                 }
             },

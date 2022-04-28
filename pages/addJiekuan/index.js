@@ -2000,6 +2000,16 @@ Page({
                     businessDateTime: this.data.submitData.businessDateTime,
                 })
             }else{
+                if(currencyType === this.data.submitData.baseCurrency) {
+                    this.setData({
+                        exchangeRateDisabled:  true,
+                        submitData: {
+                            ...this.data.submitData,
+                            exchangeRate: 1
+                        }
+                    })
+                    return
+                }
                 this.setData({
                     submitData: {
                         ...this.data.submitData,
