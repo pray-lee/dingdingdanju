@@ -212,7 +212,7 @@ Page({
             })
             // ============ 审批流 =========
             this.setData({
-                oaModule: this.findAccountbookOaModule(this.data[listName][value], this.data.accountbookList)
+                oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
             this.showOaProcessByBillType(this.data[listName][value], 3)
             // ============ 审批流 =========

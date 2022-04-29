@@ -221,7 +221,6 @@ Page({
         }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
-            this.clearSubjectData()
             this.setData({
                 applicantIndex: 0,
                 submitData: {
@@ -229,9 +228,20 @@ Page({
                     applicantType: 10
                 }
             })
+            // 滞空借款列表
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    billDetailListObj: [],
+                    originAmount: '',
+                    amount: '',
+                    formatAmount: '',
+                    originFormatAmount: '',
+                }
+            })
             // ============ 审批流 =========
             this.setData({
-                oaModule: this.findAccountbookOaModule(this.data[listName][value], this.data.accountbookList)
+                oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
             this.showOaProcessByBillType(this.data[listName][value], 4)
             // ============ 审批流 =========
@@ -302,19 +312,27 @@ Page({
             subjectAuxptyList: [],
         })
     },
-    clearCurrencyData() {
-        var newBillDetailListObj = []
-        if(this.data.submitData.billDetailListObj.length) {
-            newBillDetailListObj = this.data.submitData.billDetailListObj.map(item => {
-                return {
-                    ...item,
-                    borrowAmount: item.originBorrowAmount,
-                    originBorrowAmount: '',
-                    formatBorrowAmount: item.originFormatBorrowAmount,
-                    originFormatBorrowAmount: '',
-                    remark: item.remark
-                }
-            })
+    clearCurrencyData(data) {
+        if(data) {
+            // 外币
+            var billDetailListObj = []
+            if (data.billDetailList && data.billDetailList.length) {
+                billDetailListObj = data.billDetailList.map(item => {
+                    return {
+                        borrowAmount: item.borrowAmount,
+                        formatBorrowAmount: formatNumber(Number(item.borrowAmount).toFixed(2)),
+                        originBorrowAmount: '',
+                        originFormatBorrowAmount: '',
+                        remark: item.remark
+                    }
+                })
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billDetailListObj
+                    }
+                })
+            }
         }
         // 清除外币字段
         this.setData({
@@ -327,11 +345,8 @@ Page({
                 baseCurrency: '',
                 baseCurrencyName: '',
                 currencyTypeId: '',
-                billDetailListObj: newBillDetailListObj,
-                amount: this.data.submitData.originAmount,
-                formatAmount: this.data.submitData.originFormatAmount,
                 originAmount: '',
-                originFormatAmount: ''
+                originFormatAmount: '',
             }
         })
     },
@@ -1121,7 +1136,7 @@ Page({
                     // ============ 外币 =========
                     const currencyTypeId = !!data && data.currencyTypeId ? data.currencyTypeId : undefined
                     const exchangeRate = !!data && data.exchangeRate ? data.exchangeRate : undefined
-                    this.initCurrency(accountbookId, currencyTypeId, exchangeRate)
+                    this.initCurrency(accountbookId, currencyTypeId, exchangeRate, data)
                     // ============ 外币 =========
                     // edit的时候设置值
                     if (accountbookId) {
@@ -1634,26 +1649,6 @@ Page({
     setRenderData(data) {
         // 请求
         this.getAccountbookList(data)
-        // billDetailList
-        // 外币
-        var billDetailListObj = []
-        if (data.billDetailList && data.billDetailList.length) {
-            billDetailListObj = data.billDetailList.map(item => {
-                if(item.originBorrowAmount) {
-                    return {
-                        originBorrowAmount: item.originBorrowAmount,
-                        originFormatBorrowAmount: formatNumber(Number(item.originBorrowAmount).toFixed(2)),
-                        remark: item.remark
-                    }
-                } else{
-                    return {
-                        borrowAmount: item.borrowAmount,
-                        formatBorrowAmount: formatNumber(Number(item.borrowAmount).toFixed(2)),
-                        remark: item.remark
-                    }
-                }
-            })
-        }
         // billApEntityList
         var billApEntityListObj = []
         if (data.billApEntityList && data.billApEntityList.length) {
@@ -1704,7 +1699,6 @@ Page({
             submitData: {
                 ...this.data.submitData,
                 billApEntityListObj,
-                billDetailListObj,
                 billFilesObj: billFilesObj || [],
                 submitDate: moment().format('YYYY-MM-DD'),
                 applicantType: data.applicantType,
@@ -1712,11 +1706,11 @@ Page({
                 subjectId: data.subjectId,
                 subjectName: data.subject ? data.subject.fullSubjectName : '',
                 businessDateTime: data.businessDateTime.split(' ')[0],
-                amount: data.amount.toFixed(2),
-                formatAmount: formatNumber(data.amount),
+                amount: formatNumber(Number(data.amount).toFixed(2)),
+                formatAmount: formatNumber(Number(data.amount).toFixed(2)),
                 // 外币
-                originAmount: data.originAmount ? data.originAmount.toFixed(2) : '',
-                originFormatAmount: data.originAmount ? formatNumber(data.originAmount) : '' ,
+                originAmount: formatNumber(Number(data.originAmount).toFixed(2)),
+                originFormatAmount: formatNumber(Number(data.originAmount).toFixed(2)),
                 remark: data.remark,
                 status: data.status,
                 userName: app.globalData.realName,
@@ -1953,7 +1947,7 @@ Page({
             },
         })
     },
-    async initCurrency(accountbookId, currencyTypeId, exchangeRate) {
+    async initCurrency(accountbookId, currencyTypeId, exchangeRate, data) {
         const multiCurrency = await this.getCurrencyTagByAccountbookId(accountbookId)
         this.setData({
             multiCurrency: multiCurrency,
@@ -2008,29 +2002,38 @@ Page({
                             exchangeRate: 1
                         }
                     })
-                    return
+                }else{
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            exchangeRate
+                        }
+                    })
                 }
-                this.setData({
-                    submitData: {
-                        ...this.data.submitData,
-                        exchangeRate
-                    }
-                })
             }
-
-            if(this.data.submitData.billDetailListObj.length) {
-                var newBillDetailListObj = []
-                newBillDetailListObj = this.data.submitData.billDetailListObj.map(item => {
+            // billDetailList
+            // 外币
+            var billDetailListObj = []
+            if (data && data.billDetailList && data.billDetailList.length) {
+                billDetailListObj = data.billDetailList.map(item => {
                     return {
-                        originBorrowAmount: item.borrowAmount,
-                        originFormatBorrowAmount: item.formatBorrowAmount,
+                        originBorrowAmount: item.originBorrowAmount ? item.originBorrowAmount : item.borrowAmount,
+                        originFormatBorrowAmount: item.originBorrowAmount ? formatNumber(Number(item.originBorrowAmount).toFixed(2)) : formatNumber(Number(item.borrowAmount).toFixed(2)),
+                        borrowAmount: '',
+                        formatBorrowAmount: '',
                         remark: item.remark
                     }
                 })
+                this.setData({
+                    submitData: {
+                        ...this.data.submitData,
+                        billDetailListObj
+                    }
+                })
+                console.log(billDetailListObj)
             }
-
         }else{
-            this.clearCurrencyData()
+            this.clearCurrencyData(data)
         }
     }
 })

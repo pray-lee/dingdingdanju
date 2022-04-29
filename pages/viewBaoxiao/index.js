@@ -74,10 +74,10 @@ Page({
                     method: 'GET',
                     success: res => {
                         if (res.data.success) {
-                            if(res.data.obj) {
+                            if (res.data.obj) {
                                 app.globalData.realName = res.data.obj.realName
                                 this.getDetailById(query)
-                            }else{
+                            } else {
                                 loginFiled(res.data.msg)
                             }
                         } else {
@@ -91,7 +91,7 @@ Page({
             },
             fail: res => {
                 this.hideLoading()
-                console.log(res ,'获取授权码失败')
+                console.log(res, '获取授权码失败')
                 dd.alert({
                     content: '当前组织没有该小程序',
                     buttonText: '好的',
@@ -112,7 +112,7 @@ Page({
     },
     getDetailById(query) {
         // oa===============================
-        if(query.processInstanceId) {
+        if (query.processInstanceId) {
             this.setOaQuery(query)
         }
         this.getHistoryOaList(query)
@@ -132,7 +132,7 @@ Page({
                     // 报销类型
                     this.getReimbursementName(result.reimbursementType)
                     // ============外币=============
-                    if(result.currencyTypeId) {
+                    if (result.currencyTypeId) {
                         this.setData({
                             multiCurrency: true
                         })
@@ -141,13 +141,28 @@ Page({
                         this.setData({
                             exchangeRate: result.exchangeRate
                         })
+                        result.originApplicationAmount = formatNumber(Number(result.originApplicationAmount).toFixed(2))
+                        result.originVerificationAmount = formatNumber(Number(result.originVerificationAmount).toFixed(2))
+                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
+                        result.originTotalAmount = formatNumber((Number(result.originApplicationAmount) - Number(result.originVerificationAmount)).toFixed(2))
+                        result.billDetailList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                        })
+                        result.borrowBillList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                        })
+                    } else {
+                        result.applicationAmount = formatNumber(Number(result.applicationAmount).toFixed(2))
+                        result.verificationAmount = formatNumber(Number(result.verificationAmount).toFixed(2))
+                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
+                        result.billDetailList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                        })
+                        result.borrowBillList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                        })
                     }
-                    result.applicationAmount = formatNumber(Number(result.applicationAmount).toFixed(2))
-                    result.verificationAmount = formatNumber(Number(result.verificationAmount).toFixed(2))
-                    result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
-                    result.billDetailList.forEach(item => {
-                        item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
-                    })
+                    console.log(result)
                     this.setData({
                         result
                     })
@@ -166,7 +181,7 @@ Page({
             url: app.globalData.url + 'oaController.do?lastActivityNodeList&billId=' + query.id,
             method: 'GET',
             success: res => {
-                if(res.status === 200) {
+                if (res.status === 200) {
                     const historyOaList = this.handleData(res.data)
                     this.setData({
                         historyOaList: historyOaList.map(item => ({...item, showUserList: false}))
@@ -197,7 +212,7 @@ Page({
             url: app.globalData.url + 'oaController.do?activityNodeList&billId=' + query.id,
             method: 'GET',
             success: res => {
-                if(res.data) {
+                if (res.data) {
                     this.judgeShowOaOperate(res.data)
                     const caikaProcess = this.handleData(res.data)
                     this.setData({
@@ -373,19 +388,20 @@ Page({
             success: res => {
                 // 关闭弹框
                 this.onCommentHide()
-                if(res.data.success) {
-                    if(this.data.query.isNotification) {
+                if (res.data.success) {
+                    if (this.data.query.isNotification) {
                         this.onLoad(this.data.query)
-                    }else{
+                    } else {
                         dd.navigateBack({
                             delta: 1
                         })
                     }
-                }else{
+                } else {
                     dd.alert({
                         content: res.data.msg,
                         buttonText: '好的',
-                        success: () => {}
+                        success: () => {
+                        }
                     })
                 }
             }
@@ -399,14 +415,14 @@ Page({
             url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
-                if(res.data && res.data.length) {
-                    const { title, operationRecords, tasks, ccUserids } = res.data[0]
+                if (res.data && res.data.length) {
+                    const {title, operationRecords, tasks, ccUserids} = res.data[0]
                     const taskArr = tasks.filter(item => {
-                        if(item.taskStatus === 'RUNNING') {
-                            if(item.userid.split(',')[2]){
+                        if (item.taskStatus === 'RUNNING') {
+                            if (item.userid.split(',')[2]) {
                                 item.userName = item.userid.split(',')[2]
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                            }else{
+                            } else {
                                 item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             }
@@ -419,7 +435,7 @@ Page({
 
                     // 抄送人
                     let cc = []
-                    if(ccUserids && ccUserids.length) {
+                    if (ccUserids && ccUserids.length) {
                         cc = ccUserids.map(item => {
                             return {
                                 userName: item.split(',')[0],
@@ -430,27 +446,27 @@ Page({
                     }
 
                     const operationArr = operationRecords.filter(item => {
-                        if(item.userid.split(',')[2]){
+                        if (item.userid.split(',')[2]) {
                             item.userName = item.userid.split(',')[2]
                             item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                        }else{
+                        } else {
                             item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                         }
                         item.avatar = item.userid.split(',')[1]
-                        if(item.operationType === 'START_PROCESS_INSTANCE') {
+                        if (item.operationType === 'START_PROCESS_INSTANCE') {
                             item.operationName = '发起审批'
-                        } else if(item.operationType !== 'NONE') {
+                        } else if (item.operationType !== 'NONE') {
                             item.operationName = '审批人'
                         }
-                        if(item.operationResult === 'AGREE') {
+                        if (item.operationResult === 'AGREE') {
                             item.resultName = '（已同意）'
-                        }else if(item.operationResult === 'REFUSE') {
+                        } else if (item.operationResult === 'REFUSE') {
                             item.resultName = '（已拒绝）'
-                        }else{
+                        } else {
                             item.resultName = ''
                         }
-                        if(item.operationType !== 'NONE') {
+                        if (item.operationType !== 'NONE') {
                             return item
                         }
                     })
@@ -490,7 +506,7 @@ Page({
             method: 'GET',
             success: res => {
                 console.log(res, '币别列表。。。。。')
-                if(res.status == 200) {
+                if (res.status == 200) {
                     var currencyTypeName = res.data.filter(item => item.id === currencyTypeId)[0].currencyName
                     this.setData({
                         currencyTypeName
@@ -506,7 +522,7 @@ Page({
             url: `${app.globalData.url}reimbursementTypeController.do?getList`,
             method: 'GET',
             success: res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     var reimbursementName = res.data.filter(item => item.id == reimbursementType)[0].name
                     this.setData({
                         reimbursementName
@@ -522,7 +538,7 @@ Page({
             url: `${app.globalData.url}accountbookController.do?getBaseCurrencyInfo&accountbookId=${accountbookId}`,
             method: 'GET',
             success: res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     this.setData({
                         baseCurrencyName: res.data.baseCurrencyName
                     })

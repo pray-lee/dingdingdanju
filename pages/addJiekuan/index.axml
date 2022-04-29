@@ -314,7 +314,7 @@
                 <block a:else>
                     <view class="total" style="margin-top: 20rpx">
                         <text><image src="../../images/jiekuanTotal-icon.png" mode="scaleToFill" class="jiekuan-icon" />
-                            借款合计：<text class="total-word">{{submitData.formatAmount}}</text>
+                            借款合计：</text><text class="total-word">{{submitData.formatAmount}}</text>
                     </view>
                 </block>
             </view>

@@ -104,7 +104,7 @@ Page({
             auxpropertyNames: '',
             // 外币
             baseCurrencyName: '',
-            baseCurrency:'',
+            baseCurrency: '',
             exchangeRate: '',
             currencyTypeId: ''
         },
@@ -138,14 +138,14 @@ Page({
                             }
                         })
                     } else {
-                        if(keys === 'subjectExtraConf' && typeof item[keys] === 'object') {
+                        if (keys === 'subjectExtraConf' && typeof item[keys] === 'object') {
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
                                     [`${name}[${index}].${keys}`]: JSON.stringify(item[keys])
                                 }
                             })
-                        }else{
+                        } else {
                             this.setData({
                                 submitData: {
                                     ...this.data.submitData,
@@ -174,7 +174,7 @@ Page({
     },
     formSubmit(e) {
         // ==================处理审批流数据==================
-        if(this.data.nodeList.length) {
+        if (this.data.nodeList.length) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -192,7 +192,7 @@ Page({
         })
         // 删除辅助核算的信息，然后通过formatSubmitData重新赋值
         Object.keys(this.data.submitData).forEach(item => {
-            if(item.indexOf('billDetailList') != -1) {
+            if (item.indexOf('billDetailList') != -1) {
                 delete this.data.submitData[item]
             }
         })
@@ -279,6 +279,7 @@ Page({
             // 重新获取科目以后，就要置空报销列表
             this.setData({
                 baoxiaoList: [],
+                importList: [],
                 applicantIndex: 0,
                 submitData: {
                     ...this.data.submitData,
@@ -294,19 +295,19 @@ Page({
             })
             // ============ 审批流 =========
             this.setData({
-                oaModule: this.findAccountbookOaModule(this.data[listName][value], this.data.accountbookList)
+                oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
             this.showOaProcessByBillType(this.data[listName][value], 9)
             // ============ 审批流 =========
-            // =============外币============
-            this.initCurrency(this.data[listName][value].id)
-            // =============外币============
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
+            // =============外币============
+            this.initCurrency(this.data[listName][value].id)
+            // =============外币============
         }
         // =============外币============
-        if(name === 'currencyTypeId') {
+        if (name === 'currencyTypeId') {
             this.getExchangeRate({
                 accountbookId: this.data.submitData.accountbookId,
                 currencyTypeId: this.data[listName][value].id,
@@ -337,7 +338,7 @@ Page({
         if (name === 'applicantType') {
             // uisCurrentUser 判断是否应该选择当前登录的用户的applicantId
             var isCurrentUser = true
-            if(this.data[listName][value].id !== 10) {
+            if (this.data[listName][value].id !== 10) {
                 isCurrentUser = false
             }
             this.getBorrowBillList(this.data.submitData.accountbookId, this.data[listName][value].id, null, null, isCurrentUser)
@@ -357,34 +358,50 @@ Page({
             }
         })
     },
-    clearCurrencyData() {
-        var newBaoxiaoList = []
-        if(this.data.baoxiaoList.length) {
-            newBaoxiaoList = this.data.baoxiaoList.map(item => {
+    clearCurrencyData(data) {
+        // 清除外币字段
+        var baoxiaoList = []
+        var importList = []
+        if(data && data.billDetailList && data.billDetailList.length) {
+            baoxiaoList = data.billDetailList.map(item => {
                 return {
                     ...item,
-                    applicationAmount: item.originApplicationAmount,
+                    applicationAmount: item.applicationAmount,
+                    formatApplicationAmount: formatNumber(Number(item.applicationAmount).toFixed(2)),
                     originApplicationAmount: '',
-                    formatApplicationAmount: item.originApplicationAmount,
                     originFormatApplicationAmount: '',
-                    remark: ''
                 }
             })
         }
-        // 清除外币字段
+        if(data && data.borrowBillList && data.borrowBillList.length) {
+            importList = data.borrowBillList.map(item => {
+                return {
+                    ...item,
+                    applicationAmount: item.applicationAmount,
+                    formatApplicationAmount: formatNumber(Number(item.applicationAmount).toFixed(2)),
+                    originApplicationAmount: '',
+                    originFormatApplicationAmount: '',
+                }
+            })
+        }
         this.setData({
             currencyTypeIndex: 0,
             currencyTypeList: [],
             exchangeRateDisabled: false,
-            baoxiaoList: newBaoxiaoList,
+            baoxiaoList ,
+            importList,
             submitData: {
                 ...this.data.submitData,
                 isMultiCurrency: null,
                 baseCurrency: '',
                 baseCurrencyName: '',
                 currencyTypeId: '',
-                applicationAmount: this.data.submitData.originApplicationAmount,
-                formatApplicationAmount: this.data.submitData.originFormatApplicationAmount,
+                applicationAmount: '',
+                formatApplicationAmount: '',
+                verificationAmount: '',
+                formatVerificationAmount: '',
+                originVerificationAmount: '',
+                originFormatVerificationAmount: '',
                 originApplicationAmount: '',
                 originFormatApplicationAmount: ''
             }
@@ -440,7 +457,7 @@ Page({
                 const importList = res.data
                 if (!!importList && importList.length) {
                     // 外币
-                    if(this.data.multiCurrency) {
+                    if (this.data.multiCurrency) {
                         importList.forEach(item => {
                             item.originApplicationAmount = item.applicationAmount
                             item.originFormatApplicationAmount = item.formatApplicationAmount
@@ -468,20 +485,20 @@ Page({
         let totalApplicationAmount = Number(this.data.submitData[this.data.amountField.applicationAmount])
         const newImportList = importList.map(item => {
             let applicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
-            if(applicationAmount <= 0 && totalApplicationAmount > 0) {
+            if (applicationAmount <= 0 && totalApplicationAmount > 0) {
                 applicationAmount = totalApplicationAmount
                 totalApplicationAmount = 0
-            }else if(applicationAmount <= 0 && totalApplicationAmount <= 0){
+            } else if (applicationAmount <= 0 && totalApplicationAmount <= 0) {
                 applicationAmount = 0
                 totalApplicationAmount = 0
-            }else{
+            } else {
                 applicationAmount = item[this.data.amountField.applicationAmount]
                 totalApplicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
             }
             return {
                 ...item,
                 formatUnverifyAmount: formatNumber(item.unverifyAmount),
-                [this.data.amountField.applicationAmount]:applicationAmount
+                [this.data.amountField.applicationAmount]: applicationAmount
             }
         })
         return newImportList
@@ -498,7 +515,7 @@ Page({
             success: res => {
                 let baoxiaoDetail = res.data
                 //=============== 外币 =================
-                if(this.data.multiCurrency) {
+                if (this.data.multiCurrency) {
                     baoxiaoDetail.forEach(item => {
                         item.originApplicationAmount = item.applicationAmount
                         item.applicationAmount = ''
@@ -570,11 +587,11 @@ Page({
         this.setData({
             baoxiaoList
         })
-        if(!baoxiaoList.length) {
-           this.setData({
-               showBorrowList: false,
-               importList: []
-           })
+        if (!baoxiaoList.length) {
+            this.setData({
+                showBorrowList: false,
+                importList: []
+            })
         }
         this.setApplicationAmount(baoxiaoList)
         this.setTotalAmount()
@@ -747,7 +764,7 @@ Page({
             url: app.globalData.url + 'oaController.do?lastActivityNodeList&billId=' + query.id,
             method: 'GET',
             success: res => {
-                if(res.status === 200) {
+                if (res.status === 200) {
                     const historyOaList = this.handleData(res.data)
                     this.setData({
                         historyOaList: historyOaList.map(item => ({...item, showUserList: false}))
@@ -865,25 +882,25 @@ Page({
             }
         })
     },
-    showOaUserNodeListUseField(fields){
+    showOaUserNodeListUseField(fields) {
         let result = false
         fields.forEach(field => {
-            if(this.data[field] && this.data[field].length) {
+            if (this.data[field] && this.data[field].length) {
                 result = true
-            }else{
-                if(this.data.submitData[field]) {
+            } else {
+                if (this.data.submitData[field]) {
                     result = true
-                }else{
+                } else {
                     result = false
                 }
             }
         })
-        if(this.data.oaModule && this.data.showOaUserNodeList && result) {
+        if (this.data.oaModule && this.data.showOaUserNodeList && result) {
             this.setData({
                 showOa: true
             })
             this.getProcess(fields, 9)
-        }else{
+        } else {
             this.setData({
                 showOa: false
             })
@@ -892,9 +909,9 @@ Page({
     getOaParams(fields, billType) {
         let params = ''
         fields.forEach(item => {
-            if(this.data.submitData[item]) {
+            if (this.data.submitData[item]) {
                 params += '&' + item + '=' + this.data.submitData[item]
-            }else{
+            } else {
                 params += '&applicationAmount=' + this.data.submitData.applicationAmount
             }
         })
@@ -909,15 +926,15 @@ Page({
             url: app.globalData.url + 'oaBillConfigController.do?getOAUserList' + params,
             method: 'GET',
             success: res => {
-                if(res.data && res.data.length) {
+                if (res.data && res.data.length) {
                     const nodeList = res.data.map(node => {
                         return {
                             ...node,
-                            oaBillUserList:node.oaBillUserList || [],
-                            editable:node.editable,
-                            allowMulti:node.allowMulti,
-                            nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
-                            operate:node.signType === 'and' ? '+' : '/',
+                            oaBillUserList: node.oaBillUserList || [],
+                            editable: node.editable,
+                            allowMulti: node.allowMulti,
+                            nodeTypeName: node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                            operate: node.signType === 'and' ? '+' : '/',
                             nodeName: node.nodeName
                         }
                     })
@@ -927,15 +944,15 @@ Page({
         })
     },
     setRenderProgress(nodeList) {
-        if(nodeList && nodeList.length) {
+        if (nodeList && nodeList.length) {
             const newNodeList = nodeList.map(node => {
                 return {
                     ...node,
-                    oaBillUserList:node.oaBillUserList || [],
-                    editable:node.editable,
-                    allowMulti:node.allowMulti,
-                    nodeTypeName:node.nodeType === 'serviceTask' ? '抄送' : '审批',
-                    operate:node.signType === 'and' ? '+' : '/',
+                    oaBillUserList: node.oaBillUserList || [],
+                    editable: node.editable,
+                    allowMulti: node.allowMulti,
+                    nodeTypeName: node.nodeType === 'serviceTask' ? '抄送' : '审批',
+                    operate: node.signType === 'and' ? '+' : '/',
                     nodeName: node.nodeName
                 }
             })
@@ -965,7 +982,7 @@ Page({
             url: app.globalData.url + 'newDepartDetailController.do?treeListWithUser&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
-                if(res && res.data) {
+                if (res && res.data) {
                     const users = this.setSearchArr(res.data)
                     const searchUserList = this.handleUsers(users)
                     dd.setStorageSync({
@@ -987,7 +1004,7 @@ Page({
     },
     setSearchArr(deptList) {
         let users = []
-        for(let i = 0; i < deptList.length; i++) {
+        for (let i = 0; i < deptList.length; i++) {
             const dept = deptList[i]
             users.concat(this.generateUsername(dept, users))
         }
@@ -996,12 +1013,12 @@ Page({
     generateUsername(dept, users) {
         const userList = dept.userList || []
         const subDepartList = dept.subDepartList || []
-        if(userList.length) {
+        if (userList.length) {
             userList.forEach(item => {
                 users.push(item)
             })
         }
-        if(subDepartList.length) {
+        if (subDepartList.length) {
             subDepartList.forEach(subDepart => {
                 users.concat(this.generateUsername(subDepart, users))
             })
@@ -1010,10 +1027,10 @@ Page({
     },
     handleUsers(users) {
         const newUsers = []
-        if(users.length) {
+        if (users.length) {
             const obj = {}
             users.reduce((prev, cur) => {
-                obj[cur.id] ? '':obj[cur.id] = true && prev.push(cur)
+                obj[cur.id] ? '' : obj[cur.id] = true && prev.push(cur)
                 return prev
             }, newUsers)
         }
@@ -1026,18 +1043,18 @@ Page({
         this.setData({
             nodeList: this.data.nodeList,
             nodeIndex,
-            selectedUserList:this.data.nodeList[nodeIndex]
+            selectedUserList: this.data.nodeList[nodeIndex]
         })
     },
     getSelectedUserListFromStorage() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
         const nodeIndex = dd.getStorageSync({key: 'nodeIndex'}).data
         let currentNodeList = []
-        if(selectedUsers.length && nodeIndex !== null) {
+        if (selectedUsers.length && nodeIndex !== null) {
             currentNodeList = selectedUsers[nodeIndex].map(item => ({...item, removable: true}))
         }
-        if(!!currentNodeList && nodeIndex !== null) {
-            if(this.data.nodeList[nodeIndex]) {
+        if (!!currentNodeList && nodeIndex !== null) {
+            if (this.data.nodeList[nodeIndex]) {
                 // 把用户刚选择的和之前已经选择的混合在一起
                 this.data.nodeList[nodeIndex].oaBillUserList = this.data.nodeList[nodeIndex].oaBillUserList.concat(currentNodeList)
                 // 然后去重
@@ -1122,9 +1139,7 @@ Page({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
-                console.log(res.data, 'accountbookList')
-                console.log(data)
-                if(res.data.success && res.data.obj.length) {
+                if (res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
                     var taxpayerType = !!data ? data.accountbook.taxpayerType : null
                     var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
@@ -1137,7 +1152,7 @@ Page({
                     // ============ 外币 =========
                     const currencyTypeId = !!data && data.currencyTypeId ? data.currencyTypeId : undefined
                     const exchangeRate = !!data && data.exchangeRate ? data.exchangeRate : undefined
-                    this.initCurrency(accountbookId, currencyTypeId, exchangeRate)
+                    this.initCurrency(accountbookId, currencyTypeId, exchangeRate, data)
                     // ============ 外币 =========
                     // edit的时候设置值
                     if (accountbookId) {
@@ -1148,7 +1163,7 @@ Page({
                             }
                         })
                     }
-                    console.log(taxpayerType,' taxpayerType')
+                    console.log(taxpayerType, ' taxpayerType')
                     this.setData({
                         accountbookList: res.data.obj,
                         accountbookIndex: accountbookIndex,
@@ -1163,7 +1178,7 @@ Page({
                     var applicantId = data ? data.applicantId : ''
                     var applicantIndex = 0
                     this.data.applicantTypeList.forEach((item, index) => {
-                        if(item.id === applicantType) {
+                        if (item.id === applicantType) {
                             applicantIndex = index
                         }
                     })
@@ -1174,7 +1189,7 @@ Page({
                     var billDetailList = data ? data.billDetailList : []
                     this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName, true)
                     this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
-                }else{
+                } else {
                     dd.alert({
                         content: res.data.msg,
                         buttonText: '好的',
@@ -1197,7 +1212,7 @@ Page({
             method: 'GET',
             dataType: 'json',
             success: res => {
-                if(res.data && res.data.length) {
+                if (res.data && res.data.length) {
                     var arr = res.data.map(item => {
                         return {
                             id: item.departDetail.id,
@@ -1223,7 +1238,7 @@ Page({
                         },
                     })
                     this.getSubjectList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
-                }else{
+                } else {
                     dd.alert({
                         content: '当前用户未设置部门或者所属部门已禁用',
                         buttonText: '好的',
@@ -1241,7 +1256,7 @@ Page({
     getBorrowBillList(accountbookId, applicantType, applicant, incomeBankName, isCurrentUser) {
         this.addLoading()
         request({
-            hideLoading:this.hideLoading,
+            hideLoading: this.hideLoading,
             url: app.globalData.url + 'borrowBillController.do?borrowerObjectList&accountbookId=' + accountbookId + '&applicantType=' + applicantType + '&billType=9',
             method: 'GET',
             success: res => {
@@ -1261,9 +1276,9 @@ Page({
                 // edit的时候，设置borrowIndex
                 var borrowIndex = 0
                 var applicantId = ''
-                if(isCurrentUser) {
+                if (isCurrentUser) {
                     applicantId = !!applicant ? applicant : app.globalData.applicantId
-                }else{
+                } else {
                     applicantId = arr[0].id
                 }
                 if (applicantId) {
@@ -1377,7 +1392,7 @@ Page({
     },
     onAddBaoxiao() {
         var obj = this.generateBaseDetail()
-        if(!!obj) {
+        if (!!obj) {
             dd.setStorage({
                 key: 'initBaoxiaoDetail',
                 data: obj,
@@ -1388,7 +1403,7 @@ Page({
                     })
                 }
             })
-        }else{
+        } else {
             dd.alert({
                 content: '当前部门没有可用的费用类型',
                 buttonText: '好的',
@@ -1417,11 +1432,10 @@ Page({
     // 回显数据设置
     setRenderData(data) {
         // 请求
-        console.log(data, 'data')
         this.getAccountbookList(data)
         var importList = data.borrowBillList.map(item => {
             // 外币
-            if(data.currencyTypeId) {
+            if (data.currencyTypeId) {
                 return {
                     "subject.fullSubjectName": item.subject.fullSubjectName,
                     billDetailId: item.billDetailId,
@@ -1439,9 +1453,10 @@ Page({
                 remark: item.remark,
                 applicationAmount: item.applicationAmount,
                 formatApplicationAmount: formatNumber(Number(item.applicationAmount)),
+                originApplicationAmount: '',
+                originFormatApplicationAmount: '',
             }
         })
-        console.log(importList, 'importList')
         //fileList
         if (data.billFiles.length) {
             var billFilesObj = data.billFiles.map(item => {
@@ -1471,16 +1486,14 @@ Page({
                 formatVerificationAmount: formatNumber(Number(data.verificationAmount).toFixed(2)),
                 totalAmount: data.totalAmount,
                 formatTotalAmount: formatNumber(Number(data.totalAmount).toFixed(2)),
+                // 外币
+                originApplicationAmount: data.originApplicationAmount,
+                originFormatApplicationAmount: formatNumber(Number(data.originApplicationAmount).toFixed(2)),
+                originVerificationAmount: data.originVerificationAmount,
+                originFormatVerificationAmount: formatNumber(Number(data.originVerificationAmount).toFixed(2)),
+                exchangeRate: data.exchangeRate,
                 // 报销类型
                 reimbursementType: data.reimbursementType || '',
-                // ==============外币==============
-                originApplicationAmount: data.originApplicationAmount ? data.originApplicationAmount.toFixed(2) : '',
-                originFormatApplicationAmount: data.originApplicationAmount ? formatNumber(data.originApplicationAmount) : '',
-                originVerificationAmount: data.originVerificationAmount ? data.originVerificationAmount.toFixed(2) : '',
-                originFormatVerificationAmount: data.originVerificationAmount ? formatNumber(data.originVerificationAmount) : '',
-                originTotalAmount: '',
-                exchangeRate: data.exchangeRate || '',
-                // ==============外币==================
                 status: data.status,
                 remark: data.remark,
                 userName: app.globalData.realName,
@@ -1594,16 +1607,16 @@ Page({
                             obj.taxpayerType = taxpayerType
                             obj.subjectId = item.subjectId
                             obj.subjectName = item.subject.fullSubjectName,
-                            obj.subjectExtraId = subjectExtraId
+                                obj.subjectExtraId = subjectExtraId
                             obj.trueSubjectId = item.trueSubjectId
                             obj.trueSubjectName = item.subject.trueSubjectName
                             // 外币
-                            if(this.data.multiCurrency) {
+                            if (this.data.multiCurrency) {
                                 obj.originApplicationAmount = item.originApplicationAmount
                                 obj.originFormatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
                                 obj.applicationAmount = ''
                                 obj.formatApplicationAmount = ''
-                            }else{
+                            } else {
                                 obj.applicationAmount = item.applicationAmount
                                 obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
                             }
@@ -1693,7 +1706,7 @@ Page({
     },
     getImportBorrowList() {
         const invoice = this.data.submitData.invoice == 0 ? 1 : 0
-        if(this.data.clickFlag) {
+        if (this.data.clickFlag) {
             this.setData({
                 clickFlag: false
             })
@@ -1702,7 +1715,7 @@ Page({
                 method: 'GET',
                 success: res => {
                     console.log(res, '借款单列表...')
-                    if(res.data.rows.length) {
+                    if (res.data.rows.length) {
                         dd.setStorage({
                             key: 'tempImportList',
                             data: res.data.rows,
@@ -1713,11 +1726,12 @@ Page({
                                 })
                             }
                         });
-                    }else{
+                    } else {
                         dd.setStorage({
                             key: 'tempImportList',
                             data: [],
-                            success: () =>{}
+                            success: () => {
+                            }
                         })
                         dd.alert({
                             content: '没有需要核销的借款',
@@ -1757,12 +1771,12 @@ Page({
             importList: newImportList,
         })
         // 验证输入
-        if(Number(value) - Number(newImportList[index][this.data.amountField.applicationAmount]) > 0) {
+        if (Number(value) - Number(newImportList[index][this.data.amountField.applicationAmount]) > 0) {
             validFn('输入金额不能大于申请核销金额')
             // return
         }
 
-        if(Number(value) - Number(newImportList[index].unverifyAmount) > 0) {
+        if (Number(value) - Number(newImportList[index].unverifyAmount) > 0) {
             validFn('输入金额不能大于未核销金额')
             // return
         }
@@ -1779,7 +1793,7 @@ Page({
                 borrowTotalAmount += Number(item[this.data.amountField.applicationAmount])
             })
         }
-        if(this.data.multiCurrency) {
+        if (this.data.multiCurrency) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -1787,7 +1801,7 @@ Page({
                     originFormatVerificationAmount: formatNumber(Number(borrowTotalAmount).toFixed(2))
                 }
             })
-        }else{
+        } else {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -1808,7 +1822,7 @@ Page({
         this.setData({
             submitData: {
                 ...this.data.submitData,
-                [this.data.amountField.applicationAmount]:applicationAmount,
+                [this.data.amountField.applicationAmount]: applicationAmount,
                 [this.data.amountField.formatApplicationAmount]: formatNumber(Number(applicationAmount).toFixed(2))
             }
         })
@@ -1821,8 +1835,7 @@ Page({
         var verificationAmount = this.setBorrowAmount(this.data.importList) || 0
         // 应付款金额
         var totalAmount = Number(applicationAmount) - Number(verificationAmount)
-        // 外币
-        if(this.data.multiCurrency) {
+        if (this.data.multiCurrency) {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
@@ -1831,17 +1844,16 @@ Page({
                 }
             })
             this.calculateExchangeRate(totalAmount)
-        }else{
+        } else {
             this.setData({
                 submitData: {
                     ...this.data.submitData,
                     totalAmount: totalAmount,
                     formatTotalAmount: formatNumber(Number(totalAmount).toFixed(2)),
-                    originTotalAmount: '',
-                    originFormatTotalAmount: ''
                 }
             })
         }
+        console.log(this.data.submitData, 'dataaaaaaaaaaa')
     },
     clearBorrowList(submitData) {
         Object.keys(submitData).forEach(key => {
@@ -1895,7 +1907,7 @@ Page({
         this.data.baoxiaoList[index].applicantType = this.data.submitData.applicantType
         this.data.baoxiaoList[index].applicantId = this.data.submitData.applicantId
         this.data.baoxiaoList[index].taxpayerType = this.data.submitData.taxpayerType
-        if(this.data.multiCurrency) {
+        if (this.data.multiCurrency) {
             this.data.baoxiaoList[index].applicationAmount = this.data.baoxiaoList[index].originApplicationAmount
         }
         var obj = this.generateBaseDetail()
@@ -1948,7 +1960,7 @@ Page({
             confirmButtonText: '是',
             cancelButtonText: '否',
             success: res => {
-                if(res.confirm) {
+                if (res.confirm) {
                     this.addLoading()
                     request({
                         hideLoading: this.hideLoading,
@@ -1956,11 +1968,11 @@ Page({
                         method: 'GET',
                         success: res => {
                             console.log(res)
-                            if(res.data.success) {
+                            if (res.data.success) {
                                 dd.navigateBack({
                                     delta: 1
                                 })
-                            }else{
+                            } else {
                                 dd.alert({
                                     content: '报销单删除失败',
                                     buttonText: '好的'
@@ -1979,14 +1991,14 @@ Page({
             url: app.globalData.url + 'dingtalkController.do?getProcessinstanceJson&billType=9&billId=' + billId + '&accountbookId=' + accountbookId,
             method: 'GET',
             success: res => {
-                if(res.data && res.data.length) {
-                    const { title, operationRecords, tasks, ccUserids } = res.data[0]
+                if (res.data && res.data.length) {
+                    const {title, operationRecords, tasks, ccUserids} = res.data[0]
                     const taskArr = tasks.filter(item => {
-                        if(item.taskStatus === 'RUNNING') {
-                            if(item.userid.split(',')[2]){
+                        if (item.taskStatus === 'RUNNING') {
+                            if (item.userid.split(',')[2]) {
                                 item.userName = item.userid.split(',')[2]
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                            }else{
+                            } else {
                                 item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                                 item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             }
@@ -1999,7 +2011,7 @@ Page({
 
                     // 抄送人
                     let cc = []
-                    if(ccUserids && ccUserids.length) {
+                    if (ccUserids && ccUserids.length) {
                         cc = ccUserids.map(item => {
                             return {
                                 userName: item.split(',')[0],
@@ -2010,27 +2022,27 @@ Page({
                     }
 
                     const operationArr = operationRecords.filter(item => {
-                        if(item.userid.split(',')[2]){
+                        if (item.userid.split(',')[2]) {
                             item.userName = item.userid.split(',')[2]
                             item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
-                        }else{
+                        } else {
                             item.userName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                             item.realName = item.userid.split(',')[0].length > 1 ? item.userid.split(',')[0].slice(-2) : item.userid.split(',')[0]
                         }
                         item.avatar = item.userid.split(',')[1]
-                        if(item.operationType === 'START_PROCESS_INSTANCE') {
+                        if (item.operationType === 'START_PROCESS_INSTANCE') {
                             item.operationName = '发起审批'
-                        } else if(item.operationType !== 'NONE') {
+                        } else if (item.operationType !== 'NONE') {
                             item.operationName = '审批人'
                         }
-                        if(item.operationResult === 'AGREE') {
+                        if (item.operationResult === 'AGREE') {
                             item.resultName = '（已同意）'
-                        }else if(item.operationResult === 'REFUSE') {
+                        } else if (item.operationResult === 'REFUSE') {
                             item.resultName = '（已拒绝）'
-                        }else{
+                        } else {
                             item.resultName = ''
                         }
-                        if(item.operationType !== 'NONE') {
+                        if (item.operationType !== 'NONE') {
                             return item
                         }
                     })
@@ -2066,9 +2078,9 @@ Page({
                 url: `${app.globalData.url}accountbookController.do?isMultiCurrency&accountbookId=${accountbookId}`,
                 method: 'GET',
                 success: res => {
-                    if(res.status == 200) {
+                    if (res.status == 200) {
                         resolve(res.data.multiCurrency)
-                    }else{
+                    } else {
                         resolve(false)
                     }
                 },
@@ -2084,9 +2096,9 @@ Page({
                 method: 'GET',
                 success: res => {
                     console.log(res, '币别列表。。。。。')
-                    if(res.status == 200) {
+                    if (res.status == 200) {
                         resolve(res.data)
-                    }else{
+                    } else {
                         resolve([])
                     }
                 },
@@ -2101,9 +2113,9 @@ Page({
                 url: `${app.globalData.url}accountbookController.do?getBaseCurrencyInfo&accountbookId=${accountbookId}`,
                 method: 'GET',
                 success: res => {
-                    if(res.status == 200) {
+                    if (res.status == 200) {
                         resolve(res.data)
-                    }else{
+                    } else {
                         resolve([])
                     }
                 },
@@ -2111,9 +2123,9 @@ Page({
         })
     },
     getExchangeRate({accountbookId, businessDateTime, currencyTypeId}) {
-        if(currencyTypeId === this.data.submitData.baseCurrency) {
+        if (currencyTypeId === this.data.submitData.baseCurrency) {
             this.setData({
-                exchangeRateDisabled:  true,
+                exchangeRateDisabled: true,
                 submitData: {
                     ...this.data.submitData,
                     exchangeRate: 1
@@ -2127,7 +2139,7 @@ Page({
             url: `${app.globalData.url}exchangeRateController.do?getAverageExchangeRate&accountbookId=${accountbookId}&businessDateTime=${businessDateTime}&currencyTypeId=${currencyTypeId}`,
             method: 'GET',
             success: res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     this.setData({
                         exchangeRateDisabled: false,
                         submitData: {
@@ -2140,7 +2152,7 @@ Page({
             },
         })
     },
-    async initCurrency(accountbookId, currencyTypeId, exchangeRate) {
+    async initCurrency(accountbookId, currencyTypeId, exchangeRate, data) {
         const multiCurrency = await this.getCurrencyTagByAccountbookId(accountbookId)
         this.setData({
             multiCurrency: multiCurrency,
@@ -2151,13 +2163,13 @@ Page({
                 formatVerificationAmount: multiCurrency ? 'originFormatVerificationAmount' : 'formatVerificationAmount',
             }
         })
-        if(multiCurrency) {
+        if (multiCurrency) {
             const currencyTypeList = await this.getCurrencyTypeListByAccountbookId(accountbookId)
             let currencyType = currencyTypeList[0].id
             let currencyTypeIndex = 0
-            if(currencyTypeId) {
+            if (currencyTypeId) {
                 currencyTypeList.forEach((item, index) => {
-                    if(item.id == currencyTypeId) {
+                    if (item.id == currencyTypeId) {
                         currencyType = item.id
                         currencyTypeIndex = index
                     }
@@ -2180,16 +2192,16 @@ Page({
                     baseCurrency: baseCurrencyInfo.baseCurrency
                 }
             })
-            if(!exchangeRate) {
+            if (!exchangeRate) {
                 this.getExchangeRate({
                     accountbookId,
                     currencyTypeId: currencyType,
                     businessDateTime: this.data.submitData.businessDateTime,
                 })
-            }else{
-                if(currencyType === this.data.submitData.baseCurrency) {
+            } else {
+                if (currencyType === this.data.submitData.baseCurrency) {
                     this.setData({
-                        exchangeRateDisabled:  true,
+                        exchangeRateDisabled: true,
                         submitData: {
                             ...this.data.submitData,
                             exchangeRate: 1
@@ -2204,18 +2216,35 @@ Page({
                     }
                 })
             }
-
-            if(this.data.submitData.billDetailListObj.length) {
-                var newBillDetailListObj = []
-                newBillDetailListObj = this.data.submitData.billDetailListObj.map(item => {
+            // billDetailList
+            // 外币
+            var billDetailList = []
+            var borrowBillList = []
+            if (data && data.billDetailList && data.billDetailList.length) {
+                billDetailList = data.billDetailList.map(item => {
                     return {
-                        originBorrowAmount: item.borrowAmount,
-                        originFormatBorrowAmount: item.formatBorrowAmount,
-                        remark: item.remark
+                        ...item,
+                        originApplicationAmount: item.originApplicationAmount ? item.originApplicationAmonut : item.applicationAmount,
+                        originFormatApplicationAmount: item.originApplicationAmount ? formatNumber(Number(item.originApplicationAmount).toFixed(2)) : formatNumber(Number(item.applicationAmount).toFixed(2))
                     }
                 })
+                this.setData({
+                    baoxiaoList: billDetailList,
+                })
             }
-        }else{
+            if (data && data.borrowBillList && data.borrowBillList.length) {
+                borrowBillList = data.borrowBillList.map(item => {
+                    return {
+                        ...item,
+                        originApplicationAmount: item.originApplicationAmount ? item.originApplicationAmonut : item.applicationAmount,
+                        originFormatApplicationAmount: item.originApplicationAmount ? formatNumber(Number(item.originApplicationAmount).toFixed(2)) : formatNumber(Number(item.applicationAmount).toFixed(2))
+                    }
+                })
+                this.setData({
+                    importList: borrowBillList,
+                })
+            }
+        } else {
             this.clearCurrencyData()
         }
     },
@@ -2227,11 +2256,11 @@ Page({
             url: `${app.globalData.url}reimbursementTypeController.do?getList`,
             method: 'GET',
             success: res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     let reimbursementIndex = 0
-                    if(reimbursementId) {
+                    if (reimbursementId) {
                         res.data.forEach((item, index) => {
-                            if(item.id == reimbursementId) {
+                            if (item.id == reimbursementId) {
                                 reimbursementIndex = index
                             }
                         })
