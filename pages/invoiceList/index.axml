@@ -1,0 +1,29 @@
+<view class="app">
+    <view class="all-bill">
+        <view onTap="toggleHidden">
+            <text>{{typeText}}</text>
+            <view class="down-arrow-wrapper" animation="{{animationInfoImg}}">
+                <image class="down-arrow" mode="scaleToFill" src="../../images/down-arrow.png"></image>
+            </view>
+        </view>
+        <view class="select-bill-wrapper" animation="{{animationInfoTopList}}" topHidden="{{topHidden}}">
+            <view class="bill-btn zzs" onTap="getInvoiceList" data-type="zzs">增值税发票</view>
+            <view class="bill-btn de" onTap="getInvoiceList" data-type="95">定额发票</view>
+            <view class="bill-btn hcp" onTap="getInvoiceList" data-type="92">火车票</view>
+            <view class="bill-btn fjp" onTap="getInvoiceList" data-type="93">飞机行程单</view>
+            <view class="bill-btn czc" onTap="getInvoiceList" data-type="91">出租车票</view>
+            <view class="bill-btn ccp" onTap="getInvoiceList" data-type="88">车船票</view>
+            <view class="bill-btn glf" onTap="getInvoiceList" data-type="98">过路费</view>
+            <view class="bill-btn tyjdp" onTap="getInvoiceList" data-type="97">通用机打发票</view>
+        </view>
+    </view>
+    <view class="search-wrapper">
+        <view class="search-content">
+            <input type="text" placeholder="搜索发票号码/金额/归属公司名称" onInput="onInput" value="{{inputValue}}" />
+            <image src="../../images/delete.png" mode="scaleToFill" class="input-delete-icon" onTap="clearWord"></image>
+        </view>
+    </view>
+    <view class="see-complete-bill" onTap="getInvoiceListByUseStatus">{{useStatus == 0 ? '查看未使用发票':'查看已使用发票'}}</view>
+    <!-- scroll-view -->
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
+</view>

@@ -100,4 +100,8 @@
   font-size: 30rpx;
   font-weight:bold;
 }
+.undo-entry.invoice-list{
+  background:url('../../images/F.png') 20rpx center no-repeat;
+  background-size: 42rpx 30rpx;
+}
 

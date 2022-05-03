@@ -34,7 +34,8 @@
     "pages/progressUser/index",
     "pages/deptList/index",
     "pages/approvalUserList/index",
-    "pages/oaList/index"
+    "pages/oaList/index",
+    "pages/invoiceList/index"
   ],
   "window": {
     "defaultTitle": "我的单据",
