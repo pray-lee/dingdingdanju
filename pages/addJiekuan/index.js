@@ -166,6 +166,7 @@ Page({
         } else {
             url = app.globalData.url + 'borrowBillController.do?doUpdate&id=' + this.data.billId
         }
+        console.log(this.data.submitData, 'submitDasta.....')
         request({
             hideLoading: this.hideLoading,
             url,
@@ -243,7 +244,7 @@ Page({
             this.setData({
                 oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
-            this.showOaProcessByBillType(this.data[listName][value], 4)
+            this.showOaProcessByBillType(this.data[listName][value].id, 4)
             // ============ 审批流 =========
             this.getDepartmentList(this.data[listName][value].id)
             this.getBorrowBillList(this.data[listName][value].id, 10, null, null, true)
@@ -530,7 +531,7 @@ Page({
             clearTimeout(this.data.validT)
         }
         this.data.validT = setTimeout(() => {
-            if(!this.data.numberPattern.test(e.detail.value)) {
+            if(!this.data.numberPattern.test(e.detail.value) && e.currentTarget.dataset.type !== 'remark') {
                 dd.alert({
                     content: '请输入正确的数字',
                     buttonText: '确定',
@@ -905,8 +906,6 @@ Page({
                 return !!fieldValue
             }
         })
-        console.log(result, 'result..........')
-        console.log(this.data.showOaUserNodeList)
         if(this.data.oaModule && this.data.showOaUserNodeList && result) {
             this.setData({
                 showOa: true
@@ -1706,10 +1705,10 @@ Page({
                 subjectId: data.subjectId,
                 subjectName: data.subject ? data.subject.fullSubjectName : '',
                 businessDateTime: data.businessDateTime.split(' ')[0],
-                amount: formatNumber(Number(data.amount).toFixed(2)),
+                amount: data.amount,
                 formatAmount: formatNumber(Number(data.amount).toFixed(2)),
                 // 外币
-                originAmount: formatNumber(Number(data.originAmount).toFixed(2)),
+                originAmount: data.originAmount,
                 originFormatAmount: formatNumber(Number(data.originAmount).toFixed(2)),
                 remark: data.remark,
                 status: data.status,
@@ -1722,8 +1721,9 @@ Page({
         t = setTimeout(() => {
             this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
             this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
+            clearTimeout(t)
             t = null
-        })
+        }, 1000)
     },
     goInfoList() {
         dd.navigateTo({

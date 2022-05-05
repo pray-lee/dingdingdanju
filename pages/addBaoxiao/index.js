@@ -167,10 +167,12 @@ Page({
         app.globalData.loadingCount++
     },
     hideLoading() {
-        app.globalData.loadingCount--
-        if (app.globalData.loadingCount <= 0) {
-            dd.hideLoading()
-        }
+        setTimeout(() => {
+            app.globalData.loadingCount--
+            if (app.globalData.loadingCount <= 0) {
+                dd.hideLoading()
+            }
+        }, 60)
     },
     formSubmit(e) {
         // ==================处理审批流数据==================
@@ -297,7 +299,8 @@ Page({
             this.setData({
                 oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
-            this.showOaProcessByBillType(this.data[listName][value], 9)
+            console.log(this.data[listName][value], 'accountbook...........')
+            this.showOaProcessByBillType(this.data[listName][value].id, 9)
             // ============ 审批流 =========
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
@@ -549,7 +552,7 @@ Page({
                     })
                     this.setApplicationAmount(baoxiaoList)
                     this.setTotalAmount()
-                    this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
+                    this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
                 }
             }
         })
@@ -595,7 +598,7 @@ Page({
         }
         this.setApplicationAmount(baoxiaoList)
         this.setTotalAmount()
-        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
+        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearFileList(submitData) {
@@ -866,7 +869,10 @@ Page({
         return arr;
     },
     findAccountbookOaModule(accountbookId, accountbookList) {
-        return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+        const arr = accountbookList.filter(item => item.id === accountbookId)
+        if(arr && arr.length) {
+            return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+        }
     },
     // 通过单据判断
     showOaProcessByBillType(accountbookId, billType) {
@@ -1503,10 +1509,11 @@ Page({
         })
         let t = null
         t = setTimeout(() => {
-            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount'])
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
             this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
+            clearTimeout(t)
             t = null
-        })
+        }, 1000)
     },
     // 辅助核算请求url分类
     getAuxptyUrl(accountbookId, auxptyid) {
