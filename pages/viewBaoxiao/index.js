@@ -132,40 +132,7 @@ Page({
                     // 报销类型
                     this.getReimbursementName(result.reimbursementType)
                     // ============外币=============
-                    if (result.currencyTypeId) {
-                        this.setData({
-                            multiCurrency: true
-                        })
-                        this.getCurrencyTypeListByAccountbookId(result.accountbookId, result.currencyTypeId)
-                        this.getBaseCurrencyNameByAccountbookId(result.accountbookId)
-                        this.setData({
-                            exchangeRate: result.exchangeRate
-                        })
-                        result.originApplicationAmount = formatNumber(Number(result.originApplicationAmount).toFixed(2))
-                        result.originVerificationAmount = formatNumber(Number(result.originVerificationAmount).toFixed(2))
-                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
-                        result.originTotalAmount = formatNumber((Number(result.originApplicationAmount) - Number(result.originVerificationAmount)).toFixed(2))
-                        result.billDetailList.forEach(item => {
-                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
-                        })
-                        result.borrowBillList.forEach(item => {
-                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
-                        })
-                    } else {
-                        result.applicationAmount = formatNumber(Number(result.applicationAmount).toFixed(2))
-                        result.verificationAmount = formatNumber(Number(result.verificationAmount).toFixed(2))
-                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
-                        result.billDetailList.forEach(item => {
-                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
-                        })
-                        result.borrowBillList.forEach(item => {
-                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
-                        })
-                    }
-                    console.log(result)
-                    this.setData({
-                        result
-                    })
+                    this.getCurrencyTagByAccountbookId(result)
                     // 获取钉钉审批流
                     this.getProcessInstance(result.id, result.accountbookId)
                 }
@@ -498,6 +465,50 @@ Page({
         })
     },
     // ==========================外币==========================
+    getCurrencyTagByAccountbookId(result) {
+        request({
+            hideLoading: this.hideLoading,
+            url: `${app.globalData.url}accountbookController.do?isMultiCurrency&accountbookId=${result.accountbookId}`,
+            method: 'GET',
+            success: res => {
+                if(res.status == 200) {
+                    this.setData({
+                        multiCurrency: res.data.multiCurrency,
+                    })
+                    if(res.data.multiCurrency) {
+                        this.getCurrencyTypeListByAccountbookId(result.accountbookId, result.currencyTypeId)
+                        this.getBaseCurrencyNameByAccountbookId(result.accountbookId)
+                        this.setData({
+                            exchangeRate: result.exchangeRate
+                        })
+                        result.originApplicationAmount = formatNumber(Number(result.originApplicationAmount).toFixed(2))
+                        result.originVerificationAmount = formatNumber(Number(result.originVerificationAmount).toFixed(2))
+                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
+                        result.originTotalAmount = formatNumber(Number(result.originTotalAmount).toFixed(2))
+                        result.billDetailList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                        })
+                        result.borrowBillList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
+                        })
+                    }else{
+                        result.applicationAmount = formatNumber(Number(result.applicationAmount).toFixed(2))
+                        result.verificationAmount = formatNumber(Number(result.verificationAmount).toFixed(2))
+                        result.totalAmount = formatNumber(Number(result.totalAmount).toFixed(2))
+                        result.billDetailList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                        })
+                        result.borrowBillList.forEach(item => {
+                            item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
+                        })
+                    }
+                    this.setData({
+                        result
+                    })
+                }
+            },
+        })
+    },
     getCurrencyTypeListByAccountbookId(accountbookId, currencyTypeId) {
         this.addLoading()
         request({

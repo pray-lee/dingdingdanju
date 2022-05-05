@@ -214,7 +214,7 @@ Page({
             this.setData({
                 oaModule: this.findAccountbookOaModule(this.data[listName][value].id, this.data.accountbookList)
             })
-            this.showOaProcessByBillType(this.data[listName][value], 3)
+            this.showOaProcessByBillType(this.data[listName][value].id, 3)
             // ============ 审批流 =========
             this.setTotalAmount()
             this.getDepartmentList(this.data[listName][value].id)
@@ -694,7 +694,10 @@ Page({
         return arr;
     },
     findAccountbookOaModule(accountbookId, accountbookList) {
-        return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+        const arr = accountbookList.filter(item => item.id === accountbookId)
+        if(arr && arr.length) {
+            return accountbookList.filter(item => item.id === accountbookId)[0].oaModule
+        }
     },
     // 通过单据判断
     showOaProcessByBillType(accountbookId, billType) {
