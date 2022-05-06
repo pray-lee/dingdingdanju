@@ -212,7 +212,7 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
-        console.log(this.data.submitData, 'submitData......')
+        console.log(JSON.stringify(this.data.submitData), 'submitData......')
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -1145,67 +1145,69 @@ Page({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
-                if (res.data.success && res.data.obj.length) {
-                    var accountbookIndex = 0
-                    var taxpayerType = !!data ? data.accountbook.taxpayerType : null
-                    var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
-                    // ============ 审批流 =========
-                    this.setData({
-                        oaModule: this.findAccountbookOaModule(accountbookId, res.data.obj)
-                    })
-                    this.showOaProcessByBillType(accountbookId, 9)
-                    // ============ 审批流 =========
-                    // ============ 外币 =========
-                    const currencyTypeId = !!data && data.currencyTypeId ? data.currencyTypeId : undefined
-                    const exchangeRate = !!data && data.exchangeRate ? data.exchangeRate : undefined
-                    this.initCurrency(accountbookId, currencyTypeId, exchangeRate, data)
-                    // ============ 外币 =========
-                    // edit的时候设置值
-                    if (accountbookId) {
-                        res.data.obj.forEach((item, index) => {
-                            if (item.id === accountbookId) {
-                                accountbookIndex = index
-                                taxpayerType = item.taxpayerType
+                (async () => {
+                    if (res.data.success && res.data.obj.length) {
+                        var accountbookIndex = 0
+                        var taxpayerType = !!data ? data.accountbook.taxpayerType : null
+                        var accountbookId = !!data ? data.accountbookId : res.data.obj[0].id
+                        // ============ 审批流 =========
+                        this.setData({
+                            oaModule: this.findAccountbookOaModule(accountbookId, res.data.obj)
+                        })
+                        this.showOaProcessByBillType(accountbookId, 9)
+                        // ============ 审批流 =========
+                        // ============ 外币 =========
+                        const currencyTypeId = !!data && data.currencyTypeId ? data.currencyTypeId : undefined
+                        const exchangeRate = !!data && data.exchangeRate ? data.exchangeRate : undefined
+                        await this.initCurrency(accountbookId, currencyTypeId, exchangeRate, data)
+                        // ============ 外币 =========
+                        // edit的时候设置值
+                        if (accountbookId) {
+                            res.data.obj.forEach((item, index) => {
+                                if (item.id === accountbookId) {
+                                    accountbookIndex = index
+                                    taxpayerType = item.taxpayerType
+                                }
+                            })
+                        }
+                        console.log(taxpayerType, ' taxpayerType')
+                        this.setData({
+                            accountbookList: res.data.obj,
+                            accountbookIndex: accountbookIndex,
+                            submitData: {
+                                ...this.data.submitData,
+                                accountbookId,
+                                taxpayerType
+                            }
+                        })
+                        var submitterDepartmentId = data ? data.submitterDepartmentId : ''
+                        var applicantType = data ? data.applicantType : 10
+                        var applicantId = data ? data.applicantId : ''
+                        var applicantIndex = 0
+                        this.data.applicantTypeList.forEach((item, index) => {
+                            if (item.id === applicantType) {
+                                applicantIndex = index
+                            }
+                        })
+                        this.setData({
+                            applicantIndex
+                        })
+                        var incomeBankName = data ? data.incomeBankName : ''
+                        var billDetailList = data ? data.billDetailList : []
+                        this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName, true)
+                        this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
+                    } else {
+                        dd.alert({
+                            content: res.data.msg,
+                            buttonText: '好的',
+                            success: res => {
+                                dd.reLaunch({
+                                    url: '/pages/index/index'
+                                })
                             }
                         })
                     }
-                    console.log(taxpayerType, ' taxpayerType')
-                    this.setData({
-                        accountbookList: res.data.obj,
-                        accountbookIndex: accountbookIndex,
-                        submitData: {
-                            ...this.data.submitData,
-                            accountbookId,
-                            taxpayerType
-                        }
-                    })
-                    var submitterDepartmentId = data ? data.submitterDepartmentId : ''
-                    var applicantType = data ? data.applicantType : 10
-                    var applicantId = data ? data.applicantId : ''
-                    var applicantIndex = 0
-                    this.data.applicantTypeList.forEach((item, index) => {
-                        if (item.id === applicantType) {
-                            applicantIndex = index
-                        }
-                    })
-                    this.setData({
-                        applicantIndex
-                    })
-                    var incomeBankName = data ? data.incomeBankName : ''
-                    var billDetailList = data ? data.billDetailList : []
-                    this.getBorrowBillList(accountbookId, applicantType, applicantId, incomeBankName, true)
-                    this.getDepartmentList(accountbookId, submitterDepartmentId, billDetailList, taxpayerType)
-                } else {
-                    dd.alert({
-                        content: res.data.msg,
-                        buttonText: '好的',
-                        success: res => {
-                            dd.reLaunch({
-                                url: '/pages/index/index'
-                            })
-                        }
-                    })
-                }
+                })()
             }
         })
     },
@@ -1474,6 +1476,7 @@ Page({
         this.getReimbursementList(data.reimbursementType)
 
         // 设置数据
+        console.log(importList, 'importList.......')
         this.setData({
             ...this.data,
             // baoxiaoList,
@@ -2243,7 +2246,7 @@ Page({
                 borrowBillList = data.borrowBillList.map(item => {
                     return {
                         ...item,
-                        originApplicationAmount: item.originApplicationAmount ? item.originApplicationAmonut : item.applicationAmount,
+                        originApplicationAmount: item.originApplicationAmount ? item.originApplicationAmount : item.applicationAmount,
                         originFormatApplicationAmount: item.originApplicationAmount ? formatNumber(Number(item.originApplicationAmount).toFixed(2)) : formatNumber(Number(item.applicationAmount).toFixed(2))
                     }
                 })

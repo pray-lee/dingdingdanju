@@ -105,7 +105,7 @@
                    <view class="form-row">
                        <view class="form-row-label"><text class="require">*</text>币别</view>
                            <view class="form-row-content">
-                               <picker class="picker-style" onChange="bindObjPickerChange" value="{{currenctTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
+                               <picker class="picker-style" onChange="bindObjPickerChange" value="{{currencyTypeIndex}}" range="{{currencyTypeList}}" range-key="currencyName" data-index="currencyTypeIndex" data-name="currencyTypeId" data-list="currencyTypeList">
                                    <view class="row-extra">{{currencyTypeList[currencyTypeIndex].currencyName}}</view>
                                </picker>
                            </view>
