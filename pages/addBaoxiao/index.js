@@ -202,8 +202,18 @@ Page({
         this.formatSubmitData(this.data.baoxiaoList, 'billDetailList')
         // 提交的时候删除借款科目
         this.data.importList.forEach(item => {
+            if(this.data.multiCurrency) {
+                item.applicationAmount = null
+                item.formatApplicationAmount = null
+            }
             delete item['subject.fullSubjectName']
+            delete item['billApXlsList']
+            delete item['billTrueApXlsList']
+            delete item['departDetail']
+            delete item['subject']
+            delete item['trueSubject']
         })
+        console.log(this.data.importList, 'import borrow')
         this.formatSubmitData(this.data.importList, 'borrowBillList')
         this.formatSubmitData(this.data.submitData.billFilesObj, 'billFiles')
         var url = ''
@@ -212,7 +222,7 @@ Page({
         } else {
             url = app.globalData.url + 'reimbursementBillController.do?doUpdate&id=' + this.data.billId
         }
-        console.log(JSON.stringify(this.data.submitData), 'submitData......')
+        console.log(this.data.submitData, 'submitData......')
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -522,7 +532,7 @@ Page({
                     baoxiaoDetail.forEach(item => {
                         item.originApplicationAmount = item.applicationAmount
                         item.applicationAmount = ''
-                        item.originFormatApplicationAmount = item.formatApplicationAmount
+                        item.originFormatApplicationAmount = formatNumber(Number(item.originApplicationAmount).toFixed(2))
                         item.formatApplicationAmount = ''
                     })
                 }
@@ -1441,6 +1451,7 @@ Page({
     setRenderData(data) {
         // 请求
         this.getAccountbookList(data)
+        console.log(data.borrowBillList, 'data.borrowBillList')
         var importList = data.borrowBillList.map(item => {
             // 外币
             if (data.currencyTypeId) {
@@ -1803,6 +1814,7 @@ Page({
                 borrowTotalAmount += Number(item[this.data.amountField.applicationAmount])
             })
         }
+        // 外币
         if (this.data.multiCurrency) {
             this.setData({
                 submitData: {
