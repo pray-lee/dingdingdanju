@@ -2153,6 +2153,7 @@ Page({
                     exchangeRate: 1
                 }
             })
+            this.data.submitData.originTotalAmount && this.calculateExchangeRate(this.data.submitData.originTotalAmount)
             return
         }
         this.addLoading()

@@ -1926,6 +1926,7 @@ Page({
                     exchangeRate: 1
                 }
             })
+            this.data.submitData.originAmount && this.calculateExchangeRate(this.data.submitData.originAmount)
             return
         }
         this.addLoading()
