@@ -1,5 +1,5 @@
 {
-  "disableRemoteDebugSourcePanel": true,
+  "disableRemoteDebugSourcePanel": false,
   "enableLegacyRemoteDebug": false,
   "enableCloudBuild": false,
   "ignoreWebViewDomainCheck": true
