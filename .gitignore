@@ -2,3 +2,5 @@
 .idea/
 .tea/
 node_modules/
+.mini-ide/
+.vscode/
