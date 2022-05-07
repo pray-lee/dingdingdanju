@@ -20,6 +20,8 @@ Page({
         amountField: {
             applicationAmount: 'applicationAmount',
             formatApplicationAmount: 'formatApplicationAmount',
+            unverifyAmount: 'unverifyAmount',
+            formatUnverifyAmount: 'formatUnverifyAmount',
             verificationAmount: 'verificationAmount',
             formatVerificationAmount: 'formatVerificationAmount',
         },
@@ -478,6 +480,7 @@ Page({
                             item.formatApplicationAmount = ''
                         })
                     }
+                    console.log(importList, 'importList')
                     const newImportList = this.caculateImportList(importList)
                     this.setData({
                         importList: newImportList
@@ -510,7 +513,7 @@ Page({
             }
             return {
                 ...item,
-                formatUnverifyAmount: formatNumber(item.unverifyAmount),
+                [this.data.amountField.formatUnverifyAmount]: formatNumber(item[this.data.amountField.unverifyAmount]),
                 [this.data.amountField.applicationAmount]: applicationAmount
             }
         })
@@ -1731,12 +1734,23 @@ Page({
             this.setData({
                 clickFlag: false
             })
+            let url = app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,'
+            if(this.data.multiCurrency) {
+                url = app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&currencyTypeId=' + this.data.submitData.currencyTypeId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,applicantId,applicantName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,currencyTypeId,amount,originAmount,unverifyAmount,originUnverifyAmount,remark,businessDateTime,submitDate'
+            }
             request({
-                url: app.globalData.url + 'borrowBillController.do?dataGridManager&accountbookId=' + this.data.submitData.accountbookId + '&applicantType=' + this.data.submitData.applicantType + '&applicantId=' + this.data.submitData.applicantId + '&invoice=' + invoice + '&query=import&field=id,billCode,accountbookId,departDetail.id,departDetail.depart.departName,subjectId,subject.fullSubjectName,auxpropertyNames,submitter.id,submitter.realName,invoice,contractNumber,amount,unverifyAmount,remark,businessDateTime,submitDate,',
+                url,
                 method: 'GET',
                 success: res => {
                     console.log(res, '借款单列表...')
                     if (res.data.rows.length) {
+                        // 外币
+                        if(this.data.multiCurrency) {
+                            dd.setStorageSync({
+                                key: 'multiCurrency',
+                                data: this.data.multiCurrency
+                            })
+                        }
                         dd.setStorage({
                             key: 'tempImportList',
                             data: res.data.rows,
@@ -2184,6 +2198,8 @@ Page({
                 formatApplicationAmount: multiCurrency ? 'originFormatApplicationAmount' : 'formatApplicationAmount',
                 verificationAmount: multiCurrency ? 'originVerificationAmount' : 'verificationAmount',
                 formatVerificationAmount: multiCurrency ? 'originFormatVerificationAmount' : 'formatVerificationAmount',
+                unverifyAmount: multiCurrency ? 'originUnverifyAmount' : 'unverifyAmount',
+                formatUnverifyAmount: multiCurrency ? 'originFormatUnverifyAmount' : 'formatUnverifyAmount'
             }
         })
         if (multiCurrency) {
