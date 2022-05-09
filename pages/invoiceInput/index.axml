@@ -1,0 +1,50 @@
+<view class="app">
+    <view class="all-bill">
+        <view onTap="toggleHidden">
+            <text class="type-class {{typeClass}}">{{typeText}}</text>
+            <view class="down-arrow-wrapper" animation="{{animationInfoImg}}">
+                <image class="down-arrow" mode="scaleToFill" src="../../images/down-arrow.png"></image>
+            </view>
+        </view>
+        <view class="select-bill-wrapper" animation="{{animationInfoTopList}}" topHidden="{{topHidden}}">
+            <view class="bill-btn zzs" onTap="toggleTemplate" data-type="zzs" data-class="zzs">增值税发票</view>
+            <view class="bill-btn de" onTap="toggleTemplate" data-type="95" data-class="de">定额发票</view>
+            <view class="bill-btn hcp" onTap="toggleTemplate" data-type="92" data-class="hcp">火车票</view>
+            <view class="bill-btn fjp" onTap="toggleTemplate" data-type="93" data-class="fjp">飞机行程单</view>
+            <view class="bill-btn czc" onTap="toggleTemplate" data-type="91" data-class="czc">出租车票</view>
+            <view class="bill-btn ccp" onTap="toggleTemplate" data-type="88" data-class="ccp">车船票</view>
+            <view class="bill-btn glf" onTap="toggleTemplate" data-type="98" data-class="glf">过路费</view>
+            <view class="bill-btn tyjdp" onTap="toggleTemplate" data-type="97" data-class="tyjdp">通用机打发票</view>
+        </view>
+    </view>
+    <view class="input-content">
+        <block a:if="{{type == 'zzs'}}">
+            <view class="form-row">
+                <view class="form-row-label"><text class="require">*</text>增值税发票类别</view>
+                <view class="form-row-content">
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{zzsIndex}}" range="{{zzsList}}" range-key="name" data-index="zzsIndex" data-name="invoiceType" data-list="zzsList">
+                        <view class="row-extra">{{zzsList[zzsIndex].name}}</view>
+                    </picker>
+                </view>
+            </view>
+            <view class="form-line"/>
+        </block>
+        <block a:if="{{type == '95'}}">
+        </block>
+        <block a:if="{{type == '92'}}">
+        </block>
+        <block a:if="{{type == '93'}}">
+        </block>
+        <block a:if="{{type == '91'}}">
+        </block>
+        <block a:if="{{type == '88'}}">
+        </block>
+        <block a:if="{{type == '98'}}">
+        </block>
+        <block a:if="{{type == '97'}}">
+        </block>
+    </view>
+    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <button onTap="saveInvoice" class="submit-btn">保存</button>
+    </view>
+</view>

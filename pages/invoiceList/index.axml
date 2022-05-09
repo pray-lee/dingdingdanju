@@ -1,20 +1,20 @@
 <view class="app">
     <view class="all-bill">
         <view onTap="toggleHidden">
-            <text>{{typeText}}</text>
+            <text class="type-class {{typeClass}}">{{typeText}}</text>
             <view class="down-arrow-wrapper" animation="{{animationInfoImg}}">
                 <image class="down-arrow" mode="scaleToFill" src="../../images/down-arrow.png"></image>
             </view>
         </view>
         <view class="select-bill-wrapper" animation="{{animationInfoTopList}}" topHidden="{{topHidden}}">
-            <view class="bill-btn zzs" onTap="getInvoiceList" data-type="zzs">增值税发票</view>
-            <view class="bill-btn de" onTap="getInvoiceList" data-type="95">定额发票</view>
-            <view class="bill-btn hcp" onTap="getInvoiceList" data-type="92">火车票</view>
-            <view class="bill-btn fjp" onTap="getInvoiceList" data-type="93">飞机行程单</view>
-            <view class="bill-btn czc" onTap="getInvoiceList" data-type="91">出租车票</view>
-            <view class="bill-btn ccp" onTap="getInvoiceList" data-type="88">车船票</view>
-            <view class="bill-btn glf" onTap="getInvoiceList" data-type="98">过路费</view>
-            <view class="bill-btn tyjdp" onTap="getInvoiceList" data-type="97">通用机打发票</view>
+            <view class="bill-btn zzs" onTap="getInvoiceList" data-type="zzs" data-class="zzs">增值税发票</view>
+            <view class="bill-btn de" onTap="getInvoiceList" data-type="95" data-class="de">定额发票</view>
+            <view class="bill-btn hcp" onTap="getInvoiceList" data-type="92" data-class="hcp">火车票</view>
+            <view class="bill-btn fjp" onTap="getInvoiceList" data-type="93" data-class="fjp">飞机行程单</view>
+            <view class="bill-btn czc" onTap="getInvoiceList" data-type="91" data-class="czc">出租车票</view>
+            <view class="bill-btn ccp" onTap="getInvoiceList" data-type="88" data-class="ccp">车船票</view>
+            <view class="bill-btn glf" onTap="getInvoiceList" data-type="98" data-class="glf">过路费</view>
+            <view class="bill-btn tyjdp" onTap="getInvoiceList" data-type="97" data-class="tyjdp">通用机打发票</view>
         </view>
     </view>
     <view class="search-wrapper">
@@ -25,5 +25,44 @@
     </view>
     <view class="see-complete-bill" onTap="getInvoiceListByUseStatus">{{useStatus == 0 ? '查看未使用发票':'查看已使用发票'}}</view>
     <!-- scroll-view -->
+    <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
+        <view class="list-wrapper">
+            <view class="list-item" a:for="{{filterList}}">
+                <movable-area class='movable-area'>
+                    <movable-view direction="horizontal" class='movable-view'>
+                        <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
+                            <view class="content" data-type="{{item.invoiceType}}" onTap="goToEdit" data-id="{{item.id}}" data-status="{{item.useStatus}}" style="display:block">
+                                <view class="content1">
+                                    <view class="status error {{'invoice-type_' + item.invoiceType}}">已使用</view>
+                                    <view class="right">188</view>
+                                </view>
+                                <view class="content1">
+                                    <view a:if="{{!!item.remark}}" class="remark">{{item.remark}}</view>
+                                    <view a:else class="remark">[无事由]</view>
+                                </view>
+                                <view class="bill-number">
+                                    <text class="bill-number-span">{{item.billName}}</text>
+                                    {{item.billCode || item.invoicebillCode}}
+                                </view>
+                            </view>
+                            <view class="del" onTap="deleteInvoice" data-id="{{item.id}}" >删除</view>
+                        </view>
+                    </movable-view>
+                </movable-area>
+            </view>
+        </view>
+    </scroll-view>
+    <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="add-btn" onTap="onAddShow">
+            新增发票
+        </view>
+    </view>
+    <!-- 新增单据弹框 -->
+    <view class="add-page" animation="{{animationInfo}}">
+    <view class="invoice-input-type">
+        <view class="invoice-input-btn invoice-file" onTap="handleUpload">智能拍票</view>
+        <view class="invoice-input-btn invoice-input" onTap="invoiceInput">手录发票</view>
+    </view>
+    </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

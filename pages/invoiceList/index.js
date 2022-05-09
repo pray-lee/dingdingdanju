@@ -8,6 +8,7 @@ Page({
         startY: 0,
         type: 'zzs',
         typeText: '增值税发票',
+        typeClass: 'zzs',
         useStatus: 0, // 使用状态
         isPhoneXSeries: false,
         list: [],
@@ -140,10 +141,11 @@ Page({
         this.animationImg.rotate(0).step()
         this.animationTopList.translateY('-200%').step()
         const type = e.currentTarget.dataset.type
-        this.setTypeText(type)
+        const typeClass = e.currentTarget.dataset.class
+        this.setTypeText(type, typeClass)
         this.getInvoiceListByType(type, this.data.useStatus)
     },
-    setTypeText(type) {
+    setTypeText(type, typeClass) {
         let typeText = ''
         switch(type) {
             case 'zzs':
@@ -176,11 +178,31 @@ Page({
             animationInfoImg: this.animationImg.export(),
             animationInfoTopList: this.animationTopList.export(),
             type,
-            typeText
+            typeText,
+            typeClass
         })
     },
     getInvoiceListByType(type, useStatus) {
         console.log(type, useStatus, 'alksdjflasdkjf')
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByUserId',
+            data: {
+                invoiceType: type,
+                useStatus: '0',
+            },
+            method: 'GET',
+            success: res => {
+                console.log(res, '发票列表........')
+                if(res.data.success) {
+                    this.setData({
+                        list: res.data.obj.results || [],
+                        filterList: res.data.obj.results || [],
+                    })
+                }
+            }
+        })
     },
     getInvoiceListByUseStatus() {
         // 已使用 1 未使用 0
@@ -197,4 +219,135 @@ Page({
             })
         }
     },
+    addLoading() {
+        if (app.globalData.loadingCount < 1) {
+            dd.showLoading({
+                content: '加载中...'
+            })
+        }
+        app.globalData.loadingCount += 1
+    },
+    hideLoading() {
+        if (app.globalData.loadingCount <= 1) {
+            dd.hideLoading()
+            app.globalData.loadingCount = 0
+        } else {
+            app.globalData.loadingCount -= 1
+        }
+    },
+    onAddShow() {
+        this.animation.translateY(0).step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: false
+        })
+    },
+    onAddHide() {
+        this.animation.translateY('100%').step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: true
+        })
+    },
+    handleUpload() {
+        dd.chooseImage({
+            count: 9,
+            success: res => {
+                this.uploadFile(res.filePaths)
+            },
+            fail: res => {
+                console.log('用户取消操作')
+            }
+        })
+    },
+    invoiceInput() {
+        dd.navigateTo({
+            url: '/pages/invoiceInput/index'
+        })
+    },
+    /**
+     *
+     * @param 上传图片字符串列表
+     */
+    uploadFile(array) {
+        if (array.length) {
+            let promiseList = []
+            array.forEach(item => {
+                promiseList.push(new Promise((resolve, reject) => {
+                    this.addLoading()
+                    dd.uploadFile({
+                        url: app.globalData.url + 'aliyunController/uploadImages.do',
+                        fileType: 'image',
+                        fileName: item,
+                        filePath: item,
+                        formData: {
+                            accountbookId: 'accountbook-invoice',
+                            submitterDepartmentId: 'department-invoice'
+                        },
+                        success: res => {
+                            const result = JSON.parse(res.data)
+                            if (result.obj && result.obj.length) {
+                                const file = result.obj[0]
+                                resolve(file)
+                            } else {
+                                reject('上传失败')
+                            }
+                        },
+                        fail: res => {
+                            reject(res)
+                        },
+                        complete: res => {
+                            this.hideLoading()
+                        }
+                    })
+                }))
+            })
+            Promise.all(promiseList).then(res => {
+                // 提交成功的处理逻辑
+                var billFilesList = []
+                res.forEach(item => {
+                    billFilesList.push(item)
+                })
+                console.log(billFilesList, 'billFilesList')
+            }).catch(error => {
+                dd.alert({
+                    content: '上传失败',
+                    buttonText: '好的',
+                    success: res => {
+                        console.log(res, '上传失败')
+                    }
+                })
+            })
+        }
+    },
+    previewFile(e) {
+        var url = e.currentTarget.dataset.url
+        dd.previewImage({
+            urls: [url],
+        })
+    },
+    onInput(e) {
+        const text = e.detail.value
+        this.setData({
+            inputValue: text
+        })
+        this.handleFilter(text)
+    },
+    clearWord() {
+        this.setData({
+            inputValue: ''
+        })
+        this.handleFilter('')
+    },
+    handleFilter(text) {
+        const filterList = this.data.list.filter(item => {
+            const str = item.remark + (item.billCode || item.invoicebillCode)
+            if (str.indexOf(text) != -1) {
+                return item
+            }
+        })
+        this.setData({
+            filterList
+        })
+    }
 })

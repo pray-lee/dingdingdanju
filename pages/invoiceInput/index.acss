@@ -1,0 +1,104 @@
+.app{
+    background:#fff
+}
+.btn-area{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    z-index:990;
+    width: 100%;
+    height: 100rpx;
+    background:#fff;
+}
+.btn-area.iphoneX{
+    padding-bottom: 68rpx;
+}
+.btn-area button{
+    flex: 1;
+    border:0;
+    background:#3276c3;
+    border-radius: 0;
+    color:#fff;
+    font-size: 32rpx;
+    height: 100rpx;
+    line-height: 100rpx
+}
+.all-bill{
+    padding: 30rpx;
+    font-size: 30rpx;
+    font-weight:bold;
+    position:relative;
+}
+.select-bill-wrapper{
+    background:#fff;
+    position:absolute;
+    z-index: 99999;
+    top: 80rpx;
+    left:0;
+    padding: 20rpx;
+    display:flex;
+    flex-wrap:wrap;
+    transform: translateY(-200%);
+    border-bottom: 2px solid #ccc
+}
+.bill-btn{
+    display:inline-block;
+    width:45%;
+    height:70rpx;
+    line-height:70rpx;
+    padding-left:70rpx;
+    box-sizing:border-box;
+    font-size:25rpx;
+    margin-bottom: 10rpx;
+    font-weight:normal;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-right: 5%;
+}
+.down-arrow-wrapper{
+    display:inline-block;
+    width: 20rpx;
+    height: 20rpx;
+    margin-left: 10rpx;
+}
+.down-arrow-wrapper .down-arrow{
+    display:block;
+    width: 20rpx;
+    height: 20rpx;
+}
+.zzs {
+    background:url(../../images/invoice/zzs.png) 20rpx center no-repeat;
+    background-size: 35rpx 35rpx;
+}
+.de {
+    background:url(../../images/invoice/de.png) 20rpx center no-repeat;
+    background-size: 35rpx 35rpx;
+}
+.czc {
+    background:url(../../images/invoice/czc.png) 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.fjp {
+    background:url(../../images/invoice/fjp.png) 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.ccp {
+    background:url(../../images/invoice/ccp.png) 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.hcp {
+    background:url(../../images/invoice/hcp.png) 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.glf {
+    background:url(../../images/invoice/glf.png) 20rpx center no-repeat;
+    background-size: 35rpx 35rpx;
+}
+.tyjdp {
+    background:url(../../images/invoice/tyjdp.png) 20rpx center no-repeat;
+    background-size: 35rpx 35rpx;
+}
+.type-class{
+    padding-left:70rpx;
+}
