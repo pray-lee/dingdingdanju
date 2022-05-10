@@ -81,6 +81,7 @@ const request = option => {
         url: option.url,
         dataType: 'json',
         data: option.data,
+        headers: option.headers ||  {'Content-Type': 'application/x-www-form-urlencoded'},
         method: option.method,
         success: res => {
             if (typeof res.data !== 'string' || res.data.indexOf('主框架') === -1 || res.data.success) {

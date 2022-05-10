@@ -11,6 +11,12 @@
     height: 100rpx;
     background:#fff;
 }
+.scroll-view{
+    height: calc(100vh - 208rpx);
+}
+.scroll-view.iphoneX{
+    height: calc(100vh - 276rpx)
+}
 .btn-area.iphoneX{
     padding-bottom: 68rpx;
 }

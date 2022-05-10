@@ -17,33 +17,351 @@
             <view class="bill-btn tyjdp" onTap="toggleTemplate" data-type="97" data-class="tyjdp">通用机打发票</view>
         </view>
     </view>
-    <view class="input-content">
-        <block a:if="{{type == 'zzs'}}">
+    <scroll-view scroll-y class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}">
+        <view class="input-content">
             <view class="form-row">
-                <view class="form-row-label"><text class="require">*</text>增值税发票类别</view>
+                <view class="form-row-label"><text class="require">*</text>申请组织</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{zzsIndex}}" range="{{zzsList}}" range-key="name" data-index="zzsIndex" data-name="invoiceType" data-list="zzsList">
-                        <view class="row-extra">{{zzsList[zzsIndex].name}}</view>
+                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
+                        <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
                     </picker>
                 </view>
             </view>
-            <view class="form-line"/>
-        </block>
-        <block a:if="{{type == '95'}}">
-        </block>
-        <block a:if="{{type == '92'}}">
-        </block>
-        <block a:if="{{type == '93'}}">
-        </block>
-        <block a:if="{{type == '91'}}">
-        </block>
-        <block a:if="{{type == '88'}}">
-        </block>
-        <block a:if="{{type == '98'}}">
-        </block>
-        <block a:if="{{type == '97'}}">
-        </block>
-    </view>
+            <view class="form-line"></view>
+            <block a:if="{{type == 'zzs'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>增值税发票类别</view>
+                    <view class="form-row-content">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{zzsIndex}}" range="{{zzsList}}" range-key="name" data-index="zzsIndex" data-name="invoiceType" data-list="zzsList">
+                            <view class="row-extra">{{zzsList[zzsIndex].name}}</view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>开票日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>购买方名称</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.gmfmc}}" placeholder="请输入购买方名称" data-name="gmfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>购买方税号</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.gmfsbh}}" placeholder="请输入购买方税号" data-name="gmfsbh" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>销售方名称</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.xhfmc}}" placeholder="请输入销售方名称" data-name="xhfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>销售方税号</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.xhfsbh}}" placeholder="请输入销售方税号" data-name="xhfsbh" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>不含税合计金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpje}}" placeholder="请输入不含税合计金额" data-name="fpje" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>合计税额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpse}}" placeholder="请输入合计税额" data-name="fpse" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>价税合计</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入价税合计" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+            </block>
+            <block a:if="{{type == '95'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '92'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>车票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.pzhm}}" placeholder="请输入车票号码" data-name="pzhm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>车次</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.cc}}" placeholder="请输入车次" data-name="cc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>开车日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>票价</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入票价" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '93'}}">
+                <view class="form-row" onTap="onBusinessFocus" data-name="rq">
+                    <view class="form-row-label"><text class="require">*</text>乘坐日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.rq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>票价</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.pj}}" placeholder="请输入票价" data-name="pj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>民航发展基金</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.mhfzjj}}" placeholder="请输入民航发展基金" data-name="mhfzjj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>燃油附加费</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.ryfjf}}" placeholder="请输入燃油附加费" data-name="ryfjf" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>其他税费</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.qtsf}}" placeholder="请输入其他税费" data-name="qtsf" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>合计</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入其他税费" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>电子客票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.pzhm}}" placeholder="请输入电子客票号码" data-name="pzhm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '91'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>乘坐日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '88'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>乘车日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '98'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+            <block a:if="{{type == '97'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票代码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>开票日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>付款方名称</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.gmfmc}}" placeholder="请输入付款方名称" data-name="gmfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>总金额</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入总金额" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>收款方名称</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.xhfmc}}" placeholder="请输入收款方名称" data-name="xhfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>收款方识别号</view>
+                    <view class="form-row-content">
+                            <input class="input" value="{{submitData.xhfsbh}}" placeholder="请输入收款方识别号" data-name="xhfsbh" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+            </block>
+        </view>
+    </scroll-view>
     <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
         <button onTap="saveInvoice" class="submit-btn">保存</button>
     </view>

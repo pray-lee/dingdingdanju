@@ -142,10 +142,10 @@ Page({
         this.animationTopList.translateY('-200%').step()
         const type = e.currentTarget.dataset.type
         const typeClass = e.currentTarget.dataset.class
-        this.setTypeText(type, typeClass)
+        this.setType(type, typeClass)
         this.getInvoiceListByType(type, this.data.useStatus)
     },
-    setTypeText(type, typeClass) {
+    setType(type, typeClass) {
         let typeText = ''
         switch(type) {
             case 'zzs':

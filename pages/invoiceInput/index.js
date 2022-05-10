@@ -1,8 +1,12 @@
+import moment from "moment";
+
 var app = getApp()
 app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
+        isPhoneXSeries: false,
+        scrollTop: 0,
         type: 'zzs',
         typeClass: 'zzs',
         typeText: '增值税发票',
@@ -29,8 +33,12 @@ Page({
         topHidden: true,
         animationImg: {},
         animationInfoTopList: {},
+        accountbookIndex: 0,
+        accountbookList: [],
         submitData: {
-            invoiceType: 'zzs'
+            invoiceType: '01',
+            accountbookId: '',
+            uploadType: '1'
         }
     },
     onShow() {
@@ -57,7 +65,11 @@ Page({
 
     },
     onLoad() {
-
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
+        })
+        this.getAccountbookList()
+        this.setCurrentDate()
     },
     toggleHidden() {
         this.setData({
@@ -89,10 +101,35 @@ Page({
         this.animationTopList.translateY('-200%').step()
         const type = e.currentTarget.dataset.type
         const typeClass = e.currentTarget.dataset.class
-        this.setTypeText(type, typeClass)
+        this.clearSubmitData()
+        this.setType(type, typeClass)
+        this.setCurrentDate()
     },
-    setTypeText(type, typeClass) {
+    clearSubmitData() {
+        const accountbookId = this.data.submitData.accountbookId
+        const uploadType = this.data.submitData.uploadType
+        const invoiceType = this.data.submitData.invoiceType
+        this.setData({
+            submitData: {
+                accountbookId,
+                uploadType,
+                invoiceType
+            }
+        })
+    },
+    setCurrentDate() {
+        const type = this.data.type
+        const time = type == '93' ? 'rq' : 'kprq'
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                [time]: moment().format('YYYY-MM-DD')
+            }
+        })
+    },
+    setType(type, typeClass) {
         let typeText = ''
+        let invoiceType = type
         switch(type) {
             case 'zzs':
                 typeText = '增值税发票'
@@ -119,13 +156,20 @@ Page({
                 typeText = '通用机打发票'
                 break
         }
+        if(type == 'zzs') {
+            invoiceType = this.data.zzsList[this.data.zzsIndex].invoiceType
+        }
         this.setData({
             hidden: true,
             animationInfoImg: this.animationImg.export(),
             animationInfoTopList: this.animationTopList.export(),
             type,
             typeText,
-            typeClass
+            typeClass,
+            submitData: {
+                ...this.data.submitData,
+                invoiceType
+            }
         })
     },
     bindObjPickerChange(e) {
@@ -133,14 +177,121 @@ Page({
         var listName = e.currentTarget.dataset.list
         var value = e.detail.value
         var index = e.currentTarget.dataset.index
-        this.setData({
-            [index]: e.detail.value,
-            submitData: {
-                ...this.data.submitData,
-                [name]: this.data[listName][value].invoiceType
+        if(name !== 'accountbookId') {
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].invoiceType
+                }
+            })
+        }else{
+            this.setData({
+                [index]: e.detail.value,
+                submitData: {
+                    ...this.data.submitData,
+                    [name]: this.data[listName][value].id
+                }
+            })
+        }
+        console.log(this.data.submitData)
+    },
+    getAccountbookList() {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
+            method: 'GET',
+            success: res => {
+                if(res.data.success && res.data.obj.length) {
+                    var accountbookIndex = 0
+                    var accountbookId = res.data.obj[0].id
+                    this.setData({
+                        accountbookList: res.data.obj,
+                        accountbookIndex: accountbookIndex,
+                        submitData: {
+                            ...this.data.submitData,
+                            accountbookId
+                        }
+                    })
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的',
+                        success: res => {
+                            dd.reLaunch({
+                                url: '/pages/index/index'
+                            })
+                        }
+                    })
+                }
+            },
+        })
+    },
+    addLoading() {
+        if (app.globalData.loadingCount < 1) {
+            dd.showLoading({
+                content: '加载中...'
+            })
+        }
+        app.globalData.loadingCount++
+    },
+    hideLoading() {
+        app.globalData.loadingCount--
+        if (app.globalData.loadingCount <= 0) {
+            dd.hideLoading()
+        }
+    },
+    onBusinessFocus(e) {
+        const name = e.currentTarget.dataset.name
+        dd.datePicker({
+            format: 'yyyy-MM-dd',
+            currentDate: moment().format('YYYY-MM-DD'),
+            success: (res) => {
+                if (!!res.date) {
+                    this.setData({
+                        submitData: {
+                            ...this.data.submitData,
+                            [name]: res.date
+                        },
+                    })
+                }
+            },
+            fail: res => {
+                console.log(res, 'failed dateTime')
             }
         })
+    },
+    onBlur(e) {
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                [e.currentTarget.dataset.name]: e.detail.value
+            },
+        })
+    },
+    saveInvoice() {
+        this.addSuffix(this.data.submitData)
         console.log(this.data.submitData)
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doAdd',
+            method: 'POST',
+            headers:  {'Content-Type': 'application/json;charset=utf-8'},
+            data: JSON.stringify(this.data.submitData),
+            success: res => {
+                console.log(res, 'res')
+            }
+        })
+    },
+    addSuffix(data) {
+        Object.keys(data).forEach(key => {
+            if(key == 'kprq' || key == 'rq') {
+                if(data[key].indexOf(' ') < 0)
+                    data[key] = `${data[key]} 00:00:00`
+            }
+        })
     }
 })
 
