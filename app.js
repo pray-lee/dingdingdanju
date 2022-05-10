@@ -19,6 +19,9 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 大方向（哈尔滨）影业有限公司
+        agentId: '1630560875',
+        tenantCode: 'db_ck_wenhua2021',
         // 积木
         // agentId: '1465410619',
         // tenantCode: 'db_ck_jkyl',
@@ -122,15 +125,15 @@ App({
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
         // saas
-        // "url": "https://www.caika.net/saas/",
+        "url": "https://www.caika.net/saas/",
         // "url": "https://www.caika.net/caika/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/ucommune-test/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_ucommune_test",
+        // "url": "https://www.caika.net/ucommune-test/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_ucommune_test",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
