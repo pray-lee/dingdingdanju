@@ -26,30 +26,60 @@
     <view class="see-complete-bill" onTap="getInvoiceListByUseStatus">{{useStatus == 0 ? '查看未使用发票':'查看已使用发票'}}</view>
     <!-- scroll-view -->
     <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
-        <view class="list-wrapper">
+        <view a:if="{{filterList.length}}" class="list-wrapper">
             <view class="list-item" a:for="{{filterList}}">
                 <movable-area class='movable-area'>
                     <movable-view direction="horizontal" class='movable-view'>
                         <view class="touch-item {{item.isTouchMove ? 'touch-move-active' : ''}}" data-index="{{index}}" onTouchStart="touchstart" onTouchMove="touchmove">
                             <view class="content" data-type="{{item.invoiceType}}" onTap="goToEdit" data-id="{{item.id}}" data-status="{{item.useStatus}}" style="display:block">
-                                <view class="content1">
-                                    <view class="status error {{'invoice-type_' + item.invoiceType}}">已使用</view>
-                                    <view class="right">188</view>
-                                </view>
-                                <view class="content1">
-                                    <view a:if="{{!!item.remark}}" class="remark">{{item.remark}}</view>
-                                    <view a:else class="remark">[无事由]</view>
-                                </view>
-                                <view class="bill-number">
-                                    <text class="bill-number-span">{{item.billName}}</text>
-                                    {{item.billCode || item.invoicebillCode}}
-                                </view>
+                                <block a:if="{{item.invoiceType == '01' || item.invoiceType == '04' || item.invoiceType == '08' || item.invoiceType == '10' || item.invoiceType == '11'}}">
+                                    <view class="content1">
+                                        <view class="status error {{'invoice-type_' + item.invoiceType}}">销方名称：{{item.xhfmc || '无'}}</view>
+                                        <view class="right">{{item.jshj || '价税合计：无'}}</view>
+                                    </view>
+                                    <view class="content1">
+                                        <view class="remark">开票日期：{{item.kprq || '无'}}</view>
+                                    </view>
+                                    <view class="bill-number">
+                                        <text class="bill-number-span">增值税发票</text>
+                                    </view>
+                                </block>
+                                <block a:if="{{item.invoiceType == '95'}}">
+                                    <view class="content1">
+                                        <view class="status error {{'invoice-type_' + item.invoiceType}}">发票代码：{{item.fpdm || '无'}}</view>
+                                        <view class="right">{{item.jshj || '金额：无'}}</view>
+                                    </view>
+                                    <view class="content1">
+                                        <view class="remark">发票号码：{{item.fphm || '无'}}</view>
+                                    </view>
+                                    <view class="bill-number">
+                                        <text class="bill-number-span">定额发票</text>
+                                    </view>
+                                </block>
+                                <block a:if="{{item.invoiceType == '92'}}">
+                                    <view class="content1">
+                                        <view class="status error {{'invoice-type_' + item.invoiceType}}">姓名：{{item.xm || '无'}}</view>
+                                        <view class="right">{{item.jshj || '金额：无'}}</view>
+                                    </view>
+                                    <view class="content1">
+                                        <view class="remark">始发站：{{item.cfzd || '无'}}-终点站：{{item.ddzd || '无'}}</view>
+                                    </view>
+                                    <view class="content1">
+                                        <view class="remark">日期：{{item.kprq || '无'}}</view>
+                                    </view>
+                                    <view class="bill-number">
+                                        <text class="bill-number-span">火车票</text>
+                                    </view>
+                                </block>
                             </view>
                             <view class="del" onTap="deleteInvoice" data-id="{{item.id}}" >删除</view>
                         </view>
                     </movable-view>
                 </movable-area>
             </view>
+        </view>
+        <view a:else class="no-data-bg">
+            <view class="no-data-word">暂无数据</view>
         </view>
     </scroll-view>
     <view class="btn-area-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">

@@ -722,6 +722,18 @@ page {
   font-size: 25rpx;
   font-weight:bold;
 }
+.no-data-bg{
+  margin: 30rpx auto;
+  width: 570rpx;
+  height: 300rpx;
+  background: url('../../../images/error-view/empty.png') no-repeat 0 0;
+  background-size: contain;
+  padding-bottom: 30rpx;
+}
+.no-data-word{
+  padding-top: 320rpx;
+    text-align: center;
+}
 
 
 

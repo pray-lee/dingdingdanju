@@ -187,10 +187,10 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByUserId',
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoList',
             data: {
                 invoiceType: type,
-                useStatus: '0',
+                useStatus: '1',
             },
             method: 'GET',
             success: res => {

@@ -100,10 +100,10 @@
     height: 20rpx;
 }
 .scroll-view{
-    height: calc(100vh - 400rpx);
+    height: calc(100vh - 450rpx);
 }
 .scroll-view.iphoneX{
-    height: calc(100vh - 468rpx)
+    height: calc(100vh - 518rpx)
 }
 .list-item {
     margin:0px auto;
@@ -130,6 +130,7 @@
     justify-content: space-between;
 }
 .remark{
+    font-size: 24rpx;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
