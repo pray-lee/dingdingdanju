@@ -209,3 +209,42 @@
 .type-class{
     padding-left: 70rpx;
 }
+.status.error.invoice-type_01::before {
+    background:#ff5252
+}
+.status.error.invoice-type_04::before {
+    background:#ff5252
+}
+.status.error.invoice-type_08::before {
+    background:#ff5252
+}
+.status.error.invoice-type_10::before {
+    background:#ff5252
+}
+.status.error.invoice-type_11::before {
+    background:#ff5252
+}
+.status.error.invoice-type_95::before {
+    background:#3276c3
+}
+.status.error.invoice-type_92::before {
+    background:deepskyblue;
+}
+.status.error.invoice-type_93::before {
+    background:yellow;
+}
+.status.error.invoice-type_91::before {
+    background:green;
+}
+.status.error.invoice-type_88::before {
+    background: purple;
+}
+.status.error.invoice-type_94::before {
+    background: purple;
+}
+.status.error.invoice-type_98::before {
+    background: black;
+}
+.status.error.invoice-type_97::before {
+    background: grey;
+}
