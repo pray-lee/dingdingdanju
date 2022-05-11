@@ -341,7 +341,8 @@ Page({
     },
     handleFilter(text) {
         const filterList = this.data.list.filter(item => {
-            const str = item.remark + (item.billCode || item.invoicebillCode)
+            // 发票金额 账簿名称 发票号码
+            const str = item.accountbookName + item.fphm + item.jshj
             if (str.indexOf(text) != -1) {
                 return item
             }
