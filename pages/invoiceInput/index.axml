@@ -1,5 +1,5 @@
 <view class="app">
-    <view class="all-bill">
+    <view a:if="{{!fromStorage}}" class="all-bill">
         <view onTap="toggleHidden">
             <text class="type-class {{typeClass}}">{{typeText}}</text>
             <view class="down-arrow-wrapper" animation="{{animationInfoImg}}">
@@ -17,14 +17,19 @@
             <view class="bill-btn tyjdp" onTap="toggleTemplate" data-type="97" data-class="tyjdp">通用机打发票</view>
         </view>
     </view>
-    <scroll-view scroll-y class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}">
+    <scroll-view scroll-y class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}} {{fromStorage ? 'fromStorage' : ''}}">
         <view class="input-content">
             <view class="form-row">
                 <view class="form-row-label"><text class="require">*</text>申请组织</view>
                 <view class="form-row-content">
-                    <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
-                        <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
-                    </picker>
+                    <block a:if="{{!fromStorage}}">
+                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
+                            <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
+                        </picker>
+                    </block>
+                    <block a:else>
+                        <view class="row-extra">{{submitData.accountbookName}}</view>
+                    </block>
                 </view>
             </view>
             <view class="form-line"></view>
@@ -108,6 +113,7 @@
                             <input class="input" value="{{submitData.jshj}}" placeholder="请输入价税合计" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
+                <view class="form-line"></view>
             </block>
             <block a:if="{{type == '95'}}">
                 <view class="form-row">
@@ -474,7 +480,7 @@
             </block>
         </view>
     </scroll-view>
-    <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
+    <view a:if="{{!fromStorage}}" class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}">
         <button onTap="saveInvoice" class="submit-btn">保存</button>
     </view>
 </view>

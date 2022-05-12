@@ -17,6 +17,12 @@
 .scroll-view.iphoneX{
     height: calc(100vh - 276rpx)
 }
+.scroll-view.fromStorage{
+    height: calc(100vh - 128rpx);
+}
+.scroll-view.iphoneX.fromStorage{
+    height: calc(100vh - 226rpx)
+}
 .btn-area.iphoneX{
     padding-bottom: 68rpx;
 }

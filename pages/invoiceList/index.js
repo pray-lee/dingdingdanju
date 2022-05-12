@@ -183,7 +183,6 @@ Page({
         })
     },
     getInvoiceListByType(type, useStatus) {
-        console.log(type, useStatus, 'alksdjflasdkjf')
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -349,6 +348,18 @@ Page({
         })
         this.setData({
             filterList
+        })
+    },
+    goToEdit(e) {
+        const invoiceDetail = this.data.filterList.filter(item => item.id == e.currentTarget.dataset.id)[0]
+        dd.setStorage({
+            key: 'invoiceDetail',
+            data: invoiceDetail,
+            success: res => {
+                dd.navigateTo({
+                    url: '/pages/invoiceInput/index'
+                })
+            }
         })
     }
 })

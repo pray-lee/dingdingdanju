@@ -5,6 +5,7 @@ app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
+        fromStorage: false,
         isPhoneXSeries: false,
         scrollTop: 0,
         type: 'zzs',
@@ -41,6 +42,25 @@ Page({
             uploadType: '1'
         }
     },
+    getInvoiceDetailFromStorage() {
+        const invoiceDetail = dd.getStorageSync({key: 'invoiceDetail'}).data
+        const type = invoiceDetail.invoiceType == ('01' || '04' || '08' || '10' || '11') ? 'zzs' : invoiceDetail.invoiceType
+        invoiceDetail && this.setData({
+            fromStorage: true,
+            type,
+            submitData: {
+                ...this.data.submitData,
+                ...invoiceDetail
+            }
+        })
+        if(!this.data.fromStorage) {
+            this.getAccountbookList()
+        }
+        dd.removeStorage({
+            key: 'invoiceDetail',
+            success: res => {}
+        })
+    },
     onShow() {
         var animationImg = dd.createAnimation({
             duration: 250,
@@ -68,7 +88,7 @@ Page({
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
         })
-        this.getAccountbookList()
+        this.getInvoiceDetailFromStorage()
         this.setCurrentDate()
     },
     toggleHidden() {
@@ -282,6 +302,9 @@ Page({
             data: JSON.stringify(this.data.submitData),
             success: res => {
                 console.log(res, 'res')
+            },
+            fail: res => {
+                console.log(res, 'error')
             }
         })
     },
