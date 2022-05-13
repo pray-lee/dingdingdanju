@@ -21,6 +21,20 @@ Page({
         animationInfoTopList: {},
         inputValue: '',
         filterList: [],
+        nosupportInvoiceType: {
+            '02': '货运运输业增值税专用发票',
+            '03': '机动车销售统一发票',
+            '14': '通行费发票',
+            '15': '二手车发票',
+            '16': '区块链电子发票',
+            '21': '全电发票（专用发票）',
+            '22': '全电发票（普通发票）',
+            '96': '国际小票',
+            '85': '可报销其他发票',
+            '86': '滴滴出行行程单',
+            '87': '完税证明',
+            '00': '其他未知票种',
+        }
     },
     onLoad() {
         this.getInvoiceListByType(this.data.type, this.data.useStatus)
@@ -305,9 +319,13 @@ Page({
                 // 提交成功的处理逻辑
                 var billFilesList = []
                 res.forEach(item => {
-                    billFilesList.push(item)
+                    billFilesList.push({
+                        name: item.name,
+                        uri: item.uri,
+                        size: item.size
+                    })
                 })
-                console.log(billFilesList, 'billFilesList')
+                this.doOCR(billFilesList)
             }).catch(error => {
                 dd.alert({
                     content: '上传失败',
@@ -318,6 +336,40 @@ Page({
                 })
             })
         }
+    },
+    doOCR(fileList) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doOCR',
+            data: {
+                fileList: JSON.stringify(fileList),
+                // accountbookId: '0333'
+            },
+            method: 'POST',
+            success: res => {
+                if(res.data.success) {
+                    if(res.data.obj.length){
+                        this.hasInvoiceType(res.data.obj)
+                    }
+                }
+            }
+        })
+    },
+    hasInvoiceType(data) {
+        var noSupportInvoiceType = data.filter(item => !!this.data.nosupportInvoiceType[item.invoiceType])
+        if(noSupportInvoiceType && noSupportInvoiceType.length) {
+            dd.alert({
+                content: `暂不支持${this.data.nosupportInvoiceType[noSupportInvoiceType[0].invoiceType]}，请重新上传`,
+                buttonText: '好的'
+            })
+            return
+        }
+        // 保存发票
+        this.saveInvoice()
+    },
+    saveInvoice(data) {
+
     },
     previewFile(e) {
         var url = e.currentTarget.dataset.url

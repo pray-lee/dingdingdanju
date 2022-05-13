@@ -19,6 +19,15 @@
     </view>
     <scroll-view scroll-y class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}} {{fromStorage ? 'fromStorage' : ''}}">
         <view class="input-content">
+            <block a:if="{{imgUrl}}">
+                <view class="form-row" style="display:flex;justify-content: space-around; align-items: center">
+                    <view class="form-row-content img-wrapper" onTap="previewFile" data-url="{{imgUrl}}">
+                        <image src="{{imgUrl}}" class="img"></image>
+                    </view>
+                    <view class="form-row-content ellipsis view-word"  onTap="previewFile" data-url="{{imgUrl}}">查看原图</view>
+                </view>
+                <view class="form-line"></view>
+            </block>
             <view class="form-row">
                 <view class="form-row-label"><text class="require">*</text>申请组织</view>
                 <view class="form-row-content">
@@ -37,7 +46,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>增值税发票类别</view>
                     <view class="form-row-content">
-                        <picker class="picker-style" onChange="bindObjPickerChange" value="{{zzsIndex}}" range="{{zzsList}}" range-key="name" data-index="zzsIndex" data-name="invoiceType" data-list="zzsList">
+                        <picker disabled="{{fromStorage}}" class="picker-style" onChange="bindObjPickerChange" value="{{zzsIndex}}" range="{{zzsList}}" range-key="name" data-index="zzsIndex" data-name="invoiceType" data-list="zzsList">
                             <view class="row-extra">{{zzsList[zzsIndex].name}}</view>
                         </picker>
                     </view>
@@ -46,14 +55,14 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -68,49 +77,49 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>购买方名称</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.gmfmc}}" placeholder="请输入购买方名称" data-name="gmfmc" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.gmfmc}}" placeholder="请输入购买方名称" data-name="gmfmc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>购买方税号</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.gmfsbh}}" placeholder="请输入购买方税号" data-name="gmfsbh" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.gmfsbh}}" placeholder="请输入购买方税号" data-name="gmfsbh" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>销售方名称</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.xhfmc}}" placeholder="请输入销售方名称" data-name="xhfmc" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfmc}}" placeholder="请输入销售方名称" data-name="xhfmc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>销售方税号</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.xhfsbh}}" placeholder="请输入销售方税号" data-name="xhfsbh" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfsbh}}" placeholder="请输入销售方税号" data-name="xhfsbh" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>不含税合计金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpje}}" placeholder="请输入不含税合计金额" data-name="fpje" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpje}}" placeholder="请输入不含税合计金额" data-name="fpje" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>合计税额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpse}}" placeholder="请输入合计税额" data-name="fpse" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpse}}" placeholder="请输入合计税额" data-name="fpse" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>价税合计</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入价税合计" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入价税合计" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"></view>
@@ -119,21 +128,21 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -142,42 +151,42 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>乘客姓名</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.xm}}" placeholder="请输入乘客姓名" data-name="xm" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.xm}}" placeholder="请输入乘客姓名" data-name="xm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>车票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.pzhm}}" placeholder="请输入车票号码" data-name="pzhm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.pzhm}}" placeholder="请输入车票号码" data-name="pzhm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>座位等级</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.zwdj}}" placeholder="请输入座位等级" data-name="zwdj" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.zwdj}}" placeholder="请输入座位等级" data-name="zwdj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>始发站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.cfzd}}" placeholder="请输入始发站" data-name="cfzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.cfzd}}" placeholder="请输入始发站" data-name="cfzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>车次</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.cc}}" placeholder="请输入车次" data-name="cc" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.cc}}" placeholder="请输入车次" data-name="cc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>终点站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.ddzd}}" placeholder="请输入终点站" data-name="ddzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.ddzd}}" placeholder="请输入终点站" data-name="ddzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -192,7 +201,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>票价</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入票价" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入票价" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -201,28 +210,28 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>乘客姓名</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.xm}}" placeholder="请输入乘客姓名" data-name="xm" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.xm}}" placeholder="请输入乘客姓名" data-name="xm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>始发站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.cfzd}}" placeholder="请输入始发站" data-name="cfzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.cfzd}}" placeholder="请输入始发站" data-name="cfzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>终点站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.ddzd}}" placeholder="请输入终点站" data-name="ddzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.ddzd}}" placeholder="请输入终点站" data-name="ddzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>航班号</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.hbh}}" placeholder="请输入航班号" data-name="hbh" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.hbh}}" placeholder="请输入航班号" data-name="hbh" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -237,42 +246,42 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>票价</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.pj}}" placeholder="请输入票价" data-name="pj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.pj}}" placeholder="请输入票价" data-name="pj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>民航发展基金</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.mhfzjj}}" placeholder="请输入民航发展基金" data-name="mhfzjj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.mhfzjj}}" placeholder="请输入民航发展基金" data-name="mhfzjj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>燃油附加费</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.ryfjf}}" placeholder="请输入燃油附加费" data-name="ryfjf" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.ryfjf}}" placeholder="请输入燃油附加费" data-name="ryfjf" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>其他税费</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.qtsf}}" placeholder="请输入其他税费" data-name="qtsf" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.qtsf}}" placeholder="请输入其他税费" data-name="qtsf" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>合计</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入其他税费" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入其他税费" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>电子客票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.pzhm}}" placeholder="请输入电子客票号码" data-name="pzhm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.pzhm}}" placeholder="请输入电子客票号码" data-name="pzhm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -281,21 +290,21 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>车牌号</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.cpzh}}" placeholder="请输入车牌号" data-name="cpzh" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.cpzh}}" placeholder="请输入车牌号" data-name="cpzh" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -310,21 +319,21 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>单价</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.dj}}" placeholder="请输入单价" data-name="dj" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.dj}}" placeholder="请输入单价" data-name="dj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>里程</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.lc}}" placeholder="请输入里程" data-name="lc" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.lc}}" placeholder="请输入里程" data-name="lc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -333,35 +342,35 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>姓名</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.xm}}" placeholder="请输入姓名" data-name="xm" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.xm}}" placeholder="请输入姓名" data-name="xm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>出发站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.cfzd}}" placeholder="请输入出发站" data-name="cfzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.cfzd}}" placeholder="请输入出发站" data-name="cfzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>到达站</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.ddzd}}" placeholder="请输入到达站" data-name="ddzd" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.ddzd}}" placeholder="请输入到达站" data-name="ddzd" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -376,7 +385,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -385,28 +394,28 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>入站口</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.rk}}" placeholder="请输入入站口" data-name="rk" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.rk}}" placeholder="请输入入站口" data-name="rk" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require"></text>出站口</view>
                     <view class="form-row-content">
-                        <input class="input" value="{{submitData.ck}}" placeholder="请输入出站口" data-name="ck" onInput="onBlur"/>
+                        <input disabled="{{fromStorage}}" class="input" value="{{submitData.ck}}" placeholder="请输入出站口" data-name="ck" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -421,7 +430,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入金额" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -430,14 +439,14 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>发票号码</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
@@ -452,28 +461,28 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>付款方名称</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.gmfmc}}" placeholder="请输入付款方名称" data-name="gmfmc" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.gmfmc}}" placeholder="请输入付款方名称" data-name="gmfmc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>总金额</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.jshj}}" placeholder="请输入总金额" data-name="jshj" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入总金额" data-name="jshj" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>收款方名称</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.xhfmc}}" placeholder="请输入收款方名称" data-name="xhfmc" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfmc}}" placeholder="请输入收款方名称" data-name="xhfmc" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>收款方识别号</view>
                     <view class="form-row-content">
-                            <input class="input" value="{{submitData.xhfsbh}}" placeholder="请输入收款方识别号" data-name="xhfsbh" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfsbh}}" placeholder="请输入收款方识别号" data-name="xhfsbh" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>

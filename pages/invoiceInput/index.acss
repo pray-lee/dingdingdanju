@@ -114,3 +114,12 @@
 .type-class{
     padding-left:70rpx;
 }
+.img{
+    width:60rpx;
+    height: 60rpx
+}
+.view-word{
+    text-align:right;
+    font-weight:bold;
+    color:#3276c3
+}

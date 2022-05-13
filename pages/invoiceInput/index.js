@@ -5,6 +5,7 @@ app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
+        imgUrl: '',
         fromStorage: false,
         isPhoneXSeries: false,
         scrollTop: 0,
@@ -44,21 +45,60 @@ Page({
     },
     getInvoiceDetailFromStorage() {
         const invoiceDetail = dd.getStorageSync({key: 'invoiceDetail'}).data
-        const type = invoiceDetail.invoiceType == ('01' || '04' || '08' || '10' || '11') ? 'zzs' : invoiceDetail.invoiceType
-        invoiceDetail && this.setData({
-            fromStorage: true,
-            type,
-            submitData: {
-                ...this.data.submitData,
-                ...invoiceDetail
-            }
-        })
+        if(invoiceDetail) {
+            const arr = ['01', '04', '08', '10', '11']
+            const type = arr.includes(invoiceDetail.invoiceType) ? 'zzs' : invoiceDetail.invoiceType
+            this.getInvoiceImgUrl(invoiceDetail.id)
+            this.setData({
+                fromStorage: true,
+                type,
+                submitData: {
+                    ...this.data.submitData,
+                    ...invoiceDetail
+                }
+            })
+            dd.removeStorage({
+                key: 'invoiceDetail',
+                success: res => {}
+            })
+        }
         if(!this.data.fromStorage) {
             this.getAccountbookList()
         }
-        dd.removeStorage({
-            key: 'invoiceDetail',
-            success: res => {}
+    },
+    getInvoiceImgUrl(id) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByIds',
+            data: {
+                ids: id,
+            },
+            method: 'GET',
+            success: res => {
+                if(res.data.success) {
+                    if(res.data.obj.length) {
+                        if(res.data.obj[0].invoiceFileEntityList.length) {
+                            this.setData({
+                                imgUrl: res.data.obj[0].invoiceFileEntityList[0].uri
+                            })
+                        }
+                    }
+                }
+            }
+        })
+    },
+    previewFile(e) {
+        var url = e.currentTarget.dataset.url
+        if(url.includes('pdf')) {
+            dd.alert({
+                content: '暂不支持预览PDF文件',
+                buttonText: '好的',
+            })
+            return
+        }
+        dd.previewImage({
+            urls: [url],
         })
     },
     onShow() {
@@ -292,7 +332,6 @@ Page({
     },
     saveInvoice() {
         this.addSuffix(this.data.submitData)
-        console.log(this.data.submitData)
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
