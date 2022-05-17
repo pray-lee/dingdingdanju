@@ -28,7 +28,6 @@ Page({
             '00': '其他未知票种',
         },
         ocrList: []
-
     },
     onLoad() {
         this.setData({
@@ -670,9 +669,6 @@ Page({
     getSelectOcrListFromStorage() {
         const ocrList = dd.getStorageSync({key: 'selectOcrList'}).data
         if(ocrList) {
-            this.setData({
-                ocrList
-            })
             this.saveInvoice(ocrList)
             dd.removeStorage({
                 key: 'selectOcrList',
@@ -725,6 +721,10 @@ Page({
         })
     },
     setInvoiceInfo(data) {
-        console.log(data, 'data......')
+        if(data&&data.length) {
+            this.setData({
+                ocrList: data
+            })
+        }
     }
 })

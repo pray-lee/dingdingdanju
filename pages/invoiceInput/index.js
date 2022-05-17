@@ -108,27 +108,6 @@ Page({
             this.getAccountbookList()
         }
     },
-    getInvoiceAccountbookIdFromStorage() {
-        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
-        let idx = 0
-        if(accountbookId) {
-            this.data.accountbookList.forEach((item, index) => {
-                if (item.id === accountbookId) {
-                    idx = index
-                }
-            })
-            this.setData({
-                accountbookIndex: idx,
-                submitData: {
-                    ...this.data.submitData,
-                    accountbookId
-                }
-            })
-            dd.removeStorage({
-                key: 'accountbookId'
-            })
-        }
-    },
     getInvoiceImgUrl(id) {
         this.addLoading()
         request({
@@ -182,7 +161,6 @@ Page({
         this.setData({
             animationInfoTopList: animationTopList.export()
         })
-        this.getInvoiceAccountbookIdFromStorage()
         this.getInvoiceDetailFromStorage()
         this.getEditInvoiceDetailFromStorage()
         this.getFromDetailFromStorage()
@@ -331,6 +309,18 @@ Page({
                 if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
                     var accountbookId = res.data.obj[0].id
+                    var accountbookIdStorage = dd.getStorageSync({key: 'accountbookId'}).data
+                    if(accountbookIdStorage) {
+                        res.data.obj.forEach((item, index) => {
+                            if (item.id === accountbookIdStorage) {
+                                accountbookIndex = index
+                            }
+                        })
+                        dd.removeStorage({
+                            key: 'accountbookId',
+                            success: () => {}
+                        })
+                    }
                     this.setData({
                         accountbookList: res.data.obj,
                         accountbookIndex: accountbookIndex,

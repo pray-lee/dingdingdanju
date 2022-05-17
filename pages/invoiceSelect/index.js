@@ -62,7 +62,6 @@ Page({
         return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
     },
     onShow() {
-        this.getInvoiceAccountbookIdFromStorage()
         this.getEditInvoiceDetailFromStorage()
     },
     onLoad() {
@@ -82,6 +81,17 @@ Page({
             success: res => {
                 if(res.data.success && res.data.obj.length) {
                     var accountbookIndex = 0
+                    const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
+                    if(accountbookId) {
+                        res.data.obj.forEach((item, index) => {
+                            if (item.id === accountbookId) {
+                                accountbookIndex = index
+                            }
+                        })
+                        dd.removeStorage({
+                            key: 'accountbookId'
+                        })
+                    }
                     this.setData({
                         accountbookList: res.data.obj,
                         accountbookIndex: accountbookIndex,
@@ -143,23 +153,6 @@ Page({
             dd.removeStorage({
                 key:'ocrList',
                 success: () => {}
-            })
-        }
-    },
-    getInvoiceAccountbookIdFromStorage() {
-        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
-        let idx = 0
-        if(accountbookId) {
-            this.data.accountbookList.forEach((item, index) => {
-                if (item.id === accountbookId) {
-                    idx = index
-                }
-            })
-            this.setData({
-                accountbookIndex: idx,
-            })
-            dd.removeStorage({
-                key: 'accountbookId'
             })
         }
     },

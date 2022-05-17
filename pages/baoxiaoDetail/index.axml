@@ -56,9 +56,15 @@
                 <input class="input" placeholder="备注" onInput="onBaoxiaoBlur" data-name="remark"
                        value="{{baoxiaoDetail.remark}}"/>
             </view>
-            <view class="title">发票</view>
-            <view class="block-wrapper">
-
+            <view class="form-line"/>
+            <view class="form-row">
+                <view class="form-row-label">发票</view>
+                <view class="invoice-list">
+                    <view class="invoice-item">
+                        alsdjf
+                    </view>
+                </view>
+                <view class="add-invoice-btn" onTap="onAddShow">请添加发票</view>
             </view>
         </view>
         <view class="notice-content" hidden="{{noticeHidden}}">
