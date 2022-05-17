@@ -350,7 +350,19 @@ Page({
             success: res => {
                 if(res.data.success) {
                     if(res.data.obj.length){
-                        this.hasInvoiceType(res.data.obj)
+                        const result = this.hasInvoiceType(res.data.obj)
+                        // 去发票编辑页面
+                        if(result) {
+                            dd.setStorage({
+                                key: 'ocrList',
+                                data:res.data.obj,
+                                success: () => {
+                                    dd.navigateTo({
+                                        url: '/pages/invoiceSelect/index'
+                                    })
+                                }
+                            })
+                        }
                     }
                 }
             }
@@ -363,13 +375,9 @@ Page({
                 content: `暂不支持${this.data.nosupportInvoiceType[noSupportInvoiceType[0].invoiceType]}，请重新上传`,
                 buttonText: '好的'
             })
-            return
+            return false
         }
-        // 保存发票
-        this.saveInvoice()
-    },
-    saveInvoice(data) {
-
+        return true
     },
     previewFile(e) {
         var url = e.currentTarget.dataset.url

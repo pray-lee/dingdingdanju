@@ -7,6 +7,7 @@ Page({
     data: {
         imgUrl: '',
         fromStorage: false,
+        fromEditStorage: false,
         isPhoneXSeries: false,
         scrollTop: 0,
         type: 'zzs',
@@ -41,6 +42,31 @@ Page({
             invoiceType: '01',
             accountbookId: '',
             uploadType: '1'
+        }
+    },
+    getEditInvoiceDetailFromStorage() {
+        const editInvoiceDetail = dd.getStorageSync({key: 'editInvoiceDetail'}).data
+        if(editInvoiceDetail) {
+            const arr = ['01', '04', '08', '10', '11']
+            const type = arr.includes(editInvoiceDetail.invoiceType) ? 'zzs' : editInvoiceDetail.invoiceType
+            if(editInvoiceDetail.invoiceFileEntityList.length) {
+                this.setData({
+                    imgUrl: editInvoiceDetail.invoiceFileEntityList[0].uri
+                })
+            }
+            this.setData({
+                fromEditStorage: true,
+                type,
+                submitData: {
+                    ...this.data.submitData,
+                    ...editInvoiceDetail,
+                    uploadType: '2'
+                }
+            })
+            dd.removeStorage({
+                key: 'editInvoiceDetail',
+                success: res => {}
+            })
         }
     },
     getInvoiceDetailFromStorage() {
@@ -119,7 +145,9 @@ Page({
         this.setData({
             animationInfoTopList: animationTopList.export()
         })
-
+        this.getInvoiceDetailFromStorage()
+        this.getEditInvoiceDetailFromStorage()
+        this.setCurrentDate()
     },
     onHide() {
 
@@ -128,8 +156,6 @@ Page({
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
         })
-        this.getInvoiceDetailFromStorage()
-        this.setCurrentDate()
     },
     toggleHidden() {
         this.setData({
@@ -331,21 +357,33 @@ Page({
         })
     },
     saveInvoice() {
-        this.addSuffix(this.data.submitData)
-        this.addLoading()
-        request({
-            hideLoading: this.hideLoading,
-            url: app.globalData.url + 'invoiceInfoController.do?doAdd',
-            method: 'POST',
-            headers:  {'Content-Type': 'application/json;charset=utf-8'},
-            data: JSON.stringify(this.data.submitData),
-            success: res => {
-                console.log(res, 'res')
-            },
-            fail: res => {
-                console.log(res, 'error')
-            }
-        })
+        if(this.data.fromEditStorage) {
+            dd.setStorage({
+                key: 'editInvoiceDetail',
+                data: this.data.submitData,
+                success: res => {
+                    dd.navigateBack({
+                        delta: 1
+                    })
+                }
+            })
+        }else{
+            this.addSuffix(this.data.submitData)
+            this.addLoading()
+            request({
+                hideLoading: this.hideLoading,
+                url: app.globalData.url + 'invoiceInfoController.do?doAdd',
+                method: 'POST',
+                headers:  {'Content-Type': 'application/json;charset=utf-8'},
+                data: JSON.stringify(this.data.submitData),
+                success: res => {
+                    console.log(res, 'res')
+                },
+                fail: res => {
+                    console.log(res, 'error')
+                }
+            })
+        }
     },
     addSuffix(data) {
         Object.keys(data).forEach(key => {
