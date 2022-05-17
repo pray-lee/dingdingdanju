@@ -62,6 +62,7 @@ Page({
         return 360 * Math.atan(_Y / _X) / (2 * Math.PI);
     },
     onShow() {
+        this.getInvoiceAccountbookIdFromStorage()
         this.getEditInvoiceDetailFromStorage()
     },
     onLoad() {
@@ -107,21 +108,12 @@ Page({
         if(name !== 'accountbookId') {
             this.setData({
                 [index]: e.detail.value,
-                submitData: {
-                    ...this.data.submitData,
-                    [name]: this.data[listName][value].invoiceType
-                }
             })
         }else{
             this.setData({
                 [index]: e.detail.value,
-                submitData: {
-                    ...this.data.submitData,
-                    [name]: this.data[listName][value].id
-                }
             })
         }
-        console.log(this.data.submitData)
     },
     addLoading() {
         if (app.globalData.loadingCount < 1) {
@@ -154,8 +146,29 @@ Page({
             })
         }
     },
+    getInvoiceAccountbookIdFromStorage() {
+        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
+        let idx = 0
+        if(accountbookId) {
+            this.data.accountbookList.forEach((item, index) => {
+                if (item.id === accountbookId) {
+                    idx = index
+                }
+            })
+            this.setData({
+                accountbookIndex: idx,
+            })
+            dd.removeStorage({
+                key: 'accountbookId'
+            })
+        }
+    },
     getEditInvoiceDetailFromStorage() {
         const editInvoiceDetail = dd.getStorageSync({key: 'editInvoiceDetail'}).data
+        dd.removeStorage({
+            key: 'editInvoiceDetail',
+            success: () => {}
+        })
         const index = dd.getStorageSync({key: 'editInvoiceDetailIndex'}).data
         if(editInvoiceDetail) {
             const newList = clone(this.data.list)
@@ -176,6 +189,10 @@ Page({
         dd.setStorageSync({
             key: 'editInvoiceDetailIndex',
             data: index
+        })
+        dd.setStorageSync({
+            key: 'accountbookId',
+            data: this.data.accountbookList[this.data.accountbookIndex]
         })
         dd.setStorage({
             key: 'editInvoiceDetail',
@@ -210,6 +227,14 @@ Page({
             ...item,
             accountbookId: this.data.accountbookList[this.data.accountbookIndex].id
         }))
-        console.log(submitData, 'submitData.....')
+        dd.setStorage({
+            key: 'selectOcrList',
+            data: submitData,
+            success: res => {
+                dd.navigateBack({
+                    delta: 1
+                })
+            }
+        })
     }
 })

@@ -23,7 +23,7 @@
             <image src="../../images/delete.png" mode="scaleToFill" class="input-delete-icon" onTap="clearWord"></image>
         </view>
     </view>
-    <view class="see-complete-bill" onTap="getInvoiceListByUseStatus">{{useStatus == 0 ? '查看未使用发票':'查看已使用发票'}}</view>
+    <view class="see-complete-bill" onTap="getInvoiceListByUseStatus">{{useStatus == 1 ? '查看未使用发票':'查看已使用发票'}}</view>
     <!-- scroll-view -->
     <scroll-view scroll-y="{{true}}" class="scroll-view {{isPhoneXSeries ? 'iphoneX' : ''}}" scroll-top="{{scrollTop}}" onScroll="onScroll">
         <view a:if="{{filterList.length}}" class="list-wrapper">
@@ -141,7 +141,7 @@
                                     </view>
                                 </block>
                             </view>
-                            <view class="del" onTap="deleteInvoice" data-id="{{item.id}}" >删除</view>
+                            <view class="del" onTap="deleteInvoice" data-id="{{item.id}}">删除</view>
                         </view>
                     </movable-view>
                 </movable-area>

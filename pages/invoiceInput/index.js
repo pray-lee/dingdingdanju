@@ -6,6 +6,7 @@ import {formatNumber, request} from '../../util/getErrorMessage'
 Page({
     data: {
         imgUrl: '',
+        fromDetail: false,
         fromStorage: false,
         fromEditStorage: false,
         isPhoneXSeries: false,
@@ -44,6 +45,20 @@ Page({
             uploadType: '1'
         }
     },
+    // 从单据详情来的
+    getFromDetailFromStorage() {
+        const fromDetail = dd.getStorageSync({key: 'fromDetail'}).data
+        if(fromDetail) {
+            this.setData({
+                fromDetail
+            })
+            dd.removeStorage({
+                key: 'fromDetail',
+                success: res => {}
+            })
+        }
+    },
+    // 从识别编辑页来的
     getEditInvoiceDetailFromStorage() {
         const editInvoiceDetail = dd.getStorageSync({key: 'editInvoiceDetail'}).data
         if(editInvoiceDetail) {
@@ -69,6 +84,7 @@ Page({
             })
         }
     },
+    // 从列表页来的
     getInvoiceDetailFromStorage() {
         const invoiceDetail = dd.getStorageSync({key: 'invoiceDetail'}).data
         if(invoiceDetail) {
@@ -90,6 +106,27 @@ Page({
         }
         if(!this.data.fromStorage) {
             this.getAccountbookList()
+        }
+    },
+    getInvoiceAccountbookIdFromStorage() {
+        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
+        let idx = 0
+        if(accountbookId) {
+            this.data.accountbookList.forEach((item, index) => {
+                if (item.id === accountbookId) {
+                    idx = index
+                }
+            })
+            this.setData({
+                accountbookIndex: idx,
+                submitData: {
+                    ...this.data.submitData,
+                    accountbookId
+                }
+            })
+            dd.removeStorage({
+                key: 'accountbookId'
+            })
         }
     },
     getInvoiceImgUrl(id) {
@@ -145,8 +182,10 @@ Page({
         this.setData({
             animationInfoTopList: animationTopList.export()
         })
+        this.getInvoiceAccountbookIdFromStorage()
         this.getInvoiceDetailFromStorage()
         this.getEditInvoiceDetailFromStorage()
+        this.getFromDetailFromStorage()
         this.setCurrentDate()
     },
     onHide() {
@@ -357,41 +396,24 @@ Page({
         })
     },
     saveInvoice() {
+        let key = ''
         if(this.data.fromEditStorage) {
-            dd.setStorage({
-                key: 'editInvoiceDetail',
-                data: this.data.submitData,
-                success: res => {
-                    dd.navigateBack({
-                        delta: 1
-                    })
-                }
-            })
-        }else{
-            this.addSuffix(this.data.submitData)
-            this.addLoading()
-            request({
-                hideLoading: this.hideLoading,
-                url: app.globalData.url + 'invoiceInfoController.do?doAdd',
-                method: 'POST',
-                headers:  {'Content-Type': 'application/json;charset=utf-8'},
-                data: JSON.stringify(this.data.submitData),
-                success: res => {
-                    console.log(res, 'res')
-                },
-                fail: res => {
-                    console.log(res, 'error')
-                }
-            })
+            // 识别完成编辑,返回到识别页面
+            key = 'editInvoiceDetail'
+        }else if(!this.data.fromDetail){
+            key = 'addInvoiceDetail'
+        }else if(this.data.fromDetail) {
+            key = 'billInvoiceDetail'
         }
-    },
-    addSuffix(data) {
-        Object.keys(data).forEach(key => {
-            if(key == 'kprq' || key == 'rq') {
-                if(data[key].indexOf(' ') < 0)
-                    data[key] = `${data[key]} 00:00:00`
+        dd.setStorage({
+            key,
+            data: this.data.submitData,
+            success: res => {
+                dd.navigateBack({
+                    delta: 1
+                })
             }
         })
-    }
+    },
 })
 

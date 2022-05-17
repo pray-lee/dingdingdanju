@@ -10,6 +10,25 @@ Page({
         noticeHidden: true,
         baoxiaoDetail: {},
         baoxiaoArr: [],
+        // 发票
+        maskHidden: true,
+        animationInfo: {},
+        nosupportInvoiceType: {
+            '02': '货运运输业增值税专用发票',
+            '03': '机动车销售统一发票',
+            '14': '通行费发票',
+            '15': '二手车发票',
+            '16': '区块链电子发票',
+            '21': '全电发票（专用发票）',
+            '22': '全电发票（普通发票）',
+            '96': '国际小票',
+            '85': '可报销其他发票',
+            '86': '滴滴出行行程单',
+            '87': '完税证明',
+            '00': '其他未知票种',
+        },
+        ocrList: []
+
     },
     onLoad() {
         this.setData({
@@ -91,7 +110,34 @@ Page({
             this.getSubjectAuxptyList(subject.id, this.data.baoxiaoDetail.accountbookId, true)
         }
     },
+    onAddShow() {
+        this.animation.translateY(0).step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: false
+        })
+    },
+    onAddHide() {
+        this.animation.translateY('100%').step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: true
+        })
+    },
     onShow() {
+        // =======发票相关==========
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        this.setData({
+            animationInfo: animation.export()
+        })
+        this.getSelectOcrListFromStorage()
+        this.getBillInvoiceDetail()
+        // =======================
+        // ========页面显示=======
         setTimeout(() => {
             this.getAuxptyIdFromStorage()
             this.getBorrowIdFromStorage()
@@ -490,5 +536,195 @@ Page({
         this.setData({
             btnHidden: false
         })
+    },
+    // 发票相关
+    handleUpload() {
+        dd.chooseImage({
+            count: 9,
+            success: res => {
+                this.uploadFile(res.filePaths)
+            },
+            fail: res => {
+                console.log('用户取消操作')
+            }
+        })
+    },
+    invoiceInput() {
+        dd.setStorageSync({
+            key: 'fromDetail',
+            data: 'fromDetail'
+        })
+        dd.setStorageSync({
+            key: 'accountbookId',
+            data: this.data.baoxiaoDetail.accountbookId
+        })
+        dd.navigateTo({
+            url: '/pages/invoiceInput/index'
+        })
+    },
+    /**
+     *
+     * @param 上传图片字符串列表
+     */
+    uploadFile(array) {
+        if (array.length) {
+            let promiseList = []
+            array.forEach(item => {
+                promiseList.push(new Promise((resolve, reject) => {
+                    this.addLoading()
+                    dd.uploadFile({
+                        url: app.globalData.url + 'aliyunController/uploadImages.do',
+                        fileType: 'image',
+                        fileName: item,
+                        filePath: item,
+                        formData: {
+                            accountbookId: 'accountbook-invoice',
+                            submitterDepartmentId: 'department-invoice'
+                        },
+                        success: res => {
+                            const result = JSON.parse(res.data)
+                            if (result.obj && result.obj.length) {
+                                const file = result.obj[0]
+                                resolve(file)
+                            } else {
+                                reject('上传失败')
+                            }
+                        },
+                        fail: res => {
+                            reject(res)
+                        },
+                        complete: res => {
+                            this.hideLoading()
+                        }
+                    })
+                }))
+            })
+            Promise.all(promiseList).then(res => {
+                // 提交成功的处理逻辑
+                var billFilesList = []
+                res.forEach(item => {
+                    billFilesList.push({
+                        name: item.name,
+                        uri: item.uri,
+                        size: item.size
+                    })
+                })
+                this.doOCR(billFilesList)
+            }).catch(error => {
+                dd.alert({
+                    content: '上传失败',
+                    buttonText: '好的',
+                    success: res => {
+                        console.log(res, '上传失败')
+                    }
+                })
+            })
+        }
+    },
+    doOCR(fileList) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doOCR',
+            data: {
+                fileList: JSON.stringify(fileList),
+                // accountbookId: '0333'
+            },
+            method: 'POST',
+            success: res => {
+                if(res.data.success) {
+                    if(res.data.obj.length){
+                        const result = this.hasInvoiceType(res.data.obj)
+                        // 去发票编辑页面
+                        if(result) {
+                            dd.setStorage({
+                                key: 'ocrList',
+                                data:res.data.obj,
+                                success: () => {
+                                    dd.setStorageSync({
+                                        key: 'accountbookId',
+                                        data: this.data.baoxiaoDetail.accountbookId
+                                    })
+                                    dd.navigateTo({
+                                        url: '/pages/invoiceSelect/index'
+                                    })
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        })
+    },
+    hasInvoiceType(data) {
+        var noSupportInvoiceType = data.filter(item => !!this.data.nosupportInvoiceType[item.invoiceType])
+        if(noSupportInvoiceType && noSupportInvoiceType.length) {
+            dd.alert({
+                content: `暂不支持${this.data.nosupportInvoiceType[noSupportInvoiceType[0].invoiceType]}，请重新上传`,
+                buttonText: '好的'
+            })
+            return false
+        }
+        return true
+    },
+    getSelectOcrListFromStorage() {
+        const ocrList = dd.getStorageSync({key: 'selectOcrList'}).data
+        if(ocrList) {
+            this.setData({
+                ocrList
+            })
+            this.saveInvoice(ocrList)
+            dd.removeStorage({
+                key: 'selectOcrList',
+                success: () => {}
+            })
+        }
+    },
+    getBillInvoiceDetail() {
+        const data = dd.getStorageSync({key: 'billInvoiceDetail'}).data
+        if(data) {
+            this.saveInvoice([data])
+            dd.removeStorage({
+                key: 'billInvoiceDetail',
+                success: () => {}
+            })
+        }
+    },
+    saveInvoice(data) {
+        this.addLoading()
+        this.addSuffix(data)
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doAddList',
+            method: 'POST',
+            headers:  {'Content-Type': 'application/json;charset=utf-8'},
+            data: JSON.stringify(data),
+            success: res => {
+                if(res.data.success) {
+                    this.setInvoiceInfo(res.data.obj)
+                }else{
+                    console.log('发票保存失败')
+                }
+            },
+            fail: res => {
+                console.log(res, 'error')
+            },
+            complete: res => {
+                this.onAddHide()
+            }
+        })
+    },
+    addSuffix(data) {
+        data && data.length && data.forEach(item => {
+            Object.keys(item).forEach(key => {
+                if(key == 'kprq' || key == 'rq') {
+                    if(item[key].indexOf(' ') < 0)
+                        item[key] = `${item[key]} 00:00:00`
+                }
+            })
+        })
+    },
+    setInvoiceInfo(data) {
+        console.log(data, 'data......')
     }
 })

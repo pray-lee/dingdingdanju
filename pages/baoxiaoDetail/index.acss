@@ -109,3 +109,28 @@
     line-height:38rpx;
     color:rgb(153, 153, 153);
 }
+/*发票相关*/
+.invoice-input-type{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.add-page{
+    height: 250rpx;
+}
+.invoice-input-btn{
+    padding-left: 70rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+}
+.invoice-file{
+    background:url('../../images/invoice/photo.png') 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.invoice-input{
+    background:url('../../images/invoice/input.png') 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}

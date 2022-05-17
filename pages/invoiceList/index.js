@@ -1,3 +1,5 @@
+import clone from "lodash/cloneDeep";
+
 var app = getApp()
 app.globalData.loadingCount = 0
 import {formatNumber, request} from '../../util/getErrorMessage'
@@ -70,6 +72,8 @@ Page({
             animationInfoImg: animationImg.export(),
             animationInfoTopList: animationTopList.export()
         })
+        this.getSelectOcrListFromStorage()
+        this.getAddDetailFromStorage()
     },
     onHide() {
 
@@ -200,10 +204,10 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoList',
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByUserId',
             data: {
                 invoiceType: type,
-                useStatus: '1',
+                useStatus,
             },
             method: 'GET',
             success: res => {
@@ -221,15 +225,15 @@ Page({
         // 已使用 1 未使用 0
         const useStatus = this.data.useStatus
         if(useStatus == 1) {
-            this.getInvoiceListByType(this.data.type, useStatus)
             this.setData({
                 useStatus: 0
             })
+            this.getInvoiceListByType(this.data.type, 0)
         }else{
-            this.getInvoiceListByType(this.data.type, useStatus)
             this.setData({
                 useStatus: 1
             })
+            this.getInvoiceListByType(this.data.type, 1)
         }
     },
     addLoading() {
@@ -421,5 +425,92 @@ Page({
                 })
             }
         })
-    }
+    },
+    saveInvoice(data) {
+        this.addLoading()
+        this.addSuffix(data)
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doAddList',
+            method: 'POST',
+            headers:  {'Content-Type': 'application/json;charset=utf-8'},
+            data: JSON.stringify(data),
+            success: res => {
+                // 刷新发票列表
+                if(res.data.success) {
+                    this.onLoad()
+                }
+            },
+            fail: res => {
+                console.log(res, 'error')
+            },
+            complete: res => {
+                this.onAddHide()
+            }
+        })
+    },
+    addSuffix(data) {
+        data && data.length && data.forEach(item => {
+            Object.keys(item).forEach(key => {
+                if(key == 'kprq' || key == 'rq') {
+                    if(item[key].indexOf(' ') < 0)
+                        item[key] = `${item[key]} 00:00:00`
+                }
+            })
+        })
+    },
+    getSelectOcrListFromStorage() {
+        const data = dd.getStorageSync({key: 'selectOcrList'}).data
+        if(data) {
+            this.saveInvoice(data)
+            dd.removeStorage({
+                key: 'selectOcrList',
+                success: () => {}
+            })
+        }
+    },
+    getAddDetailFromStorage() {
+        const data = dd.getStorageSync({key: 'addInvoiceDetail'}).data
+        if(data) {
+            this.saveInvoice([data])
+            dd.removeStorage({
+                key: 'addInvoiceDetail',
+                success: () => {}
+            })
+        }
+    },
+    deleteInvoice(e) {
+        const id = e.currentTarget.dataset.id
+        dd.confirm({
+            title: '温馨提示',
+            content: '确认删除该发票吗?',
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            success: res => {
+                if(res.confirm) {
+                    this.addLoading()
+                    request({
+                        hideLoading: this.hideLoading(),
+                        url: app.globalData.url + 'invoiceInfoController.do?doBatchDel',
+                        data: {
+                            ids: id
+                        },
+                        method: 'GET',
+                        success: res => {
+                            if(res.data.success) {
+                                this.onLoad()
+                            }
+                        },
+                        fail: error => {
+                            console.log(error, 'error')
+                            dd.alert({
+                                content: '删除失败',
+                                buttonText: '好的'
+                            })
+                        }
+                    })
+                }
+            }
+        })
+    },
 })

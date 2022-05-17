@@ -1,5 +1,5 @@
 <view class="form-wrapper" onTap="onClick">
-    <scroll-view scroll-y class="form-scroll-wrapper">
+    <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
 <!--        <view class="title">-->
 <!--            <text>报销详情</text>-->
 <!--        </view>-->
@@ -56,6 +56,10 @@
                 <input class="input" placeholder="备注" onInput="onBaoxiaoBlur" data-name="remark"
                        value="{{baoxiaoDetail.remark}}"/>
             </view>
+            <view class="title">发票</view>
+            <view class="block-wrapper">
+
+            </view>
         </view>
         <view class="notice-content" hidden="{{noticeHidden}}">
             <view>
@@ -98,4 +102,12 @@
         <button onTap="addDetail" class="submit-btn save-draft">再加一笔</button>
         <button onTap="submitBaoxiaoDetail" class="submit-btn">保存报销</button>
     </view>
+    <!-- 新增单据弹框 -->
+    <view class="add-page" animation="{{animationInfo}}">
+        <view class="invoice-input-type">
+            <view class="invoice-input-btn invoice-file" onTap="handleUpload">智能拍票</view>
+            <view class="invoice-input-btn invoice-input" onTap="invoiceInput">手录发票</view>
+        </view>
+    </view>
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>
