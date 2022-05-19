@@ -314,6 +314,7 @@ Page({
                         res.data.obj.forEach((item, index) => {
                             if (item.id === accountbookIdStorage) {
                                 accountbookIndex = index
+                                accountbookId = accountbookIdStorage
                             }
                         })
                         dd.removeStorage({

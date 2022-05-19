@@ -627,7 +627,6 @@ Page({
             url: app.globalData.url + 'invoiceInfoController.do?doOCR',
             data: {
                 fileList: JSON.stringify(fileList),
-                // accountbookId: '0333'
             },
             method: 'POST',
             success: res => {
@@ -697,7 +696,8 @@ Page({
             data: JSON.stringify(data),
             success: res => {
                 if(res.data.success) {
-                    this.setInvoiceInfo(res.data.obj)
+                    this.setInvoiceList(res.data.obj)
+                    this.setInvoiceInBaoxiaoDetail(res.data.obj)
                 }else{
                     console.log('发票保存失败')
                 }
@@ -720,11 +720,144 @@ Page({
             })
         })
     },
-    setInvoiceInfo(data) {
-        if(data&&data.length) {
+    setInvoiceList(data) {
+        if(data && data.length) {
             this.setData({
                 ocrList: data
             })
         }
+    },
+    setInvoiceInBaoxiaoDetail(data) {
+        if(data && data.length) {
+            this.setInvoiceInfoId(data)
+            this.setOtherInvoiceInfo(data)
+        }
+    },
+    setInvoiceInfoId(data) {
+        let invoiceInfoId = ''
+        data.forEach(item => {
+            invoiceInfoId += item.id + ','
+        })
+        invoiceInfoId = invoiceInfoId.slice(0, -1)
+        this.setData({
+            baoxiaoDetail: {
+                ...this.data.baoxiaoDetail,
+                invoiceInfoId
+            }
+        })
+    },
+    setOtherInvoiceInfo(data) {
+        this.setInvoiceApplicationAmount(data)
+        this.setInvoiceRate(data)
+    },
+    setInvoiceApplicationAmount(data) {
+        // applicationAmount
+        let applicationAmount = ''
+        data.forEach(item => {
+            applicationAmount += parseFloat(item.jshj)
+        })
+        this.setData({
+            baoxiaoDetail: {
+                ...this.data.baoxiaoDetail,
+                applicationAmount,
+                formatApplicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
+            }
+        })
+
+    },
+    setInvoiceRate(data) {
+        // 税率 专票处理
+        const selectedObj = data[0]
+        if(selectedObj.invoiceType == '01' || selectedObj.invoiceType == '08') {
+            this.setZhuanpiao(selectedObj)
+        }else if( selectedObj.invoiceType == '04'|| selectedObj.invoiceType == "10" || selectedObj.invoiceType == "11") {
+            if(selectedObj.invoiceDetailEntityObj) {
+                if(invoiceDetail.hwmc.indexOf('客运') != -1) {
+                    this.setZhuanpiao(selectedObj)
+                }else{
+                    this.setPupiao(selectedObj)
+                }
+            }
+        }else if(selectedObj.invoiceType == '95') {
+            this.setPupiao(selectedObj)
+        }else if(selectedObj.invoiceType == '92') {
+            this.setZhuanpiao(selectedObj)
+        }else if(selectedObj.invoiceType == '93') {
+            this.setZhuanpiao(selectedObj)
+        }else if(selectedObj.invoiceType == '91') {
+            this.setPupiao(selectedObj)
+        }else if(selectedObj.invoiceType == '88' || selectedObj.invoiceType == '94') {
+            this.setZhuanpiao(selectedObj)
+        }else if(selectedObj.invoiceType == '98') {
+            this.setZhuanpiao(selectedObj)
+        }else if(selectedObj.invoiceType == '97') {
+            this.setPupiao(selectedObj)
+        }
+    },
+    // 专票
+    setZhuanpiao(selectedObj) {
+        // 税率 专票处理
+        let invoiceType = this.data.baoxiaoDetail.invoiceType
+        let taxRageIndex = this.data.baoxiaoDetail.taxRageIndex
+        let taxRate = this.data.baoxiaoDetail.taxRate
+        let noticeHidden = true
+        let taxRageArr = []
+        // 专票
+        invoiceType = '2'
+        noticeHidden = false
+        taxRageArr = this.data.baoxiaoDetail.taxRageObject.taxRageArr
+        if(selectedObj.invoiceType == '01' || selectedObj.invoiceType == '08' || selectedObj.invoiceType == '04' || selectedObj.invoiceType == '10' || selectedObj.invoiceType == '11') {
+            if(selectedObj.invoiceDetailEntityObj) {
+                taxRate = selectedObj.invoiceDetailEntityObj[0].sl
+            }
+        }else if(selectedObj.invoiceType == '92') {
+            taxRate = '9'
+        }else if(selectedObj.invoiceType == '93') {
+            taxRate = '9'
+        }else if(selectedObj.invoiceType == '88' || selectedObj.invoiceType == '94') {
+            taxRate = '3'
+        }else if(selectedObj.invoiceType == '98') {
+            taxRate = '5'
+        }
+        taxRageArr.forEach((item, index) => {
+            if(taxRate == item.id) {
+                taxRageIndex = index
+            }
+        })
+        this.setData({
+            baoxiaoDetail: {
+                ...this.data.baoxiaoDetail,
+                invoiceType,
+                taxRate,
+                taxRageIndex,
+                noticeHidden,
+                taxRageArr
+
+            }
+        })
+    },
+    // 普票
+    setPupiao(selectedObj) {
+        // 普票处理
+        let invoiceType = this.data.baoxiaoDetail.invoiceType
+        let taxRageIndex = this.data.baoxiaoDetail.taxRageIndex
+        let taxRate = this.data.baoxiaoDetail.taxRate
+        let noticeHidden = true
+        let taxRageArr = []
+        invoiceType = '1'
+        noticeHidden = true
+        taxRageArr = []
+        taxRageIndex = 0
+        taxRate = ''
+        this.setData({
+            baoxiaoDetail: {
+                ...this.data.baoxiaoDetail,
+                invoiceType,
+                taxRate,
+                taxRageIndex,
+                noticeHidden,
+                taxRageArr
+            }
+        })
     }
 })
