@@ -37,7 +37,8 @@
     "pages/oaList/index",
     "pages/invoiceList/index",
     "pages/invoiceInput/index",
-    "pages/invoiceSelect/index"
+    "pages/invoiceSelect/index",
+    "pages/invoiceListSelect/index"
   ],
   "window": {
     "defaultTitle": "我的单据",

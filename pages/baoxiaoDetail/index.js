@@ -135,6 +135,7 @@ Page({
         })
         this.getSelectOcrListFromStorage()
         this.getBillInvoiceDetail()
+        this.getOcrListFromListFromStorage()
         // =======================
         // ========页面显示=======
         setTimeout(() => {
@@ -561,6 +562,11 @@ Page({
             url: '/pages/invoiceInput/index'
         })
     },
+    invoiceSelect() {
+        dd.navigateTo({
+            url: '/pages/invoiceListSelect/index'
+        })
+    },
     /**
      *
      * @param 上传图片字符串列表
@@ -665,6 +671,7 @@ Page({
         }
         return true
     },
+    // 从上传识别之后的列表选
     getSelectOcrListFromStorage() {
         const ocrList = dd.getStorageSync({key: 'selectOcrList'}).data
         if(ocrList) {
@@ -675,6 +682,7 @@ Page({
             })
         }
     },
+    // 从发票录入选
     getBillInvoiceDetail() {
         const data = dd.getStorageSync({key: 'billInvoiceDetail'}).data
         if(data) {
@@ -684,6 +692,19 @@ Page({
                 success: () => {}
             })
         }
+    },
+    // 从个人票夹选
+    getOcrListFromListFromStorage() {
+        const ocrList = dd.getStorageSync({key: 'ocrListFromList'}).data
+        if(ocrList) {
+            this.setInvoiceList(ocrList)
+            this.setInvoiceInBaoxiaoDetail(ocrList)
+            dd.removeStorage({
+                key: 'ocrListFromList',
+                success: () => {}
+            })
+        }
+        this.onAddHide()
     },
     saveInvoice(data) {
         this.addLoading()
@@ -752,7 +773,7 @@ Page({
     },
     setInvoiceApplicationAmount(data) {
         // applicationAmount
-        let applicationAmount = ''
+        let applicationAmount = 0
         data.forEach(item => {
             applicationAmount += parseFloat(item.jshj)
         })
@@ -859,5 +880,15 @@ Page({
                 taxRageArr
             }
         })
+    },
+    deleteInvoice(e) {
+        const index = e.currentTarget.dataset.index
+        const list = clone(this.data.ocrList)
+        list.splice(index, 1)
+        this.setData({
+            ocrList: list
+        })
+        this.setInvoiceApplicationAmount(list)
+        this.setInvoiceInBaoxiaoDetail(list)
     }
 })

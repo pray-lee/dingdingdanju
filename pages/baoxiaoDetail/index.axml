@@ -61,7 +61,7 @@
                 <view class="form-row-label">发票</view>
                 <view class="invoice-list">
                     <view class="invoice-item" a:for="{{ocrList}}" a:if="{{ocrList.length}}">
-                        <view class="delete-btn"></view>
+                        <view class="delete-btn" onTap="deleteInvoice" data-index="{{index}}"></view>
                         <view class="invoice-info">
                             <view class="invoice-left-wrapper">
                                 <block a:if="{{item.invoiceType == '01' || item.invoiceType == '04' || item.invoiceType == '08' || item.invoiceType == '10' || item.invoiceType == '11'}}">
@@ -158,6 +158,7 @@
         <view class="invoice-input-type">
             <view class="invoice-input-btn invoice-file" onTap="handleUpload">智能拍票</view>
             <view class="invoice-input-btn invoice-input" onTap="invoiceInput">手录发票</view>
+            <view class="invoice-input-btn invoice-select" onTap="invoiceSelect">个人票夹</view>
         </view>
     </view>
     <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>

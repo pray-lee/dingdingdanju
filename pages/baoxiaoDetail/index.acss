@@ -117,7 +117,7 @@
     align-items: center;
 }
 .add-page{
-    height: 250rpx;
+    height: 350rpx;
 }
 .invoice-input-btn{
     padding-left: 70rpx;
@@ -143,6 +143,7 @@
 }
 .invoice-item{
     display:flex;
+    padding-bottom: 10rpx;
 }
 .invoice-info{
     flex: 1;
