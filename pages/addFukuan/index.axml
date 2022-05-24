@@ -105,7 +105,7 @@
                 <view class="baoxiao-list">
                     <view class="baoxiao-item" a:for="{{fukuanList}}" a:if="{{fukuanList.length}}">
                         <view class="form-row">
-                            <view class="delete-baoxiao-item" onTap="deleteBaoxiaoDetail"
+                            <view class="delete-baoxiao-item" onTap="deleteFukuanDetail"
                                   data-id="{{item.billDetailId}}" data-index="{{index}}"></view>
                             <view onTap="showFukuanDetail" data-index="{{index}}"
                                   class="form-row-content baoxiaoDetail-left" data-index="{{index}}">

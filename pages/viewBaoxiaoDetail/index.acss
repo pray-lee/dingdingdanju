@@ -104,3 +104,120 @@
     line-height:38rpx;
     color:rgb(153, 153, 153);
 }
+/*发票相关*/
+.invoice-input-type{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.add-page{
+    height: 350rpx;
+}
+.invoice-input-btn{
+    padding-left: 70rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+}
+.invoice-file{
+    background:url('../../images/invoice/photo.png') 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.invoice-input{
+    background:url('../../images/invoice/input.png') 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.add-invoice-btn{
+    text-align:center;
+    height: 87rpx;
+    line-height: 87rpx;
+    color:#1f65d8;
+    font-size: 28rpx;
+}
+.invoice-item{
+    display:flex;
+    padding-bottom: 10rpx;
+}
+.invoice-info{
+    flex: 1;
+    display:flex;
+    justify-content: space-between;
+    font-size: 24rpx;
+}
+.invoice-left-wrapper{
+    padding-left: 20rpx;
+}
+.invoice-title{
+    padding-bottom: 10rpx;
+}
+.invoice-right{
+    font-size: 30rpx;
+    font-weight:bold;
+}
+.invoice-tag{
+    display:inline-block;
+    padding: 10rpx;
+    font-size: 20rpx;
+    border: 1px solid #ff5252;
+    border-radius: 4rpx;
+}
+.delete-btn{
+    width: 40rpx;
+    height: 40rpx;
+    background:url(../../images/delete.png) center center no-repeat;
+    background-size: 40rpx 40rpx;
+}
+.invoice-type_01 {
+    border-color:#ff5252;
+    color:#ff5252
+}
+.invoice-type_04 {
+    border-color:#ff5252;
+    color:#ff5252
+}
+.invoice-type_08 {
+    border-color:#ff5252;
+    color:#ff5252
+}
+.invoice-type_10 {
+    border-color:#ff5252;
+    color:#ff5252
+}
+.invoice-type_11 {
+    border-color:#ff5252;
+    color:#ff5252
+}
+.invoice-type_95 {
+    border-color:#3276c3;
+    color:#3276c3
+}
+.invoice-type_92 {
+    border-color:deepskyblue;
+    color:deepskyblue;
+}
+.invoice-type_93 {
+    border-color:yellow;
+    color: yellow;
+}
+.invoice-type_91 {
+    border-color:green;
+    color:green;
+}
+.invoice-type_88 {
+    border-color: purple;
+    color: purple;
+}
+.invoice-type_94 {
+    border-color: purple;
+    color: purple;
+}
+.invoice-type_98 {
+    border-color: black;
+    color: black;
+}
+.invoice-type_97 {
+    border-color: grey;
+    color: grey;
+}

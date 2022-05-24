@@ -37,7 +37,7 @@
                                     <block a:if="{{item.invoiceType == '01' || item.invoiceType == '04' || item.invoiceType == '08' || item.invoiceType == '10' || item.invoiceType == '11'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">销方名称：{{item.xhfmc || '无'}}</view>
-                                            <view class="right">{{item.jshj || '价税合计：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '价税合计：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">开票日期：{{item.kprq || '无'}}</view>
@@ -49,7 +49,7 @@
                                     <block a:if="{{item.invoiceType == '95'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">发票代码：{{item.fpdm || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">发票号码：{{item.fphm || '无'}}</view>
@@ -61,7 +61,7 @@
                                     <block a:if="{{item.invoiceType == '92'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">姓名：{{item.xm || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">始发站：{{item.cfzd || '无'}}-终点站：{{item.ddzd || '无'}}</view>
@@ -76,7 +76,7 @@
                                     <block a:if="{{item.invoiceType == '93'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">姓名：{{item.xm || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">始发站：{{item.cfzd || '无'}}-终点站：{{item.ddzd || '无'}}</view>
@@ -91,7 +91,7 @@
                                     <block a:if="{{item.invoiceType == '91'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">发票代码：{{item.fpdm || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">发票号码：{{item.fphm || '无'}}</view>
@@ -106,7 +106,7 @@
                                     <block a:if="{{item.invoiceType == '88' || item.invoiceType == '94'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">姓名：{{item.xm || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">始发站：{{item.cfzd || '无'}}-终点站：{{item.ddzd || '无'}}</view>
@@ -121,7 +121,7 @@
                                     <block a:if="{{item.invoiceType == '98'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">入口：{{item.rk || '无'}}-出口：{{item.ck || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">日期：{{item.kprq || '无'}}</view>
@@ -133,7 +133,7 @@
                                     <block a:if="{{item.invoiceType == '97'}}">
                                         <view class="content1">
                                             <view class="status error {{'invoice-type_' + item.invoiceType}}">收款方名称：{{item.xhfmc || '无'}}</view>
-                                            <view class="right">{{item.jshj || '金额：无'}}</view>
+                                            <view class="right">{{item.formatJshj || '金额：无'}}</view>
                                         </view>
                                         <view class="content1">
                                             <view class="remark">日期：{{item.kprq || '无'}}</view>

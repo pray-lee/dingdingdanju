@@ -7,6 +7,24 @@ Page({
         isPhoneXSeries: false,
         btnHidden: false,
         fukuanDetail: {},
+        // 发票
+        maskHidden: true,
+        animationInfo: {},
+        nosupportInvoiceType: {
+            '02': '货运运输业增值税专用发票',
+            '03': '机动车销售统一发票',
+            '14': '通行费发票',
+            '15': '二手车发票',
+            '16': '区块链电子发票',
+            '21': '全电发票（专用发票）',
+            '22': '全电发票（普通发票）',
+            '96': '国际小票',
+            '85': '可报销其他发票',
+            '86': '滴滴出行行程单',
+            '87': '完税证明',
+            '00': '其他未知票种',
+        },
+        ocrList: []
     },
     onLoad() {
         this.setData({
@@ -20,6 +38,14 @@ Page({
             this.setData({
                 fukuanDetail
             })
+            // 发票
+            if(fukuanDetail.ocrList) {
+                this.setInvoiceList(fukuanDetail.ocrList)
+            }
+            if(fukuanDetail.invoiceInfoId && !fukuanDetail.ocrList) {
+                this.getInvoiceDetailById(fukuanDetail.invoiceInfoId)
+            }
+            // =======
             dd.removeStorage({
                 key: 'fukuanDetail'
             })
@@ -80,5 +106,120 @@ Page({
         this.setData({
             btnHidden: false
         })
-    }
+    },
+    // 发票
+    setInvoiceList(data) {
+        if(data && data.length) {
+            data.forEach(item => {
+                item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
+            })
+            this.setData({
+                ocrList: data
+            })
+        }
+    },
+    deleteInvoice(e) {
+        const index = e.currentTarget.dataset.index
+        let list = clone(this.data.ocrList)
+        let invoiceInfoId = list[index].id
+        list.splice(index, 1)
+        this.setData({
+            ocrList: list,
+            fukuanDetail: {
+                ...this.data.fukuanDetail,
+                ocrList: []
+            }
+        })
+        this.removeInvoiceInfoId(invoiceInfoId)
+        this.setInvoiceApplicationAmount(list)
+        this.setInvoiceInFukuanDetail(list)
+    },
+    getInvoiceDetailById(ids) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            method: 'GET',
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByIds',
+            data: {
+                ids,
+            },
+            success: res => {
+                if(res.data.success) {
+                    this.setData({
+                        ocrList: res.data.obj
+                    })
+                }else{
+                    dd.alert({
+                        content: '获取发票详情失败',
+                        buttonText: '好的'
+                    })
+                }
+            },
+            fail: err => {
+                console.log(err, 'error')
+            }
+        })
+    },
+    goToInvoiceDetail(e) {
+        const index = e.currentTarget.dataset.index
+        dd.setStorage({
+            key: 'invoiceDetail',
+            data: this.data.ocrList[index],
+            success: res => {
+                dd.navigateTo({
+                    url: '/pages/invoiceInput/index'
+                })
+            }
+        })
+    },
+    removeInvoiceInfoId(id) {
+        let invoiceInfoId = this.data.fukuanDetail.invoiceInfoId.split(',')
+        let newIds = ''
+        if(invoiceInfoId.length) {
+            let ids = invoiceInfoId.filter(item => item !== id)
+            newIds = ids.join(',')
+        }
+        this.setData({
+            fukuanDetail: {
+                ...this.data.fukuanDetail,
+                invoiceInfoId: newIds
+            }
+        })
+    },
+    setInvoiceApplicationAmount(data) {
+        // applicationAmount
+        let applicationAmount = 0
+        data.forEach(item => {
+            applicationAmount += parseFloat(item.jshj)
+        })
+        this.setData({
+            fukuanDetail: {
+                ...this.data.fukuanDetail,
+                applicationAmount,
+                formatApplicationAmount: formatNumber(Number(applicationAmount).toFixed(2))
+            }
+        })
+    },
+    setInvoiceInFukuanDetail(data) {
+        if(data && data.length) {
+            this.setInvoiceInfoId(data)
+            this.setOtherInvoiceInfo(data)
+        }
+    },
+    setInvoiceInfoId(data) {
+        let invoiceInfoId = ''
+        data.forEach(item => {
+            invoiceInfoId += item.id + ','
+        })
+        invoiceInfoId = invoiceInfoId.slice(0, -1)
+        this.setData({
+            fukuanDetail: {
+                ...this.data.fukuanDetail,
+                invoiceInfoId
+            }
+        })
+    },
+    setOtherInvoiceInfo(data) {
+        this.setInvoiceApplicationAmount(data)
+    },
 })

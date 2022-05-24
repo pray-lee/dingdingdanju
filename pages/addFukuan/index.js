@@ -320,11 +320,8 @@ Page({
     // 获取导入的应付单
     getImportFukuanListFromStorage() {
         const fukuanList = dd.getStorageSync({key: 'importCommonList'}).data
-        console.log(this.data.fukuanList, 'this.data.fukuanList')
         if(!!fukuanList) {
             let oldList = this.data.fukuanList.concat()
-            console.log(oldList, 'oldList')
-            console.log(fukuanList)
             if(oldList.length) {
                 for(let i = 0; i < fukuanList.length; i++) {
                     if(oldList.every(item => item.billDetailId !== fukuanList[i].billDetailId)) {
@@ -347,11 +344,24 @@ Page({
                     fukuanList: oldList.concat(fukuanList)
                 })
             }
+            // 发票
+            this.setAccountbookId(this.data.submitData.accountbookId, clone(this.data.fukuanList))
+
             this.setApplicationAmount(this.data.fukuanList)
             this.setTotalAmount()
             this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'fukuanList', 'totalAmount'])
             dd.removeStorageSync({
                 key: 'importCommonList'
+            })
+        }
+    },
+    setAccountbookId(accountbookId, data) {
+        if(data && data.length) {
+            data.forEach(item => {
+                item.accountbookId = accountbookId
+            })
+            this.setData({
+                fukuanList: data
             })
         }
     },
@@ -420,7 +430,7 @@ Page({
             }
         })
     },
-    deleteBaoxiaoDetail(e) {
+    deleteFukuanDetail(e) {
         var idx = e.currentTarget.dataset.index
         var fukuanList = this.data.fukuanList.filter((item, index) => {
             return idx !== index
@@ -1183,6 +1193,7 @@ Page({
     },
     // 获取应付单列表并且跳转
     getYingfuList() {
+        console.log(this.data.submitData.accountbookId, 'accountbookId')
         if(!this.data.submitData.applicantId) {
             dd.alert({
                 content: '请选择供应商',
@@ -1196,11 +1207,17 @@ Page({
             method: 'GET',
             success: res => {
                 if(res.data.rows.length) {
+                    // 发票
+                    dd.setStorageSync({
+                        key: 'accountbookId',
+                        data: this.data.submitData.accountbookId
+                    })
                     dd.setStorage({
                         key: 'tempImportList',
                         data: res.data.rows,
                         success: res => {
                            this.hideLoading()
+                            // 发票
                            dd.navigateTo({
                                url: '/pages/importYingshouList/index'
                            })

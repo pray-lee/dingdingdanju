@@ -151,6 +151,11 @@ Page({
             method: 'GET',
             success: res => {
                 if(res.data.success) {
+                    if(res.data.obj.results.length) {
+                        res.data.obj.results.forEach(item => {
+                            item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
+                        })
+                    }
                     this.setData({
                         list: res.data.obj.results || [],
                         filterList: res.data.obj.results || [],

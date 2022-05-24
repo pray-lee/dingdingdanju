@@ -42,6 +42,11 @@ Page({
             })
         } else {
             if (isEdit) {
+                // ==========发票相关=========
+                if(baoxiaoDetail.invoiceInfoId) {
+                    this.getInvoiceDetailById(baoxiaoDetail.invoiceInfoId)
+                }
+                // ==========================
                 this.getSubjectAuxptyList(baoxiaoDetail.subjectId, baoxiaoDetail.accountbookId, false)
                 dd.removeStorage({
                     key: 'edit',
@@ -743,6 +748,9 @@ Page({
     },
     setInvoiceList(data) {
         if(data && data.length) {
+            data.forEach(item => {
+                item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
+            })
             this.setData({
                 ocrList: data
             })
@@ -764,6 +772,20 @@ Page({
             baoxiaoDetail: {
                 ...this.data.baoxiaoDetail,
                 invoiceInfoId
+            }
+        })
+    },
+    removeInvoiceInfoId(id) {
+        let invoiceInfoId = this.data.baoxiaoDetail.invoiceInfoId.split(',')
+        let newIds = ''
+        if(invoiceInfoId.length) {
+            let ids = invoiceInfoId.filter(item => item !== id)
+            newIds = ids.join(',')
+        }
+        this.setData({
+            baoxiaoDetail: {
+                ...this.data.baoxiaoDetail,
+                invoiceInfoId: newIds
             }
         })
     },
@@ -883,12 +905,52 @@ Page({
     },
     deleteInvoice(e) {
         const index = e.currentTarget.dataset.index
-        const list = clone(this.data.ocrList)
+        let list = clone(this.data.ocrList)
+        let invoiceInfoId = list[index].id
         list.splice(index, 1)
         this.setData({
             ocrList: list
         })
+        this.removeInvoiceInfoId(invoiceInfoId)
         this.setInvoiceApplicationAmount(list)
         this.setInvoiceInBaoxiaoDetail(list)
+    },
+    getInvoiceDetailById(ids) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading(),
+            method: 'GET',
+            url: app.globalData.url + 'invoiceInfoController.do?getInvoiceInfoByIds',
+            data: {
+                ids,
+            },
+            success: res => {
+                if(res.data.success) {
+                    this.setData({
+                        ocrList: res.data.obj
+                    })
+                }else{
+                    dd.alert({
+                        content: '获取发票详情失败',
+                        buttonText: '好的'
+                    })
+                }
+            },
+            fail: err => {
+                console.log(err, 'error')
+            }
+        })
+    },
+    goToInvoiceDetail(e) {
+        const index = e.currentTarget.dataset.index
+        dd.setStorage({
+            key: 'invoiceDetail',
+            data: this.data.ocrList[index],
+            success: res => {
+                dd.navigateTo({
+                    url: '/pages/invoiceInput/index'
+                })
+            }
+        })
     }
 })

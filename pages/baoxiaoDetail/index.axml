@@ -62,7 +62,7 @@
                 <view class="invoice-list">
                     <view class="invoice-item" a:for="{{ocrList}}" a:if="{{ocrList.length}}">
                         <view class="delete-btn" onTap="deleteInvoice" data-index="{{index}}"></view>
-                        <view class="invoice-info">
+                        <view class="invoice-info" onTap="goToInvoiceDetail" data-index="{{index}}">
                             <view class="invoice-left-wrapper">
                                 <block a:if="{{item.invoiceType == '01' || item.invoiceType == '04' || item.invoiceType == '08' || item.invoiceType == '10' || item.invoiceType == '11'}}">
                                     <view class="invoice-title">销方名称：{{item.xhfmc || '无'}}</view>
@@ -105,7 +105,7 @@
                                     <view class="invoice-tag {{'invoice-type_' + item.invoiceType}}">通用机打发票</view>
                                 </block>
                             </view>
-                            <view class="invoice-right">{{item.jshj}}</view>
+                            <view class="invoice-right">{{item.formatJshj}}</view>
                         </view>
                     </view>
                 </view>

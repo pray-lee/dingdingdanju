@@ -1519,6 +1519,8 @@ Page({
                 userName: app.globalData.realName,
                 accountbookId: data.accountbookId,
                 billCode: data.billCode,
+                // 发票
+
             },
         })
         let t = null
@@ -1641,6 +1643,8 @@ Page({
                                 obj.applicationAmount = item.applicationAmount
                                 obj.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
                             }
+                            // 发票
+                            obj.invoiceInfoId = item.invoiceInfoId
                             // 附加信息
                             if (!!item.extraMessage) {
                                 obj.extraMessage = JSON.parse(item.extraMessage)
@@ -1929,6 +1933,7 @@ Page({
         this.data.baoxiaoList[index].applicantType = this.data.submitData.applicantType
         this.data.baoxiaoList[index].applicantId = this.data.submitData.applicantId
         this.data.baoxiaoList[index].taxpayerType = this.data.submitData.taxpayerType
+        // 外币
         if (this.data.multiCurrency) {
             this.data.baoxiaoList[index].applicationAmount = this.data.baoxiaoList[index].originApplicationAmount
         }
