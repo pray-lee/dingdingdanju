@@ -569,7 +569,7 @@ Page({
     },
     invoiceSelect() {
         dd.navigateTo({
-            url: '/pages/invoiceListSelect/index'
+            url: '/pages/invoiceListSelect/index?accountbookId=' + this.data.baoxiaoDetail.accountbookId
         })
     },
     /**
@@ -661,6 +661,11 @@ Page({
                             })
                         }
                     }
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
                 }
             }
         })
@@ -725,6 +730,10 @@ Page({
                     this.setInvoiceList(res.data.obj)
                     this.setInvoiceInBaoxiaoDetail(res.data.obj)
                 }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
                     console.log('发票保存失败')
                 }
             },

@@ -374,6 +374,11 @@ Page({
                             })
                         }
                     }
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
                 }
             }
         })
@@ -445,6 +450,11 @@ Page({
                 // 刷新发票列表
                 if(res.data.success) {
                     this.onLoad()
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
                 }
             },
             fail: res => {

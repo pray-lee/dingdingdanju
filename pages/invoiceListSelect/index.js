@@ -1,8 +1,8 @@
 import clone from "lodash/cloneDeep";
+import {formatNumber, request} from '../../util/getErrorMessage'
 
 var app = getApp()
 app.globalData.loadingCount = 0
-import {formatNumber, request} from '../../util/getErrorMessage'
 
 Page({
     data: {
@@ -36,9 +36,14 @@ Page({
             '86': '滴滴出行行程单',
             '87': '完税证明',
             '00': '其他未知票种',
-        }
+        },
+        accountbookId: ''
     },
-    onLoad() {
+    onLoad(query) {
+        const accountbookId = query.accountbookId
+        this.setData({
+            accountbookId
+        })
         this.getInvoiceListByType(this.data.type, this.data.useStatus)
     },
     onReady() {
@@ -140,6 +145,7 @@ Page({
         })
     },
     getInvoiceListByType(type, useStatus) {
+        console.log(this.data.accountbookId, 'accountbookId')
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -147,6 +153,7 @@ Page({
             data: {
                 invoiceType: type,
                 useStatus,
+                accountbookId: this.data.accountbookId
             },
             method: 'GET',
             success: res => {
