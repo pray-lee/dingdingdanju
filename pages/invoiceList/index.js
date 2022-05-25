@@ -39,6 +39,9 @@ Page({
         }
     },
     onLoad() {
+        this.setData({
+            isPhoneXSeries: app.globalData.isPhoneXSeries,
+        })
         this.getInvoiceListByType(this.data.type, this.data.useStatus)
     },
     onReady() {

@@ -189,7 +189,7 @@
     align-items: center;
 }
 .add-page{
-    height: 250rpx;
+    height: 405;
 }
 .invoice-input-btn{
     padding-left: 70rpx;

@@ -157,7 +157,7 @@
         </view>
     </view>
     <!-- 新增单据弹框 -->
-    <view class="add-page" animation="{{animationInfo}}">
+    <view class="add-page " animation="{{animationInfo}}">
     <view class="invoice-input-type">
         <view class="invoice-input-btn invoice-file" onTap="handleUpload">智能拍票</view>
         <view class="invoice-input-btn invoice-input" onTap="invoiceInput">手录发票</view>

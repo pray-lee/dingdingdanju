@@ -166,6 +166,10 @@
     background:url('../../images/invoice/input.png') 20rpx center no-repeat;
     background-size: 40rpx 40rpx;
 }
+.invoice-select{
+    background:url('../../images/invoice/invoice-list.png') 20rpx center no-repeat;
+    background-size: 40rpx 40rpx;
+}
 .add-invoice-btn{
     text-align:center;
     height: 87rpx;

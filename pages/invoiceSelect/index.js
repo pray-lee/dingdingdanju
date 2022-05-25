@@ -147,6 +147,7 @@ Page({
             this.setData({
                 list: list.map(item => ({
                     ...item,
+                    formatJshj: formatNumber(Number(item.jshj).toFixed(2)),
                     uploadType: '2',
                 }))
             })
@@ -167,7 +168,10 @@ Page({
             const newList = clone(this.data.list)
             newList[index] = editInvoiceDetail
             this.setData({
-                list: newList
+                list: newList.map(item => ({
+                    ...item,
+                    formatJshj: formatNumber(Number(item.jshj).toFixed(2))
+                }))
             })
             dd.removeStorage({
                 key: 'editInvoiceDetail'
