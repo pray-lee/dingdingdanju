@@ -1,12 +1,25 @@
 const app = getApp()
 Page({
     data: {
-        tempImportList: []
+        tempImportList: [],
+        amountField: {
+            unverifyAmount: 'unverifyAmount'
+        }
     },
     onLoad() {
         const tempImportList = dd.getStorageSync({
             key: 'tempImportList'
         }).data
+        const multiCurrency = dd.getStorageSync({
+            key: 'multiCurrency'
+        }).data
+        if(multiCurrency) {
+            this.setData({
+                amountField: {
+                    unverifyAmount: 'originUnverifyAmount'
+                }
+            })
+        }
         this.setData({
             tempImportList
         })
@@ -23,7 +36,7 @@ Page({
                 var temp = {
                     ...arr[i][0],
                     billDetailId: arr[i][0].id,
-                    applicationAmount: arr[i][0].unverifyAmount,
+                    applicationAmount: arr[i][0][this.data.amountField.unverifyAmount],
                     remark: arr[i][0].remark
                 }
                 newArr.push(temp)
