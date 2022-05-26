@@ -1,4 +1,5 @@
 import moment from "moment";
+import clone from "lodash/cloneDeep";
 
 var app = getApp()
 app.globalData.loadingCount = 0
@@ -42,7 +43,8 @@ Page({
         submitData: {
             invoiceType: '01',
             accountbookId: '',
-            uploadType: '1'
+            uploadType: '1',
+            invoiceDetailEntityList: [{}]
         }
     },
     // 从单据详情来的
@@ -164,7 +166,6 @@ Page({
         this.getInvoiceDetailFromStorage()
         this.getEditInvoiceDetailFromStorage()
         this.getFromDetailFromStorage()
-        this.setCurrentDate()
     },
     onHide() {
 
@@ -223,12 +224,25 @@ Page({
     setCurrentDate() {
         const type = this.data.type
         const time = type == '93' ? 'rq' : 'kprq'
-        this.setData({
-            submitData: {
-                ...this.data.submitData,
-                [time]: moment().format('YYYY-MM-DD')
-            }
-        })
+        if(time != 'rq') {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    [time]: moment().format('YYYY-MM-DD')
+                }
+            })
+        }else{
+            const obj = this.data.submitData.invoiceDetailEntityList ? this.data.submitData.invoiceDetailEntityList[0] : {}
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    // invoiceDetailIntityList: {
+                    //     [time]: moment().format('YYYY-MM-DD')
+                    // }
+                    invoiceDetailEntityList: [{...obj, [time]: moment().format('YYYY-MM-DD')}]
+                }
+            })
+        }
     },
     setType(type, typeClass) {
         let typeText = ''
@@ -365,12 +379,22 @@ Page({
             currentDate: moment().format('YYYY-MM-DD'),
             success: (res) => {
                 if (!!res.date) {
-                    this.setData({
-                        submitData: {
-                            ...this.data.submitData,
-                            [name]: res.date
-                        },
-                    })
+                    if(name !== 'rq') {
+                        this.setData({
+                            submitData: {
+                                ...this.data.submitData,
+                                [name]: res.date
+                            },
+                        })
+                    }else{
+                        const obj = this.data.submitData.invoiceDetailEntityList ? this.data.submitData.invoiceDetailEntityList[0] : {}
+                        this.setData({
+                            submitData: {
+                                ...this.data.submitData,
+                                invoiceDetailEntityList: [{...obj, [name]: res.date}]
+                            },
+                        })
+                    }
                 }
             },
             fail: res => {
@@ -396,9 +420,16 @@ Page({
         }else if(this.data.fromDetail) {
             key = 'billInvoiceDetail'
         }
+
+         let submitData = clone(this.data.submitData)
+        if(submitData.invoiceType == '93') {
+            if(!submitData.qtsf) {
+                submitData.qtsf = 0
+            }
+        }
         dd.setStorage({
             key,
-            data: this.data.submitData,
+            data: submitData,
             success: res => {
                 dd.navigateBack({
                     delta: 1

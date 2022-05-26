@@ -1238,6 +1238,11 @@ Page({
     // 编辑付款详情
     showFukuanDetail(e) {
         const index = e.currentTarget.dataset.index
+        // 发票
+        dd.setStorageSync({
+            key: 'accountbookId',
+            data: this.data.submitData.accountbookId
+        })
         dd.setStorage({
             key: 'index',
             data: index,
@@ -1246,6 +1251,7 @@ Page({
             }
         })
         const fukuanDetail = clone(this.data.fukuanList[index])
+        console.log(fukuanDetail, 'fukuaidetial')
         dd.setStorage({
             key: 'fukuanDetail',
             data: fukuanDetail,
@@ -1308,7 +1314,8 @@ Page({
                 subjectId: item.subjectId,
                 remark: item.remark,
                 taxRate: item.taxRate,
-                invoiceType: item.invoiceType
+                invoiceType: item.invoiceType,
+                invoiceInfoId: item.invoiceInfoId
             }))
         }else{
             var fukuanList = []

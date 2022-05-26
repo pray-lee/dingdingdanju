@@ -127,9 +127,11 @@ Page({
         this.setData({
             animationInfo: animation.export()
         })
-        this.getSelectOcrListFromStorage()
-        this.getBillInvoiceDetail()
-        this.getOcrListFromListFromStorage()
+        setTimeout(() => {
+            this.getSelectOcrListFromStorage()
+            this.getBillInvoiceDetail()
+            this.getOcrListFromListFromStorage()
+        })
         // =======================
         this.getRemarksFromStorage()
         this.getImportListFromStorage()
@@ -432,6 +434,19 @@ Page({
         this.onAddHide()
     },
     saveInvoice(data) {
+        data.forEach(item => {
+            if(item.formatJshj) {
+                delete item.formatJshj
+            }
+        })
+        // 飞机行程单特殊处理
+        data.forEach(item => {
+            if(item.invoiceType == '93') {
+                if(!item.qtsf) {
+                    item.qtsf = 0
+                }
+            }
+        })
         this.addLoading()
         this.addSuffix(data)
         request({
@@ -464,7 +479,7 @@ Page({
         data && data.length && data.forEach(item => {
             Object.keys(item).forEach(key => {
                 if(key == 'kprq' || key == 'rq') {
-                    if(item[key].indexOf(' ') < 0)
+                    if(typeof item[key] == 'string' && item[key].indexOf(' ') < 0)
                         item[key] = `${item[key]} 00:00:00`
                 }
             })
@@ -523,14 +538,13 @@ Page({
         const tempData = clone(this.data.importList)
         tempData[this.data.invoiceIndex].applicationAmount = applicationAmount
         tempData[this.data.invoiceIndex].formatApplicationAmount = formatNumber(Number(applicationAmount).toFixed(2))
+        this.setData({
+            importList: tempData.map(item => ({...clone(item)}))
+        })
         dd.setStorageSync({
             key: 'importList',
             data: tempData
         })
-        this.setData({
-            importList: tempData
-        })
-
     },
     deleteInvoice(e) {
         const index = e.currentTarget.dataset.index

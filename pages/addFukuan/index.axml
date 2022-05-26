@@ -115,6 +115,7 @@
                                 <view class="remark-title">事由：</view>
                                 <view class="remark-content" a:if="{{item.remark}}">{{item.remark}}</view>
                                 <view class="remark-content" a:else>无</view>
+                                <view class="remark-content has-invoice" a:if="{{item.invoiceInfoId}}">已有发票</view>
                             </view>
                             <view onTap="showFukuanDetail" data-index="{{index}}"
                                   class="form-row-content ellipsis borrow-remark baoxiaoDetail-right"

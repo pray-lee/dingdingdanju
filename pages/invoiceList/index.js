@@ -219,7 +219,9 @@ Page({
                     if(res.data.obj.results.length) {
                         res.data.obj.results.forEach(item => {
                             item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
-                            item.kprq = item.kprq.split(' ')[0]
+                            if(item.kprq) {
+                                item.kprq = item.kprq.split(' ')[0]
+                            }
                         })
                     }
                     this.setData({
@@ -441,6 +443,19 @@ Page({
         })
     },
     saveInvoice(data) {
+        data.forEach(item => {
+            if(item.formatJshj) {
+                delete item.formatJshj
+            }
+        })
+        // 飞机行程单特殊处理
+        data.forEach(item => {
+            if(item.invoiceType == '93') {
+                if(!item.qtsf) {
+                    item.qtsf = 0
+                }
+            }
+        })
         this.addLoading()
         this.addSuffix(data)
         request({
@@ -471,7 +486,7 @@ Page({
     addSuffix(data) {
         data && data.length && data.forEach(item => {
             Object.keys(item).forEach(key => {
-                if(key == 'kprq' || key == 'rq') {
+                if(typeof item[key] == 'string' && key == 'kprq' || key == 'rq') {
                     if(item[key].indexOf(' ') < 0)
                         item[key] = `${item[key]} 00:00:00`
                 }

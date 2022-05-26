@@ -15,6 +15,7 @@ Page({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
         const fukuanDetail = dd.getStorageSync({key: 'fukuanDetail'}).data
+        console.log(fukuanDetail, 'fukuanDetail')
         // ==========发票相关=========
         if(fukuanDetail.invoiceInfoId) {
             this.getInvoiceDetailById(fukuanDetail.invoiceInfoId)

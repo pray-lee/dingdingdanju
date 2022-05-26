@@ -240,7 +240,7 @@
                 <view class="form-row" onTap="onBusinessFocus" data-name="rq">
                     <view class="form-row-label"><text class="require">*</text>乘坐日期</view>
                     <view class="form-row-content">
-                        <view data-name="businessDateTime">{{submitData.rq}}</view>
+                        <view data-name="businessDateTime">{{submitData.invoiceDetailEntityList[0].rq}}</view>
                     </view>
                     <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
                 </view>
@@ -269,7 +269,7 @@
                 <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>其他税费</view>
                     <view class="form-row-content">
-                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.qtsf}}" placeholder="请输入其他税费" data-name="qtsf" onInput="onBlur"/>
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.qtsf || 0}}" placeholder="请输入其他税费" data-name="qtsf" onInput="onBlur"/>
                     </view>
                 </view>
                 <view class="form-line"/>

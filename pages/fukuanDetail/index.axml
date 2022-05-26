@@ -92,10 +92,20 @@
                         </view>
                     </view>
                 </view>
+                <view class="add-invoice-btn" onTap="onAddShow">请添加发票</view>
             </view>
         </view>
     </scroll-view>
     <view class="btn-area {{isPhoneXSeries ? 'iphoneX' : ''}}" hidden="{{btnHidden}}">
         <button onTap="submitFukuanDetail" class="submit-btn">保存</button>
     </view>
+    <!-- 新增单据弹框 -->
+    <view class="add-page" animation="{{animationInfo}}">
+        <view class="invoice-input-type">
+            <view class="invoice-input-btn invoice-file" onTap="handleUpload">智能拍票</view>
+            <view class="invoice-input-btn invoice-input" onTap="invoiceInput">手录发票</view>
+            <view class="invoice-input-btn invoice-select" onTap="invoiceSelect">个人票夹</view>
+        </view>
+    </view>
+    <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

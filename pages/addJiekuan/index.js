@@ -606,7 +606,7 @@ Page({
     },
     calculateExchangeRate(origin) {
         var exchangeRate = this.data.submitData.exchangeRate
-        var value = NP.times(exchangeRate, origin)
+        var value = NP.divide(origin, exchangeRate)
         this.setData({
             submitData: {
                 ...this.data.submitData,

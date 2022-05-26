@@ -24,17 +24,23 @@ Page({
             '87': '完税证明',
             '00': '其他未知票种',
         },
-        ocrList: []
+        ocrList: [],
+        accountbookId: ''
     },
     onLoad() {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
+        // 发票
+        this.getAccountbookId()
     },
     onShow() {
         let fukuanDetail = dd.getStorageSync({key: 'fukuanDetail'}).data
-        fukuanDetail.formatUnverifyAmount = formatNumber(Number(fukuanDetail.unverifyAmount).toFixed(2))
         if(!!fukuanDetail) {
+            console.log(fukuanDetail, 'fukuanDetail')
+            if(fukuanDetail.unverifyAmount) {
+                fukuanDetail.formatUnverifyAmount = formatNumber(Number(fukuanDetail.unverifyAmount).toFixed(2))
+            }
             this.setData({
                 fukuanDetail
             })
@@ -50,6 +56,19 @@ Page({
                 key: 'fukuanDetail'
             })
         }
+        // =======发票相关==========
+        var animation = dd.createAnimation({
+            duration: 250,
+            timeFunction: 'ease-in'
+        })
+        this.animation = animation
+        this.setData({
+            animationInfo: animation.export()
+        })
+        this.getSelectOcrListFromStorage()
+        this.getBillInvoiceDetail()
+        this.getOcrListFromListFromStorage()
+        // =======================
     },
     onKaipiaoBlur(e) {
         var tempData = clone(this.data.fukuanDetail)
@@ -81,6 +100,7 @@ Page({
             })
             return
         }
+        console.log(this.data.fukuanDetail, 'fukuandetail....')
         dd.setStorage({
             key: 'fukuanDetail',
             data: this.data.fukuanDetail,
@@ -108,13 +128,261 @@ Page({
         })
     },
     // 发票
+    onAddShow(e) {
+        this.animation.translateY(0).step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: false
+        })
+        const index = e.currentTarget.dataset.index
+        this.setData({
+            invoiceIndex: index
+        })
+    },
+    onAddHide() {
+        this.animation.translateY('100%').step()
+        this.setData({
+            animationInfo: this.animation.export(),
+            maskHidden: true
+        })
+    },
+    // 发票
+    handleUpload() {
+        dd.chooseImage({
+            count: 9,
+            success: res => {
+                this.uploadFile(res.filePaths)
+            },
+            fail: res => {
+                console.log('用户取消操作')
+            }
+        })
+    },
+    invoiceInput() {
+        dd.setStorageSync({
+            key: 'fromDetail',
+            data: 'fromDetail'
+        })
+        dd.setStorageSync({
+            key: 'accountbookId',
+            data: this.data.accountbookId
+        })
+        dd.navigateTo({
+            url: '/pages/invoiceInput/index'
+        })
+    },
+    invoiceSelect() {
+        dd.navigateTo({
+            url: '/pages/invoiceListSelect/index?accountbookId=' + this.data.accountbookId
+        })
+    },
+    /**
+     *
+     * @param 上传图片字符串列表
+     */
+    uploadFile(array) {
+        if (array.length) {
+            let promiseList = []
+            array.forEach(item => {
+                promiseList.push(new Promise((resolve, reject) => {
+                    this.addLoading()
+                    dd.uploadFile({
+                        url: app.globalData.url + 'aliyunController/uploadImages.do',
+                        fileType: 'image',
+                        fileName: item,
+                        filePath: item,
+                        formData: {
+                            accountbookId: 'accountbook-invoice',
+                            submitterDepartmentId: 'department-invoice'
+                        },
+                        success: res => {
+                            const result = JSON.parse(res.data)
+                            if (result.obj && result.obj.length) {
+                                const file = result.obj[0]
+                                resolve(file)
+                            } else {
+                                reject('上传失败')
+                            }
+                        },
+                        fail: res => {
+                            reject(res)
+                        },
+                        complete: res => {
+                            this.hideLoading()
+                        }
+                    })
+                }))
+            })
+            Promise.all(promiseList).then(res => {
+                // 提交成功的处理逻辑
+                var billFilesList = []
+                res.forEach(item => {
+                    billFilesList.push({
+                        name: item.name,
+                        uri: item.uri,
+                        size: item.size
+                    })
+                })
+                this.doOCR(billFilesList)
+            }).catch(error => {
+                dd.alert({
+                    content: '上传失败',
+                    buttonText: '好的',
+                    success: res => {
+                        console.log(res, '上传失败')
+                    }
+                })
+            })
+        }
+    },
+    doOCR(fileList) {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doOCR',
+            data: {
+                fileList: JSON.stringify(fileList),
+            },
+            method: 'POST',
+            success: res => {
+                if(res.data.success) {
+                    if(res.data.obj.length){
+                        const result = this.hasInvoiceType(res.data.obj)
+                        // 去发票编辑页面
+                        if(result) {
+                            dd.setStorage({
+                                key: 'ocrList',
+                                data:res.data.obj,
+                                success: () => {
+                                    dd.setStorageSync({
+                                        key: 'accountbookId',
+                                        data: this.data.accountbookId
+                                    })
+                                    dd.navigateTo({
+                                        url: '/pages/invoiceSelect/index'
+                                    })
+                                }
+                            })
+                        }
+                    }
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
+                }
+            }
+        })
+    },
+    hasInvoiceType(data) {
+        var noSupportInvoiceType = data.filter(item => !!this.data.nosupportInvoiceType[item.invoiceType])
+        if(noSupportInvoiceType && noSupportInvoiceType.length) {
+            dd.alert({
+                content: `暂不支持${this.data.nosupportInvoiceType[noSupportInvoiceType[0].invoiceType]}，请重新上传`,
+                buttonText: '好的'
+            })
+            return false
+        }
+        return true
+    },
+    // 从上传识别之后的列表选
+    getSelectOcrListFromStorage() {
+        const ocrList = dd.getStorageSync({key: 'selectOcrList'}).data
+        if(ocrList) {
+            this.saveInvoice(ocrList)
+            dd.removeStorage({
+                key: 'selectOcrList',
+                success: () => {}
+            })
+        }
+    },
+    // 从发票录入选
+    getBillInvoiceDetail() {
+        const data = dd.getStorageSync({key: 'billInvoiceDetail'}).data
+        if(data) {
+            this.saveInvoice([data])
+            dd.removeStorage({
+                key: 'billInvoiceDetail',
+                success: () => {}
+            })
+        }
+    },
+    // 从个人票夹选
+    getOcrListFromListFromStorage() {
+        const ocrList = dd.getStorageSync({key: 'ocrListFromList'}).data
+        if(ocrList) {
+            this.setInvoiceList(ocrList)
+            this.setInvoiceInFukuanDetail(ocrList)
+            dd.removeStorage({
+                key: 'ocrListFromList',
+                success: () => {}
+            })
+        }
+        this.onAddHide()
+    },
+    saveInvoice(data) {
+        data.forEach(item => {
+            if(item.formatJshj) {
+                delete item.formatJshj
+            }
+        })
+        // 飞机行程单特殊处理
+        data.forEach(item => {
+            if(item.invoiceType == '93') {
+                if(!item.qtsf) {
+                    item.qtsf = 0
+                }
+            }
+        })
+        this.addLoading()
+        this.addSuffix(data)
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceInfoController.do?doAddList',
+            method: 'POST',
+            headers:  {'Content-Type': 'application/json;charset=utf-8'},
+            data: JSON.stringify(data),
+            success: res => {
+                if(res.data.success) {
+                    this.setInvoiceList(res.data.obj)
+                    this.setInvoiceInFukuanDetail(res.data.obj)
+                }else{
+                    dd.alert({
+                        content: res.data.msg,
+                        buttonText: '好的'
+                    })
+                    console.log('发票保存失败')
+                }
+            },
+            fail: res => {
+                console.log(res, 'error')
+            },
+            complete: res => {
+                this.onAddHide()
+            }
+        })
+    },
+    addSuffix(data) {
+        data && data.length && data.forEach(item => {
+            Object.keys(item).forEach(key => {
+                if(typeof item[key] == 'string' && key == 'kprq' || key == 'rq') {
+                    if(item[key].indexOf(' ') < 0)
+                        item[key] = `${item[key]} 00:00:00`
+                }
+            })
+        })
+    },
     setInvoiceList(data) {
         if(data && data.length) {
             data.forEach(item => {
                 item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
             })
             this.setData({
-                ocrList: data
+                ocrList: data,
+                fukuanDetail: {
+                    ...this.data.fukuanDetail,
+                    ocrList: data,
+                }
             })
         }
     },
@@ -127,7 +395,7 @@ Page({
             ocrList: list,
             fukuanDetail: {
                 ...this.data.fukuanDetail,
-                ocrList: []
+                ocrList: list
             }
         })
         this.removeInvoiceInfoId(invoiceInfoId)
@@ -145,8 +413,17 @@ Page({
             },
             success: res => {
                 if(res.data.success) {
+                    if(res.data.obj.length) {
+                        res.data.obj.forEach(item => {
+                            item.formatJshj = formatNumber(Number(item.jshj).toFixed(2))
+                        })
+                    }
                     this.setData({
-                        ocrList: res.data.obj
+                        ocrList: res.data.obj,
+                        fukuanDetail: {
+                            ...this.data.fukuanDetail,
+                            ocrList: res.data.obj,
+                        }
                     })
                 }else{
                     dd.alert({
@@ -186,12 +463,20 @@ Page({
             }
         })
     },
+    // 获取账簿id
+    getAccountbookId() {
+        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
+        this.setData({
+            accountbookId
+        })
+    },
     setInvoiceApplicationAmount(data) {
         // applicationAmount
         let applicationAmount = 0
         data.forEach(item => {
             applicationAmount += parseFloat(item.jshj)
         })
+        console.log(applicationAmount, 'applicationAmount.......')
         this.setData({
             fukuanDetail: {
                 ...this.data.fukuanDetail,
