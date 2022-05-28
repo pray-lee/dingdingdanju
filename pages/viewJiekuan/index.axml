@@ -130,7 +130,8 @@
                     <view class="borrow-item" a:for="{{result.billDetailList}}">
                         <view class="form-row">
                             <view class="form-row-content">
-                                <text>{{item.borrowAmount}}</text>
+                                <text a:if="{{multiCurrency}}">{{item.originBorrowAmount}}</text>
+                                <text a:else>{{item.borrowAmount}}</text>
                             </view>
                             <view class="borrow-line"></view>
                             <block>

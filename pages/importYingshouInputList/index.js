@@ -5,7 +5,7 @@ import {formatNumber, request, validFn} from "../../util/getErrorMessage";
 const app = getApp()
 Page({
     data: {
-        invoiceIndex: null,
+        invoiceIndex: 0,
         isPhoneXSeries: false,
         btnHidden: false,
         importList: [],
@@ -29,13 +29,22 @@ Page({
             '00': '其他未知票种',
         },
         accountbookId: '',
+        origin: ''
     },
-    onLoad() {
+    onHide() {
+        console.log('hide')
+    },
+    onLoad(query) {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries
         })
         // 发票
         this.getAccountbookId()
+        if(query && query.origin) {
+            this.setData({
+                origin: query.origin
+            })
+        }
     },
     bindObjPickerChange(e) {
         var id = e.currentTarget.dataset.id
@@ -107,6 +116,12 @@ Page({
         this.setData({
             importList: tempData
         })
+        dd.removeStorageSync({
+            key: 'savedImportList'
+        })
+        dd.removeStorageSync({
+            key: 'importList'
+        })
     },
     // 获取开票内容
     getRemarksFromStorage(){
@@ -134,7 +149,10 @@ Page({
         })
         // =======================
         this.getRemarksFromStorage()
-        this.getImportListFromStorage()
+        if(!dd.getStorageSync({key: 'invoiceImportListTag'}).data)
+            this.getImportListFromStorage()
+        else
+            dd.removeStorageSync({key: 'invoiceImportListTag'})
     },
     onInput(e) {
         const value = e.detail.value
@@ -173,19 +191,10 @@ Page({
             })
             return
         }
-        dd.removeStorageSync({
-            key: 'tempImportList'
-        })
-        dd.removeStorageSync({
-            key: 'savedImportList'
-        })
-        dd.removeStorageSync({
-            key: 'importList'
-        })
         this.data.importList.forEach(item => {
             item.formatApplicationAmount = formatNumber(Number(item.applicationAmount).toFixed(2))
             item.billId = item.id
-            item.subjectName = item['subjectEntity.fullSubjectName']
+            item.subjectName = item['subjectName']
         })
         dd.setStorage({
             key: 'importCommonList',
@@ -195,6 +204,15 @@ Page({
                     delta: 2
                 })
             }
+        })
+        dd.removeStorageSync({
+            key: 'tempImportList'
+        })
+        dd.removeStorageSync({
+            key: 'savedImportList'
+        })
+        dd.removeStorageSync({
+            key: 'importList'
         })
     },
     suppleImportList() {
@@ -260,6 +278,7 @@ Page({
     },
     // 发票相关
     handleUpload() {
+        dd.setStorageSync({key: 'invoiceImportListTag', data: 1})
         dd.chooseImage({
             count: 9,
             success: res => {
@@ -267,11 +286,12 @@ Page({
             },
             fail: res => {
                 console.log('用户取消操作')
+                dd.removeStorageSync({key: 'invoiceImportListTag'})
             }
         })
     },
     invoiceInput() {
-        console.log(this.data.accountbookId, 'accountbookId')
+        dd.setStorageSync({key: 'invoiceImportListTag', data: 1})
         dd.setStorageSync({
             key: 'fromDetail',
             data: 'fromDetail'
@@ -285,6 +305,7 @@ Page({
         })
     },
     invoiceSelect() {
+        dd.setStorageSync({key: 'invoiceImportListTag', data: 1})
         dd.navigateTo({
             url: '/pages/invoiceListSelect/index?accountbookId=' + this.data.accountbookId
         })
@@ -424,8 +445,15 @@ Page({
     getOcrListFromListFromStorage() {
         const ocrList = dd.getStorageSync({key: 'ocrListFromList'}).data
         if(ocrList) {
-            this.setInvoiceList(ocrList)
-            this.setInvoiceInFukuanDetail(ocrList)
+            let data = []
+            let importObj = this.data.importList[this.data.invoiceIndex]
+            if(importObj.ocrList) {
+                data = clone(importObj.ocrList).concat(ocrList)
+            }else {
+                data = ocrList
+            }
+            this.setInvoiceList(data)
+            this.setInvoiceInFukuanDetail(data)
             dd.removeStorage({
                 key: 'ocrListFromList',
                 success: () => {}
@@ -457,8 +485,16 @@ Page({
             data: JSON.stringify(data),
             success: res => {
                 if(res.data.success) {
-                    this.setInvoiceList(res.data.obj)
-                    this.setInvoiceInFukuanDetail(res.data.obj)
+                    let ocrList = []
+                    let importObj = this.data.importList[this.data.invoiceIndex]
+                    if(importObj.ocrList) {
+                        ocrList = clone(importObj.ocrList).concat(res.data.obj)
+                    }else{
+                        ocrList = clone(res.data.obj)
+                    }
+
+                    this.setInvoiceList(ocrList)
+                    this.setInvoiceInFukuanDetail(ocrList)
                 }else{
                     dd.alert({
                         content: res.data.msg,

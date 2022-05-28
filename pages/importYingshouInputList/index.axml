@@ -1,6 +1,5 @@
 <!--   导入应收单修改   -->
-<view class="form-wrapper">
-    <view class="add-extra-page" onTap="onClick">
+<view class="form-wrapper"> <view class="add-extra-page" onTap="onClick">
     <form>
         <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}" onScroll="onScroll" scroll-into-view="{{scrollId}}" scroll-with-animation>
             <view class="baoxiao-item" a:if="{{importList.length}}" a:for="{{importList}}" id="{{index + 1}}">
@@ -11,7 +10,7 @@
                     <view class="form-row" onTap="showContent">
                         <view class="form-row-label"><text class="require">*</text>销售类型</view>
                         <view class="form-row-content">
-                            <view class="mock-input">{{item['subjectEntity.fullSubjectName']}}</view>
+                            <view class="mock-input">{{item['subjectName']}}</view>
                         </view>
                     </view>
                     <view class="form-line"/>
@@ -63,62 +62,64 @@
                             </view>
                         </view>
                     </view>
-                    <view class="form-line"/>
-                    <view class="form-row">
-                        <view class="form-row-label">发票</view>
-                        <view class="invoice-list">
-                            <view class="invoice-item" a:for="{{item.ocrList}}" a:if="{{item.ocrList}}" a:for-item="ocr" a:for-index="idx">
-                                <view class="delete-btn" onTap="deleteInvoice" data-index="{{idx}}" data-importindex="{{index}}"></view>
-                                <view class="invoice-info" onTap="goToInvoiceDetail" data-index="{{idx}}">
-                                    <view class="invoice-left-wrapper">
-                                        <block a:if="{{ocr.invoiceType == '01' || ocr.invoiceType == '04' || ocr.invoiceType == '08' || ocr.invoiceType == '10' || ocr.invoiceType == '11'}}">
-                                            <view class="invoice-title">销方名称：{{ocr.xhfmc || '无'}}</view>
-                                            <view class="invoice-title">开票日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">增值税发票</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '95'}}">
-                                            <view class="invoice-title">发票代码：{{ocr.fpdm || '无'}}</view>
-                                            <view class="invoice-title">发票号码：{{ocr.fphm || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">定额发票</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '92'}}">
-                                            <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
-                                            <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">火车票</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '93'}}">
-                                            <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
-                                            <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">飞机行程单</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '91'}}">
-                                            <view class="invoice-title">发票代码：{{ocr.fpdm || '无'}}</view>
-                                            <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">出租车票</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '88' || ocr.invoiceType == '94'}}">
-                                            <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
-                                            <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">车船票</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '98'}}">
-                                            <view class="invoice-title">入口：{{ocr.rk || '无'}}-出口：{{ocr.ck || '无'}}</view>
-                                            <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">过路费</view>
-                                        </block>
-                                        <block a:if="{{ocr.invoiceType == '97'}}">
-                                            <view class="invoice-title">收款方名称：{{ocr.xhfmc || '无'}}</view>
-                                            <view class="invoice-title">开票日期：{{ocr.kprq || '无'}}</view>
-                                            <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">通用机打发票</view>
-                                        </block>
+                    <block a:if="{{origin == 'fukuan'}}">
+                        <view class="form-line"/>
+                        <view class="form-row">
+                            <view class="form-row-label">发票</view>
+                            <view class="invoice-list">
+                                <view class="invoice-item" a:for="{{item.ocrList}}" a:if="{{item.ocrList}}" a:for-item="ocr" a:for-index="idx">
+                                    <view class="delete-btn" onTap="deleteInvoice" data-index="{{idx}}" data-importindex="{{index}}"></view>
+                                    <view class="invoice-info" onTap="goToInvoiceDetail" data-index="{{idx}}">
+                                        <view class="invoice-left-wrapper">
+                                            <block a:if="{{ocr.invoiceType == '01' || ocr.invoiceType == '04' || ocr.invoiceType == '08' || ocr.invoiceType == '10' || ocr.invoiceType == '11'}}">
+                                                <view class="invoice-title">销方名称：{{ocr.xhfmc || '无'}}</view>
+                                                <view class="invoice-title">开票日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">增值税发票</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '95'}}">
+                                                <view class="invoice-title">发票代码：{{ocr.fpdm || '无'}}</view>
+                                                <view class="invoice-title">发票号码：{{ocr.fphm || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">定额发票</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '92'}}">
+                                                <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
+                                                <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">火车票</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '93'}}">
+                                                <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
+                                                <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">飞机行程单</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '91'}}">
+                                                <view class="invoice-title">发票代码：{{ocr.fpdm || '无'}}</view>
+                                                <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">出租车票</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '88' || ocr.invoiceType == '94'}}">
+                                                <view class="invoice-title">始发站：{{ocr.cfzd || '无'}}-终点站：{{ocr.ddzd || '无'}}</view>
+                                                <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">车船票</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '98'}}">
+                                                <view class="invoice-title">入口：{{ocr.rk || '无'}}-出口：{{ocr.ck || '无'}}</view>
+                                                <view class="invoice-title">日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">过路费</view>
+                                            </block>
+                                            <block a:if="{{ocr.invoiceType == '97'}}">
+                                                <view class="invoice-title">收款方名称：{{ocr.xhfmc || '无'}}</view>
+                                                <view class="invoice-title">开票日期：{{ocr.kprq || '无'}}</view>
+                                                <view class="invoice-tag {{'invoice-type_' + ocr.invoiceType}}">通用机打发票</view>
+                                            </block>
+                                        </view>
+                                        <view class="invoice-right">{{ocr.formatJshj}}</view>
                                     </view>
-                                    <view class="invoice-right">{{ocr.formatJshj}}</view>
                                 </view>
                             </view>
+                            <view class="add-invoice-btn" onTap="onAddShow" data-index="{{index}}">请添加发票</view>
                         </view>
-                        <view class="add-invoice-btn" onTap="onAddShow" data-index="{{index}}">请添加发票</view>
-                    </view>
-                    <view class="form-line"></view>
+                        <view class="form-line"></view>
+                    </block>
                     <view data-id="{{item.id}}" onTap="deleteImportInputList" class="form-row" style="min-height: 10rpx; display:flex;justify-content: center;align-items: center">
                         <view class="delete-icon">删除</view>
                     </view>
@@ -129,6 +130,8 @@
             <button class="submit-btn cancel-extra save-draft" onTap="suppleImportList">补充导入</button>
             <button class="submit-btn" onTap="saveImportList">保存信息</button>
         </view>
+        </form>
+    </view>
         <!-- 新增单据弹框 -->
         <view class="add-page" animation="{{animationInfo}}">
             <view class="invoice-input-type">
@@ -137,6 +140,5 @@
                 <view class="invoice-input-btn invoice-select" onTap="invoiceSelect">个人票夹</view>
             </view>
         </view>
-        </form>
-    </view>
+        <view class="mask" hidden="{{maskHidden}}" onTap="onAddHide"></view>
 </view>

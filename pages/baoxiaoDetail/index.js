@@ -709,8 +709,9 @@ Page({
     getOcrListFromListFromStorage() {
         const ocrList = dd.getStorageSync({key: 'ocrListFromList'}).data
         if(ocrList) {
-            this.setInvoiceList(ocrList)
-            this.setInvoiceInBaoxiaoDetail(ocrList)
+            const data = clone(this.data.ocrList).concat(ocrList)
+            this.setInvoiceList(data)
+            this.setInvoiceInBaoxiaoDetail(data)
             dd.removeStorage({
                 key: 'ocrListFromList',
                 success: () => {}
@@ -742,8 +743,9 @@ Page({
             data: JSON.stringify(data),
             success: res => {
                 if(res.data.success) {
-                    this.setInvoiceList(res.data.obj)
-                    this.setInvoiceInBaoxiaoDetail(res.data.obj)
+                    const ocrList = clone(this.data.ocrList).concat(res.data.obj)
+                    this.setInvoiceList(ocrList)
+                    this.setInvoiceInBaoxiaoDetail(ocrList)
                 }else{
                     dd.alert({
                         content: res.data.msg,
@@ -950,9 +952,7 @@ Page({
             },
             success: res => {
                 if(res.data.success) {
-                    this.setData({
-                        ocrList: res.data.obj
-                    })
+                    this.setInvoiceList(res.data.obj)
                 }else{
                     dd.alert({
                         content: '获取发票详情失败',

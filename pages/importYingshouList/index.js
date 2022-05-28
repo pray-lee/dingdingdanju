@@ -12,9 +12,18 @@ Page({
         isAllSelect:false,
         totalAmount: '0.00',
         num: 0,
-        inputValue: ''
+        inputValue: '',
+        // 发票
+        origin: ''
+
     },
-    onLoad() {
+    // 发票
+    onLoad(query) {
+        if(query && query.origin)
+       this.setData({
+           origin: query.origin
+       })
+
     },
     onShow() {
         let tempImportList = dd.getStorageSync({
@@ -212,7 +221,7 @@ Page({
                         totalAmount: '0.00'
                     })
                     dd.navigateTo({
-                        url: '/pages/importYingshouInputList/index'
+                        url: '/pages/importYingshouInputList/index?origin=' + this.data.origin
                     })
                 }
             })

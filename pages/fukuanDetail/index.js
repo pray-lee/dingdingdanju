@@ -311,8 +311,9 @@ Page({
     getOcrListFromListFromStorage() {
         const ocrList = dd.getStorageSync({key: 'ocrListFromList'}).data
         if(ocrList) {
-            this.setInvoiceList(ocrList)
-            this.setInvoiceInFukuanDetail(ocrList)
+            const data = clone(this.data.ocrList).concat(ocrList)
+            this.setInvoiceList(data)
+            this.setInvoiceInFukuanDetail(data)
             dd.removeStorage({
                 key: 'ocrListFromList',
                 success: () => {}
@@ -344,8 +345,9 @@ Page({
             data: JSON.stringify(data),
             success: res => {
                 if(res.data.success) {
-                    this.setInvoiceList(res.data.obj)
-                    this.setInvoiceInFukuanDetail(res.data.obj)
+                    const ocrList = clone(this.data.ocrList).concat(res.data.obj)
+                    this.setInvoiceList(ocrList)
+                    this.setInvoiceInFukuanDetail(ocrList)
                 }else{
                     dd.alert({
                         content: res.data.msg,
