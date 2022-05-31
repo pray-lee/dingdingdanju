@@ -88,9 +88,9 @@ Page({
                                 accountbookIndex = index
                             }
                         })
-                        dd.removeStorage({
-                            key: 'accountbookId'
-                        })
+                        // dd.removeStorage({
+                        //     key: 'accountbookId'
+                        // })
                     }
                     this.setData({
                         accountbookList: res.data.obj,

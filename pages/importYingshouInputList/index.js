@@ -68,6 +68,7 @@ Page({
         })
     },
     getImportListFromStorage() {
+        dd.removeStorageSync({key: 'invoiceImportListTag'})
         const importList = dd.getStorageSync({key: 'importList'}).data
         const savedImportList = dd.getStorageSync({key: 'savedImportList'}).data || []
         console.log(importList, 'importList')
@@ -149,10 +150,9 @@ Page({
         })
         // =======================
         this.getRemarksFromStorage()
-        if(!dd.getStorageSync({key: 'invoiceImportListTag'}).data)
+        if(!dd.getStorageSync({key: 'invoiceImportListTag'}).data) {
             this.getImportListFromStorage()
-        else
-            dd.removeStorageSync({key: 'invoiceImportListTag'})
+        }
     },
     onInput(e) {
         const value = e.detail.value
@@ -286,7 +286,7 @@ Page({
             },
             fail: res => {
                 console.log('用户取消操作')
-                dd.removeStorageSync({key: 'invoiceImportListTag'})
+                // dd.removeStorageSync({key: 'invoiceImportListTag'})
             }
         })
     },
