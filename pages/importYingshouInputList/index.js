@@ -45,6 +45,7 @@ Page({
                 origin: query.origin
             })
         }
+        dd.removeStorageSync({key: 'invoiceImportListTag'})
     },
     bindObjPickerChange(e) {
         var id = e.currentTarget.dataset.id
