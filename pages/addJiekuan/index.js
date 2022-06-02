@@ -2036,5 +2036,27 @@ Page({
         }else{
             this.clearCurrencyData(data)
         }
+    },
+    // 预算
+    getBudgetDetail() {
+        if(!this.data.submitData.subjectId) {
+            dd.alert({
+                content: '请选择科目',
+                buttonText: '好的'
+            })
+            return
+        }
+        if(this.data.submitData.billApEntityListObj.length !== this.data.subjectAuxptyList.length) {
+            dd.alert({
+                content: '请补全辅助核算',
+                buttonText: '好的'
+            })
+            return
+        }
+        // 预算请求
+        const params = {}
+        // request({
+        //     hideLoading: this.hideLoading(),
+        // })
     }
 })
