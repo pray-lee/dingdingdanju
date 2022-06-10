@@ -19,6 +19,10 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 优客工厂
+        "url": "https://www.caika.net/ucommune-test/",
+        agentId: '1676278005',
+        tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
         // agentId: '1298473947',
         // tenantCode: 'db_ck_education',
@@ -112,9 +116,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/ucommune-test/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_ucommune_test",
+        // "url": "https://www.caika.net/ucommune-test/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_ucommune_test",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

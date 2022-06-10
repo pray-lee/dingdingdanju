@@ -64,7 +64,6 @@
                     </view>
                 </view>
                 <view class="form-line"/>
-                    <view class="form-row-label" onTap="getBudgetDetail"><text class="require">*</text>查预算</view>
                 <view class="form-row" onTap="goSubjectPage">
                     <view class="form-row-label"><text class="require">*</text>借款类型</view>
                     <view class="form-row-content">
