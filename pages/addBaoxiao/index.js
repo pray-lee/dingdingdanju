@@ -399,6 +399,7 @@ Page({
                 }
             })
         }
+        console.log(importList, 'importList....................... clearCurrency')
         this.setData({
             currencyTypeIndex: 0,
             currencyTypeList: [],
@@ -1454,7 +1455,6 @@ Page({
     setRenderData(data) {
         // 请求
         this.getAccountbookList(data)
-        console.log(data.borrowBillList, 'data.borrowBillList')
         var importList = data.borrowBillList.map(item => {
             // 外币
             if (data.currencyTypeId) {
@@ -2289,7 +2289,7 @@ Page({
                 })
             }
         } else {
-            this.clearCurrencyData()
+            this.clearCurrencyData(data)
         }
     },
     // 报销类型
