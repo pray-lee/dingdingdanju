@@ -20,7 +20,8 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 优客工厂
-        "url": "https://www.caika.net/ucommune-test/",
+        // "url": "https://www.caika.net/ucommune-test/",
+        "url": "https://www.caika.net/ucommune/",
         agentId: '1676278005',
         tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
