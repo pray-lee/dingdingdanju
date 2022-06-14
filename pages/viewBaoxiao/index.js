@@ -5,6 +5,8 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        // 增加申请人
+        realName: '',
         // =============外币相关============
         multiCurrency: false,
         baseCurrencyName: '',
@@ -105,6 +107,10 @@ Page({
         })
     },
     onLoad(query) {
+        // 增加申请人
+        this.setData({
+            realName: app.globalData.realName
+        })
         this.setData({
             query: {...query}
         })
