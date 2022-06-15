@@ -20,9 +20,9 @@ Page({
     // 发票
     onLoad(query) {
         if(query && query.origin)
-       this.setData({
-           origin: query.origin
-       })
+           this.setData({
+               origin: query.origin
+           })
 
     },
     onShow() {
