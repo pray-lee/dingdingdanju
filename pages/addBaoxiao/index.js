@@ -1899,7 +1899,7 @@ Page({
                 }
             })
         }
-        console.log(this.data.submitData, 'dataaaaaaaaaaa')
+        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
     },
     clearBorrowList(submitData) {
         Object.keys(submitData).forEach(key => {
