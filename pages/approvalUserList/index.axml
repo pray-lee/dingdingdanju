@@ -16,7 +16,7 @@
                     </label>
                 </block>
                 <block a:else>
-                    <label class="radio info-item user-item" a:for="{{userList}}" key="label-{{index}}">
+                    <label class="radio info-item user-item" a:for="{{searchResult}}" key="label-{{index}}">
                         <radio onChange="radioChange" data-index="{{index}}" checked="{{item.checked}}"/>
                         <text class="dept-name user-name">{{item.name}}</text>
                     </label>

@@ -26,6 +26,8 @@ Page({
             formatUnverifyAmount: 'formatUnverifyAmount',
             verificationAmount: 'verificationAmount',
             formatVerificationAmount: 'formatVerificationAmount',
+            totalAmount: 'totalAmount',
+            formatTotalAmount: 'formatTotalAmount'
         },
         // =============审批流相关============
         oaModule: null,
@@ -100,6 +102,7 @@ Page({
             formatApplicationAmount: '',
             originApplicationAmount: '',
             originFormatApplicationAmount: '',
+            totalAmount: 0,
             formatTotalAmount: '',
             formatVerificationAmount: '',
             status: 20,
@@ -179,6 +182,16 @@ Page({
         }, 60)
     },
     formSubmit(e) {
+        // ============= 处理外币提交=================
+        if(!this.data.submitData.isMultiCurrency) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    isMultiCurrency: 0
+                }
+            })
+        }
+        // ============= 处理外币提交=================
         // ==================处理审批流数据==================
         if (this.data.nodeList.length) {
             this.setData({
@@ -292,6 +305,7 @@ Page({
         }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
             // 重新获取科目以后，就要置空报销列表
             this.setData({
                 baoxiaoList: [],
@@ -568,7 +582,6 @@ Page({
                     })
                     this.setApplicationAmount(baoxiaoList)
                     this.setTotalAmount()
-                    this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
                 }
             }
         })
@@ -614,7 +627,6 @@ Page({
         }
         this.setApplicationAmount(baoxiaoList)
         this.setTotalAmount()
-        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
     },
     // 删除得时候把submitData里面之前存的报销列表数据清空
     clearFileList(submitData) {
@@ -935,10 +947,11 @@ Page({
     getOaParams(fields, billType) {
         let params = ''
         fields.forEach(item => {
-            if (this.data.submitData[item]) {
+            if (this.data.submitData[item] || this.data.submitData[item] === 0) {
                 params += '&' + item + '=' + this.data.submitData[item]
             } else {
-                params += '&applicationAmount=' + this.data.submitData.applicationAmount
+                const applicationAmount = this.data.submitData.applicationAmount ? this.data.submitData.applicationAmount : 0
+                params += '&applicationAmount=' + applicationAmount
             }
         })
         params = '&billType=' + billType + params
@@ -1520,6 +1533,8 @@ Page({
                 originFormatApplicationAmount: formatNumber(Number(data.originApplicationAmount).toFixed(2)),
                 originVerificationAmount: data.originVerificationAmount,
                 originFormatVerificationAmount: formatNumber(Number(data.originVerificationAmount).toFixed(2)),
+                originTotalAmount: data.originTotalAmount,
+                originFormatTotalAmount:formatNumber(Number(data.originTotalAmount).toFixed(2)),
                 exchangeRate: data.exchangeRate,
                 // 报销类型
                 reimbursementType: data.reimbursementType || '',
@@ -1538,7 +1553,7 @@ Page({
             this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
             clearTimeout(t)
             t = null
-        }, 1000)
+        })
     },
     // 辅助核算请求url分类
     getAuxptyUrl(accountbookId, auxptyid) {
@@ -1760,6 +1775,10 @@ Page({
                                 key: 'multiCurrency',
                                 data: this.data.multiCurrency
                             })
+                        }else{
+                            dd.removeStorageSync({
+                                key: 'multiCurrency',
+                            })
                         }
                         dd.setStorage({
                             key: 'tempImportList',
@@ -1881,6 +1900,8 @@ Page({
         var verificationAmount = this.setBorrowAmount(this.data.importList) || 0
         // 应付款金额
         var totalAmount = Number(applicationAmount) - Number(verificationAmount)
+        // 记录一下计算之前的总数
+        var oldTotalAmount = this.data.submitData[this.data.amountField.totalAmount]
         if (this.data.multiCurrency) {
             this.setData({
                 submitData: {
@@ -1899,7 +1920,9 @@ Page({
                 }
             })
         }
-        this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
+        if(totalAmount != oldTotalAmount) {
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'baoxiaoList', 'totalAmount', 'reimbursementType'])
+        }
     },
     clearBorrowList(submitData) {
         Object.keys(submitData).forEach(key => {
@@ -2210,7 +2233,10 @@ Page({
                 verificationAmount: multiCurrency ? 'originVerificationAmount' : 'verificationAmount',
                 formatVerificationAmount: multiCurrency ? 'originFormatVerificationAmount' : 'formatVerificationAmount',
                 unverifyAmount: multiCurrency ? 'originUnverifyAmount' : 'unverifyAmount',
-                formatUnverifyAmount: multiCurrency ? 'originFormatUnverifyAmount' : 'formatUnverifyAmount'
+                formatUnverifyAmount: multiCurrency ? 'originFormatUnverifyAmount' : 'formatUnverifyAmount',
+                totalAmount: multiCurrency ? 'originTotalAmount' : 'totalAmount',
+                formatTotalAmount: multiCurrency ? 'originFormatTotalAmount' : 'formatTotalAmount',
+
             }
         })
         if (multiCurrency) {
@@ -2286,6 +2312,7 @@ Page({
                 borrowBillList = data.borrowBillList.map(item => {
                     return {
                         ...item,
+                        'subject.fullSubjectName':item.subject.fullSubjectName,
                         originApplicationAmount: item.originApplicationAmount ? item.originApplicationAmount : item.applicationAmount,
                         originFormatApplicationAmount: item.originApplicationAmount ? formatNumber(Number(item.originApplicationAmount).toFixed(2)) : formatNumber(Number(item.applicationAmount).toFixed(2))
                     }

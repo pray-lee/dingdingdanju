@@ -134,6 +134,16 @@ Page({
         }
     },
     formSubmit(e) {
+        // ============= 处理外币提交=================
+        if(!this.data.submitData.isMultiCurrency) {
+            this.setData({
+                submitData: {
+                    ...this.data.submitData,
+                    isMultiCurrency: 0
+                }
+            })
+        }
+        // ============= 处理外币提交=================
         // ==================处理审批流数据==================
         if(this.data.nodeList.length) {
             this.setData({
@@ -224,6 +234,7 @@ Page({
         }
         // --------------------------------------------------------
         if (name === 'accountbookId') {
+            this.showOaUserNodeListUseField(['accountbookId', 'submitterDepartmentId', 'billDetailListObj'])
             this.setData({
                 applicantIndex: 0,
                 submitData: {
@@ -1729,7 +1740,7 @@ Page({
             this.setRenderProgress(JSON.parse(data.oaBillUserNodeListJson))
             clearTimeout(t)
             t = null
-        }, 1000)
+        })
     },
     goInfoList() {
         dd.navigateTo({
