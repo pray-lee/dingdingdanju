@@ -24,10 +24,10 @@ App({
         // agentId: '1630560875',
         // tenantCode: 'db_ck_wenhua2021',
         // 优客工厂
-        // "url": "https://www.caika.net/ucommune-test/",
+        "url": "https://www.caika.net/ucommune-test/",
         // "url": "https://www.caika.net/ucommune/",
-        // agentId: '1676278005',
-        // tenantCode: 'db_ck_ucommune',
+        agentId: '1676278005',
+        tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
         // "url": "https://www.caika.net/caika/",
         // agentId: '1298473947',
