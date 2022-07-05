@@ -19,33 +19,45 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 大方向
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1630560875',
+        // tenantCode: 'db_ck_wenhua2021',
         // 优客工厂
-        "url": "https://www.caika.net/ucommune-test/",
+        // "url": "https://www.caika.net/ucommune-test/",
         // "url": "https://www.caika.net/ucommune/",
-        agentId: '1676278005',
-        tenantCode: 'db_ck_ucommune',
+        // agentId: '1676278005',
+        // tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1298473947',
         // tenantCode: 'db_ck_education',
         // 寿司
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1297763523',
         // tenantCode: 'db_ck_zh2021',
         // 学齐智
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1222705047',
         // tenantCode: 'db_ck_education',
         // some some cocktal
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1208026881',
         // tenantCode: 'db_ck_kh2021',
         // 糖豆娱乐文化
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1174025008',
         // tenantCode: 'db_ck_wenhua2021',
         // 美时光
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1242286064',
         // tenantCode: 'db_ck_education',
         // 女神驾到
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1170508467',
         // tenantCode: 'db_ck_education',
         // 北京遇龙少年文化传媒有限公司
+        // "url": "https://www.caika.net/caika/",
         // agentId: '1167607333',
         // tenantCode: 'db_ck_wenhua2021',
         // 成都依达智创科技有限公司
@@ -64,40 +76,43 @@ App({
         // "agentId": "1086314896",
         // "tenantCode": "db_ck_tgwy",
         // 栖梧教育
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "1056327836",
         // "tenantCode": "db_ck_customer",
         // 思无邪
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "1049398475",
         // "tenantCode": "db_ck_wenhua2021",
         // 中海外
         // "agentId": "1030661487",
         // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
-        // "url": "https://www.caika.net/DS/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "886493470",
         // "tenantCode": "db_ck_ds2021",
         // 票房宝
-        // "url": "https://www.caika.net/WH/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "874431275",
         // "tenantCode": "db_ck_zh2021",
         // 看场影业
-        // "url": "https://www.caika.net/WH/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "972063429",
         // "tenantCode": "db_ck_wenhua2021",
         // 贵州旭丰升企业管理有限公司
-        // "url": "https://www.caika.net/fxcx/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "1020654372",
         // "tenantCode": "db_ck_wenhua",
         // 小苹果
         // "url": "https://www.caika.net/MedicalService/",
-        // "url": "https://www.caika.net/saas/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "878913385",
         // "tenantCode": "db_ck_medicine2021",
         // 智取科技
-        // "url": "https://www.caika.net/MedicalService/",
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "893637276",
         // "tenantCode": "db_ck_education",
         // 奇异设计
+        // "url": "https://www.caika.net/caika/",
         // "agentId": "1103399428",
         // "tenantCode": "db_ck_zh2021",
         // CaiKa
