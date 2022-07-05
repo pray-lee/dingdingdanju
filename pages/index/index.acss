@@ -96,7 +96,7 @@
   box-shadow: 0 2px 20px 0 rgba(0,0,0,0.20);
   background:url('../../images/undo-btn.png') 20rpx center no-repeat;
   background-size: 30rpx 40rpx;
-  background-color:#fff;
+  background-color:#fff !important;
   font-size: 30rpx;
   font-weight:bold;
 }

@@ -77,6 +77,7 @@ Page({
         })
         this.getSelectOcrListFromStorage()
         this.getAddDetailFromStorage()
+        this.getInvoiceAccountbookIdFromStorage()
     },
     onHide() {
 
@@ -278,15 +279,53 @@ Page({
         })
     },
     handleUpload() {
-        dd.chooseImage({
-            count: 9,
+        this.goToInvoiceAccountbookList()
+    },
+    goToInvoiceAccountbookList() {
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'invoiceConfigController.do?getAccountbookListByUserId&userId=' + app.globalData.applicantId,
+            method: 'GET',
             success: res => {
-                this.uploadFile(res.filePaths)
-            },
-            fail: res => {
-                console.log('用户取消操作')
+                if (res.status === 200) {
+                    if(res.data && res.data.length) {
+                        dd.setStorage({
+                            key: 'invoiceAccountbookList',
+                            data: res.data,
+                            success: res => {
+                                dd.navigateTo({
+                                    url: "/pages/invoiceAccountbookList/index"
+                                })
+                            }
+                        })
+                    }else{
+                        dd.alert({
+                            content: '当前用户没有开通发票模块',
+                            buttonText: '好的',
+                        })
+                    }
+                }
             }
         })
+    },
+    getInvoiceAccountbookIdFromStorage() {
+        const accountbookId = dd.getStorageSync({key: 'invoiceAccountbookId'}).data
+        if(accountbookId) {
+            dd.chooseImage({
+                count: 9,
+                success: res => {
+                    this.uploadFile(res.filePaths, accountbookId)
+                },
+                fail: res => {
+                    console.log('用户取消操作')
+                }
+            })
+            dd.removeStorage({
+                key: 'invoiceAccountbookId',
+                success: () => {}
+            })
+        }
     },
     invoiceInput() {
         dd.navigateTo({
@@ -297,7 +336,7 @@ Page({
      *
      * @param 上传图片字符串列表
      */
-    uploadFile(array) {
+    uploadFile(array, accountbookId) {
         if (array.length) {
             let promiseList = []
             array.forEach(item => {
@@ -309,7 +348,7 @@ Page({
                         fileName: item,
                         filePath: item,
                         formData: {
-                            accountbookId: 'accountbook-invoice',
+                            accountbookId: accountbookId,
                             submitterDepartmentId: 'department-invoice'
                         },
                         success: res => {
@@ -337,10 +376,10 @@ Page({
                     billFilesList.push({
                         name: item.name,
                         uri: item.uri,
-                        size: item.size
+                        size: item.size,
                     })
                 })
-                this.doOCR(billFilesList)
+                this.doOCR(billFilesList, accountbookId)
             }).catch(error => {
                 dd.alert({
                     content: '上传失败',
@@ -352,14 +391,14 @@ Page({
             })
         }
     },
-    doOCR(fileList) {
+    doOCR(fileList, accountbookId) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
             url: app.globalData.url + 'invoiceInfoController.do?doOCR',
             data: {
                 fileList: JSON.stringify(fileList),
-                // accountbookId: '0333'
+                accountbookId: accountbookId
             },
             method: 'POST',
             success: res => {

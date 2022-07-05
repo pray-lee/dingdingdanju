@@ -10,6 +10,7 @@ Page({
         fromDetail: false,
         fromStorage: false,
         fromEditStorage: false,
+        accountbookDisabled: false,
         isPhoneXSeries: false,
         scrollTop: 0,
         type: 'zzs',
@@ -317,43 +318,52 @@ Page({
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
+            url: app.globalData.url + 'invoiceConfigController.do?getAccountbookListByUserId&userId=' + app.globalData.applicantId,
             method: 'GET',
             success: res => {
-                if(res.data.success && res.data.obj.length) {
-                    var accountbookIndex = 0
-                    var accountbookId = res.data.obj[0].id
-                    var accountbookIdStorage = dd.getStorageSync({key: 'accountbookId'}).data
-                    if(accountbookIdStorage) {
-                        res.data.obj.forEach((item, index) => {
-                            if (item.id === accountbookIdStorage) {
-                                accountbookIndex = index
-                                accountbookId = accountbookIdStorage
-                            }
-                        })
-                        dd.removeStorage({
-                            key: 'accountbookId',
-                            success: () => {}
-                        })
-                    }
-                    this.setData({
-                        accountbookList: res.data.obj,
-                        accountbookIndex: accountbookIndex,
-                        submitData: {
-                            ...this.data.submitData,
-                            accountbookId
-                        }
-                    })
-                }else{
-                    dd.alert({
-                        content: res.data.msg,
-                        buttonText: '好的',
-                        success: res => {
-                            dd.reLaunch({
-                                url: '/pages/index/index'
+                if(res.status === 200) {
+                    if(res.data && res.data.length) {
+                        var accountbookIndex = 0
+                        var accountbookId = res.data[0].id
+                        var accountbookIdStorage = dd.getStorageSync({key: 'accountbookId'}).data
+                        if(accountbookIdStorage) {
+                            this.setData({
+                                accountbookDisabled: true
+                            })
+                            res.data.forEach((item, index) => {
+                                if (item.id === accountbookIdStorage) {
+                                    accountbookIndex = index
+                                    accountbookId = accountbookIdStorage
+                                }
+                            })
+                            dd.removeStorage({
+                                key: 'accountbookId',
+                                success: () => {}
+                            })
+                        }else{
+                            this.setData({
+                                accountbookDisabled: false
                             })
                         }
-                    })
+                        this.setData({
+                            accountbookList: res.data,
+                            accountbookIndex: accountbookIndex,
+                            submitData: {
+                                ...this.data.submitData,
+                                accountbookId
+                            }
+                        })
+                    }else{
+                        dd.alert({
+                            content: res.data.msg,
+                            buttonText: '好的',
+                            success: res => {
+                                dd.reLaunch({
+                                    url: '/pages/index/index'
+                                })
+                            }
+                        })
+                    }
                 }
             },
         })

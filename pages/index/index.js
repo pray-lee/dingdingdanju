@@ -28,6 +28,7 @@ Page({
         })
     },
     gotoInvoiceList() {
+        dd.removeStorageSync({key: 'accountbookId'})
         dd.navigateTo({
             url: '/pages/invoiceList/index'
         })

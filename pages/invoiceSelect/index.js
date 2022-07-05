@@ -10,6 +10,7 @@ Page({
         list: [],
         accountbookIndex: 0,
         accountbookList: [],
+        accountbookDisabled: false,
     },
     //手指触摸动作开始 记录起点X坐标
     touchstart: function (e) {
@@ -79,33 +80,42 @@ Page({
             url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
             method: 'GET',
             success: res => {
-                if(res.data.success && res.data.obj.length) {
-                    var accountbookIndex = 0
-                    const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
-                    if(accountbookId) {
-                        res.data.obj.forEach((item, index) => {
-                            if (item.id === accountbookId) {
-                                accountbookIndex = index
-                            }
-                        })
-                        // dd.removeStorage({
-                        //     key: 'accountbookId'
-                        // })
-                    }
-                    this.setData({
-                        accountbookList: res.data.obj,
-                        accountbookIndex: accountbookIndex,
-                    })
-                }else{
-                    dd.alert({
-                        content: res.data.msg,
-                        buttonText: '好的',
-                        success: res => {
-                            dd.reLaunch({
-                                url: '/pages/index/index'
+                if(res.data.success) {
+                    if(res.data.obj && res.data.obj.length) {
+                        var accountbookIndex = 0
+                        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
+                        if(accountbookId) {
+                            this.setData({
+                                accountbookDisabled: true
+                            })
+                            res.data.obj.forEach((item, index) => {
+                                if (item.id === accountbookId) {
+                                    accountbookIndex = index
+                                }
+                            })
+                            // dd.removeStorage({
+                            //     key: 'accountbookId'
+                            // })
+                        }else{
+                            this.setData({
+                                accountbookDisabled: false
                             })
                         }
-                    })
+                        this.setData({
+                            accountbookList: res.data.obj,
+                            accountbookIndex: accountbookIndex,
+                        })
+                    }else{
+                        dd.alert({
+                            content: res.data.msg,
+                            buttonText: '好的',
+                            success: res => {
+                                dd.reLaunch({
+                                    url: '/pages/index/index'
+                                })
+                            }
+                        })
+                    }
                 }
             },
         })

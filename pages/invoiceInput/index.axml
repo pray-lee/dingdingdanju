@@ -33,7 +33,10 @@
                     <view class="form-row-label"><text class="require">*</text>申请组织</view>
                     <view class="form-row-content">
                         <block a:if="{{!fromStorage}}">
-                            <picker class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
+                            <picker a:if="{{!accountbookDisabled}}" class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
+                                <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
+                            </picker>
+                            <picker a:else disabled class="picker-style" onChange="bindObjPickerChange" value="{{accountbookIndex}}" range="{{accountbookList}}" range-key="accountbookName" data-index="accountbookIndex" data-name="accountbookId" data-list="accountbookList">
                                 <view class="row-extra">{{accountbookList[accountbookIndex].accountbookName}}</view>
                             </picker>
                         </block>
