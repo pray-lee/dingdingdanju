@@ -125,7 +125,11 @@ Page({
                     if(res.data.obj.length) {
                         if(res.data.obj[0].invoiceFileEntityList.length) {
                             this.setData({
-                                imgUrl: res.data.obj[0].invoiceFileEntityList[0].uri
+                                imgUrl: res.data.obj[0].invoiceFileEntityList[0].uri,
+                                submitData: {
+                                    ...this.data.submitData,
+                                    invoiceDetailEntityList: res.data.obj[0].invoiceDetailEntityList
+                                }
                             })
                         }
                     }
