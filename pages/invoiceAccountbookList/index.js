@@ -51,7 +51,7 @@ Page({
    },
    searchFn(value) {
        app.globalData.timeOutInstance = setTimeout(() => {
-          var searchResult = this.data.borrowList.filter(item => item.name.indexOf(value) !== -1)
+          var searchResult = this.data.borrowList.filter(item => item.accountbookName.indexOf(value) !== -1)
           this.setData({
              searchResult: searchResult
           })

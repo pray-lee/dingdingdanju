@@ -412,7 +412,7 @@ Page({
                                 data:res.data.obj,
                                 success: () => {
                                     dd.navigateTo({
-                                        url: '/pages/invoiceSelect/index'
+                                        url: '/pages/invoiceSelect/index?invoiceAccountbookId=' + accountbookId
                                     })
                                 }
                             })

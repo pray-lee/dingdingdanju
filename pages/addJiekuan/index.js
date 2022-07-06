@@ -2071,9 +2071,39 @@ Page({
             return
         }
         // 预算请求
-        const params = {}
-        // request({
-        //     hideLoading: this.hideLoading(),
-        // })
-    }
+        const params = {
+            billTypeId: 4,
+            businessDateTime: this.data.submitData.businessDateTime,
+            accountbookId: this.data.submitData.accountbookId,
+            submitterDepartmentId: this.data.submitData.submitterDepartmentId,
+            subjectId: this.data.submitData.subjectId,
+            subjectName: this.data.submitData.subjectName
+        }
+        this.formatBudgetData(this.data.submitData.billApEntityListObj, 'billApEntityList', params)
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'budgetController.do?getBudgetAmount',
+            method: 'POST',
+            data: params,
+            success: res => {
+                if(res.data.success) {
+                    dd.alert({
+                        content: res.data.obj,
+                        buttonText: '好的'
+                    })
+                }
+            }
+        })
+    },
+    formatBudgetData(array, name, params) {
+        if (!!array && array.length) {
+            array.forEach((item, index) => {
+                Object.keys(item).forEach(keys => {
+                    if(keys != 'name')
+                        params[`${name}[${index}].${keys}`] = item[keys]
+                })
+            })
+        }
+    },
 })

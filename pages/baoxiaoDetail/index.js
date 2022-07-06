@@ -714,7 +714,7 @@ Page({
                                         data: this.data.baoxiaoDetail.accountbookId
                                     })
                                     dd.navigateTo({
-                                        url: '/pages/invoiceSelect/index'
+                                        url: '/pages/invoiceSelect/index?invoiceAccountbookId=' + accountbookId
                                     })
                                 }
                             })
@@ -1033,5 +1033,58 @@ Page({
                 })
             }
         })
-    }
+    },
+    // 预算
+    getBudgetDetail() {
+        console.log(this.data, 'this.data')
+        if(!this.data.baoxiaoDetail.subjectId) {
+            dd.alert({
+                content: '请选择科目',
+                buttonText: '好的'
+            })
+            return
+        }
+        if(this.data.baoxiaoDetail.billDetailApEntityListObj.length !== this.data.baoxiaoDetail.subjectAuxptyList.length) {
+            dd.alert({
+                content: '请补全辅助核算',
+                buttonText: '好的'
+            })
+            return
+        }
+        // 预算请求
+        const params = {
+            billTypeId: 9,
+            businessDateTime: this.data.baoxiaoDetail.businessDateTime,
+            accountbookId: this.data.baoxiaoDetail.accountbookId,
+            submitterDepartmentId: this.data.baoxiaoDetail.submitterDepartmentId,
+            subjectId: this.data.baoxiaoDetail.subjectId,
+            subjectName: this.data.baoxiaoDetail.subjectName
+        }
+        this.formatBudgetData(this.data.baoxiaoDetail.billDetailApEntityListObj, 'billApEntityList', params)
+        this.addLoading()
+        request({
+            hideLoading: this.hideLoading,
+            url: app.globalData.url + 'budgetController.do?getBudgetAmount',
+            method: 'POST',
+            data: params,
+            success: res => {
+                if(res.data.success) {
+                    dd.alert({
+                        content: res.data.obj,
+                        buttonText: '好的'
+                    })
+                }
+            }
+        })
+    },
+    formatBudgetData(array, name, params) {
+        if (!!array && array.length) {
+            array.forEach((item, index) => {
+                Object.keys(item).forEach(keys => {
+                    if(keys != 'name')
+                        params[`${name}[${index}].${keys}`] = item[keys]
+                })
+            })
+        }
+    },
 })

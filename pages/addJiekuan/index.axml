@@ -71,14 +71,17 @@
                     </view>
                 </view>
                 <view class="form-line"/>
-                <view class="form-row" onTap="goSubjectPage">
+                <view class="form-row">
                     <view class="form-row-label"><text class="require">*</text>借款类型</view>
-                    <view class="form-row-content">
+                    <view class="form-row-content budge-wrapper">
 <!--                         <picker class="picker-style" onChange="bindObjPickerChange" value="{{subjectIndex}}" range="{{subjectList}}" range-key="name" data-name="subjectId" data-index="subjectIndex" data-list="subjectList"> -->
 <!--                             <view class="row-extra">{{subjectList[subjectIndex].name}}</view> -->
 <!--                         </picker> -->
-                        <view a:if="{{submitData.subjectId}}" class="mock-input">{{submitData.subjectName}}</view>
-                        <view a:else class="mock-input nodata">请选择借款类型</view>
+                        <view class="subject-name" onTap="goSubjectPage">
+                            <view a:if="{{submitData.subjectId}}" class="mock-input">{{submitData.subjectName}}</view>
+                            <view a:else class="mock-input nodata">请选择借款类型</view>
+                        </view>
+                        <view class="form-row-content budge" onTap="getBudgetDetail"></view>
                     </view>
                 </view>
                 <view class="form-line"/>

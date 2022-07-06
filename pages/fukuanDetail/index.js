@@ -315,7 +315,7 @@ Page({
                                         data: this.data.accountbookId
                                     })
                                     dd.navigateTo({
-                                        url: '/pages/invoiceSelect/index'
+                                        url: '/pages/invoiceSelect/index?invoiceAccountbookId=' + accountbookId
                                     })
                                 }
                             })

@@ -65,44 +65,53 @@ Page({
     onShow() {
         this.getEditInvoiceDetailFromStorage()
     },
-    onLoad() {
+    onLoad(query) {
         this.setData({
             isPhoneXSeries: app.globalData.isPhoneXSeries,
         })
-        this.getAccountbookList()
+        this.getAccountbookList(query.invoiceAccountbookId)
         this.getOcrListFromStorage()
     },
     onHide() {},
-    getAccountbookList() {
+    getAccountbookList(invoiceAccountbookId) {
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
-            url: app.globalData.url + 'accountbookController.do?getAccountbooksJsonByUserId&agentId=' + app.globalData.agentId,
+            url: app.globalData.url + 'invoiceConfigController.do?getAccountbookListByUserId&userId=' + app.globalData.applicantId,
             method: 'GET',
             success: res => {
-                if(res.data.success) {
-                    if(res.data.obj && res.data.obj.length) {
+                debugger
+                if(res.status === 200) {
+                    if(res.data && res.data.length) {
                         var accountbookIndex = 0
-                        const accountbookId = dd.getStorageSync({key: 'accountbookId'}).data
-                        if(accountbookId) {
+                        var accountbookId = res.data[0].id
+                        const accountbookIdStorage = dd.getStorageSync({key: 'accountbookId'}).data
+                        if(accountbookIdStorage) {
                             this.setData({
                                 accountbookDisabled: true
                             })
-                            res.data.obj.forEach((item, index) => {
-                                if (item.id === accountbookId) {
+                            res.data.forEach((item, index) => {
+                                if (item.id === accountbookIdStorage) {
                                     accountbookIndex = index
+                                    accountbookId = accountbookIdStorage
                                 }
                             })
-                            // dd.removeStorage({
-                            //     key: 'accountbookId'
-                            // })
+                            dd.removeStorage({
+                                key: 'accountbookId'
+                            })
                         }else{
+                            res.data.forEach((item, index) => {
+                                if (item.id === invoiceAccountbookId) {
+                                    accountbookIndex = index
+                                    accountbookId = invoiceAccountbookId
+                                }
+                            })
                             this.setData({
                                 accountbookDisabled: false
                             })
                         }
                         this.setData({
-                            accountbookList: res.data.obj,
+                            accountbookList: res.data,
                             accountbookIndex: accountbookIndex,
                         })
                     }else{
