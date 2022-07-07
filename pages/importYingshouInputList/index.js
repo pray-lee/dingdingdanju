@@ -330,10 +330,6 @@ Page({
     },
     getInvoiceAccountbookIdFromStorage() {
         const accountbookId = dd.getStorageSync({key: 'invoiceAccountbookId'}).data
-        dd.alert({
-            content: accountbookId,
-            buttonText: '好的'
-        })
         if(accountbookId) {
             dd.chooseImage({
                 count: 9,

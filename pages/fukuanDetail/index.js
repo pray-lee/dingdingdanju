@@ -68,6 +68,7 @@ Page({
         this.getSelectOcrListFromStorage()
         this.getBillInvoiceDetail()
         this.getOcrListFromListFromStorage()
+        this.getInvoiceAccountbookIdFromStorage()
         // =======================
     },
     onKaipiaoBlur(e) {
