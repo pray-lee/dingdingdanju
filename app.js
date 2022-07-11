@@ -132,9 +132,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        // "url": "https://www.caika.net/ucommune-test/",
-        // "agentId": "1249138757",
-        // "tenantCode": "db_ck_ucommune_test",
+        "url": "https://www.caika.net/caika/",
+        "agentId": "1249138757",
+        "tenantCode": "db_ck_pxxt",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团

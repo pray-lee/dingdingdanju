@@ -359,11 +359,11 @@ Page({
                         })
                     }else{
                         dd.alert({
-                            content: res.data.msg,
+                            content: '当前用户没有开通发票模块',
                             buttonText: '好的',
                             success: res => {
-                                dd.reLaunch({
-                                    url: '/pages/index/index'
+                                dd.navigateBack({
+                                    delta: 1
                                 })
                             }
                         })
