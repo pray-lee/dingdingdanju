@@ -19,9 +19,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        //秦皇岛家具
+        agentId: '1751890535',
+        tenantCode: 'db_ck_qhdqm',
         // 恩微影视
-        agentId: '1653706159',
-        tenantCode: 'db_ck_ewyy',
+        // agentId: '1653706159',
+        // tenantCode: 'db_ck_ewyy',
         // 大方向（哈尔滨）影业有限公司
         // agentId: '1630560875',
         // tenantCode: 'db_ck_wenhua2021',
