@@ -19,9 +19,12 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        //中大邑和
+        agentId: '1767231312',
+        tenantCode: 'db_ck_kh2021',
         //秦皇岛家具
-        agentId: '1751890535',
-        tenantCode: 'db_ck_qhdqm',
+        // agentId: '1751890535',
+        // tenantCode: 'db_ck_qhdqm',
         // 恩微影视
         // agentId: '1653706159',
         // tenantCode: 'db_ck_ewyy',
