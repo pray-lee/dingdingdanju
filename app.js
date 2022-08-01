@@ -20,6 +20,7 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         //中大邑和
+        "url": "https://www.caika.net/caika/",
         agentId: '1767231312',
         tenantCode: 'db_ck_kh2021',
         //秦皇岛家具
@@ -134,7 +135,7 @@ App({
         // 测试环境进销存
         // "url": "https://www.caika.net/TestJxc/",
         // saas
-        "url": "https://www.caika.net/saas/",
+        // "url": "https://www.caika.net/saas/",
         // "url": "https://www.caika.net/caika/",
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
