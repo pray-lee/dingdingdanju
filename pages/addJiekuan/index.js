@@ -7,6 +7,8 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
+        // web-view
+        webViewHidden: true,
         // 增加申请人
         realName: '',
         // =============外币相关============
@@ -675,15 +677,18 @@ Page({
         this.onAddHide()
     },
     handleUpload() {
-        dd.chooseImage({
-            count: 9,
-            success: res => {
-                this.uploadFile(res.filePaths)
-            },
-            fail: res => {
-                console.log('用户取消操作')
-            }
+        this.setData({
+            webViewHidden: false
         })
+        // dd.chooseImage({
+        //     count: 9,
+        //     success: res => {
+        //         this.uploadFile(res.filePaths)
+        //     },
+        //     fail: res => {
+        //         console.log('用户取消操作')
+        //     }
+        // })
     },
     /**
      *
@@ -747,8 +752,21 @@ Page({
     },
     previewFile(e) {
         var url = e.currentTarget.dataset.url
-        dd.previewImage({
-            urls: [url],
+        // dd.previewImage({
+        //     urls: [url],
+        // })
+        dd.downloadFile({
+            url,
+            success({ filePath }) {
+                dd.previewImage({
+                    urls: [filePath],
+                });
+            },
+            fail(res) {
+                dd.alert({
+                    content: res.errorMessage || res.error,
+                });
+            },
         })
     },
     onLoad(query) {
@@ -2106,4 +2124,15 @@ Page({
             })
         }
     },
+    test(e) {
+        const billFilesList = e.detail.fileLists
+        this.setData({
+            webViewHidden: true,
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
+            }
+        })
+
+    }
 })

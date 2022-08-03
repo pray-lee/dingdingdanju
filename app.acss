@@ -734,6 +734,15 @@ page {
   padding-top: 320rpx;
     text-align: center;
 }
+#web-view-1{
+    position:fixed;
+    z-index: 999999999;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    margin:auto;
+}
 
 
 

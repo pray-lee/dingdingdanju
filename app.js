@@ -32,10 +32,10 @@ App({
         // agentId: '1630560875',
         // tenantCode: 'db_ck_wenhua2021',
         // 优客工厂
-        "url": "https://www.caika.net/ucommune-test/",
+        // "url": "https://www.caika.net/ucommune-test/",
         // "url": "https://www.caika.net/ucommune/",
-        agentId: '1676278005',
-        tenantCode: 'db_ck_ucommune',
+        // agentId: '1676278005',
+        // tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
         // "url": "https://www.caika.net/caika/",
         // agentId: '1298473947',
@@ -139,10 +139,10 @@ App({
         // "url": "http://192.168.1.121:8080/jeecg/",
         // 测试环境test
         // 于龙测试
-        // "url": "https://www.caika.net/jeecg/",
+        "url": "https://www.caika.net/jeecg/",
         // "url": "https://www.caika.net/caika/",
-        // "agentId": "1249138757",
-        // "tenantCode": "db_ck_pxxt",
+        "agentId": "1249138757",
+        "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
