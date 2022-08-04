@@ -760,7 +760,6 @@ Page({
             previewWebViewHidden: false,
             uploadWebViewHidden: true,
         })
-        this.createWebViewContext()
         let t = setTimeout(() => {
             this.previewWebViewContext.postMessage({url})
             clearTimeout(t)
