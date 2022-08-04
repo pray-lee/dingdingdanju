@@ -8,7 +8,10 @@ app.globalData.loadingCount = 0
 Page({
     data: {
         // web-view
-        webViewHidden: true,
+        uploadWebViewHidden: true,
+        previewWebViewHidden: true,
+        webViewUploadUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile',
+        webViewPreviewUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goPreviewFile',
         // 增加申请人
         realName: '',
         // =============外币相关============
@@ -678,7 +681,8 @@ Page({
     },
     handleUpload() {
         this.setData({
-            webViewHidden: false
+            uploadWebViewHidden: false,
+            previewWebViewHidden: true
         })
         // dd.chooseImage({
         //     count: 9,
@@ -752,22 +756,20 @@ Page({
     },
     previewFile(e) {
         var url = e.currentTarget.dataset.url
-        // dd.previewImage({
-        //     urls: [url],
-        // })
-        dd.downloadFile({
-            url,
-            success({ filePath }) {
-                dd.previewImage({
-                    urls: [filePath],
-                });
-            },
-            fail(res) {
-                dd.alert({
-                    content: res.errorMessage || res.error,
-                });
-            },
+        this.setData({
+            previewWebViewHidden: false,
+            uploadWebViewHidden: true,
         })
+        this.createWebViewContext()
+        let t = setTimeout(() => {
+            this.previewWebViewContext.postMessage({url})
+            clearTimeout(t)
+            t = null
+        }, 1000)
+    },
+    createWebViewContext() {
+        this.uploadWebViewContext = dd.createWebViewContext('web-view-upload');
+        this.previewWebViewContext = dd.createWebViewContext('web-view-preview');
     },
     onLoad(query) {
         // 增加申请人
@@ -2124,15 +2126,24 @@ Page({
             })
         }
     },
-    test(e) {
-        const billFilesList = e.detail.fileLists
-        this.setData({
-            webViewHidden: true,
-            submitData: {
-                ...this.data.submitData,
-                billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
-            }
-        })
+    receiveUploadMessage(e) {
+            const billFilesList = e.detail.fileLists
+            this.setData({
+                previewWebViewHidden: true,
+                uploadWebViewHidden: true,
+                submitData: {
+                    ...this.data.submitData,
+                    billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
+                }
+            })
 
+    },
+    receivePreviewMessage(e) {
+        if(e.detail.back) {
+            this.setData({
+                previewWebViewHidden: true,
+                uploadWebViewHidden: true
+            })
+        }
     }
 })

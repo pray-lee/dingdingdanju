@@ -734,7 +734,7 @@ page {
   padding-top: 320rpx;
     text-align: center;
 }
-#web-view-1{
+#web-view-upload ,#web-view-preview{
     position:fixed;
     z-index: 999999999;
     top:0;
