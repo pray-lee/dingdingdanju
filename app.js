@@ -15,6 +15,9 @@ App({
         // login(this)
     },
     globalData: {
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1249138757',
+        // tenantCode: 'db_ck_oa',
         // "corpId": "ding2fac28f4bbc361e435c2f4657eb6378f",
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
