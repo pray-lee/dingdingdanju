@@ -397,6 +397,7 @@ Page({
             baoxiaoList = data.billDetailList.map(item => {
                 return {
                     ...item,
+                    'subject.fullSubjectName': item.subject.fullSubjectName || '',
                     applicationAmount: item.applicationAmount,
                     formatApplicationAmount: formatNumber(Number(item.applicationAmount).toFixed(2)),
                     originApplicationAmount: '',
@@ -517,7 +518,7 @@ Page({
     caculateImportList(importList, inputValue, index) {
         let totalApplicationAmount = Number(this.data.submitData[this.data.amountField.applicationAmount])
         const newImportList = importList.map(item => {
-            let applicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
+            let applicationAmount = NP.minus(totalApplicationAmount, Number(item[this.data.amountField.applicationAmount]))
             if (applicationAmount <= 0 && totalApplicationAmount > 0) {
                 applicationAmount = totalApplicationAmount
                 totalApplicationAmount = 0
@@ -526,7 +527,7 @@ Page({
                 totalApplicationAmount = 0
             } else {
                 applicationAmount = item[this.data.amountField.applicationAmount]
-                totalApplicationAmount = totalApplicationAmount - Number(item[this.data.amountField.applicationAmount])
+                totalApplicationAmount = NP.minus(totalApplicationAmount, Number(item[this.data.amountField.applicationAmount]))
             }
             return {
                 ...item,
