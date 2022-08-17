@@ -519,6 +519,7 @@ Page({
         });
     },
     onShow() {
+        this.getUploadFileListFromStorage()
         this.getSelectedUserListFromStorage()
         this.getAuxptyIdFromStorage()
         this.getBorrowIdFromStorage()
@@ -680,10 +681,10 @@ Page({
         this.onAddHide()
     },
     handleUpload() {
-        this.setData({
-            uploadWebViewHidden: false,
-            previewWebViewHidden: true
-        })
+        // this.setData({
+        //     uploadWebViewHidden: false,
+        //     previewWebViewHidden: true
+        // })
         // dd.chooseImage({
         //     count: 9,
         //     success: res => {
@@ -693,6 +694,9 @@ Page({
         //         console.log('用户取消操作')
         //     }
         // })
+        dd.navigateTo({
+            url: '/pages/webview/index'
+        })
     },
     /**
      *
@@ -755,16 +759,28 @@ Page({
         }
     },
     previewFile(e) {
+        // var url = e.currentTarget.dataset.url
+        // this.setData({
+        //     previewWebViewHidden: false,
+        //     uploadWebViewHidden: true,
+        //     webViewPreviewUrl: this.data.webViewPreviewUrl + '&t=' + new Date().getTime()
+        // })
+        // let t = setTimeout(() => {
+        //     this.previewWebViewContext.postMessage({url})
+        //     clearTimeout(t)
+        //     t = null
+        // }, 1000)
         var url = e.currentTarget.dataset.url
-        this.setData({
-            previewWebViewHidden: false,
-            uploadWebViewHidden: true,
-        })
-        let t = setTimeout(() => {
-            this.previewWebViewContext.postMessage({url})
-            clearTimeout(t)
-            t = null
-        }, 1000)
+        const imgArr = ['jpg', 'jpeg', 'png', 'gif']
+        if(imgArr.some(item => url.indexOf(item) !== -1)) {
+            dd.previewImage({
+                urls:[url]
+            })
+        }else{
+            dd.navigateTo({
+                url: '/pages/webview/index?url=' + url
+            })
+        }
     },
     createWebViewContext() {
         this.uploadWebViewContext = dd.createWebViewContext('web-view-upload');
@@ -1096,6 +1112,17 @@ Page({
             nodeIndex,
             selectedUserList:this.data.nodeList[nodeIndex]
         })
+    },
+    getUploadFileListFromStorage() {
+        const uploadFileList = dd.getStorageSync({key: 'uploadFileList'}).data || []
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: this.data.submitData.billFilesObj.concat(uploadFileList)
+            }
+        })
+        dd.removeStorage({key: 'uploadFileList'})
+
     },
     getSelectedUserListFromStorage() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []
@@ -2125,24 +2152,4 @@ Page({
             })
         }
     },
-    receiveUploadMessage(e) {
-            const billFilesList = e.detail.fileLists
-            this.setData({
-                previewWebViewHidden: true,
-                uploadWebViewHidden: true,
-                submitData: {
-                    ...this.data.submitData,
-                    billFilesObj: this.data.submitData.billFilesObj.concat(billFilesList)
-                }
-            })
-
-    },
-    receivePreviewMessage(e) {
-        if(e.detail.back) {
-            this.setData({
-                previewWebViewHidden: true,
-                uploadWebViewHidden: true
-            })
-        }
-    }
 })

@@ -1,5 +1,5 @@
-<web-view a:if="{{!uploadWebViewHidden}}" id="web-view-upload" src="http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile" onMessage="receiveUploadMessage"></web-view>
-<web-view a:if="{{!previewWebViewHidden}}" id="web-view-preview" src="http://192.168.10.224:8080/caika/aliyunController.do?goPreviewFile" onMessage="receivePreviewMessage"></web-view>
+<!-- <web-view a:if="{{!uploadWebViewHidden}}" id="web-view-upload" src="http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile" onMessage="receiveUploadMessage"></web-view> -->
+<!-- <web-view a:if="{{!previewWebViewHidden}}" id="web-view-preview" src="{{webViewPreviewUrl}}" onMessage="receivePreviewMessage"></web-view> -->
 <view class="form-wrapper">
     <form onSubmit="formSubmit" onReset="formReset">
         <scroll-view scroll-y class="form-scroll-wrapper {{isPhoneXSeries ? 'iphoneX' : ''}}">
