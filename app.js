@@ -22,6 +22,10 @@ App({
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
+        // 颜值时代生物科技有限公司
+        "url": "https://www.caika.net/caika/",
+        agentId: '1806744140',
+        tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
         // "url": "https://www.caika.net/caika/",
         // agentId: '1780714116',
