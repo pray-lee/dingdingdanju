@@ -741,7 +741,7 @@ Page({
         }
     },
     previewFile(e) {
-        preview(e)
+        preview(e.currentTarget.dataset.url + '_ck')
     },
     onLoad(query) {
         // 增加申请人

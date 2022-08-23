@@ -17,8 +17,7 @@ const submitSuccess = () => {
     })
 }
 
-const previewFile = e => {
-    var url = e.currentTarget.dataset.url
+const previewFile = url => {
     const imgArr = ['jpg', 'jpeg', 'png', 'gif']
     if(imgArr.some(item => url.indexOf(item) !== -1)) {
         dd.previewImage({
