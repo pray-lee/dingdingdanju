@@ -1,7 +1,7 @@
 Page({
     data: {
-        webViewUploadUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile',
-        webViewPreviewUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goPreviewFile',
+        webViewUploadUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile&v=' + new Date().getTime(),
+        webViewPreviewUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goPreviewFile&v=' + new Date().getTime(),
         url:''
     },
     onLoad(query) {

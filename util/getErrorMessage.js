@@ -17,6 +17,20 @@ const submitSuccess = () => {
     })
 }
 
+const previewFile = e => {
+    var url = e.currentTarget.dataset.url
+    const imgArr = ['jpg', 'jpeg', 'png', 'gif']
+    if(imgArr.some(item => url.indexOf(item) !== -1)) {
+        dd.previewImage({
+            urls:[url]
+        })
+    }else{
+        dd.navigateTo({
+            url: '/pages/webview/index?url=' + url
+        })
+    }
+}
+
 const loginFiled = (msg = "") => {
     dd.alert({
         title: '登录失败',
@@ -115,5 +129,6 @@ export {
     formatNumber,
     validFn,
     login,
-    request
+    request,
+    previewFile
 }
