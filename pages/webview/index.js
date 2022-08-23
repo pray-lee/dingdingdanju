@@ -8,6 +8,7 @@ Page({
         this.previewWebViewContext = dd.createWebViewContext('web-view-preview');
         let url = ''
         if(query.url) {
+            // 预览
             this.setData({
                 url: this.data.webViewPreviewUrl
             })
@@ -17,6 +18,7 @@ Page({
                 })
             }, 1000)
         }else{
+            // 上传
             this.setData({
                 url: this.data.webViewUploadUrl
             })

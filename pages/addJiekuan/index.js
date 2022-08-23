@@ -7,11 +7,6 @@ var app = getApp()
 app.globalData.loadingCount = 0
 Page({
     data: {
-        // web-view
-        uploadWebViewHidden: true,
-        previewWebViewHidden: true,
-        webViewUploadUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goUploadFile',
-        webViewPreviewUrl: 'http://192.168.10.224:8080/caika/aliyunController.do?goPreviewFile',
         // 增加申请人
         realName: '',
         // =============外币相关============
@@ -681,19 +676,6 @@ Page({
         this.onAddHide()
     },
     handleUpload() {
-        // this.setData({
-        //     uploadWebViewHidden: false,
-        //     previewWebViewHidden: true
-        // })
-        // dd.chooseImage({
-        //     count: 9,
-        //     success: res => {
-        //         this.uploadFile(res.filePaths)
-        //     },
-        //     fail: res => {
-        //         console.log('用户取消操作')
-        //     }
-        // })
         dd.navigateTo({
             url: '/pages/webview/index'
         })
@@ -759,17 +741,6 @@ Page({
         }
     },
     previewFile(e) {
-        // var url = e.currentTarget.dataset.url
-        // this.setData({
-        //     previewWebViewHidden: false,
-        //     uploadWebViewHidden: true,
-        //     webViewPreviewUrl: this.data.webViewPreviewUrl + '&t=' + new Date().getTime()
-        // })
-        // let t = setTimeout(() => {
-        //     this.previewWebViewContext.postMessage({url})
-        //     clearTimeout(t)
-        //     t = null
-        // }, 1000)
         var url = e.currentTarget.dataset.url
         const imgArr = ['jpg', 'jpeg', 'png', 'gif']
         if(imgArr.some(item => url.indexOf(item) !== -1)) {
@@ -781,10 +752,6 @@ Page({
                 url: '/pages/webview/index?url=' + url
             })
         }
-    },
-    createWebViewContext() {
-        this.uploadWebViewContext = dd.createWebViewContext('web-view-upload');
-        this.previewWebViewContext = dd.createWebViewContext('web-view-preview');
     },
     onLoad(query) {
         // 增加申请人
