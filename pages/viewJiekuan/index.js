@@ -59,7 +59,7 @@ Page({
         }
     },
     previewFile(e) {
-        preview(e)
+        preview(e.currentTarget.dataset.url + '_ck')
     },
     getDetail(query) {
         dd.getAuthCode({
