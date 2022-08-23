@@ -15,17 +15,17 @@ App({
         // login(this)
     },
     globalData: {
-        // "url": "https://www.caika.net/caika/",
-        // agentId: '1249138757',
-        // tenantCode: 'db_ck_oa',
+        "url": "https://www.caika.net/caika/",
+        agentId: '1249138757',
+        tenantCode: 'db_ck_oa',
         // "corpId": "ding2fac28f4bbc361e435c2f4657eb6378f",
         // "CustomKey": "suiteledp8nm95trck3th",
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 颜值时代生物科技有限公司
-        "url": "https://www.caika.net/caika/",
-        agentId: '1806744140',
-        tenantCode: 'db_ck_ds2021',
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1806744140',
+        // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
         // "url": "https://www.caika.net/caika/",
         // agentId: '1780714116',
@@ -147,9 +147,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/caika/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_oa",
+        // "url": "https://www.caika.net/caika/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
