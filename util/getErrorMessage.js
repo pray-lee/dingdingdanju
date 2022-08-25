@@ -21,7 +21,7 @@ const previewFile = url => {
     const imgArr = ['jpg', 'jpeg', 'png', 'gif']
     if(imgArr.some(item => url.indexOf(item) !== -1)) {
         dd.previewImage({
-            urls:[url]
+            urls:[url.slice(0, -3)]
         })
     }else{
         dd.navigateTo({
