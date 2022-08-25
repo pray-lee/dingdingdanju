@@ -1,4 +1,4 @@
-import {formatNumber, loginFiled, request} from "../../util/getErrorMessage";
+import {previewFile as preview, formatNumber, loginFiled, request} from "../../util/getErrorMessage";
 import clone from 'lodash/cloneDeep'
 
 var app = getApp()
@@ -60,10 +60,7 @@ Page({
         }
     },
     previewFile(e) {
-        var url = e.currentTarget.dataset.url
-        dd.previewImage({
-            urls: [url],
-        })
+        preview(e.currentTarget.dataset.url + '_ck')
     },
     getDetail(query) {
         dd.getAuthCode({

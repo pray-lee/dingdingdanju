@@ -1,6 +1,13 @@
 import moment from "moment";
 import clone from 'lodash/cloneDeep'
-import {getErrorMessage, submitSuccess, formatNumber, validFn, request} from "../../util/getErrorMessage";
+import {
+    getErrorMessage,
+    submitSuccess,
+    formatNumber,
+    validFn,
+    request,
+    previewFile as preview
+} from "../../util/getErrorMessage";
 import NP from "number-precision";
 
 var app = getApp()
@@ -653,21 +660,11 @@ Page({
         })
     },
     previewFile(e) {
-        var url = e.currentTarget.dataset.url
-        dd.previewImage({
-            urls: [url],
-        })
+        preview(e.currentTarget.dataset.url + '_ck')
     },
     handleUpload() {
-        dd.chooseImage({
-            count: 9,
-            success: res => {
-                console.log(res)
-                this.uploadFile(res.filePaths)
-            },
-            fail: res => {
-                console.log('用户取消操作')
-            }
+        dd.navigateTo({
+            url: '/pages/webview/index'
         })
     },
     /**

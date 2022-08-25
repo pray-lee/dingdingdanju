@@ -1,5 +1,5 @@
 import clone from "lodash/cloneDeep";
-import {getErrorMessage, submitSuccess, formatNumber, request} from "../../util/getErrorMessage";
+import {previewFile as preview, getErrorMessage, submitSuccess, formatNumber, request} from "../../util/getErrorMessage";
 import moment from "moment";
 
 var app = getApp()
@@ -626,14 +626,8 @@ Page({
         })
     },
     handleUpload() {
-        dd.chooseImage({
-            count: 9,
-            success: res => {
-                this.uploadFile(res.filePaths)
-            },
-            fail: res => {
-                console.log('用户取消操作')
-            }
+        dd.navigateTo({
+            url: '/pages/webview/index'
         })
     },
     /**
@@ -699,10 +693,7 @@ Page({
         }
     },
     previewFile(e) {
-        var url = e.currentTarget.dataset.url
-        dd.previewImage({
-            urls: [url],
-        })
+        preview(e.currentTarget.dataset.url + '_ck')
     },
     onLoad(query) {
         // 增加申请人
