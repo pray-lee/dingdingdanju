@@ -586,6 +586,7 @@ Page({
         }
     },
     onShow() {
+        this.getUploadFileListFromStorage()
         this.getCustomerDetailFromStorage()
         this.getUpdatedCustomerFromStorage()
         this.getExpressInfoFromStorage()
@@ -929,6 +930,17 @@ Page({
                 })
             }
         })
+    },
+    getUploadFileListFromStorage() {
+        const uploadFileList = dd.getStorageSync({key: 'uploadFileList'}).data || []
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: this.data.submitData.billFilesObj.concat(uploadFileList)
+            }
+        })
+        dd.removeStorage({key: 'uploadFileList'})
+
     },
     // 获取选择的客户信息和客户快递列表
     getCustomerDetailFromStorage() {

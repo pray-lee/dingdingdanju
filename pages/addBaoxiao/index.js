@@ -602,6 +602,7 @@ Page({
         })
     },
     onShow() {
+        this.getUploadFileListFromStorage()
         // 从缓存获取用户已经选择的审批人
         this.getSelectedUserListFromStorage()
         // 从缓存里获取借款列表
@@ -1083,6 +1084,16 @@ Page({
             nodeIndex,
             selectedUserList: this.data.nodeList[nodeIndex]
         })
+    },
+    getUploadFileListFromStorage() {
+        const uploadFileList = dd.getStorageSync({key: 'uploadFileList'}).data || []
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: this.data.submitData.billFilesObj.concat(uploadFileList)
+            }
+        })
+        dd.removeStorage({key: 'uploadFileList'})
     },
     getSelectedUserListFromStorage() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []

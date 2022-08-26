@@ -414,6 +414,7 @@ Page({
         return newImportList
     },
     onShow() {
+        this.getUploadFileListFromStorage()
         this.getSelectedUserListFromStorage()
         // 从缓存获取修改的付款详情
         this.getFukuanDetailFromStorage()
@@ -883,6 +884,17 @@ Page({
             nodeIndex,
             selectedUserList:this.data.nodeList[nodeIndex]
         })
+    },
+    getUploadFileListFromStorage() {
+        const uploadFileList = dd.getStorageSync({key: 'uploadFileList'}).data || []
+        this.setData({
+            submitData: {
+                ...this.data.submitData,
+                billFilesObj: this.data.submitData.billFilesObj.concat(uploadFileList)
+            }
+        })
+        dd.removeStorage({key: 'uploadFileList'})
+
     },
     getSelectedUserListFromStorage() {
         const selectedUsers = dd.getStorageSync({key: 'selectedUsers'}).data || []

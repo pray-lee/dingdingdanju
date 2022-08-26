@@ -15,7 +15,7 @@ App({
         // login(this)
     },
     globalData: {
-        "url": "https://www.caika.net/caika/",
+        "url": "https://www.caika.net/test/",
         agentId: '1249138757',
         tenantCode: 'db_ck_oa',
         // "corpId": "ding2fac28f4bbc361e435c2f4657eb6378f",
