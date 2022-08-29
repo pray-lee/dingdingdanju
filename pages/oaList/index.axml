@@ -11,13 +11,13 @@
                         <view class="left status error {{item.billType.toLowerCase()}}">
                             <text>{{item.taskName}}</text>
                         </view>
-                        <text class="right approval-time">{{item.createDate}}</text>
+                        <text class="right approval-time">{{item.taskEndTime||item.createDate}}</text>
                     </view>
                     <view class="content content-bottom">
                         <text class="left">{{item.billName}}</text>
                         <text class="right">{{item.billCode || item.invoicebillCode}}</text>
                     </view>
-                </view>
+                </viewg>
             </view>
         </view>
     </scroll-view>

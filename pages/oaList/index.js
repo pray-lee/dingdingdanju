@@ -52,7 +52,7 @@ Page({
         const url = this.data.undo ?
             app.globalData.url + 'oaTaskController.do?todoDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status'
             :
-            app.globalData.url + 'oaTaskController.do?finishDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status'
+            app.globalData.url + 'oaTaskController.do?finishDatagrid&field=id,applicationAmount,accountbookId,billType,billCode,taskName,billId,createDate,processInstanceId,remark,status,taskEndTime'
         this.addLoading()
         request({
             hideLoading: this.hideLoading,
@@ -66,7 +66,8 @@ Page({
                             return {
                                 ...item,
                                 billType: this.data.billType[item.billType],
-                                billName: this.data.billName[item.billType]
+                                billName: this.data.billName[item.billType],
+                                taskName: item.taskName || '审批时间',
                             }
                         })
                     })
