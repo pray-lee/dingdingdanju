@@ -17,7 +17,7 @@
                         <text class="left">{{item.billName}}</text>
                         <text class="right">{{item.billCode || item.invoicebillCode}}</text>
                     </view>
-                </viewg>
+                </view>
             </view>
         </view>
     </scroll-view>
