@@ -23,17 +23,17 @@ App({
         // "CustomSecret": "pAw2w2JgcMMsF2HW7N0ik3bP0lvEvnxw_nkQRbRSBa1TQs7CbPP-hW836RoGoTAW",
         // ----------------------config-----------------------------
         // 秦皇岛曲美
-        "url": "https://www.caika.net/caika/",
-        agentId: '1751890535',
-        tenantCode: 'db_ck_qhdqm',
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1751890535',
+        // tenantCode: 'db_ck_qhdqm',
         // 颜值时代生物科技有限公司
         // "url": "https://www.caika.net/caika/",
         // agentId: '1806744140',
         // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
-        // "url": "https://www.caika.net/caika/",
-        // agentId: '1780714116',
-        // tenantCode: 'db_ck_xld',
+        "url": "https://www.caika.net/caika/",
+        agentId: '1780714116',
+        tenantCode: 'db_ck_xld',
         //中大邑和
         // "url": "https://www.caika.net/caika/",
         // agentId: '1767231312',
