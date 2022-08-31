@@ -31,9 +31,9 @@ App({
         // agentId: '1806744140',
         // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
-        // "url": "https://www.caika.net/caika/",
-        // agentId: '1780714116',
-        // tenantCode: 'db_ck_xld',
+        "url": "https://www.caika.net/caika/",
+        agentId: '1780714116',
+        tenantCode: 'db_ck_xld',
         //中大邑和
         // "url": "https://www.caika.net/caika/",
         // agentId: '1767231312',

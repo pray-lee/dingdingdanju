@@ -181,12 +181,10 @@ Page({
         app.globalData.loadingCount++
     },
     hideLoading() {
-        setTimeout(() => {
-            app.globalData.loadingCount--
-            if (app.globalData.loadingCount <= 0) {
-                dd.hideLoading()
-            }
-        }, 60)
+        app.globalData.loadingCount--
+        if (app.globalData.loadingCount <= 0) {
+            dd.hideLoading()
+        }
     },
     formSubmit(e) {
         // ============= 处理外币提交=================
