@@ -31,9 +31,9 @@ App({
         // agentId: '1806744140',
         // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
-        "url": "https://www.caika.net/caika/",
-        agentId: '1780714116',
-        tenantCode: 'db_ck_xld',
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1780714116',
+        // tenantCode: 'db_ck_xld',
         //中大邑和
         // "url": "https://www.caika.net/caika/",
         // agentId: '1767231312',
@@ -44,9 +44,9 @@ App({
         // tenantCode: 'db_ck_wenhua2021',
         // 优客工厂
         // "url": "https://www.caika.net/ucommune-test/",
-        // "url": "https://www.caika.net/ucommune/",
-        // agentId: '1676278005',
-        // tenantCode: 'db_ck_ucommune',
+        "url": "https://www.caika.net/ucommune/",
+        agentId: '1676278005',
+        tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
         // "url": "https://www.caika.net/caika/",
         // agentId: '1298473947',
