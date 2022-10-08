@@ -15,7 +15,14 @@ App({
         // login(this)
     },
     globalData: {
-        // "url": "https://www.caika.net/caika/",
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1407349837',
+        // tenantCode: 'db_ck_czwy2',
+        // 爱绿城
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1369346288',
+        // tenantCode: 'db_ck_alchb',
+        // // "url": "https://www.caika.net/caika/",
         // agentId: '1249138757',
         // tenantCode: 'db_ck_oa',
         // "corpId": "ding2fac28f4bbc361e435c2f4657eb6378f",
@@ -44,9 +51,9 @@ App({
         // tenantCode: 'db_ck_wenhua2021',
         // 优客工厂
         // "url": "https://www.caika.net/ucommune-test/",
-        "url": "https://www.caika.net/ucommune/",
-        agentId: '1676278005',
-        tenantCode: 'db_ck_ucommune',
+        // "url": "https://www.caika.net/ucommune/",
+        // agentId: '1676278005',
+        // tenantCode: 'db_ck_ucommune',
         // 石狮文旅研学旅行
         // "url": "https://www.caika.net/caika/",
         // agentId: '1298473947',
@@ -86,9 +93,11 @@ App({
         // agentId: '1107585282',
         // tenantCode: 'db_ck_llf',
         // 捷峰项目
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1129582065',
         // tenantCode: 'db_ck_qzweiming',
         // 挥戈项目
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1129521457',
         // tenantCode: 'db_ck_qzweiming',
         // 天港物业
