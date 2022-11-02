@@ -51,7 +51,7 @@ App({
         // "url": "https://www.caika.net/saas/",
         // agentId: '1428400011',
         // tenantCode: 'db_ck_dthd',
-        // 财税无忧
+        // 财税无忧(一贝)
         // "url": "https://www.caika.net/saas/",
         // agentId: '1407349837',
         // tenantCode: 'db_ck_czwy2',
@@ -124,6 +124,7 @@ App({
         // agentId: '1167607333',
         // tenantCode: 'db_ck_wenhua2021',
         // 成都依达智创科技有限公司
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1141861372',
         // tenantCode: 'db_ck_ldjh',
         // 捷峰项目
@@ -134,9 +135,6 @@ App({
         // "url": "https://www.caika.net/saas/",
         // agentId: '1129521457',
         // tenantCode: 'db_ck_qzweiming',
-        // 天港物业
-        // "agentId": "1086314896",
-        // "tenantCode": "db_ck_tgwy",
         // 栖梧教育
         // "url": "https://www.caika.net/caika/",
         // "agentId": "1056327836",
@@ -145,9 +143,6 @@ App({
         // "url": "https://www.caika.net/caika/",
         // "agentId": "1049398475",
         // "tenantCode": "db_ck_wenhua2021",
-        // 中海外
-        // "agentId": "1030661487",
-        // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/caika/",
         // "agentId": "886493470",
@@ -194,9 +189,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/caika/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_oa",
+        // "url": "https://www.caika.net/caika/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
