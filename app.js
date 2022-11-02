@@ -16,9 +16,9 @@ App({
     },
     globalData: {
         // 合智互联
-        "url": "https://www.caika.net/saas/",
-        agentId: '1904824991',
-        tenantCode: 'db_ck_hzhl',
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1904824991',
+        // tenantCode: 'db_ck_hzhl',
         // 力动几何
         // "url": "https://www.caika.net/saas/",
         // agentId: '1141861372',
@@ -194,9 +194,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        // "url": "https://www.caika.net/caika/",
-        // "agentId": "1249138757",
-        // "tenantCode": "db_ck_pxxt",
+        "url": "https://www.caika.net/caika/",
+        "agentId": "1249138757",
+        "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
