@@ -15,7 +15,51 @@ App({
         // login(this)
     },
     globalData: {
-        "url": "https://www.caika.net/test/",
+        // 合智互联
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1904824991',
+        // tenantCode: 'db_ck_hzhl',
+        // 力动几何
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1141861372',
+        // tenantCode: 'db_ck_ldjh',
+        // 中海外
+        // "url": "https://www.caika.net/saas/",
+        // "agentId": "1030661487",
+        // "tenantCode": "db_ck_zhwjr",
+        // 天港物业
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1086314896',
+        // tenantCode: 'db_ck_tgwy',
+        // 朗利夫
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1107585282',
+        // tenantCode: 'db_ck_llf',
+        // 内蒙古康新牧场
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1423147826',
+        // tenantCode: 'db_ck_kxmc',
+        // 积木工装
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1465410619',
+        // tenantCode: 'db_ck_jkyl',
+        // 恩威影视
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1653706159',
+        // tenantCode: 'db_ck_ewyy',
+        // 优力连续
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1428400011',
+        // tenantCode: 'db_ck_dthd',
+        // 财税无忧(一贝)
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1407349837',
+        // tenantCode: 'db_ck_czwy2',
+        // 爱绿城
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '1369346288',
+        // tenantCode: 'db_ck_alchb',
+        "url": "https://www.caika.net/caika/",
         agentId: '1249138757',
         tenantCode: 'db_ck_oa',
         // "corpId": "ding2fac28f4bbc361e435c2f4657eb6378f",
@@ -80,20 +124,17 @@ App({
         // agentId: '1167607333',
         // tenantCode: 'db_ck_wenhua2021',
         // 成都依达智创科技有限公司
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1141861372',
         // tenantCode: 'db_ck_ldjh',
-        // 朗利夫
-        // agentId: '1107585282',
-        // tenantCode: 'db_ck_llf',
         // 捷峰项目
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1129582065',
         // tenantCode: 'db_ck_qzweiming',
         // 挥戈项目
+        // "url": "https://www.caika.net/saas/",
         // agentId: '1129521457',
         // tenantCode: 'db_ck_qzweiming',
-        // 天港物业
-        // "agentId": "1086314896",
-        // "tenantCode": "db_ck_tgwy",
         // 栖梧教育
         // "url": "https://www.caika.net/caika/",
         // "agentId": "1056327836",
@@ -102,9 +143,6 @@ App({
         // "url": "https://www.caika.net/caika/",
         // "agentId": "1049398475",
         // "tenantCode": "db_ck_wenhua2021",
-        // 中海外
-        // "agentId": "1030661487",
-        // "tenantCode": "db_ck_zhwjr",
         // 电商 (爱在当下)
         // "url": "https://www.caika.net/caika/",
         // "agentId": "886493470",
