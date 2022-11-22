@@ -291,7 +291,7 @@ Page({
         const borrowId = dd.getStorageSync({key: 'borrowId'}).data
         if (!!borrowId) {
             console.log('借款人id已经获取', borrowId)
-            var borrowIndex = null
+            var borrowIndex = 0
             this.data.borrowList.forEach((item, index) => {
                 if (item.id === borrowId) {
                     borrowIndex = index
@@ -1173,7 +1173,7 @@ Page({
                             incomeBankName: bankName
                         }
                     })
-                    this.setIncomeBankAccount(arr[0].bankAccount)
+                    this.setIncomeBankAccount(arr[incomeBankIndex].bankAccount)
                 } else {
                     this.setData({
                         incomeBankList: [],

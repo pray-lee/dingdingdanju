@@ -42,6 +42,9 @@
                     <view class="form-row-content borrowList-wrapper">
                         <view class="mock-input">{{result.applicantName}}</view>
                     </view>
+                </view>
+                <view class="form-line"></view>
+                <view class="form-row">
                     <block>
                         <view class="form-row-content incomeBankAccount">
                             <view a:if="{{result.incomeBankAccount}}" class="mock-input ellipsis">{{result.incomeBankAccount}}</view>

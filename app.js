@@ -15,6 +15,10 @@ App({
         // login(this)
     },
     globalData: {
+        // 华橙影业（山东）有限公司
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '2032332092',
+        // tenantCode: 'db_ck_hcyy',
         // 合智互联
         // "url": "https://www.caika.net/saas/",
         // agentId: '1904824991',

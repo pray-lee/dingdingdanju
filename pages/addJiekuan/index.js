@@ -630,7 +630,7 @@ Page({
     },
     handleAddBorrow() {
         const borrowAmountIndex = dd.getStorageSync({key: 'borrowAmountIndex'}).data
-        if (this.data[this.data.amountField.borrowAmount] === '') {
+        if (this.data[this.data.amountField.borrowAmount] === '') { 
             dd.alert({
                 content: '请输入借款金额',
                 buttonText: '确定',
@@ -1332,7 +1332,7 @@ Page({
                             incomeBankName: bankName
                         }
                     })
-                    this.setIncomeBankAccount(arr[0].bankAccount)
+                    this.setIncomeBankAccount(arr[incomeBankIndex].bankAccount)
                 } else {
                     this.setData({
                         incomeBankList: [],

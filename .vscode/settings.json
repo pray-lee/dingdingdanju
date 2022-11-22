@@ -1,5 +1,5 @@
 {
-    "editor.highlightActiveIndentGuide": false,
-    "editor.renderIndentGuides": false,
-    "zenMode.hideLineNumbers": false
+    "zenMode.hideLineNumbers": false,
+    "editor.guides.indentation": false,
+    "editor.guides.highlightActiveIndentation": false
 }
