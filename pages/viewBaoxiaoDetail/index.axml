@@ -19,7 +19,7 @@
             <view class="form-line" a:if="{{baoxiaoDetail.billDetailApEntityList.length}}"></view>
             <view class="form-row" a:if="{{!baoxiaoDetail.extraMessage}}">
                 <view class="form-row-label"><text class="require">*</text>申请报销金额</view>
-<!--                <input class="input" type="digit" placeholder="申请报销金额" value="{{baoxiaoDetail.formatApplicationAmount}}" disabled/>-->
+<!--                <input class="input" type="text" placeholder="申请报销金额" value="{{baoxiaoDetail.formatApplicationAmount}}" disabled/>-->
                 <view class="mock-input">{{baoxiaoDetail.formatApplicationAmount}}</view>
             </view>
             <view class="form-row" a:else onTap="openExtraInfo" data-extraMessage="{{baoxiaoDetail.extraMessage}}" data-extraConf="{{baoxiaoDetail.subjectExtraConf}}">

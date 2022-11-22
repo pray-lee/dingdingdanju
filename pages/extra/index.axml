@@ -23,7 +23,7 @@
                                         </view>
                                     </block>
                                     <block a:else>
-                                        <input a:if="{{extraDetail.field== '金额'}}" type="digit" class="input"
+                                        <input a:if="{{extraDetail.field== '金额'}}" type="text" class="input"
                                                onInput="onExtraInput" value="{{baoxiaoDetail.extraMessage[index][idx]}}"
                                                placeholder="{{extraDetail.field}}" data-name="{{extraDetail.field}}"
                                                onInput="onExtraBlur" data-index="{{idx}}" data-extraIndex="{{index}}"

@@ -30,7 +30,7 @@
     <view class="form-row">
         <view class="form-row-label"><text class="require">*</text>开户行账号</view>
         <view class="form-row-content">
-            <input class="input" type="digit" placeholder="开户行名称" onInput="bindKeyInput" data-type="bankAccount" value="{{customInfo.bankAccount}}"/>
+            <input class="input" type="text" placeholder="开户行名称" onInput="bindKeyInput" data-type="bankAccount" value="{{customInfo.bankAccount}}"/>
         </view>
     </view>
     <view class="form-line"/>
