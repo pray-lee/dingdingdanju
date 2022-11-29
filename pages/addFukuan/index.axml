@@ -155,7 +155,7 @@
                                 <view class="tip">本次核销金额</view>
                                 <view class="edit-wrapper">
                                     <input value="{{item.applicationAmount}}" onInput="borrowInput" onInput="borrowBlur"
-                                           data-index="{{index}}" type="digit"/>
+                                           data-index="{{index}}" type="text"/>
                                     <image src="../../images/edit.png" mode="aspectFill" class="edit"></image>
                                 </view>
                             </view>
