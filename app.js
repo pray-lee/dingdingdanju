@@ -124,9 +124,9 @@ App({
         // agentId: '1170508467',
         // tenantCode: 'db_ck_education',
         // 北京遇龙少年文化传媒有限公司
-        "url": "https://www.caika.net/caika/",
-        agentId: '1167607333',
-        tenantCode: 'db_ck_wenhua2021',
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1167607333',
+        // tenantCode: 'db_ck_wenhua2021',
         // 成都依达智创科技有限公司
         // "url": "https://www.caika.net/saas/",
         // agentId: '1141861372',
