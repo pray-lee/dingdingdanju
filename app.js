@@ -79,9 +79,9 @@ App({
         // agentId: '1806744140',
         // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
-        // "url": "https://www.caika.net/caika/",
-        // agentId: '1780714116',
-        // tenantCode: 'db_ck_xld',
+        "url": "https://www.caika.net/caika/",
+        agentId: '1780714116',
+        tenantCode: 'db_ck_xld',
         //中大邑和
         // "url": "https://www.caika.net/caika/",
         // agentId: '1767231312',
@@ -193,9 +193,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/caika/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_oa",
+        // "url": "https://www.caika.net/caika/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
