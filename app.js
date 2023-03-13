@@ -15,6 +15,10 @@ App({
         // login(this)
     },
     globalData: {
+        // 取次春波
+        "url": "https://www.caika.net/caika/",
+        agentId: '2462991994',
+        tenantCode: 'db_ck_wenhua2021',
         // 华橙影业（山东）有限公司
         // "url": "https://www.caika.net/saas/",
         // agentId: '2032332092',
@@ -79,9 +83,9 @@ App({
         // agentId: '1806744140',
         // tenantCode: 'db_ck_ds2021',
         // 小丽都 西里食品
-        "url": "https://www.caika.net/caika/",
-        agentId: '1780714116',
-        tenantCode: 'db_ck_xld',
+        // "url": "https://www.caika.net/caika/",
+        // agentId: '1780714116',
+        // tenantCode: 'db_ck_xld',
         //中大邑和
         // "url": "https://www.caika.net/caika/",
         // agentId: '1767231312',
