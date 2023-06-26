@@ -8,6 +8,7 @@
         </view>
         <view class="select-bill-wrapper" animation="{{animationInfoTopList}}" topHidden="{{topHidden}}">
             <view class="bill-btn zzs" onTap="toggleTemplate" data-type="zzs" data-class="zzs">增值税发票</view>
+            <view class="bill-btn qd" onTap="toggleTemplate" data-type="qd" data-class="qd">全电发票</view>
             <view class="bill-btn de" onTap="toggleTemplate" data-type="95" data-class="de">定额发票</view>
             <view class="bill-btn hcp" onTap="toggleTemplate" data-type="92" data-class="hcp">火车票</view>
             <view class="bill-btn fjp" onTap="toggleTemplate" data-type="93" data-class="fjp">飞机行程单</view>
@@ -61,6 +62,81 @@
                     <view class="form-row-label"><text class="require">*</text>发票代码</view>
                     <view class="form-row-content">
                             <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpdm}}" placeholder="请输入发票代码" data-name="fpdm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>发票号码</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fphm}}" placeholder="请输入发票号码" data-name="fphm" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row" onTap="onBusinessFocus" data-name="kprq">
+                    <view class="form-row-label"><text class="require">*</text>开票日期</view>
+                    <view class="form-row-content">
+                        <view data-name="businessDateTime">{{submitData.kprq}}</view>
+                    </view>
+                    <image src="../../images/date-icon.png" mode="scaleToFill" class="date-icon"></image>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>购买方名称</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.gmfmc}}" placeholder="请输入购买方名称" data-name="gmfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>购买方税号</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.gmfsbh}}" placeholder="请输入购买方税号" data-name="gmfsbh" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>销售方名称</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfmc}}" placeholder="请输入销售方名称" data-name="xhfmc" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>销售方税号</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.xhfsbh}}" placeholder="请输入销售方税号" data-name="xhfsbh" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>不含税合计金额</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpje}}" placeholder="请输入不含税合计金额" data-name="fpje" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>合计税额</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.fpse}}" placeholder="请输入合计税额" data-name="fpse" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"/>
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>价税合计</view>
+                    <view class="form-row-content">
+                            <input disabled="{{fromStorage}}" class="input" value="{{submitData.jshj}}" placeholder="请输入价税合计" data-name="jshj" onInput="onBlur"/>
+                    </view>
+                </view>
+                <view class="form-line"></view>
+            </block>
+            <block a:if="{{type == 'qd'}}">
+                <view class="form-row">
+                    <view class="form-row-label"><text class="require">*</text>全电发票类别</view>
+                    <view class="form-row-content">
+                        <picker disabled="{{fromStorage}}" class="picker-style" onChange="bindObjPickerChange" value="{{qdIndex}}" range="{{qdList}}" range-key="name" data-index="qdIndex" data-name="invoiceType" data-list="qdList">
+                            <view class="row-extra">{{qdList[qdIndex].name}}</view>
+                        </picker>
                     </view>
                 </view>
                 <view class="form-line"/>
