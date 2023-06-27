@@ -113,9 +113,9 @@ Page({
             let type = ''
             const arr = ['01', '04', '08', '10', '11']
             const qdArr = ['21', '22']
-            if(arr.includes(editInvoiceDetail.invoiceType)) {
+            if(arr.includes(invoiceDetail.invoiceType)) {
                 type = 'zzs'
-            } else if (qdArr.includes(editInvoiceDetail.invoiceType)) {
+            } else if (qdArr.includes(invoiceDetail.invoiceType)) {
                 type = 'qd'
             }else{
                 type = invoiceDetail.invoiceType
