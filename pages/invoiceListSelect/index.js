@@ -111,6 +111,9 @@ Page({
             case 'zzs':
                typeText = '增值税发票'
                 break
+            case 'qd':
+                typeText = '全电发票'
+                break
             case '95':
                 typeText = '定额发票'
                 break

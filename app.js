@@ -16,6 +16,10 @@ App({
     },
     globalData: {
         // 柚心科技
+        "url": "https://www.caika.net/saas/",
+        agentId: '2639067978',
+        tenantCode: 'db_ck_thcs',
+        // 柚心科技
         // "url": "https://www.caika.net/saas/",
         // agentId: '2554380074',
         // tenantCode: 'db_ck_yfh',
@@ -201,9 +205,9 @@ App({
         // 测试环境test
         // 于龙测试
         // "url": "https://www.caika.net/jeecg/",
-        "url": "https://www.caika.net/caika/",
-        "agentId": "1249138757",
-        "tenantCode": "db_ck_oa",
+        // "url": "https://www.caika.net/caika/",
+        // "agentId": "1249138757",
+        // "tenantCode": "db_ck_oa",
         // 企业服务商的app
         // "agentId": '782995014'
         // 测试集团
