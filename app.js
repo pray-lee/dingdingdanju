@@ -15,10 +15,10 @@ App({
         // login(this)
     },
     globalData: {
-        // 柚心科技
-        "url": "https://www.caika.net/saas/",
-        agentId: '2639067978',
-        tenantCode: 'db_ck_thcs',
+        // 泰和长盛
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '2639067978',
+        // tenantCode: 'db_ck_thcs',
         // 柚心科技
         // "url": "https://www.caika.net/saas/",
         // agentId: '2554380074',
@@ -139,10 +139,6 @@ App({
         // "url": "https://www.caika.net/caika/",
         // agentId: '1167607333',
         // tenantCode: 'db_ck_wenhua2021',
-        // 成都依达智创科技有限公司
-        // "url": "https://www.caika.net/saas/",
-        // agentId: '1141861372',
-        // tenantCode: 'db_ck_ldjh',
         // 捷峰项目
         // "url": "https://www.caika.net/saas/",
         // agentId: '1129582065',
