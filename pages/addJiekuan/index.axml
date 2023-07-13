@@ -119,10 +119,10 @@
                     </view>
                     <view class="form-line"/>
                 </block>
-                <view class="form-row invoice-wrapper">
-                    <view class="form-row-label"><text class="require">*</text>是否有发票</view>
-                    <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>
-                </view>
+<!--                <view class="form-row invoice-wrapper">-->
+<!--                    <view class="form-row-label"><text class="require">*</text>是否有发票</view>-->
+<!--                    <switch onChange="radioChange" checked="{{!!submitData.invoice}}" color="#1f76d8"/>-->
+<!--                </view>-->
             </view>
 <!--      外币        -->
             <block a:if="{{multiCurrency}}">
