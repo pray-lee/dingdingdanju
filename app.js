@@ -15,6 +15,10 @@ App({
         // login(this)
     },
     globalData: {
+        // 青创
+        "url": "https://www.caika.net/saas/",
+        agentId: '2688875117',
+        tenantCode: 'db_ck_sczz_qc',
         // 泰和长盛
         // "url": "https://www.caika.net/saas/",
         // agentId: '2639067978',
