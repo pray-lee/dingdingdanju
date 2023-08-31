@@ -15,10 +15,17 @@ App({
         // login(this)
     },
     globalData: {
-        // 青创
         "url": "https://www.caika.net/saas/",
-        agentId: '2688875117',
-        tenantCode: 'db_ck_sczz_qc',
+        agentId: '2708921669',
+        tenantCode: 'db_ck_yfjk',
+        // 博川佳和影视文化
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '2698183958',
+        // tenantCode: 'db_ck_thcs',
+        // 青创
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '2688875117',
+        // tenantCode: 'db_ck_sczz_qc',
         // 泰和长盛
         // "url": "https://www.caika.net/saas/",
         // agentId: '2639067978',
