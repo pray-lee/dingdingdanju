@@ -15,9 +15,13 @@ App({
         // login(this)
     },
     globalData: {
+        // 青创青年创业创新
         "url": "https://www.caika.net/saas/",
-        agentId: '2708921669',
-        tenantCode: 'db_ck_yfjk',
+        agentId: '2716878984',
+        tenantCode: 'db_ck_sczz_qc',
+        // "url": "https://www.caika.net/saas/",
+        // agentId: '2708921669',
+        // tenantCode: 'db_ck_yfjk',
         // 博川佳和影视文化
         // "url": "https://www.caika.net/saas/",
         // agentId: '2698183958',
