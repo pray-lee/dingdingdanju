@@ -15,10 +15,14 @@ App({
         // login(this)
     },
     globalData: {
+        // 无锡重塑
+        "url": "https://www.caika.net/caika/",
+        agentId: '2837091317',
+        tenantCode: 'db_ck_wenhua2021',
         // 农博会
-        "url": "https://www.caika.net/sczz/",
-        agentId: '2785520411',
-        tenantCode: 'db_ck_sczz_bjnbh',
+        // "url": "https://www.caika.net/sczz/",
+        // agentId: '2785520411',
+        // tenantCode: 'db_ck_sczz_bjnbh',
         // 甲寅（青岛）文化教育咨询
         // "url": "https://www.caika.net/caika/",
         // agentId: '2783752941',
